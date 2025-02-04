@@ -1,6 +1,6 @@
 import printPacket from "../log/printPacket";
 
-makePacket(packetId, payload) {
+function makePacket(packetId, payload) {
     // 패킷 크기
     const packetSize = 5 + packetDataBuffer.length;
 
