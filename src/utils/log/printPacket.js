@@ -1,6 +1,6 @@
 const printPacket = (packetSize, packetId, packetData, str_in_out = '') => {
-  if ((str_in_out = 'in')) console.log('---------- received Packet ----------');
-  else if ((str_in_out = 'out'))
+  if (str_in_out === 'in') console.log('---------- received Packet ----------');
+  else if (str_in_out === 'out')
     console.log('---------- sent Packet ----------');
   else console.log('---------- Packet ----------')
   console.log('-Header');
