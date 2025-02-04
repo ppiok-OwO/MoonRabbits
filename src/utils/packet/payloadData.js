@@ -1,9 +1,9 @@
 const payloadData = {
-    PlayerInfo: (playerId, nickname, class_int) => {
-      playerId, 
-      nickname, 
-      'class' : class_int,
-    },
+    // PlayerInfo: (playerId, nickname, class_int) => {
+    //   playerId, 
+    //   nickname, 
+    //   'class' : class_int,
+    // },
     TransformInfo: (players) => {
       players;
     },
