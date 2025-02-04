@@ -1,5 +1,9 @@
 import { PORT, HOST, CLIENT_VERSION } from '../constants/env.js';
-import { PACKET_SIZE, PACKET_ID_LENGTH } from '../constants/header.js';
+import {
+  PACKET_ID,
+  PACKET_ID_LENGTH,
+  PACKET_SIZE,
+} from '../constants/header.js';
 
 export const config = {
   server: {
@@ -12,5 +16,9 @@ export const config = {
   packet: {
     totalSize: PACKET_SIZE,
     idLength: PACKET_ID_LENGTH,
+  },
+  packetId: {
+    C_Enter: PACKET_ID.C_Enter,
+    S_Enter: PACKET_ID.S_Enter,
   },
 };
