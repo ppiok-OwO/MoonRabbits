@@ -1,31 +1,38 @@
 import Player from '../player.class.js';
 
-class UserSession {
-  users = new Map();
+class PlayerSession {
+  players = new Map();
   playerId = 1;
 
-  addUser(socket) {
-    const newUser = this.users.set(socket, new Player(socket, this.playerId++));
+  addPlayer(socket) {
+    const newUser = this.players.set(
+      socket,
+      new Player(socket, this.playerId++),
+    );
     return newUser;
   }
 
-  removeUser(socket) {
-    this.users.delete(socket);
+  removePlayer(socket) {
+    this.players.delete(socket);
   }
 
-  getUser(socket) {
-    return this.users.get(socket);
+  getPlayer(socket) {
+    return this.players.get(socket);
   }
 
-  getAllUsers() {
-    return this.users.values();
+  getAllPlayers() {
+    return this.players.values();
   }
 
   clearSession() {
-    this.users.clear();
+    this.players.clear();
   }
 
-  notify() {}
+  notify(packet) {
+    for (const user of this.players) {
+      user.socket.write(packet);
+    }
+  }
 }
 
-export default UserSession;
+export default PlayerSession;
