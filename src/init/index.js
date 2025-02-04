@@ -8,7 +8,7 @@ const initServer = async () => {
   try {
     await loadGameAssets();
     await loadProtos();
-    await testAllConnections(pools);
+    // await testAllConnections(pools);
     // 다음 작업
   } catch (err) {
     console.error(err);

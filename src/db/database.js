@@ -36,8 +36,8 @@ const createPool = (dbConfig) => {
 
 // 여러 데이터베이스 커넥션 풀 생성
 const pools = {
-  GAME_DB: createPool(databases.GAME_DB),
-  USER_DB: createPool(databases.USER_DB),
+  // GAME_DB: createPool(databases.GAME_DB),
+  // USER_DB: createPool(databases.USER_DB),
 };
 
 export default pools;
