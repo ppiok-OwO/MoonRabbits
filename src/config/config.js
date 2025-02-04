@@ -1,5 +1,9 @@
 import { PORT, HOST, CLIENT_VERSION } from '../constants/env.js';
-import { PACKET_ID, PACKET_ID_LENGTH, TOTAL_LENGTH } from '../constants/header.js';
+import {
+  PACKET_ID,
+  PACKET_ID_LENGTH,
+  PACKET_SIZE,
+} from '../constants/header.js';
 
 export const config = {
   server: {
@@ -10,16 +14,11 @@ export const config = {
     version: CLIENT_VERSION,
   },
   packet: {
-    totalLength: TOTAL_LENGTH,
-    typeLength: PACKET_ID_LENGTH,
+    totalSize: PACKET_SIZE,
+    idLength: PACKET_ID_LENGTH,
   },
   packetId: {
-    C_Enter : PACKET_ID.C_Enter,
-    S_Enter : PACKET_ID.S_Enter,
+    C_Enter: PACKET_ID.C_Enter,
+    S_Enter: PACKET_ID.S_Enter,
   },
-  // 필요한 만큼 추가
-  gameSession: {
-    MAX_PLAYERS: 2,
-  },
-  ingame: {},
 };
