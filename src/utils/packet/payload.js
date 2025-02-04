@@ -1,6 +1,6 @@
 const payload = {
   S_Enter: (playerInfo_PlayerInfo) => {
-    return { playerInfo: playerInfo_PlayerInfo };
+    return { player: playerInfo_PlayerInfo };
   },
   S_Spawn: (players_ArrayOfPlayerInfo) => {
     return { players: players_ArrayOfPlayerInfo };
@@ -58,7 +58,10 @@ const payload = {
     };
   },
   S_MonsterAction: (actionMonsterIdx_int, actionSet_ActionSet) => {
-    return { actionMonsterIdx:actionMonsterIdx_int, actionSet:actionSet_ActionSet };
+    return {
+      actionMonsterIdx: actionMonsterIdx_int,
+      actionSet: actionSet_ActionSet,
+    };
   },
 };
 
