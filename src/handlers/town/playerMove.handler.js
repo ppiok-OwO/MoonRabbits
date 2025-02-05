@@ -10,13 +10,14 @@ import payloadData from '../../utils/packet/payloadData.js';
 const playerMoveHandler = (socket, packetData) => {
   const { transform } = packetData;
   const playerSession = getPlayerSession();
-  const move = payload.S_Move(playerSession.playerId, transform);
+  const player = playerSession.getPlayer(socket);
+  const move = payload.S_Move(player.id, transform);
 
   const packet = makePacket(config.packetId.S_Move, move);
 
   //socket.write(packet);
 
-  const dungeonId = playerSession.getPlayer(socket).getDungeonId();
+  const dungeonId = player.getDungeonId();
   if (dungeonId) {
     const dungeonSessions = getDungeonSessions();
     const dungeon = dungeonSessions.getDungeon(dungeonId);
