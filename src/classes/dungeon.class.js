@@ -18,7 +18,11 @@ class Dungeon {
     // 식별자는 idx?로 하면 될 거 같아여
   }
 
-  notify() {}
+  notify(packet) {
+    for (const player of this.players) {
+      player.socket.write(packet);
+    }
+  }
 }
 
 export default Dungeon;
