@@ -4,7 +4,7 @@ import {
   PACKET_ID_LENGTH,
   PACKET_SIZE,
 } from '../constants/header.js';
-
+import { baseStatData } from '../constants/PlayerBaseStat.js';
 export const config = {
   server: {
     port: PORT,
@@ -28,4 +28,7 @@ export const config = {
     C_Chat: PACKET_ID.C_Chat,
     S_Chat: PACKET_ID.S_Chat,
   },
+  newPlayerStatData: {
+    baseStatData
+  }
 };
