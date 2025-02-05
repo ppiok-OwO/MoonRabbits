@@ -1,12 +1,13 @@
 class User {
-  constructor(nickname, socket) {
+  constructor(socket) {
     this.id = null;
-    this.nickname = nickname;
+    this.nickname = null;
     this.socket = socket;
   }
 
-  setUserInfo(id) {
+  setUserInfo(id, nickname) {
     this.id = id;
+    this.nickname = nickname;
   }
 
   getId() {
