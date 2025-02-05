@@ -6,24 +6,19 @@ import {
 import makePacket from '../../utils/packet/makePacket.js';
 import payload from '../../utils/packet/payload.js';
 
-export const chatHandler = (socket, packetData) => {
-  const { playerId, senderName, chatMsg } = packetData;
-
+export const animationHandler = (socket, packetData) => {
   try {
-    // 유효성 검사
-    // 나는 나인가? 나는 누구인가?
-
-    // 예외 처리
-
-    // 패킷 직렬화
-    const chatPayload = payload.S_Chat(playerId, chatMsg);
-    const packet = makePacket(PACKET_ID.S_Chat, chatPayload);
+    const { animCode } = packetData;
 
     // 플레이어 세션을 통해 플레이어 인스턴스를 불러온다.
     const playerSession = getPlayerSession();
     const player = playerSession.getPlayer(socket);
 
-    // 만약 던전이면 dungeonId를 클라이언트가 보내주기로!
+    // 패킷 직렬화
+    const animPayload = payload.S_Animation(player.id, animCode);
+    const packet = makePacket(PACKET_ID.S_Animation, animPayload);
+
+    // 만약 던전이면
     const dungeonId = player.getDungeonId();
     if (dungeonId) {
       const dungeonSessions = getDungeonSessions();

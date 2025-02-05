@@ -19,8 +19,8 @@ class Dungeon {
   }
 
   notify(packet) {
-    for (const player of this.players) {
-      player.socket.write(packet);
+    for (const player of this.players.keys()) {
+      player.write(packet);
     }
   }
 }
