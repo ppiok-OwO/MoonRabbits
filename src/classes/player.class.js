@@ -12,8 +12,9 @@ class Player extends User {
     this.dungeonId = null;
   }
 
-  setPlayerInfo(level, stat, classCode) {
+  setPlayerInfo(level, nickname, stat, classCode) {
     this.level = level;
+    this.nickname = nickname;
     this.stat = stat;
     this.class = classCode;
   }
