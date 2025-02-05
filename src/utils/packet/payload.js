@@ -1,6 +1,6 @@
 const payload = {
-  S_Enter: (playerInfo_PlayerInfo) => {
-    return { playerInfo: playerInfo_PlayerInfo };
+  S_Enter: (player_PlayerInfo) => {
+    return { player: player_PlayerInfo };
   },
   S_Spawn: (players_ArrayOfPlayerInfo) => {
     return { players: players_ArrayOfPlayerInfo };

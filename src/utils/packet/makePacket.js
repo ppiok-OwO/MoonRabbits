@@ -2,7 +2,7 @@ import { config } from "../../config/config.js";
 import { getProtoMessages } from "../../init/loadProtos.js";
 import printPacket from "../log/printPacket.js";
 
-function makePacket(packetId, payload) {   
+function makePacket(packetId, packetData) {   
     // 패킷 아이디 -> 타입
     const packetIdValues = Object.values(config.packetId);
     const packetIdIndex = packetIdValues.findIndex((f) => f === packetId,);
@@ -10,7 +10,7 @@ function makePacket(packetId, payload) {
 
     // 페이로드
     const proto = getProtoMessages()[packetType];
-    const packetDataBuffer = proto.encode(payload).finish();
+    const packetDataBuffer = proto.encode(packetData).finish();
 
     // 패킷 크기
     const packetSize = 5 + packetDataBuffer.length;
@@ -31,7 +31,7 @@ function makePacket(packetId, payload) {
  
     // 디버그용 콘솔 출력, packetId 필터링해서 사용
     if (packetId >= 0) {
-      printPacket(packetSize, packetId, payload, 'out');
+      printPacket(packetSize, packetId, packetData, 'out');
     }
 
     // 패킷 만들기
