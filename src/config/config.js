@@ -23,5 +23,7 @@ export const config = {
     S_Spawn: PACKET_ID.S_Spawn,
     C_Move: PACKET_ID.C_Move,
     S_Move: PACKET_ID.S_Move,
+    C_Chat: PACKET_ID.C_Chat,
+    S_Chat: PACKET_ID.S_Chat,
   },
 };
