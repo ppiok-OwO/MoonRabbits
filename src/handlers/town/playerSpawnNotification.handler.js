@@ -16,18 +16,7 @@ const playerSpawnNotificationHandler = (socket, packetData) => {
   const playerInfoArray = Array.from(players.values())
     .filter((player) => player.id !== currentPlayer.id)
     .map((player) => {
-      console.log(player);
-      const transform = payloadData.TransformInfo(1, 1, 140, 1);
-
-      const statInfo = payloadData.StatInfo(1, 10, 10, 10, 10, 10, 10, 10, 10);
-
-      return payloadData.PlayerInfo(
-        player.id,
-        packetData.nickname,
-        packetData.class,
-        transform,
-        statInfo,
-      );
+      return player.getPlayerInfo();
     });
 
   console.log('=========패킷 준비 ============');

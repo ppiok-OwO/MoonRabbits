@@ -50,6 +50,15 @@ class Player extends User {
   getStatInfo() {
     return this.stat.getPlayerStats();
   }
+  getPlayerInfo() {
+    return payloadData.PlayerInfo(
+      this.id,
+      this.nickname,
+      this.class,
+      this.position,
+      this.getStatInfo(),
+    );
+  }
 
   setDungeonId(dungeonId) {
     this.dungeonId = dungeonId;
