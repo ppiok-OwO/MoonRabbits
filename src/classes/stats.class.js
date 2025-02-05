@@ -1,4 +1,4 @@
-import payloadData from '../utils/packet/payloadData';
+import payloadData from '../utils/packet/payloadData.js';
 
 class stats {
   constructor(
