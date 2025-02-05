@@ -21,7 +21,7 @@ const printPacket = (packetSize, packetId, packetData, str_in_out = '') => {
 const printObject = (object, width = 4, isArray=false) => {
   const objectKeyValues = Object.entries(object);
   objectKeyValues.forEach(([key, value], index) => {
-      if (typeof value === 'number') value = value.toFixed(1);
+      if (typeof value === 'number' && !Number.isInteger(value)) value = value.toFixed(1);
       if (typeof value === 'object') {
           if (Array.isArray(value)) {
               console.log(' '.repeat(width) + `${key} [`);
