@@ -5,10 +5,10 @@ class PlayerSession {
   playerId = 1;
 
   addPlayer(socket) {
-    const newUser = this.players.set(
-      socket,
-      new Player(socket, this.playerId++),
-    );
+    this.players.set(socket, new Player(socket, this.playerId++));
+
+    const newUser = this.players.get(socket);
+
     return newUser;
   }
 
@@ -21,7 +21,8 @@ class PlayerSession {
   }
 
   getAllPlayers() {
-    return this.players.values();
+    // return this.players.values();
+    return this.players;
   }
 
   clearSession() {
@@ -29,8 +30,8 @@ class PlayerSession {
   }
 
   notify(packet) {
-    for (const user of this.players) {
-      user.socket.write(packet);
+    for (const player of this.players.keys()) {
+      player.write(packet);
     }
   }
 }
