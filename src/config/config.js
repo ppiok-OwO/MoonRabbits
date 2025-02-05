@@ -21,5 +21,7 @@ export const config = {
     C_Enter: PACKET_ID.C_Enter,
     S_Enter: PACKET_ID.S_Enter,
     S_Spawn: PACKET_ID.S_Spawn,
+    C_Move: PACKET_ID.C_Move,
+    S_Move: PACKET_ID.S_Move,
   },
 };
