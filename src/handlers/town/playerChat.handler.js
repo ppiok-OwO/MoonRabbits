@@ -2,7 +2,6 @@ import { PACKET_ID } from '../../constants/header.js';
 import {
   getDungeonSessions,
   getPlayerSession,
-  playerSession,
 } from '../../session/sessions.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import payload from '../../utils/packet/payload.js';
@@ -21,6 +20,7 @@ export const chatHandler = (socket, packetData) => {
     const packet = makePacket(PACKET_ID.S_Chat, chatPayload);
 
     // 플레이어 세션을 통해 플레이어 인스턴스를 불러온다.
+    const playerSession = getPlayerSession();
     const player = playerSession.getPlayer(socket);
 
     // 만약 던전이면 dungeonId를 클라이언트가 보내주기로!
