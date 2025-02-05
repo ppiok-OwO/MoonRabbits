@@ -19,12 +19,11 @@ const handleError = (socket, error) => {
     case ErrorCodes.PACKET_STRUCTURE_MISMATCH:
     case ErrorCodes.UNKNOWN_HANDLER_ID:
     case ErrorCodes.USER_NOT_FOUND:
-      console.error('\x1b[31m-------------------- 커스텀 에러 발생 --------------------\x1b');
+      console.error('\x1b[31m-------------------- 커스텀 에러 발생 --------------------\x1b[0m');
       console.error(error);
       break;
     default:
-      console.error('\x1b[31m-------------------- 일반 에러 발생 --------------------\x1b');
-      error.name = '\x1b[31m[' + error.name + ']\x1b[0m';
+      console.error('\x1b[31m-------------------- 일반 에러 발생 --------------------\x1b[0m');
       console.error(error);
       break;
   }
