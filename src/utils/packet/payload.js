@@ -58,7 +58,10 @@ const payload = {
     };
   },
   S_MonsterAction: (actionMonsterIdx_int, actionSet_ActionSet) => {
-    return { actionMonsterIdx:actionMonsterIdx_int, actionSet:actionSet_ActionSet };
+    return {
+      actionMonsterIdx: actionMonsterIdx_int,
+      actionSet: actionSet_ActionSet,
+    };
   },
 };
 

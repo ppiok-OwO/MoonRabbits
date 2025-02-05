@@ -22,6 +22,10 @@ class Player extends User {
     this.dungeonId = dungeonId;
   }
 
+  getDungeonId() {
+    return this.dungeonId;
+  }
+
   resetDungeonId() {
     this.dungeonId = null;
   }

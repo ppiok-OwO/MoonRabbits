@@ -12,16 +12,16 @@ function makePacket(packetId, packetData) {
     const proto = getProtoMessages()[packetType];
     const packetDataBuffer = proto.encode(packetData).finish();
 
-    // 패킷 크기
-    const packetSize = 5 + packetDataBuffer.length;
+  // 패킷 크기
+  const packetSize = 5 + packetDataBuffer.length;
 
-    // 헤더 쓰기 - 패킷 크기
-    const packetSizeBuffer = Buffer.alloc(4);
-    packetSizeBuffer.writeUint32BE(packetSize, 0);
+  // 헤더 쓰기 - 패킷 크기
+  const packetSizeBuffer = Buffer.alloc(4);
+  packetSizeBuffer.writeUint32LE(packetSize, 0);
 
-    // 헤더 쓰기 - 패킷 아이디
-    const packetIdBuffer = Buffer.alloc(1);
-    packetIdBuffer.writeUInt8(packetId, 0);
+  // 헤더 쓰기 - 패킷 아이디
+  const packetIdBuffer = Buffer.alloc(1);
+  packetIdBuffer.writeUInt8(packetId, 0);
 
     // 헤더 만들기
     const headerBuffer = Buffer.concat([
@@ -34,10 +34,10 @@ function makePacket(packetId, packetData) {
       printPacket(packetSize, packetId, packetData, 'out');
     }
 
-    // 패킷 만들기
-    const packetBuffer = Buffer.concat([headerBuffer, packetDataBuffer]);
+  // 패킷 만들기
+  const packetBuffer = Buffer.concat([headerBuffer, packetDataBuffer]);
 
-    return packetBuffer;
+  return packetBuffer;
 }
 
 export default makePacket;
