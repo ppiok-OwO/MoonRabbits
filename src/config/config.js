@@ -23,6 +23,8 @@ export const config = {
     S_Spawn: PACKET_ID.S_Spawn,
     C_Animation: PACKET_ID.C_Animation,
     S_Animation: PACKET_ID.S_Animation,
+    C_Move: PACKET_ID.C_Move,
+    S_Move: PACKET_ID.S_Move,
     C_Chat: PACKET_ID.C_Chat,
     S_Chat: PACKET_ID.S_Chat,
   },
