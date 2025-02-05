@@ -10,9 +10,9 @@ import payloadData from '../../utils/packet/payloadData.js';
 const townEnterHandler = (socket, packetData) => {
   const transform = payloadData.TransformInfo(1, 1, 1, 1);
   const statInfo = payloadData.StatInfo(1, 10, 10, 10, 10, 10, 10, 10, 10);
-  const playerId = getPlayerSession().playerId;
+  const player = playerSession.getPlayer(socket);
   const playerInfo = payloadData.PlayerInfo(
-    playerId,
+    player.id,
     packetData.nickname,
     packetData.class,
     transform,
@@ -24,17 +24,8 @@ const townEnterHandler = (socket, packetData) => {
   const packet = makePacket(config.packetId.S_Enter, data);
 
   const playerSession = getPlayerSession();
-  const player = playerSession.getPlayer(socket);
 
-  const dungeonId = player.getDungeonId();
-  if (dungeonId) {
-    const dungeonSessions = getDungeonSessions();
-    const dungeon = dungeonSessions.getDungeon(dungeonId);
-    dungeon.notify(packet);
-  } else {
-    playerSession.notify(packet);
-  }
-  //socket.write(packet);
+  socket.write(packet);
 };
 
 export default townEnterHandler;
