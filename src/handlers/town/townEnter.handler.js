@@ -10,7 +10,7 @@ import payloadData from '../../utils/packet/payloadData.js';
 const townEnterHandler = (socket, packetData) => {
   const transform = payloadData.TransformInfo(1, 1, 1, 1);
   const statInfo = payloadData.StatInfo(1, 10, 10, 10, 10, 10, 10, 10, 10);
-  const playerId = getPlayerSession().playerId;
+  const playerId = getPlayerSession().getPlayer(socket).id;
   const playerInfo = payloadData.PlayerInfo(
     playerId,
     packetData.nickname,

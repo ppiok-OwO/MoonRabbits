@@ -3,6 +3,7 @@ import {
   getDungeonSessions,
   getPlayerSession,
 } from '../../session/sessions.js';
+import makePacket from '../../utils/packet/makePacket.js';
 import payload from '../../utils/packet/payload.js';
 
 export const animationHandler = (socket, packetData) => {
