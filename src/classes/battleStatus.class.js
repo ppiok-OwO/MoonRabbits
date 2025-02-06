@@ -85,7 +85,7 @@ class BattleStatus {
       if (this.turnIndex < 0 || this.turnIndex >= this.entity.length) {
         this.turnIndex = 0;
         this.entity.sort((a, b) => {
-          return a.getSpeed() - b.getSpeed();
+          return b.getSpeed() - a.getSpeed();
         });
         console.log(this.entity);
       }
