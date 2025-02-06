@@ -20,10 +20,8 @@ const townEnterHandler = (socket, packetData) => {
   
     socket.write(packet);
   
-    const chatPayload = payload.S_Chat(0, `입장하였습니다.`);
-    const chatPacket = makePacket(config.packetId.S_Chat, chatPayload);
-  
-    socket.write(chatPacket);
+    const chatPacket = Packet.S_Chat(0, `${player.nickname}님이 입장하였습니다.`);
+    getPlayerSession().notify(chatPacket);
   
     playerSpawnNotificationHandler(socket, packetData);
   } catch (error) {
