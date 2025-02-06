@@ -36,6 +36,16 @@ class Party {
     return this.members;
   }
 
+  getAllMemberIds() {
+    const memberIds = [];
+    for (const member of this.members.values()) {
+      const memberId = member.getId();
+      memberIds.push(memberId);
+    }
+
+    return memberIds;
+  }
+
   disbandParty() {
     this.members.clear();
     this.partyLeaderId = null;
