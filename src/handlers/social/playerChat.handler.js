@@ -3,6 +3,7 @@ import {
   getDungeonSessions,
   getPlayerSession,
 } from '../../session/sessions.js';
+import handleError from '../../utils/error/errorHandler.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import payload from '../../utils/packet/payload.js';
 
@@ -23,9 +24,9 @@ export const chatHandler = (socket, packetData) => {
     const playerSession = getPlayerSession();
     const player = playerSession.getPlayer(socket);
 
-    // 만약 던전이면
     const dungeonId = player.getDungeonId();
     if (dungeonId) {
+      // 만약 던전이면
       const dungeonSessions = getDungeonSessions();
       const dungeon = dungeonSessions.getDungeon(dungeonId);
       dungeon.notify(packet);
@@ -34,6 +35,6 @@ export const chatHandler = (socket, packetData) => {
       playerSession.notify(packet);
     }
   } catch (error) {
-    console.error(error);
+    handleError(error);
   }
 };
