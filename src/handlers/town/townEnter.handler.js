@@ -1,10 +1,7 @@
-import { config } from '../../config/config.js';
 import { getPlayerSession } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
-import makePacket from '../../utils/packet/makePacket.js';
 import Packet from '../../utils/packet/packet.js';
-import payload from '../../utils/packet/payload.js';
 
 import playerSpawnNotificationHandler from './playerSpawnNotification.handler.js';
 
