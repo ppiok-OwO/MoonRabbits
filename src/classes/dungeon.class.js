@@ -1,5 +1,5 @@
-import payloadData from "../utils/packet/payloadData.js";
-import BattleStatus from "./battleStatus.class.js";
+import payloadData from '../utils/packet/payloadData.js';
+import BattleStatus from './battleStatus.class.js';
 class Dungeon {
   constructor(dungeonId, dungeonCode) {
     this.id = dungeonId;
@@ -12,7 +12,7 @@ class Dungeon {
   // players는 player 인스턴스들이 담긴 일반 배열
   setPlayers(players) {
     for (const player of players) {
-      this.players.set(player.id, player);
+      this.players.set(player.socket, player);
     }
   }
 
@@ -21,9 +21,11 @@ class Dungeon {
     this.monsters = monsters;
   }
 
-  getDungeonInfo(){
-    const monsterStatus = this.monsters.map(monster =>{return monster.getMonsterStatus()});
-    payloadData.DungeonInfo(this.code,monsterStatus);
+  getDungeonInfo() {
+    const monsterStatus = this.monsters.map((monster) => {
+      return monster.getMonsterStatus();
+    });
+    payloadData.DungeonInfo(this.code, monsterStatus);
   }
 
   notify(packet) {
@@ -33,8 +35,14 @@ class Dungeon {
   }
 
   //전투 게시 함수 (플레이어와 몬스터 반드시 설정 필요.)
-  setBattleStatus(){
-    this.battleStatus = new BattleStatus(this, players, monsters);
+  setBattleStatus() {
+    this.battleStatus = new BattleStatus(
+      this,
+      Array.from(this.players, ([key, value]) => {
+        return value;
+      }),
+      this.monsters,
+    );
   }
 }
 

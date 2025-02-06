@@ -1,7 +1,7 @@
 //배틀로그 종류
 export const BattleLogId = {
-  menu: 0,
-  attack: 1,
+  menu: 1,
+  attack: 2,
   // 추가
   placeholder: 1000,
 };

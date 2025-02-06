@@ -31,6 +31,7 @@ export const onData = (socket) => async (data) => {
         const packetIdIndex = packetIdValues.findIndex((f) => f === packetId,);
         const packetType = Object.keys(config.packetId)[packetIdIndex];
 
+        console.log(packetType);
         // 역직렬화 
         const proto = getProtoMessages()[packetType];
         const packetData = proto.decode(packetDataBuffer);
@@ -47,6 +48,7 @@ export const onData = (socket) => async (data) => {
       }
     }
   } catch (error) {
+    console.log(error);
     throw new CustomError(ErrorCodes.PACKET_DECODE_ERROR, 'onData.js 패킷 디코딩 에러');
   }
 };

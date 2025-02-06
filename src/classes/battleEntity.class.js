@@ -189,10 +189,10 @@ class BattleEntity {
     if (hp <= 0) {
       hp = 1;
     }
-    addHp(hp * -1);
+    this.addHp(hp * -1);
   }
   subMp(mp) {
-    addMp(mp * -1);
+    this.addMp(mp * -1);
   }
 
   subTurn(turn) {

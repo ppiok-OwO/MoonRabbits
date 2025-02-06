@@ -7,10 +7,13 @@ import makePacket from '../../../utils/packet/makePacket.js';
 import payload from '../../../utils/packet/payload.js';
 import payloadData from '../../../utils/packet/payloadData.js';
 import Monster from '../../../classes/monster.class.js';
+import { screenDoneResponseHandler } from './ScreenDoneResponse.handler.js';
+
 
 let monsterIdx = 0;
 
 export const enterDungeonResponseHandler = (socket, dungeonCode) => {
+  console.log('enterDungeonResponseHandler');
   //던전 받기(이후에) 일단 개인에게만 전송
   const playerSession = getPlayerSession();
   const dungeonSessions = getDungeonSessions();
@@ -24,14 +27,21 @@ export const enterDungeonResponseHandler = (socket, dungeonCode) => {
 
     players.push(playerSession.getPlayer(socket));
     newDungeon.setPlayers(players);
+    players.forEach((player) => {
+      player.setDungeonId(newDungeon.id);
+    });
 
     //몬스터 3마리 추가
     for (let i = 0; i < 3; i++) {
       monsters.push(new Monster(monsterIdx++, 2001, 'testIntern'));
     }
+    console.log(`monsters.push(new Monster(monsterIdx++, 2001, 'testIntern')) ${monsters}`);
     newDungeon.setMonsters(monsters);
+    console.log(`newDungeon.setMonsters(monsters) ${newDungeon.monsters}`);
 
     newDungeon.setBattleStatus();
+
+
 
     const payloadEnterDungeon = payload.S_EnterDungeon(
       newDungeon.getDungeonInfo(),
@@ -39,11 +49,14 @@ export const enterDungeonResponseHandler = (socket, dungeonCode) => {
         return player.getPlayerStatus();
       }),
       payloadData.ScreenText('testScreenText', true),
-      payloadData.BattleLog('testBattleLog', true),
+      payloadData.BattleLog('testBattleLog', true,payloadData.BtnInfo('계속',true)),
     );
     newDungeon.notify(
       makePacket(PACKET_ID.S_EnterDungeon, payloadEnterDungeon),
     );
+
+
+    
 
     newDungeon.battleStatus.BattleLoop();
   } catch (error) {

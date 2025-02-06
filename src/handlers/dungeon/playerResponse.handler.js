@@ -5,29 +5,31 @@ import {
 } from '../../session/sessions.js';
 import payloadData from '../../utils/packet/payloadData.js';
 
+import { playerBattleLogResponseHandler } from './response/playerBattleLogResponse.handler.js';
+import { screenDoneResponseHandler } from './response/ScreenDoneResponse.handler.js';
+
 export const playerResponseHandler = (socket, packetData) => {
   const { responseCode } = packetData;
+  console.log('responseCode : ' + responseCode);
   const playerSession = getPlayerSession();
   const dungeonSessions = getDungeonSessions();
   const player = playerSession.getPlayer(socket);
   const dungeon = dungeonSessions.getDungeon(player.dungeonId);
   try {
+    if (responseCode == 0) {
+      screenDoneResponseHandler(dungeon);
+    }
     //이전 메시지에 따라서 확인
     switch (player.lastBattleLog) {
+      case 0:
+        break;
       //최상위 메뉴
       case config.battletag.Menu:
-        sendBattleLogMenu(dungeon, responseCode);
+        sendBattleLogMenu(dungeon, player, responseCode);
+        break;
       //몬스터 공격
       case config.battletag.Attack:
-        attackMonster(dungeon, responseCode);
-        break;
-      case 2:
-        break;
-      case 3:
-        break;
-      case 4:
-        break;
-      case 5:
+        attackMonster(dungeon, player, responseCode);
         break;
       default:
     }
@@ -40,11 +42,12 @@ const sendBattleLogMenu = async (dungeon, player, responseCode) => {
   switch (responseCode) {
     case config.battletag.Attack:
       const btns = [];
+      const playerSession = getPlayerSession();
       dungeon.monsters.forEach((monster) => {
         btns.push(payloadData.BtnInfo(`${monster.name}을 공격`, true));
       });
       playerBattleLogResponseHandler(
-        playerSession.getPlayerIndex(controlEntity.id),
+        playerSession.getPlayerById(controlEntity.id),
         config.battletag.Attack,
         '',
         false,
@@ -55,10 +58,13 @@ const sendBattleLogMenu = async (dungeon, player, responseCode) => {
   }
 };
 
-const attackMonster = async (dungeon, player, responseCode) => {
+const attackMonster = (dungeon, player, responseCode) => {
+  console.log(
+    `dungeon.monsters[responseCode] ${dungeon.monsters[responseCode]}`,
+  );
   dungeon.battleStatus.attackEntity(
-    dungeon.battlestatus.getPlayerIndex(player.id),
-    dungeon.battlestatus.getMonsterIndex(dungeon.monsters[responseCode].idx),
+    dungeon.battleStatus.getPlayerIndex(player.id),
+    dungeon.battleStatus.getMonsterIndex(dungeon.monsters[responseCode].idx),
   );
   dungeon.battleStatus.battleLoop();
 };
