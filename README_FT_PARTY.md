@@ -16,6 +16,13 @@
 | playerCount   | int      | 파티 멤버 수       |
 | members       | playerId | repeated      |
 
+### C_JoinParty
+
+| 필드명      | 타입  | 설명                   |
+| -------- | --- | -------------------- |
+| partyId  | int | 파티 ID                |
+| memberId | int | 파티에 추가된 멤버의 playerId |
+
 ### S_JoinParty
 
 | 필드명           | 타입       | 설명            |
@@ -24,6 +31,13 @@
 | partyLeaderId | int      | 파티장의 playerId |
 | playerCount   | int      | 파티 멤버 수       |
 | members       | playerId | repeated      |
+
+### C_LeaveParty
+
+| 필드명      | 타입  | 설명                  |
+| -------- | --- | ------------------- |
+| partyId  | int | 파티 ID               |
+| memberId | int | 파티를 떠난 멤버의 playerId 
 
 ### S_LeaveParty
 
