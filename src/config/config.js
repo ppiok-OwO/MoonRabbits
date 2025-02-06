@@ -1,9 +1,14 @@
-import { PORT, HOST, CLIENT_VERSION } from '../constants/env.js';
 import {
-  PACKET_ID,
-  PACKET_ID_LENGTH,
-  PACKET_SIZE,
-} from '../constants/header.js';
+  PORT,
+  HOST,
+  CLIENT_VERSION,
+  DB1_NAME,
+  DB1_USER,
+  DB1_PASSWORD,
+  DB1_HOST,
+  DB1_PORT,
+} from '../constants/env.js';
+import { PACKET_ID, PACKET_ID_LENGTH, PACKET_SIZE } from '../constants/header.js';
 import { baseStatData } from '../constants/PlayerBaseStat.js';
 export const config = {
   server: {
@@ -17,6 +22,15 @@ export const config = {
     totalSize: PACKET_SIZE,
     idLength: PACKET_ID_LENGTH,
   },
+  database: {
+    MOONRABBITS_DB: {
+      name: DB1_NAME,
+      user: DB1_USER,
+      password: DB1_PASSWORD,
+      host: DB1_HOST,
+      port: DB1_PORT,
+    },
+  },
   packetId: {
     C_Enter: PACKET_ID.C_Enter,
     S_Enter: PACKET_ID.S_Enter,
@@ -27,6 +41,6 @@ export const config = {
     S_Chat: PACKET_ID.S_Chat,
   },
   newPlayerStatData: {
-    baseStatData
-  }
+    baseStatData,
+  },
 };
