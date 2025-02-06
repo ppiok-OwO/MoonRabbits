@@ -15,7 +15,7 @@ class Player extends User {
   }
 
   setNewPlayerInfo(classCode, nickname) {
-    const newplayerstat = config.newPlayerStatData.baseStatData[classCode];
+    const newplayerstat = config.newPlayerStatData.BASE_STAT_DATA[classCode];
     this.stat = new stats(
       payloadData.StatInfo(
         newplayerstat.level,
@@ -33,7 +33,12 @@ class Player extends User {
     this.nickname = nickname;
   }
   sendPacket(packet) {
-    this.socket.write(packet);
+    try{
+      this.socket.write(packet);
+    }
+    catch(error){
+      console.error(error);
+    }
   }
 
   setPlayerInfo(stat = new stats(), classCode) {

@@ -4,8 +4,8 @@ import {
   PACKET_ID_LENGTH,
   PACKET_SIZE,
 } from '../constants/header.js';
-import { baseStatData } from '../constants/PlayerBaseStat.js';
-import { BattleLogId } from '../constants/BattleLog.js';
+import { BASE_STAT_DATA } from '../constants/PlayerBaseStat.js';
+import { BATTLE_LOG_ID } from '../constants/BattleLog.js';
 export const config = {
   server: {
     port: PORT,
@@ -43,10 +43,10 @@ export const config = {
     S_MonsterAction: PACKET_ID.S_MonsterAction,
   },
   newPlayerStatData: {
-    baseStatData,
+    BASE_STAT_DATA,
   },
   battletag: {
-    Menu: BattleLogId.menu,
-    Attack: BattleLogId.attack,
+    Menu: BATTLE_LOG_ID.menu,
+    Attack: BATTLE_LOG_ID.attack,
   },
 };

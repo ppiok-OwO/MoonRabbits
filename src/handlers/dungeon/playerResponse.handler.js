@@ -14,11 +14,13 @@ export const playerResponseHandler = (socket, packetData) => {
   const playerSession = getPlayerSession();
   const dungeonSessions = getDungeonSessions();
   const player = playerSession.getPlayer(socket);
+  console.log('player.lastBattleLog : ' + player.lastBattleLog);
   const dungeon = dungeonSessions.getDungeon(player.dungeonId);
   try {
     if (responseCode == 0) {
       screenDoneResponseHandler(dungeon);
     }
+    dungeon.battleStatus.battleLoop();
     //이전 메시지에 따라서 확인
     switch (player.lastBattleLog) {
       case 0:
@@ -40,17 +42,25 @@ export const playerResponseHandler = (socket, packetData) => {
 
 const sendBattleLogMenu = async (dungeon, player, responseCode) => {
   switch (responseCode) {
-    case config.battletag.Attack:
+    case 1:
       const btns = [];
-      const playerSession = getPlayerSession();
+      //적 찾기
+      const battleStatus = dungeon.battleStatus;
       dungeon.monsters.forEach((monster) => {
-        btns.push(payloadData.BtnInfo(`${monster.name}을 공격`, true));
+        btns.push(
+          payloadData.BtnInfo(
+            `${monster.name}을 공격`,
+            battleStatus.entity[battleStatus.getMonsterIndex(monster.idx)]
+              .getHp() > 0,
+          ),
+        );
       });
+
       playerBattleLogResponseHandler(
-        playerSession.getPlayerById(controlEntity.id),
+        player,
         config.battletag.Attack,
         '',
-        false,
+        true,
         btns,
       );
       break;
@@ -60,11 +70,14 @@ const sendBattleLogMenu = async (dungeon, player, responseCode) => {
 
 const attackMonster = (dungeon, player, responseCode) => {
   console.log(
-    `dungeon.monsters[responseCode] ${dungeon.monsters[responseCode]}`,
+    `dungeon.monsters[responseCode] ${dungeon.monsters[responseCode - 1]}`,
   );
   dungeon.battleStatus.attackEntity(
     dungeon.battleStatus.getPlayerIndex(player.id),
-    dungeon.battleStatus.getMonsterIndex(dungeon.monsters[responseCode].idx),
+    dungeon.battleStatus.getMonsterIndex(
+      dungeon.monsters[responseCode - 1].idx,
+    ),
   );
+
   dungeon.battleStatus.battleLoop();
 };

@@ -9,7 +9,7 @@ import { monsterActionResponseHandler } from '../handlers/dungeon/response/monst
 //몬스터, 플레이어 통합 관리용 클래스스
 class BattleEntity {
   //side 팀을 의미하는 구분 (0,1 로 구분)
-  constructor(dungeon, id, side = 0, Ai = true, stat = new stats()) {
+  constructor(dungeon, id, name, side = 0, Ai = true, stat = new stats()) {
     this.dungeon = dungeon;
     this.id = id;
     this.side = side;
@@ -155,20 +155,27 @@ class BattleEntity {
       this.hp = 0;
     } else if (this.hp + hp > this.maxHp) {
       this.hp = this.maxHp;
+    } else {
+      this.hp += hp;
+      console.log('this.hp' + this.hp);
+      console.log('hp' + hp);
     }
+    console.log('this.hp' + this.hp);
+    console.log('hp' + hp);
+
     if (this.Ai) {
       monsterSetHpResponseHandler(this.dungeon, this.id, this.hp);
-      if (this.hp <= 0) {
-        monsterActionResponseHandler(this.dungeon, this.id, 4);
-      } else {
-        monsterActionResponseHandler(this.dungeon, this.id, 5);
-      }
+      // if (this.hp <= 0) {
+      //   monsterActionResponseHandler(this.dungeon, this.id, 5);
+      // } else {
+      //   monsterActionResponseHandler(this.dungeon, this.id, 4);
+      // }
     } else {
       playerSetHpResponseHandler(this.dungeon, this.id, this.hp);
       if (this.hp <= 0) {
-        playerActionResponseHandler(this.dungeon, this.id, 4);
-      } else {
         playerActionResponseHandler(this.dungeon, this.id, 5);
+      } else {
+        playerActionResponseHandler(this.dungeon, this.id, 4);
       }
     }
     return this.hp;
@@ -178,6 +185,8 @@ class BattleEntity {
       return -1;
     } else if (this.mp + mp > this.maxMp) {
       this.mp = this.maxMp;
+    } else {
+      this.mp += mp;
     }
     if (!this.Ai) {
       playerSetMpResponseHandler(this.dungeon, this.id, this.mp);
@@ -195,9 +204,17 @@ class BattleEntity {
     this.addMp(mp * -1);
   }
 
-  subTurn(turn) {
-    if (this.turn - turn < 0) return -1;
-    return (this.turn -= turn);
+  subTurn(battleStatus, turn = 1) {
+    this.turn -= turn;
+
+    if (this.turn <= 0) {
+      battleStatus.nextTurnIndex();
+      this.resetTurn();
+    }
+    return this.turn;
+  }
+  resetTurn() {
+    this.turn = 1;
   }
 }
 

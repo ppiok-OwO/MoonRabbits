@@ -2,5 +2,5 @@ import { enterDungeonResponseHandler } from '../dungeon/response/enterDungeonRes
 
 export const enterDungeonHandler = (socket, packetData) => {
   const { dungeonCode } = packetData;
-  enterDungeonResponseHandler(socket, dungeonCode);
+  enterDungeonResponseHandler(socket, dungeonCode + 5000);
 };

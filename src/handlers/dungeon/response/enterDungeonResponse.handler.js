@@ -9,7 +9,6 @@ import payloadData from '../../../utils/packet/payloadData.js';
 import Monster from '../../../classes/monster.class.js';
 import { screenDoneResponseHandler } from './ScreenDoneResponse.handler.js';
 
-
 let monsterIdx = 0;
 
 export const enterDungeonResponseHandler = (socket, dungeonCode) => {
@@ -33,32 +32,33 @@ export const enterDungeonResponseHandler = (socket, dungeonCode) => {
 
     //몬스터 3마리 추가
     for (let i = 0; i < 3; i++) {
-      monsters.push(new Monster(monsterIdx++, 2001, 'testIntern'));
+      monsters.push(new Monster(i, 2001, 'testIntern'));
     }
-    console.log(`monsters.push(new Monster(monsterIdx++, 2001, 'testIntern')) ${monsters}`);
+    console.log(
+      `monsters.push(new Monster(monsterIdx++, 2001, 'testIntern')) ${monsters}`,
+    );
     newDungeon.setMonsters(monsters);
     console.log(`newDungeon.setMonsters(monsters) ${newDungeon.monsters}`);
 
     newDungeon.setBattleStatus();
 
+    players.forEach((player) => {
+      const payloadEnterDungeon = payload.S_EnterDungeon(
+        newDungeon.getDungeonInfo(),
+        player.getPlayerStatus(),
+        payloadData.ScreenText('testScreenText', true),
+        payloadData.BattleLog(
+          'testBattleLog',
+          true,
+          payloadData.BtnInfo('계속', true),
+        ),
+      );
 
+      player.sendPacket(
+        makePacket(PACKET_ID.S_EnterDungeon, payloadEnterDungeon),
+      );
+    });
 
-    const payloadEnterDungeon = payload.S_EnterDungeon(
-      newDungeon.getDungeonInfo(),
-      players.map((player) => {
-        return player.getPlayerStatus();
-      }),
-      payloadData.ScreenText('testScreenText', true),
-      payloadData.BattleLog('testBattleLog', true,payloadData.BtnInfo('계속',true)),
-    );
-    newDungeon.notify(
-      makePacket(PACKET_ID.S_EnterDungeon, payloadEnterDungeon),
-    );
-
-
-    
-
-    newDungeon.battleStatus.BattleLoop();
   } catch (error) {
     console.error(error);
   }
