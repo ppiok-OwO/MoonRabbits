@@ -37,10 +37,7 @@ export const onData = (socket) => async (data) => {
       try {
         packetData = proto.decode(packetDataBuffer);
       } catch (error) {
-        throw new CustomError(
-          ErrorCodes.PACKET_DECODE_ERROR,
-          'onData 패킷 디코딩 에러',
-        );
+        socket.emit('error', new CustomError(ErrorCodes.PACKET_DECODE_ERROR, 'onData 패킷 디코딩 에러'));
       }
 
       // 디버그용 콘솔 출력, packetId 필터링해서 사용
