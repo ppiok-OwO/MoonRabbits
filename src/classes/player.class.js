@@ -14,7 +14,7 @@ class Player extends User {
     this.lastBattleLog = 0;
   }
 
-  setNewPlayerInfo(classCode) {
+  setNewPlayerInfo(classCode, nickname) {
     const newplayerstat = config.newPlayerStatData.baseStatData[classCode];
     this.stat = new stats(
       payloadData.StatInfo(
@@ -30,6 +30,7 @@ class Player extends User {
       ),
     );
     this.class = classCode;
+    this.nickname = nickname;
   }
   sendPacket(packet) {
     this.socket.write(packet);
@@ -52,6 +53,15 @@ class Player extends User {
   }
   getStatInfo() {
     return this.stat.getPlayerStats();
+  }
+  getPlayerInfo() {
+    return payloadData.PlayerInfo(
+      this.id,
+      this.nickname,
+      this.class,
+      this.position,
+      this.getStatInfo(),
+    );
   }
 
   setDungeonId(dungeonId) {

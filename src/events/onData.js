@@ -1,6 +1,8 @@
 import { config } from '../config/config.js';
 import handlers from '../handlers/index.js';
 import { getProtoMessages } from '../init/loadProtos.js';
+import CustomError from '../utils/error/customError.js';
+import { ErrorCodes } from '../utils/error/errorCodes.js';
 import printPacket from '../utils/log/printPacket.js';
 
 export const onData = (socket) => async (data) => {
@@ -45,7 +47,7 @@ export const onData = (socket) => async (data) => {
       }
     }
   } catch (error) {
-    console.error(`패킷 수신중 오류... ${error}`);
+    throw new CustomError(ErrorCodes.PACKET_DECODE_ERROR, 'onData.js 패킷 디코딩 에러');
   }
 };
 
