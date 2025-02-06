@@ -1,5 +1,5 @@
 import { config } from '../config/config.js';
-import handlers from '../handlers/index.js';
+import { getHandlerByPacketId } from '../handlers/index.js';
 import { getProtoMessages } from '../init/loadProtos.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
@@ -41,9 +41,8 @@ export const onData = (socket) => async (data) => {
         }
 
         // 패킷타입별 핸들러 실행
-        const handler = handlers[packetId];
-        if (!handler) console.log('핸들러가 정의되지 않은 패킷ID : ', packetId);
-        else handler(socket, packetData);
+        const handler = getHandlerByPacketId(packetId);
+        handler(socket, packetData);
       }
     }
   } catch (error) {
