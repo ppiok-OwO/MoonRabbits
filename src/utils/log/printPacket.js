@@ -1,24 +1,15 @@
 import { config } from "../../config/config.js";
-import { PACKET_ID } from "../../constants/header.js";
 
 const printPacket = (packetSize, packetId, packetData, str_in_out = '') => {
   const packetType = Object.entries(config.packetId).find(([, id]) => id === packetId)[0];
+  const color = str_in_out==='in'?33:36;
 
-  if ((str_in_out === 'in')) console.log('---------- received Packet ----------');
-  else if ((str_in_out === 'out'))
-    console.log('---------- sent Packet ----------');
-  else console.log('---------- Packet ----------')
-  console.log('-Header');
-  console.log(`    packetSize : ${packetSize}`);
-  console.log(`    packetId : ${packetId} (${packetType})`);
-  console.log();
-  console.log('-PacketData');
+  console.log(`\x1b[${color}m[${packetType} 패킷]\x1b[0m`);
   printObject(packetData);
-  //console.log(`${Object.entries(packetData).reduce((packetData, data) => packetData + `    ${data[0]} : ${data[1]}\n`, '')}`);
-  console.log('---------------------------------');
+  console.log();
 };
 
-const printObject = (object, width = 4, isArray=false) => {
+const printObject = (object, width = 2, isArray=false) => {
   const objectKeyValues = Object.entries(object);
   objectKeyValues.forEach(([key, value], index) => {
       if (typeof value === 'number' && !Number.isInteger(value)) value = value.toFixed(1);
