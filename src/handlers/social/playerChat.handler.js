@@ -1,11 +1,9 @@
-import { PACKET_ID } from '../../constants/header.js';
 import {
   getDungeonSessions,
   getPlayerSession,
 } from '../../session/sessions.js';
 import handleError from '../../utils/error/errorHandler.js';
-import makePacket from '../../utils/packet/makePacket.js';
-import payload from '../../utils/packet/payload.js';
+import Packet from '../../utils/packet/packet.js';
 
 export const chatHandler = (socket, packetData) => {
   try {
@@ -17,8 +15,7 @@ export const chatHandler = (socket, packetData) => {
     // (2) 예외 처리
 
     // 패킷 직렬화
-    const chatPayload = payload.S_Chat(playerId, chatMsg);
-    const packet = makePacket(PACKET_ID.S_Chat, chatPayload);
+    const packet = Packet.S_Chat(playerId, chatMsg);
 
     // 플레이어 세션을 통해 플레이어 인스턴스를 불러온다.
     const playerSession = getPlayerSession();
