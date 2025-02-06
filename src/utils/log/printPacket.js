@@ -1,5 +1,4 @@
 import { config } from "../../config/config.js";
-import { PACKET_ID } from "../../constants/header.js";
 
 const printPacket = (packetSize, packetId, packetData, str_in_out = '') => {
   const packetType = Object.entries(config.packetId).find(([, id]) => id === packetId)[0];

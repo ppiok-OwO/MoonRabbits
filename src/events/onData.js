@@ -11,42 +11,51 @@ export const onData = (socket) => async (data) => {
     return;
   }
 
-  try {
-    socket.buffer = Buffer.concat([socket.buffer, data]);
+  socket.buffer = Buffer.concat([socket.buffer, data]);
 
-    const packetSizeByte = 4; //config.header.sizeByte;
-    const packetIdByte = 1; //config.header.idByte;
-    const headerSize = packetSizeByte + packetIdByte;
+  const packetSizeByte = 4; //config.header.sizeByte;
+  const packetIdByte = 1; //config.header.idByte;
+  const headerSize = packetSizeByte + packetIdByte;
 
-    while (socket.buffer.length >= headerSize) {
-      const packetSize = socket.buffer.readUInt32LE(0);
-      const packetId = socket.buffer.readUInt8(packetSizeByte);
+  while (socket.buffer.length >= headerSize) {
+    const packetSize = socket.buffer.readUInt32LE(0);
+    const packetId = socket.buffer.readUInt8(packetSizeByte);
 
-      if (socket.buffer.length >= packetSize) {
-        const packetDataBuffer = socket.buffer.slice(headerSize, packetSize);
-        socket.buffer = socket.buffer.slice(packetSize);
+    if (socket.buffer.length >= packetSize) {
+      const packetDataBuffer = socket.buffer.slice(headerSize, packetSize);
+      socket.buffer = socket.buffer.slice(packetSize);
 
-        // 패킷 아이디 -> 타입
-        const packetIdValues = Object.values(config.packetId);
-        const packetIdIndex = packetIdValues.findIndex((f) => f === packetId,);
-        const packetType = Object.keys(config.packetId)[packetIdIndex];
+      // 패킷 아이디 -> 타입
+      const packetIdValues = Object.values(config.packetId);
+      const packetIdIndex = packetIdValues.findIndex((f) => f === packetId);
+      const packetType = Object.keys(config.packetId)[packetIdIndex];
 
-        // 역직렬화 
-        const proto = getProtoMessages()[packetType];
-        const packetData = proto.decode(packetDataBuffer);
+      const proto = getProtoMessages()[packetType];
+      let packetData;
 
-        // 디버그용 콘솔 출력, packetId 필터링해서 사용
-        if (packetId >= 0) {
-          printPacket(packetSize, packetId, packetData, 'in');
-        }
+      // 역직렬화
+      try {
+        packetData = proto.decode(packetDataBuffer);
+      } catch (error) {
+        throw new CustomError(
+          ErrorCodes.PACKET_DECODE_ERROR,
+          'onData 패킷 디코딩 에러',
+        );
+      }
 
-        // 패킷타입별 핸들러 실행
+      // 디버그용 콘솔 출력, packetId 필터링해서 사용
+      if (packetId >= 0) {
+        printPacket(packetSize, packetId, packetData, 'in');
+      }
+
+      // 패킷타입별 핸들러 실행
+      try {
         const handler = getHandlerByPacketId(packetId);
         handler(socket, packetData);
+      } catch (error) {
+        socket.emit('error', new CustomError(error.code?error.code:ErrorCodes.HANDLER_ERROR, error));
       }
     }
-  } catch (error) {
-    throw new CustomError(ErrorCodes.PACKET_DECODE_ERROR, 'onData.js 패킷 디코딩 에러');
   }
 };
 
