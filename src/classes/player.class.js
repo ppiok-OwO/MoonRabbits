@@ -11,22 +11,28 @@ class Player extends User {
     this.stat = null;
     this.class = null;
     this.dungeonId = null;
+    this.lastBattleLog = 0;
   }
 
   setNewPlayerInfo(classCode) {
     const newplayerstat = config.newPlayerStatData.baseStatData[classCode];
-    this.stat = new stats(payloadData.StatInfo(
-      newplayerstat.level,
-      newplayerstat.hp,
-      newplayerstat.maxHp,
-      newplayerstat.mp,
-      newplayerstat.maxMp,
-      newplayerstat.atk,
-      newplayerstat.def,
-      newplayerstat.magic,
-      newplayerstat.speed,
-    ));
+    this.stat = new stats(
+      payloadData.StatInfo(
+        newplayerstat.level,
+        newplayerstat.hp,
+        newplayerstat.maxHp,
+        newplayerstat.mp,
+        newplayerstat.maxMp,
+        newplayerstat.atk,
+        newplayerstat.def,
+        newplayerstat.magic,
+        newplayerstat.speed,
+      ),
+    );
     this.class = classCode;
+  }
+  sendPacket(packet) {
+    this.socket.write(packet);
   }
 
   setPlayerInfo(stat = new stats(), classCode) {
@@ -44,7 +50,7 @@ class Player extends User {
       this.stat.getMp(),
     );
   }
-  getStatInfo(){
+  getStatInfo() {
     return this.stat.getPlayerStats();
   }
 
@@ -54,6 +60,9 @@ class Player extends User {
 
   getDungeonId() {
     return this.dungeonId;
+  }
+  getPlayerStat() {
+    return this.stat;
   }
 
   resetDungeonId() {

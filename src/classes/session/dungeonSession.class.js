@@ -6,7 +6,9 @@ class DungeonSession {
 
   setDungeon(dungeonCode) {
     const dungeonId = uuidV4();
-    this.dungeons.set(dungeonId, new Dungeon(dungeonId, dungeonCode));
+    const newDungeon = new Dungeon(dungeonId, dungeonCode)
+    this.dungeons.set(dungeonId, newDungeon);
+    return newDungeon;
   }
 
   removeDungeon(dungeonId) {

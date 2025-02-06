@@ -5,6 +5,7 @@ import {
   PACKET_SIZE,
 } from '../constants/header.js';
 import { baseStatData } from '../constants/PlayerBaseStat.js';
+import { BattleLogId } from '../constants/BattleLog.js';
 export const config = {
   server: {
     port: PORT,
@@ -23,6 +24,10 @@ export const config = {
     S_Spawn: PACKET_ID.S_Spawn,
   },
   newPlayerStatData: {
-    baseStatData
-  }
+    baseStatData,
+  },
+  battletag: {
+    Menu: BattleLogId.menu,
+    Attack: BattleLogId.attack,
+  },
 };
