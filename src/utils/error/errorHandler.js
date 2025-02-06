@@ -1,4 +1,5 @@
 import { config } from '../../config/config.js';
+import { getPlayerSession } from '../../session/sessions.js';
 import makePacket from '../packet/makePacket.js';
 import payload from '../packet/payload.js';
 import { ErrorCodes } from './errorCodes.js';
@@ -8,6 +9,10 @@ const handleError = (socket, error) => {
   let errorReponsePayload;
   let errorReponsePacket;
   let errorReponseCode;
+  
+  const playerId = getPlayerSession().getPlayer(socket).id;
+  const nickname = getPlayerSession().getPlayer(socket).nickname;
+
   switch (error.code) {
     case ErrorCodes.CLIENT_VERSION_MISMATCH:
     case ErrorCodes.GAME_NOT_FOUND:
@@ -20,10 +25,12 @@ const handleError = (socket, error) => {
     case ErrorCodes.UNKNOWN_HANDLER_ID:
     case ErrorCodes.USER_NOT_FOUND:
       console.error('\x1b[31m-------------------- 커스텀 에러 발생 --------------------\x1b[0m');
+      console.error(`클라이언트: ${playerId} (${nickname?`${nickname}`:`로그인하지 않음`})`);
       console.error(error);
       break;
     default:
       console.error('\x1b[31m-------------------- 일반 에러 발생 --------------------\x1b[0m');
+      console.error(`클라이언트: ${playerId} (${nickname?`${nickname}`:`로그인하지 않음`})`);
       console.error(error);
       break;
   }
