@@ -1,5 +1,5 @@
-import stats from './stats.class';
-import payloadData from '../utils/packet/payloadData';
+import stats from './stats.class.js';
+import payloadData from '../utils/packet/payloadData.js';
 
 class Monster {
   constructor(monsterIdx, monsterModel, monsterName, stat = new stats()) {
@@ -18,8 +18,12 @@ class Monster {
       this.idx,
       this.model,
       this.name,
-      this.stat.getHp,
+      this.stat.getHp(),
     );
+  }
+
+  getMonsterStat(){
+    return this.stat;
   }
 }
 
