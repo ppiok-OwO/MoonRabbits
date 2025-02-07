@@ -1,7 +1,7 @@
-import { config } from "../../config/config.js";
+import { packetIdEntries } from "../../config/config.js";
 
 const printPacket = (packetSize, packetId, packetData, str_in_out = '') => {
-  const packetType = Object.entries(config.packetId).find(([, id]) => id === packetId)[0];
+  const packetType = packetIdEntries.find(([, id]) => id === packetId)[0];
   const color = str_in_out==='in'?33:36;
 
   console.log(`\x1b[${color}m[${packetType} 패킷]\x1b[0m`);

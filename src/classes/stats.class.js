@@ -2,7 +2,7 @@ import payloadData from '../utils/packet/payloadData.js';
 
 class stats {
   constructor(
-    statInfo = payloadData.StatInfo(1, 100, 100, 100, 100, 10, 5, 10, 50),
+    statInfo = payloadData.StatInfo(1, 100, 100, 100, 100, 20, 5, 10, 50),
   ) {
     const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed } = statInfo;
     this.level = level;

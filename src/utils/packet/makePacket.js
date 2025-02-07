@@ -1,12 +1,10 @@
-import { config } from '../../config/config.js';
+import { packetIdEntries } from '../../config/config.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
 import printPacket from '../log/printPacket.js';
 
 function makePacket(packetId, packetData) {
   // 패킷 아이디 -> 타입
-  const packetIdValues = Object.values(config.packetId);
-  const packetIdIndex = packetIdValues.findIndex((f) => f === packetId);
-  const packetType = Object.keys(config.packetId)[packetIdIndex];
+  const packetType = packetIdEntries.find(([, id]) => id === packetId)[0];
 
   // 페이로드
   const proto = getProtoMessages()[packetType];
