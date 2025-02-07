@@ -19,6 +19,13 @@ class PlayerSession {
   getPlayer(socket) {
     return this.players.get(socket);
   }
+  getPlayerById(id){
+    for (const player of this.players.values()) {
+      if(player.id === id)
+        return player;
+    }
+    return -1;
+  }
 
   getAllPlayers() {
     // return this.players.values();

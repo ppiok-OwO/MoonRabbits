@@ -1,4 +1,4 @@
-export const baseStatData = {
+export const BASE_STAT_DATA = {
     1001: {
       level: 1,
       hp: 300,
