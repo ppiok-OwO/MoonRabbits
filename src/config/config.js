@@ -4,7 +4,8 @@ import {
   PACKET_ID_LENGTH,
   PACKET_SIZE,
 } from '../constants/header.js';
-import { baseStatData } from '../constants/PlayerBaseStat.js';
+import { BASE_STAT_DATA } from '../constants/PlayerBaseStat.js';
+import { BATTLE_LOG_ID } from '../constants/BattleLog.js';
 export const config = {
   server: {
     port: PORT,
@@ -21,10 +22,11 @@ export const config = {
     C_Enter: PACKET_ID.C_Enter,
     S_Enter: PACKET_ID.S_Enter,
     S_Spawn: PACKET_ID.S_Spawn,
-    C_Animation: PACKET_ID.C_Animation,
-    S_Animation: PACKET_ID.S_Animation,
+    S_Despawn: PACKET_ID.S_Despawn,
     C_Move: PACKET_ID.C_Move,
     S_Move: PACKET_ID.S_Move,
+    C_Animation: PACKET_ID.C_Animation,
+    S_Animation: PACKET_ID.S_Animation,
     C_Chat: PACKET_ID.C_Chat,
     S_Chat: PACKET_ID.S_Chat,
     C_EnterDungeon: PACKET_ID.C_EnterDungeon,
@@ -41,6 +43,10 @@ export const config = {
     S_MonsterAction: PACKET_ID.S_MonsterAction,
   },
   newPlayerStatData: {
-    baseStatData
-  }
+    BASE_STAT_DATA,
+  },
+  battletag: {
+    Menu: BATTLE_LOG_ID.menu,
+    Attack: BATTLE_LOG_ID.attack,
+  },
 };
