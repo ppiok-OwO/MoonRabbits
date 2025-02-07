@@ -50,3 +50,5 @@ export const config = {
     Attack: BATTLE_LOG_ID.attack,
   },
 };
+
+export const packetIdEntries = Object.entries(config.packetId);
