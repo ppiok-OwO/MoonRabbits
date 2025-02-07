@@ -21,18 +21,13 @@ function makePacket(packetId, packetData) {
   const packetIdBuffer = Buffer.alloc(1);
   packetIdBuffer.writeUInt8(packetId, 0);
 
-  // 헤더 만들기
-  const headerBuffer = Buffer.concat([packetSizeBuffer, packetIdBuffer]);
-
   // 디버그용 콘솔 출력, packetId 필터링해서 사용
   if (packetId >= 0) {
     printPacket(packetSize, packetId, packetData, 'out');
   }
 
   // 패킷 만들기
-  const packetBuffer = Buffer.concat([headerBuffer, packetDataBuffer]);
-
-  return packetBuffer;
+  return Buffer.concat([packetSizeBuffer, packetIdBuffer, packetDataBuffer]);
 }
 
 export default makePacket;

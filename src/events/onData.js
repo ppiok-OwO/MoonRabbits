@@ -23,7 +23,7 @@ export const onData = (socket) => async (data) => {
     const packetSize = socket.buffer.readUInt32LE(0);
     if(!packetSize) socket.emit('error', new CustomError(ErrorCodes.MISSING_FIELDS, 'packetSize is missing in header'));
     const packetId = socket.buffer.readUInt8(config.packet.totalSize);
-    if(!packetId) socket.emit('error', new CustomError(ErrorCodes.MISSING_FIELDS, 'packetId is missing in header'));
+    if(packetId === null || packetId === undefined ) socket.emit('error', new CustomError(ErrorCodes.MISSING_FIELDS, 'packetId is missing in header'));
 
     if (socket.buffer.length >= packetSize) {
       const packetDataBuffer = socket.buffer.slice(headerSize, packetSize);
