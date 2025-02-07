@@ -1,9 +1,14 @@
-import { PORT, HOST, CLIENT_VERSION } from '../constants/env.js';
 import {
-  PACKET_ID,
-  PACKET_ID_LENGTH,
-  PACKET_SIZE,
-} from '../constants/header.js';
+  PORT,
+  HOST,
+  CLIENT_VERSION,
+  DB1_NAME,
+  DB1_USER,
+  DB1_PASSWORD,
+  DB1_HOST,
+  DB1_PORT,
+} from '../constants/env.js';
+import { PACKET_ID, PACKET_ID_LENGTH, PACKET_SIZE } from '../constants/header.js';
 import { BASE_STAT_DATA } from '../constants/PlayerBaseStat.js';
 import { BATTLE_LOG_ID } from '../constants/BattleLog.js';
 export const config = {
@@ -17,6 +22,15 @@ export const config = {
   packet: {
     totalSize: PACKET_SIZE,
     idLength: PACKET_ID_LENGTH,
+  },
+  databases: {
+    MOONRABBITS_DB: {
+      name: DB1_NAME,
+      user: DB1_USER,
+      password: DB1_PASSWORD,
+      host: DB1_HOST,
+      port: DB1_PORT,
+    },
   },
   packetId: {
     C_Enter: PACKET_ID.C_Enter,

@@ -22,7 +22,7 @@ const createSchemas = async () => {
   const sqlDir = path.join(__dirname, '../sql');
   try {
     // MOONRABBITS_DB SQL 파일 실행
-    await executeSqlFile(pools.MOONRABBITS_DB, path.join(sqlDir, 'moonrabbits_db.sql'));
+    await executeSqlFile(pools.MOONRABBITS_DB, path.join(sqlDir, 'MOONRABBITS_DB.sql'));
 
     console.log('데이터베이스 테이블이 성공적으로 생성되었습니다.');
   } catch (error) {

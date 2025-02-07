@@ -2,7 +2,7 @@ import mysql from 'mysql2/promise';
 import { config } from '../config/config.js';
 import { formatDate } from '../utils/dateFormatter.js';
 
-const { database } = config;
+const { databases } = config;
 
 // 데이터베이스 커넥션 풀 생성 함수
 const createPool = (dbConfig) => {
@@ -37,7 +37,7 @@ const createPool = (dbConfig) => {
 // 여러 데이터베이스 커넥션 풀 생성
 const pools = {
   // GAME_DB: createPool(databases.GAME_DB),
-  MOONRABBITS_DB: createPool(database.MOONRABBITS_DB),
+  MOONRABBITS_DB: createPool(databases.MOONRABBITS_DB),
 };
 
 export default pools;
