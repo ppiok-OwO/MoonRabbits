@@ -2,6 +2,8 @@ import {
   getDungeonSessions,
   getPlayerSession,
 } from '../../session/sessions.js';
+import CustomError from '../../utils/error/customError.js';
+import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import handleError from '../../utils/error/errorHandler.js';
 import Packet from '../../utils/packet/packet.js';
 
@@ -12,6 +14,16 @@ export const animationHandler = (socket, packetData) => {
     // 플레이어 세션을 통해 플레이어 인스턴스를 불러온다.
     const playerSession = getPlayerSession();
     const player = playerSession.getPlayer(socket);
+
+    if (!player) {
+      socket.emit(
+        'error',
+        new CustomError(
+          ErrorCodes.USER_NOT_FOUND,
+          '플레이어 정보를 찾을 수 없습니다.',
+        ),
+      );
+    }
 
     // 패킷 직렬화
     const packet = Packet.S_Animation(player.getId(), animCode);
