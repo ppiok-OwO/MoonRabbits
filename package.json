@@ -16,6 +16,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bull": "^4.16.5",
+    "bullmq": "^5.40.0",
     "dotenv": "^16.4.7",
     "lodash": "^4.17.21",
     "long": "^5.2.4",
