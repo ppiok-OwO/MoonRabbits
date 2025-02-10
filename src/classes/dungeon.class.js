@@ -1,12 +1,12 @@
 import payloadData from '../utils/packet/payloadData.js';
-import BattleStatus from './battleStatus.class.js';
+//import BattleStatus from './battleStatus.class.js';
 class Dungeon {
   constructor(dungeonId, dungeonCode) {
     this.id = dungeonId;
     this.code = dungeonCode;
     this.monsters = [];
     this.players = [];
-    this.battleStatus = null;
+    //this.battleStatus = null;
   }
 
   // players는 player 인스턴스들이 담긴 일반 배열
@@ -34,9 +34,9 @@ class Dungeon {
   }
 
   //전투 게시 함수 (플레이어와 몬스터 반드시 설정 필요.)
-  setBattleStatus() {
-    this.battleStatus = new BattleStatus(this, this.players, this.monsters);
-  }
+  // setBattleStatus() {
+  //   this.battleStatus = new BattleStatus(this, this.players, this.monsters);
+  // }
 }
 
 export default Dungeon;

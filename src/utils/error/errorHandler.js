@@ -3,7 +3,9 @@ import Packet from '../packet/packet.js';
 import { ErrorCodes } from './errorCodes.js';
 
 const handleError = (socket, error) => {
-  const nickname = getPlayerSession().getPlayer(socket).nickname;
+  
+  // const nickname = getPlayerSession().getPlayer(socket).nickname;
+  const nickname = '로그인 시도';
 
   switch (error.code) {
     case ErrorCodes.CLIENT_VERSION_MISMATCH:
