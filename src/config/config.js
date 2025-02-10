@@ -24,7 +24,7 @@ export const config = {
     idLength: PACKET_ID_LENGTH,
   },
   databases: {
-    MOONRABBITS_DB: {
+    PROJECT_R_USER_DB: {
       name: DB1_NAME,
       user: DB1_USER,
       password: DB1_PASSWORD,
