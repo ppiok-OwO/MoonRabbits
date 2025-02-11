@@ -86,6 +86,12 @@ const Packet = {
       actionSet: actionSet_ActionSet,
     });
   },
+  S_Register: (isSuccess_bool, msg_string) => {
+    return makePacket(config.packetId.S_Register, {
+      isSuccess: isSuccess_bool,
+      msg: msg_string,
+    });
+  },
 };
 
 export default Packet;
