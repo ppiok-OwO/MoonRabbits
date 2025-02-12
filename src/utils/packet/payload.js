@@ -8,7 +8,7 @@ const payload = {
   S_Despawn: (playerIds_ArrayOfInt) => {
     return { playerIds: playerIds_ArrayOfInt };
   },
-  S_Move: (playerId_int, transform_TransformInfo) => {
+  S_Location: (playerId_int, transform_TransformInfo) => {
     return { playerId: playerId_int, transform: transform_TransformInfo };
   },
   S_Animation: (playerId_int, animCode_int) => {

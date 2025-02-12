@@ -6,6 +6,7 @@ import {
 } from '../constants/header.js';
 import { BASE_STAT_DATA } from '../constants/PlayerBaseStat.js';
 import { BATTLE_LOG_ID } from '../constants/BattleLog.js';
+import { UPDATE_LOCATION } from '../constants/UpdateLocation.js';
 export const config = {
   server: {
     port: PORT,
@@ -23,6 +24,8 @@ export const config = {
     S_Enter: PACKET_ID.S_Enter,
     S_Spawn: PACKET_ID.S_Spawn,
     S_Despawn: PACKET_ID.S_Despawn,
+    C_Location: PACKET_ID.C_Location,
+    S_Location: PACKET_ID.S_Location,
     C_Move: PACKET_ID.C_Move,
     S_Move: PACKET_ID.S_Move,
     C_Animation: PACKET_ID.C_Animation,
@@ -48,6 +51,9 @@ export const config = {
   battletag: {
     Menu: BATTLE_LOG_ID.menu,
     Attack: BATTLE_LOG_ID.attack,
+  },
+  updateLocation: {
+    tolerance: UPDATE_LOCATION.tolerance,
   },
 };
 

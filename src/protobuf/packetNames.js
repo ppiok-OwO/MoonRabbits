@@ -3,6 +3,8 @@ export const packetNames = [
   'S_Enter',
   'S_Spawn',
   'S_Despawn',
+  'C_Location',
+  'S_Location',
   'C_Move',
   'S_Move',
   'C_Animation',

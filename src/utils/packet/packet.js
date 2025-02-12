@@ -2,6 +2,12 @@ import { config } from '../../config/config.js';
 import makePacket from './makePacket.js';
 
 const Packet = {
+  C_Enter: (nickname_string, class_string) => {
+    return makePacket(config.packetId.C_Enter, {
+      nickname: nickname_string,
+      class: class_string,
+    });
+  },
   S_Enter: (player_PlayerInfo) => {
     return makePacket(config.packetId.S_Enter, { player: player_PlayerInfo });
   },
@@ -15,10 +21,33 @@ const Packet = {
       playerIds: playerIds_ArrayOfInt,
     });
   },
-  S_Move: (playerId_int, transform_TransformInfo) => {
+  S_Location: (playerId_int, transform_TransformInfo) => {
     return makePacket(config.packetId.S_Move, {
       playerId: playerId_int,
       transform: transform_TransformInfo,
+    });
+  },
+  C_Move: (
+    startPosX_float,
+    startPosY_float,
+    startPosZ_float,
+    targetPosX_float,
+    targetPosY_float,
+    targetPosZ_float,
+  ) => {
+    return makePacket(config.packetId.C_Move, {
+      startPosX: startPosX_float,
+      startPosY: startPosY_float,
+      startPosZ: startPosZ_float,
+      targetPosX: targetPosX_float,
+      targetPosY: targetPosY_float,
+      targetPosZ: targetPosZ_float,
+    });
+  },
+  S_Move: (playerId_int, path_PathInfo) => {
+    return makePacket(config.packetId.S_Move, {
+      playerId: playerId_int,
+      path: path_PathInfo,
     });
   },
   S_Animation: (playerId_int, animCode_int) => {

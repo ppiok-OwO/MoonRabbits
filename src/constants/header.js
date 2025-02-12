@@ -6,6 +6,8 @@ export const PACKET_ID = {
   S_Enter: 1,
   S_Spawn: 2,
   S_Despawn: 5,
+  C_Location: 100,
+  S_Location: 101,
   C_Move: 6,
   S_Move: 7,
   C_Animation: 8,

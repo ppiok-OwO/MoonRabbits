@@ -23,10 +23,11 @@ const readFileAsync = (filename) => {
 
 export const loadGameAssets = async () => {
   try {
-    const [monsters] = await Promise.all([
+    const [monsters, navmesh] = await Promise.all([
       readFileAsync('monster.json'),
+      readFileAsync('navmesh.json'),
     ]);
-    gameAssets = { monsters };
+    gameAssets = { monsters, navmesh };
     return gameAssets;
   } catch (error) {
     throw new Error('Failed to load game assets: ' + error.message);
