@@ -59,6 +59,8 @@ export const config = {
     S_Register: PACKET_ID.S_Register,
     C_Login: PACKET_ID.C_Login,
     S_Login: PACKET_ID.S_Login,
+    C_CreateCharacter : PACKET_ID.C_CreateCharacter,
+    S_CreateCharacter : PACKET_ID.S_CreateCharacter
   },
   newPlayerStatData: {
     BASE_STAT_DATA,

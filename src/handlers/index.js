@@ -10,6 +10,7 @@ import { enterDungeonHandler } from './town/enterDungeon.handler.js';
 import { playerResponseHandler } from './dungeon/playerResponse.handler.js';
 import registerHandler from './account/register.handler.js';
 import loginHandler from './account/login.handler.js';
+import createCharacterHandler from './account/createCharacter.handler.js';
 
 // 패킷 ID별로 핸들러 맵핑
 const handlers = {
@@ -22,6 +23,7 @@ const handlers = {
   [config.packetId.C_PlayerResponse]: playerResponseHandler,
   [config.packetId.C_Register]: registerHandler,
   [config.packetId.C_Login]: loginHandler,
+  [config.packetId.C_CreateCharacter]: createCharacterHandler
 };
 
 export const getHandlerByPacketId = (packetId) => {

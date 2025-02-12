@@ -25,4 +25,6 @@ export const packetNames = [
   'S_Register',
   'C_Login',
   'S_Login',
+  'C_CreateCharacter',
+  'S_CreateCharacter'
 ];

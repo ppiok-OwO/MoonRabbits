@@ -103,6 +103,12 @@ const Packet = {
       ownedCharacters: ownedCharacters_ArrayOfOwnedCharacters,
     });
   },
+  S_CreateCharacter: (isSuccess_bool,msg_string) => {
+    return makePacket(config.packetId.S_CreateCharacter, {
+        isSuccess : isSuccess_bool,
+        msg:msg_string
+    });
+  }
 };
 
 export default Packet;
