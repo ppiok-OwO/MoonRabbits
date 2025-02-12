@@ -36,6 +36,8 @@ enum MsgId {
   S_REGISTER = 51;
   C_LOGIN = 52;
   S_LOGIN = 53;
+  C_CREATE_CHARACTER = 54;
+  S_CREATE_CHARACTER = 55;
 }
 
 // 응답 패킷 - S_Enter, S_Spawn
@@ -185,6 +187,16 @@ message S_Login {
   bool isSuccess = 1;
   string msg = 2;
   repeated OwnedCharacters ownedCharacters = 3;
+}
+
+message C_CreateCharacter {
+  string nickname = 1;
+  int32 class = 2;
+}
+
+message S_CreateCharacter {
+  bool isSuccess = 1;
+  string msg = 2;
 }
 
 
