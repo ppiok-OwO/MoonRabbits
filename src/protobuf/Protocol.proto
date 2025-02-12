@@ -1,6 +1,42 @@
 syntax = "proto3";
 
-package common; // 네임 스페이스
+package protocol; // 네임 스페이스
+
+option csharp_namespace = "Google.Protobuf.Protocol";
+
+// 메세지 아이디
+enum MsgId {
+  C_ENTER = 0;
+  S_ENTER = 1;
+  S_SPAWN = 2;
+  C_LEAVE = 3;
+  S_LEAVE = 4;
+  S_DESPAWN = 5;
+  C_MOVE = 6;
+  S_MOVE = 7;
+  C_ANIMATION = 8;
+  S_ANIMATION = 9;
+  C_CHANGE_COSTUME = 10;
+  S_CHANGE_COSTUME = 11;
+  C_CHAT = 12;
+  S_CHAT = 13;
+  C_ENTER_DUNGEON = 14;
+  C_PLAYER_RESPONSE = 15;
+  S_ENTER_DUNGEON = 16;
+  S_LEAVE_DUNGEON = 17;
+  S_SCREEN_TEXT = 18;
+  S_SCREEN_DONE = 19;
+  S_BATTLE_LOG = 20;
+  S_SET_PLAYER_HP = 21;
+  S_SET_PLAYER_MP = 22;
+  S_SET_MONSTER_HP = 23;
+  S_PLAYER_ACTION = 24;
+  S_MONSTER_ACTION = 25;
+  C_REGISTER = 50;
+  S_REGISTER = 51;
+  C_LOGIN = 52;
+  S_LOGIN = 53;
+}
 
 // 응답 패킷 - S_Enter, S_Spawn
 message C_Enter{
@@ -18,12 +54,15 @@ message S_Spawn {
   repeated PlayerInfo players = 1;
 }
 
+message C_Leave { }
+
+message S_Leave { }
 
 
 // 접속상태를 서버에서 판단해서 끊기도 다른 플레이어들 정보 전달
 // 응답 패킷 - S_Leave, S_Despawn
 message S_Despawn {
-  repeated int32 playerIds = 2; // PlayerInfo 전부 말고 아이디만 받는다.
+  repeated int32 playerIds = 1; // PlayerInfo 전부 말고 아이디만 받는다.
 }
 
 
@@ -126,6 +165,28 @@ message S_MonsterAction {
   ActionSet actionSet = 2;
 }
 
+message C_Register {
+  string email = 1;
+  string pw = 2;
+  string pwCheck = 3;
+}
+
+message S_Register {
+  bool isSuccess = 1;
+  string msg = 2;
+}
+
+message C_Login {
+  string email = 1;
+  string pw = 2;
+}
+
+message S_Login {
+  bool isSuccess = 1;
+  string msg = 2;
+  repeated OwnedCharacters ownedCharacters = 3;
+}
+
 
 // 정보 구조체
 
@@ -213,4 +274,9 @@ message BattleLog {
 message BtnInfo {
   string msg = 1;
   bool enable = 2;
+}
+
+message OwnedCharacters {
+  string nickname = 1;
+  int32 class = 2;
 }

@@ -24,5 +24,9 @@ export const PACKET_ID = {
   S_SetMonsterHp: 23,
   S_PlayerAction: 24,
   S_MonsterAction: 25,
+  C_Register: 50,
+  S_Register: 51,
+  C_Login: 52,
+  S_Login: 53,
   // 추가
 };

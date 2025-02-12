@@ -86,6 +86,23 @@ const Packet = {
       actionSet: actionSet_ActionSet,
     });
   },
+  S_Register: (isSuccess_bool, msg_string) => {
+    return makePacket(config.packetId.S_Register, {
+      isSuccess: isSuccess_bool,
+      msg: msg_string,
+    });
+  },
+  S_Login: (
+    isSuccess_bool,
+    msg_string,
+    ownedCharacters_ArrayOfOwnedCharacters,
+  ) => {
+    return makePacket(config.packetId.S_Login, {
+      isSuccess: isSuccess_bool,
+      msg: msg_string,
+      ownedCharacters: ownedCharacters_ArrayOfOwnedCharacters,
+    });
+  },
 };
 
 export default Packet;

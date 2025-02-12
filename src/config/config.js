@@ -55,6 +55,10 @@ export const config = {
     S_SetMonsterHp: PACKET_ID.S_SetMonsterHp,
     S_PlayerAction: PACKET_ID.S_PlayerAction,
     S_MonsterAction: PACKET_ID.S_MonsterAction,
+    C_Register: PACKET_ID.C_Register,
+    S_Register: PACKET_ID.S_Register,
+    C_Login: PACKET_ID.C_Login,
+    S_Login: PACKET_ID.S_Login,
   },
   newPlayerStatData: {
     BASE_STAT_DATA,
