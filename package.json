@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "chalk": "^5.4.1",
     "dotenv": "^16.4.7",
     "lodash": "^4.17.21",
     "long": "^5.2.4",

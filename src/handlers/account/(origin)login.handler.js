@@ -1,9 +1,8 @@
-import Packet from '../utils/packet/packet.js';
-import payloadData from '../utils/packet/payloadData.js';
+import Packet from '../../utils/packet/packet.js';
+import payloadData from '../../utils/packet/payloadData.js';
 
 /* (임시) 로그인 패킷 테스트 */
 const loginHandler = (socket, packetData) => {
-  
   // [case 01] 로그인 성공 - 캐릭터 보유
   const isSuccess = true;
   const msg = '로그인에 성공했습니다. 캐릭터 O';

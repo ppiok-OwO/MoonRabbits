@@ -8,8 +8,8 @@ import playerSpawnNotificationHandler from './town/playerSpawnNotification.handl
 import townEnterHandler from './town/townEnter.handler.js';
 import { enterDungeonHandler } from './town/enterDungeon.handler.js';
 import { playerResponseHandler } from './dungeon/playerResponse.handler.js';
-import registerHandler from './register.handler.js';
-import loginHandler from './login.handler.js';
+import registerHandler from './account/register.handler.js';
+import loginHandler from './account/login.handler.js';
 
 // 패킷 ID별로 핸들러 맵핑
 const handlers = {
