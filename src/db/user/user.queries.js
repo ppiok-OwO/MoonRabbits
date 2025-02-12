@@ -1,6 +1,6 @@
 export const SQL_QUERIES = {
-  FIND_USER_BY_ID: 'SELECT * FROM user WHERE id = ?',
-  CREATE_USER: 'INSERT INTO user (id) VALUES (?)',
-  UPDATE_USER_LOGIN:
-    'UPDATE user SET last_login = CURRENT_TIMESTAMP WHERE id = ?',
+  FIND_USER_BY_EMAIL: 'SELECT * FROM USER WHERE email = ?',
+  CREATE_USER: 'INSERT INTO USER (user_id, email, password) VALUES (?, ?, ?)',
+  UPDATE_USER_LOGIN: 'UPDATE USER SET last_login = CURRENT_TIMESTAMP WHERE id = ?',
+  UPDATE_USER_LAST_LOGIN: 'UPDATE USER SET last_login = CURRENT_TIMESTAMP WHERE user_id = ?',
 };
