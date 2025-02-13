@@ -23,7 +23,7 @@
     "navmesh": "^2.3.1",
     "obj-file-parser": "^0.6.2",
     "protobufjs": "^7.4.0",
-    "recast-detour": "^1.6.4",
+    "recast-navigation": "^0.39.0",
     "uuid": "^11.0.5"
   },
   "devDependencies": {
