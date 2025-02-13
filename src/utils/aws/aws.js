@@ -16,12 +16,8 @@ const ec2Client = new EC2Client({
   },
 });
 
-// EC2 인스턴스 데이터
-const ec2Instances = {
-  main: {
-    id: 'i-0641db6963ce49246',
-  },
-};
+// EC2 인스턴스 데이터 *ip는 동적 할당(계속 바뀜)
+const ec2Instances = new Map([['main', {id: 'i-0641db6963ce49246', state: 'running', ip: '54.180.108.151'}]]);
 
 // #DESCRIBE
 export function describeInstances() {
@@ -76,8 +72,13 @@ export function runInstances() {
   ec2Client.send(run).then(
     (data) => {
       console.log('인스턴스 시작');
-      const instanceId = data.Instances[0].InstanceId;
       // #ADD 새로 생성된 EC2 instance의 id를 어떻게 관리할 것인가?
+      const instanceId = data.Instances[0].InstanceId;
+      const state = data.Instances[0].State.Name;
+      const publicIpAddress = data.Instances[0].PublicIpAddress;
+      const publicDnsName = data.Instances[0].PublicDnsName;
+      ec2Instances.set('테스트서버', { instanceId, state, publicIpAddress });
+      //
     },
     (error) => console.log('인스턴스 시작 실패', error),
   );
@@ -92,4 +93,8 @@ export function terminateInstances(instanceId) {
     () => console.log('인스턴스 종료'),
     (error) => console.log('인스턴스 종료 실패', error),
   );
+}
+
+function setupInstance(host){
+
 }
