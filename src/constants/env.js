@@ -20,3 +20,5 @@ export const TOKEN_SECRET_KEY = process.env.TOKEN_SECRET_KEY || 'custom_secret_k
 // AWS
 export const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID || 'my_access_key_id';
 export const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY || 'my_secret_access_key';
+export const AWS_KEY_NAME = process.env.AWS_KEY_NAME || 'sparta_keypair';
+export const AWS_SECURITY_GROUP_ID = process.env.AWS_SECURITY_GROUP_ID || 'sg-xxxx';

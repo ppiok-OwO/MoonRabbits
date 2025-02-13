@@ -6,7 +6,16 @@ import {
   RunInstancesCommand,
   TerminateInstancesCommand,
 } from '@aws-sdk/client-ec2';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { config } from '../../config/config.js';
+import { ec2Types } from './ec2Info.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const townUserDataScript = fs.readFileSync(path.join(__dirname, "town-user-data.sh"), "utf8");
+const townUserDataBase64 = Buffer.from(townUserDataScript).toString("base64");
 
 const ec2Client = new EC2Client({
   region: 'ap-northeast-2',
@@ -17,12 +26,6 @@ const ec2Client = new EC2Client({
 });
 
 // EC2 인스턴스 데이터 *ip는 동적 할당(계속 바뀜)
-const ec2Instances = new Map([
-  [
-    'main',
-    { id: 'i-0641db6963ce49246', state: 'running', ip: '54.180.108.151' },
-  ],
-]);
 
 export const AWS = {
   // #DESCRIBE
@@ -68,23 +71,32 @@ export const AWS = {
   },
 
   // #RUN
-  runInstances: () => {
+  runInstances: (type) => {
+    //const userDataBase64 = type===ec2Types.town?townUserDataBase64:null;
+    const userDataBase64 = townUserDataBase64;
     const run = new RunInstancesCommand({
       ImageId: 'ami-0dc44556af6f78a7b', // AMI ID
       InstanceType: 't2.micro',
       MinCount: 1,
       MaxCount: 1,
+      KeyName: config.aws.keyName,
+      SecurityGroupIds: [config.aws.securityGroupId],   // inbound TCP:3000 0.0.0.0/0
+      UserData: userDataBase64,
     });
     ec2Client.send(run).then(
       (data) => {
-        console.log('인스턴스 시작');
         // #ADD 새로 생성된 EC2 instance의 id를 어떻게 관리할 것인가?
         const instanceId = data.Instances[0].InstanceId;
         const state = data.Instances[0].State.Name;
-        const publicIpAddress = data.Instances[0].PublicIpAddress;
         const publicDnsName = data.Instances[0].PublicDnsName;
-        ec2Instances.set('테스트서버', { instanceId, state, publicIpAddress });
-        //
+        //ec2Instances.set('테스트서버', { instanceId, state, publicIpAddress });
+        setupInstance(publicDnsName);
+        console.log('인스턴스 시작');
+        console.log(`instanceId: ${instanceId}`)
+        setTimeout(()=>{
+            const publicIpAddress = data.Instances[0].PublicIpAddress;
+            console.log(`publicIpAddress: ${publicIpAddress}`)
+        }, 10000);
       },
       (error) => console.log('인스턴스 시작 실패', error),
     );
@@ -100,6 +112,8 @@ export const AWS = {
       (error) => console.log('인스턴스 종료 실패', error),
     );
   },
+
+  // #GET IP
 };
 
 function setupInstance(host) {}
