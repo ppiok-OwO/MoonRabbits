@@ -15,110 +15,117 @@ const basePath = path.join(__dirname, '../../assets');
 
 // NavMesh 로드 및 초기화
 export async function loadNavMesh(objFile) {
-  const objData = fs.readFileSync(path.join(basePath, objFile), 'utf-8');
+  try {
+    const objData = fs.readFileSync(path.join(basePath, objFile), 'utf-8');
 
-  const vertices = [];
-  const indices = [];
+    const vertices = [];
+    const indices = [];
 
-  objData.split('\n').forEach((line) => {
-    const parts = line.trim().split(' ');
-    if (parts[0] === 'v') {
-      vertices.push(parts.slice(1).map(Number));
-    } else if (parts[0] === 'f') {
-      indices.push(...parts.slice(1).map((idx) => parseInt(idx, 10) - 1));
-    }
-  });
+    objData.split('\n').forEach((line) => {
+      const parts = line.trim().split(' ');
+      if (parts[0] === 'v') {
+        vertices.push(parts.slice(1).map(Number));
+      } else if (parts[0] === 'f') {
+        indices.push(...parts.slice(1).map((idx) => parseInt(idx, 10) - 1));
+      }
+    });
 
-  if (vertices.length === 0) throw new Error('정점 데이터가 없습니다.');
-  if (indices.length === 0 || indices.length % 3 !== 0)
-    throw new Error('인덱스 데이터가 잘못되었습니다.');
+    if (vertices.length === 0) throw new Error('정점 데이터가 없습니다.');
+    if (indices.length === 0 || indices.length % 3 !== 0)
+      throw new Error('인덱스 데이터가 잘못되었습니다.');
 
-  const navMeshConfig = {
-    cs: 0.1,
-    ch: 0.1,
-    walkableSlopeAngle: 45,
-    walkableHeight: 2,
-    walkableClimb: 0.9,
-    walkableRadius: 0.6,
-    maxEdgeLen: 3,
-    maxSimplificationError: 0.01,
-    minRegionArea: 1,
-    mergeRegionArea: 2,
-    tileSize: 8,
-    borderSize: 4,
-  };
+    const navMeshConfig = {
+      cs: 0.1,
+      ch: 0.1,
+      walkableSlopeAngle: 45,
+      walkableHeight: 2,
+      walkableClimb: 0.9,
+      walkableRadius: 0.6,
+      maxEdgeLen: 3,
+      maxSimplificationError: 0.01,
+      minRegionArea: 1,
+      mergeRegionArea: 2,
+      tileSize: 8,
+      borderSize: 4,
+    };
 
-  console.log('Vertices:', vertices.length);
-  console.log('Indices:', indices.length);
+    console.log('Vertices:', vertices.length);
+    console.log('Indices:', indices.length);
 
-  const { success, navMesh } = generateSoloNavMesh(
-    vertices.flat(),
-    indices,
-    navMeshConfig,
-  );
+    const { success, navMesh } = generateSoloNavMesh(
+      vertices.flat(),
+      indices,
+      navMeshConfig,
+    );
 
-  if (!success) throw new Error('NavMesh 생성 실패');
+    if (!success) throw new Error('NavMesh 생성 실패');
 
-  return navMesh;
+    return navMesh;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 export async function findPath(navMesh, startPos, endPos, stepSize = 1) {
-  const navMeshQuery = new NavMeshQuery(navMesh);
-
-  // 시작점과 끝점을 설정해주기
-  const start = { x: startPos.x, y: startPos.y, z: startPos.z };
-  const end = { x: endPos.x, y: endPos.y, z: endPos.z };
-
-  // 좌표에서 가장 가까운 폴리곤 ID 가져오기
-  const { success: startSuccess, polyRef: startRef } =
-    navMeshQuery.findClosestPoint(start);
-  const { success: endSuccess, polyRef: endRef } =
-    navMeshQuery.findClosestPoint(end);
-
-  if (!startSuccess || !endSuccess) {
-    throw new Error('탐색 가능한 네비게이션 폴리곤을 찾을 수 없습니다.');
-  }
-
-  // 폴리곤 기반 경로 탐색
-  const { success, polys } = navMeshQuery.findPath(
-    startRef,
-    endRef,
-    start,
-    end,
-    {
-      maxPathPolys: 256,
-    },
-  );
-  if (!success) {
-    throw new Error('경로를 찾을 수 없습니다.');
-  }
-
-  // 경로를 실제 좌표로 변환
-  let rawPath = [];
   try {
-    for (let i = 0; i < polys.length; i++) {
-      const point = navMeshQuery.getClosestPoint({
-        x: polys[i].x,
-        y: polys[i].y,
-        z: polys[i].z,
-      });
-      rawPath.push({ x: point.x, y: point.y, z: point.z });
+    const navMeshQuery = new NavMeshQuery(navMesh);
+
+    // 시작점과 끝점을 설정해주기
+    const start = { x: startPos.x, y: startPos.y, z: startPos.z };
+    const end = { x: endPos.x, y: endPos.y, z: endPos.z };
+
+    // 좌표에서 가장 가까운 폴리곤 ID 가져오기
+    const { success: startSuccess, polyRef: startRef } =
+      navMeshQuery.findClosestPoint(start);
+    const { success: endSuccess, polyRef: endRef } =
+      navMeshQuery.findClosestPoint(end);
+    if (!startSuccess || !endSuccess) {
+      throw new Error('탐색 가능한 네비게이션 폴리곤을 찾을 수 없습니다.');
     }
-  } finally {
-    // 메모리 누수를 막기 위해 `destroy()` 호출 (예외 발생 시에도 실행되도록 `finally` 사용)
-    polys.destroy();
-  }
 
-  // computePath의 시작점과 끝점을 `startPos`와 `endPos`로 강제 설정
-  if (rawPath.length > 0) {
-    rawPath[0] = start;
-    rawPath[rawPath.length] = end;
-  } else {
-    rawPath.push(start);
-    rawPath.push(end);
-  }
+    // 폴리곤 기반 경로 탐색
+    const { success, polys } = navMeshQuery.findPath(
+      startRef,
+      endRef,
+      start,
+      end,
+      {
+        maxPathPolys: 256,
+      },
+    );
+    if (!success) {
+      throw new Error('경로를 찾을 수 없습니다.');
+    }
 
-  return interpolatePath(rawPath, stepSize);
+    // 경로를 실제 좌표로 변환
+    let rawPath = [];
+    try {
+      for (let i = 0; i < polys.length; i++) {
+        const point = navMeshQuery.getClosestPoint({
+          x: polys[i].x,
+          y: polys[i].y,
+          z: polys[i].z,
+        });
+        rawPath.push({ x: point.x, y: point.y, z: point.z });
+      }
+    } finally {
+      // 메모리 누수를 막기 위해 `destroy()` 호출 (예외 발생 시에도 실행되도록 `finally` 사용)
+      polys.destroy();
+    }
+
+    // computePath의 시작점과 끝점을 `startPos`와 `endPos`로 강제 설정
+    if (rawPath.length > 0) {
+      rawPath[0] = start;
+      rawPath[rawPath.length] = end;
+    } else {
+      rawPath.push(start);
+      rawPath.push(end);
+    }
+
+    return interpolatePath(rawPath, stepSize);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 // 찾아보니까 유니티 navMesh에서 쓰는 보간법은 steering target이라고 한다.(아마도?)
