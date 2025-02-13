@@ -6,32 +6,12 @@ import { generateSoloNavMesh } from 'recast-navigation/generators';
 import { init } from 'recast-navigation';
 
 // 이유는 모르겠는데 찾아보니까 Recast 인스턴스는 비동기로 초기화를 해줘야 한다.
-const Recast = await init();
-
-let navMesh;
-let navMeshQuery;
+await init();
 
 // obj 파일의 절대 경로
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const basePath = path.join(__dirname, '../../assets');
-
-// AABB 범위 계산 함수(맵의 경계부를 알기 위해서)
-function calculateBounds(vertices) {
-  const bmin = { x: Infinity, y: Infinity, z: Infinity };
-  const bmax = { x: -Infinity, y: -Infinity, z: -Infinity };
-
-  vertices.forEach(([x, y, z]) => {
-    bmin.x = Math.min(bmin.x, x);
-    bmin.y = Math.min(bmin.y, y);
-    bmin.z = Math.min(bmin.z, z);
-    bmax.x = Math.max(bmax.x, x);
-    bmax.y = Math.max(bmax.y, y);
-    bmax.z = Math.max(bmax.z, z);
-  });
-
-  return { bmin, bmax };
-}
 
 // NavMesh 로드 및 초기화
 export async function loadNavMesh(objFile) {
