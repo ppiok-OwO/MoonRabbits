@@ -1,18 +1,8 @@
-import stats from './stats.class.js';
-import { playerSetHpResponseHandler } from '../handlers/dungeon/response/playerSetHpResponse.handler.js';
-import { playerSetMpResponseHandler } from '../handlers/dungeon/response/playerSetMpResponse.handler.js';
-import { monsterSetHpResponseHandler } from '../handlers/dungeon/response/monsterSetHpResponse.handler.js';
-
-import { playerActionResponseHandler } from '../handlers/dungeon/response/playerActionResponse.handler.js';
-import { monsterActionResponseHandler } from '../handlers/dungeon/response/monsterActionResponse.handler.js';
-
 //몬스터, 플레이어 통합 관리용 클래스스
-class BattleEntity {
-  //side 팀을 의미하는 구분 (0,1 로 구분)
-  constructor(dungeon, id, name, side = 0, Ai = true, stat = new stats()) {
-    this.dungeon = dungeon;
-    this.id = id;
-    this.side = side;
+class Entity {
+  constructor(
+    stat = payloadData.StatInfo(1, 100, 100, 100, 100, 20, 5, 10, 50),
+  ) {
     const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed } = stat;
     this.level = level;
     this.hp = hp;
@@ -23,9 +13,6 @@ class BattleEntity {
     this.def = def;
     this.magic = magic;
     this.speed = speed;
-    //행동횟수
-    this.turn = 1;
-    this.Ai = Ai;
 
     this.effectLevel = 0;
     this.effectMaxHp = 0;
@@ -157,26 +144,6 @@ class BattleEntity {
       this.hp = this.maxHp;
     } else {
       this.hp += hp;
-      console.log('this.hp' + this.hp);
-      console.log('hp' + hp);
-    }
-    console.log('this.hp' + this.hp);
-    console.log('hp' + hp);
-
-    if (this.Ai) {
-      monsterSetHpResponseHandler(this.dungeon, this.id, this.hp);
-      // if (this.hp <= 0) {
-      //   monsterActionResponseHandler(this.dungeon, this.id, 5);
-      // } else {
-      //   monsterActionResponseHandler(this.dungeon, this.id, 4);
-      // }
-    } else {
-      playerSetHpResponseHandler(this.dungeon, this.id, this.hp);
-      if (this.hp <= 0) {
-        playerActionResponseHandler(this.dungeon, this.id, 5);
-      } else {
-        playerActionResponseHandler(this.dungeon, this.id, 4);
-      }
     }
     return this.hp;
   }
@@ -187,9 +154,6 @@ class BattleEntity {
       this.mp = this.maxMp;
     } else {
       this.mp += mp;
-    }
-    if (!this.Ai) {
-      playerSetMpResponseHandler(this.dungeon, this.id, this.mp);
     }
     return this.mp;
   }
@@ -203,19 +167,6 @@ class BattleEntity {
   subMp(mp) {
     this.addMp(mp * -1);
   }
-
-  subTurn(battleStatus, turn = 1) {
-    this.turn -= turn;
-
-    if (this.turn <= 0) {
-      battleStatus.nextTurnIndex();
-      this.resetTurn();
-    }
-    return this.turn;
-  }
-  resetTurn() {
-    this.turn = 1;
-  }
 }
 
-export default BattleEntity;
+export default Entity;

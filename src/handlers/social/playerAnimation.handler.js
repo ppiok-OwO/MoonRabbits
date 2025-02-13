@@ -26,7 +26,8 @@ export const animationHandler = (socket, packetData) => {
     }
 
     // 패킷 직렬화
-    const packet = Packet.S_Animation(player.getId(), animCode);
+    // const packet = Packet.S_Animation(player.getId(), animCode);
+    const packet = Packet.S_Animation(player.id, animCode);
 
     // 채팅창 알림 패킷 생성
     let chatPacket;
@@ -70,5 +71,6 @@ export const animationHandler = (socket, packetData) => {
     }
   } catch (error) {
     handleError(error);
+    // console.error(error);
   }
 };
