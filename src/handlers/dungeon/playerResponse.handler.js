@@ -6,7 +6,7 @@ import {
 import payloadData from '../../utils/packet/payloadData.js';
 
 import { playerBattleLogResponseHandler } from './response/playerBattleLogResponse.handler.js';
-import { screenDoneResponseHandler } from './response/ScreenDoneResponse.handler.js';
+import { screenDoneResponseHandler } from './response/screenDoneResponse.handler.js';
 
 export const playerResponseHandler = (socket, packetData) => {
 //전투 관련 패킷 변경으로 사용 불가.

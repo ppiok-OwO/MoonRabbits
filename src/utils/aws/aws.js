@@ -75,7 +75,7 @@ export const AWS = {
     //const userDataBase64 = type===ec2Types.town?townUserDataBase64:null;
     const userDataBase64 = townUserDataBase64;
     const run = new RunInstancesCommand({
-      ImageId: 'ami-0dc44556af6f78a7b', // AMI ID
+      ImageId: 'ami-024ea438ab0376a47', // AMI ID
       InstanceType: 't2.micro',
       MinCount: 1,
       MaxCount: 1,
@@ -93,10 +93,6 @@ export const AWS = {
         setupInstance(publicDnsName);
         console.log('인스턴스 시작');
         console.log(`instanceId: ${instanceId}`)
-        setTimeout(()=>{
-            const publicIpAddress = data.Instances[0].PublicIpAddress;
-            console.log(`publicIpAddress: ${publicIpAddress}`)
-        }, 10000);
       },
       (error) => console.log('인스턴스 시작 실패', error),
     );
@@ -117,3 +113,6 @@ export const AWS = {
 };
 
 function setupInstance(host) {}
+
+//AWS.runInstances(2);
+//AWS.describeInstances();

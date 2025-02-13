@@ -7,9 +7,9 @@ const server = net.createServer(onConnection);
 
 initServer()
   .then(() => {
-    server.listen(config.server.port, config.server.host, () => {
+    server.listen(config.server.port, () => {
       console.log(
-        `[메인서버]가 ${config.server.host}:${config.server.port}에서 실행 중입니다.`,
+        `[메인서버]가 PORT:${config.server.port}에서 실행 중입니다.`,
       );
       console.log(server.address());
     });
