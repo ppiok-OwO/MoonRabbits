@@ -1,4 +1,4 @@
-import { PORT, HOST, CLIENT_VERSION } from '../constants/env.js';
+import { PORT, HOST, CLIENT_VERSION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } from '../constants/env.js';
 import {
   PACKET_ID,
   PACKET_ID_LENGTH,
@@ -48,6 +48,10 @@ export const config = {
   battletag: {
     Menu: BATTLE_LOG_ID.menu,
     Attack: BATTLE_LOG_ID.attack,
+  },
+  aws: {
+    accessKeyId: AWS_ACCESS_KEY_ID,
+    secretAccessKey: AWS_SECRET_ACCESS_KEY,
   },
 };
 

@@ -16,3 +16,7 @@ export const DB_PORT = process.env.DB_PORT || 3306;
 
 // JWT
 export const TOKEN_SECRET_KEY = process.env.TOKEN_SECRET_KEY || 'custom_secret_key';
+
+// AWS
+export const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID || 'my_access_key_id';
+export const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY || 'my_secret_access_key';
