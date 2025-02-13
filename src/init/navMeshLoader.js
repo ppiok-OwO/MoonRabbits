@@ -129,7 +129,7 @@ export async function findPath(navMesh, startPos, endPos, stepSize = 1) {
 }
 
 // 찾아보니까 유니티 navMesh에서 쓰는 보간법은 steering target이라고 한다.(아마도?)
-// 현재 위치에서 다음 방향을 미리 설정하고 부드럽게 회전 => 경로 점을 직선으로 따라가는 것이 아니라, 미리 방향을 예측하고 보간함
+// 현재 위치에서 다음 방향을 미리 설정하고 부드럽게 회전 => 경로상의 점을 직선으로 따라가는 것이 아니라, 미리 방향을 예측하고 보간함
 // 다음 방향을 미리 설정할 때 일정 거리 내 가장 먼 지점을 고르는데 그 범위를 lookaheadDistance로 설정하는 셈
 function getSteeringTarget(currentPosition, path, lookaheadDistance = 2) {
   let closestPoint = path[0];

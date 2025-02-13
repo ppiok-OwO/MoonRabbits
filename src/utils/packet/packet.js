@@ -22,7 +22,7 @@ const Packet = {
     });
   },
   S_Location: (playerId_int, transform_TransformInfo) => {
-    return makePacket(config.packetId.S_Move, {
+    return makePacket(config.packetId.S_Location, {
       playerId: playerId_int,
       transform: transform_TransformInfo,
     });
@@ -44,10 +44,10 @@ const Packet = {
       targetPosZ: targetPosZ_float,
     });
   },
-  S_Move: (playerId_int, path_PathInfo) => {
+  S_Move: (playerId_int, isValidPath_bool) => {
     return makePacket(config.packetId.S_Move, {
       playerId: playerId_int,
-      path: path_PathInfo,
+      isValidPath: isValidPath_bool,
     });
   },
   S_Animation: (playerId_int, animCode_int) => {

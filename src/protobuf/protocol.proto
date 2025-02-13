@@ -9,6 +9,8 @@ enum MsgId {
   C_ENTER = 0;
   S_ENTER = 1;
   S_SPAWN = 2;
+  C_LEAVE = 3;
+  S_LEAVE = 4;
   S_DESPAWN = 5;
   C_MOVE = 6;
   S_MOVE = 7;
@@ -56,9 +58,6 @@ message S_Despawn {
   repeated int32 playerIds = 1; // PlayerInfo 전부 말고 아이디만 받는다.
 }
 
-
-
-
 // 응답 패킷 - S_Move
 message C_Move {
   float startPosX = 1;
@@ -72,8 +71,7 @@ message C_Move {
 // ALL
 message S_Move {
   int32 playerId = 1;
-  repeated PathInfo path = 2;
-  int32 timestamp = 3;
+  bool isValidPath = 2;
 }
 
 // 응답 패킷 - S_Animation
@@ -192,12 +190,6 @@ message TransformInfo {
   float posY = 2; // 기본값 : 1
   float posZ = 3; // 기본값 : -8 ~ 8
   float rot = 4; // 기본값 : 0~360
-}
-
-message PathInfo {
-  float x = 1;
-  float y = 2;
-  float z = 3;
 }
 
 message StatInfo {
