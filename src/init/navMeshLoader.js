@@ -66,8 +66,6 @@ export async function findPath(navMesh, startPos, endPos, stepSize = 1) {
   const navMeshQuery = new NavMeshQuery(navMesh);
 
   // 시작점과 끝점을 설정해주기
-  // const start = new Recast.Vec3(startPos.x, startPos.y, startPos.z);
-  // const end = new Recast.Vec3(endPos.x, endPos.y, endPos.z);
   const start = { x: startPos.x, y: startPos.y, z: startPos.z };
   const end = { x: endPos.x, y: endPos.y, z: endPos.z };
 
