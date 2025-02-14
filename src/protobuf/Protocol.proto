@@ -32,17 +32,14 @@ enum MsgId {
   S_SET_MONSTER_HP = 23;
   S_PLAYER_ACTION = 24;
   S_MONSTER_ACTION = 25;
-<<<<<<<< HEAD:src/protobuf/protocol.proto
   C_LOCATION = 100;
   S_LOCATION = 101;
-========
   C_REGISTER = 50;
   S_REGISTER = 51;
   C_LOGIN = 52;
   S_LOGIN = 53;
   C_CREATE_CHARACTER = 54;
   S_CREATE_CHARACTER = 55;
->>>>>>>> bccd00f2ba45fb34f9a1a02f479fc818c659f326:src/protobuf/Protocol.proto
 }
 
 // 응답 패킷 - S_Enter, S_Spawn
