@@ -47,19 +47,6 @@ export async function playerMoveHandler(socket, packetData) {
       player.setPath(path);
       isValidPath = true;
     }
-
-    // const packet = Packet.S_Move(player.id, isValidPath);
-
-    // const dungeonId = player.getDungeonId();
-    // if (dungeonId) {
-    //   // 만약 던전이면
-    //   const dungeonSessions = getDungeonSessions();
-    //   const dungeon = dungeonSessions.getDungeon(dungeonId);
-    //   dungeon.notify(packet);
-    // } else {
-    //   // 던전이 아니면
-    //   playerSession.notify(packet);
-    // }
   } catch (error) {
     console.error(error);
   }

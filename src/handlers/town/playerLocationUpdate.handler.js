@@ -18,88 +18,91 @@ import payloadData from '../../utils/packet/payloadData.js';
 // ]
 
 const playerLocationUpdateHandler = (socket, packetData) => {
-  const { transform } = packetData;
+  try {
+    const { transform } = packetData;
 
-  // 플레이어 세션을 통해 플레이어 인스턴스를 불러온다.
-  const playerSession = getPlayerSession();
-  const player = playerSession.getPlayer(socket);
-  if (!player) {
-    socket.emit(
-      'error',
-      new CustomError(
-        ErrorCodes.USER_NOT_FOUND,
-        '플레이어 정보를 찾을 수 없습니다.',
-      ),
-    );
-  }
-
-  const path = player.getPath();
-  if (path === null) {
-    console.log('생성된 경로가 없음!!');
-  } else {
-    // transform의 좌표로부터 가장 가까운 path상의 좌표 구하기
-    // 두 좌표 사이의 거리가 루트2보다 작아야 한다.
-    let minDistance = Infinity;
-    let closestPoint;
-    path.forEach((point) => {
-      const distance = calculateDistance(point, transform);
-      minDistance = Math.min(minDistance, distance);
-      closestPoint = { PosX: point.x, PosY: point.y, PosZ: point.z, rot: 320 };
-    });
-    if (minDistance > Math.sqrt(2)) {
-      throw new CustomError(ErrorCodes.HANDLER_ERROR, '이동동기화가 잘못 됨!!');
+    // 플레이어 세션을 통해 플레이어 인스턴스를 불러온다.
+    const playerSession = getPlayerSession();
+    const player = playerSession.getPlayer(socket);
+    if (!player) {
+      socket.emit(
+        'error',
+        new CustomError(
+          ErrorCodes.USER_NOT_FOUND,
+          '플레이어 정보를 찾을 수 없습니다.',
+        ),
+      );
     }
 
-    const nextPos = calculateFuturePosition(transform);
-    const nextTransForm = { ...nextPos.futurePosition, rot: transform.rot };
+    const path = player.getPath();
+    if (path === null) {
+      console.log('생성된 경로가 없음!!');
+    } else {
+      // transform의 좌표로부터 가장 가까운 path상의 좌표 구하기
+      // 두 좌표 사이의 거리가 루트2(대락 1.4)보다 작아야 한다.
+      let minDistance = Infinity;
+      let closestPoint = null;
+      path.forEach((point) => {
+        const distance = calculateDistance(point, transform);
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestPoint = { PosX: point.x, PosY: point.y, PosZ: point.z }; // transform과 가장 가까운 경로상의 좌표
+        }
+      });
+      console.log('closestPoint : ', closestPoint);
+      console.log('transform :', transform);
+      console.log('minDistance :', minDistance);
 
-    // const packet = Packet.S_Location(player.id, closestPoint);
-    const packet = Packet.S_Location(player.id, transform);
+      if (minDistance > 1.4) {
+        // 오차범위를 벗어나면 플레이어의 위치를 closestPoint로 재조정한다.
+        const syncLocationPacket = Packet.S_Chat(
+          0,
+          '플레이어의 위치를 재조정합니다.',
+        );
+
+        const newTransform = { ...closestPoint, rot: transform.rot };
+        const packet = Packet.S_Location(player.id, newTransform, false);
+
+        // 위치동기화 브로드 캐스트
+        const dungeonId = player.getDungeonId();
+        if (dungeonId) {
+          // 만약 던전이면
+          const dungeonSessions = getDungeonSessions();
+          const dungeon = dungeonSessions.getDungeon(dungeonId);
+          dungeon.notify(packet);
+          dungeon.notify(syncLocationPacket);
+        } else {
+          // 던전이 아니면
+          playerSession.notify(packet);
+          playerSession.notify(syncLocationPacket);
+        }
+
+        return;
+      }
+    }
+
+    const packet = Packet.S_Location(player.id, transform, true);
 
     const dungeonId = player.getDungeonId();
     if (dungeonId) {
+      // 만약 던전이면
       const dungeonSessions = getDungeonSessions();
       const dungeon = dungeonSessions.getDungeon(dungeonId);
       dungeon.notify(packet);
     } else {
+      // 던전이 아니면
       playerSession.notify(packet);
     }
+  } catch (error) {
+    console.error(error);
   }
 };
 
 function calculateDistance(point1, transform) {
-  const dx = point1.x - transform.PosX;
-  const dy = point1.y - transform.PosY;
-  const dz = point1.z - transform.PosZ;
-
+  const dx = point1.x - transform.posX;
+  const dy = point1.y - transform.posY;
+  const dz = point1.z - transform.posZ;
   return Math.sqrt(dx * dx + dy * dy + dz * dz);
-}
-
-function calculateFuturePosition(transform) {
-  // 1. Y축 회전 값(도 → 라디안 변환)
-  const radians = (transform.rot * Math.PI) / 180;
-
-  // 2. 단위 방향 벡터 계산 (XZ 평면 기준)
-  const unitVector = {
-    x: Math.sin(radians), // X 방향 단위 벡터
-    y: 0, // Y축 이동 없음
-    z: Math.cos(radians), // Z 방향 단위 벡터
-  };
-
-  // 3. 이동 거리 (속도 10f * 0.5초 = 5 유닛)
-  const moveDistance = 10 * 0.5;
-
-  // 4. 최종 위치 계산 (현재 좌표 + 이동 거리 * 단위 벡터)
-  const futurePosition = {
-    PosX: transform.PosX + unitVector.x * moveDistance,
-    PosY: transform.PosY, // Y축 변화 없음
-    PosZ: transform.PosZ + unitVector.z * moveDistance,
-  };
-
-  return {
-    unitVector: unitVector,
-    futurePosition: futurePosition,
-  };
 }
 
 export default playerLocationUpdateHandler;

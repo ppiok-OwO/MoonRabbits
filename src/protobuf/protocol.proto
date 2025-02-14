@@ -70,8 +70,6 @@ message C_Move {
 
 // ALL
 message S_Move {
-  int32 playerId = 1;
-  bool isValidPath = 2;
 }
 
 // 응답 패킷 - S_Animation
@@ -171,6 +169,7 @@ message C_Location {
 message S_Location {
   int32 playerId = 1;
   TransformInfo transform = 2;
+  bool isValidTransform = 3;
 }
 
 // 정보 구조체

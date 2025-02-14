@@ -21,10 +21,15 @@ const Packet = {
       playerIds: playerIds_ArrayOfInt,
     });
   },
-  S_Location: (playerId_int, transform_TransformInfo) => {
+  S_Location: (
+    playerId_int,
+    transform_TransformInfo,
+    isValidTransform_bool,
+  ) => {
     return makePacket(config.packetId.S_Location, {
       playerId: playerId_int,
       transform: transform_TransformInfo,
+      isValidTransform: isValidTransform_bool,
     });
   },
   C_Move: (
@@ -44,11 +49,8 @@ const Packet = {
       targetPosZ: targetPosZ_float,
     });
   },
-  S_Move: (playerId_int, isValidPath_bool) => {
-    return makePacket(config.packetId.S_Move, {
-      playerId: playerId_int,
-      isValidPath: isValidPath_bool,
-    });
+  S_Move: () => {
+    return makePacket(config.packetId.S_Move, {});
   },
   S_Animation: (playerId_int, animCode_int) => {
     return makePacket(config.packetId.S_Animation, {

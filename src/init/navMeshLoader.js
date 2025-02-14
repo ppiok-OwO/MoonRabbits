@@ -5,7 +5,7 @@ import { NavMeshQuery } from 'recast-navigation';
 import { generateSoloNavMesh } from 'recast-navigation/generators';
 import { init } from 'recast-navigation';
 
-// 이유는 모르겠는데 찾아보니까 Recast 인스턴스는 비동기로 초기화를 해줘야 한다.
+// 이유는 모르겠는데 찾아보니까 wasm 파일은 비동기로 초기화를 해줘야 한다.
 await init();
 
 // obj 파일의 절대 경로
@@ -37,10 +37,10 @@ export async function loadNavMesh(objFile) {
     const navMeshConfig = {
       cs: 0.1,
       ch: 0.1,
-      walkableSlopeAngle: 45,
-      walkableHeight: 2,
-      walkableClimb: 0.9,
-      walkableRadius: 0.6,
+      walkableSlopeAngle: 21.1, // NavMeshAgent의 Max Slope랑 같게
+      walkableHeight: 2, // NavMeshAgent의 height랑 같게
+      walkableClimb: 0.11, // NavMeshAgent의 Step Height랑 같게
+      walkableRadius: 0.64, // NavMeshAgent의 radius랑 같게
       maxEdgeLen: 3,
       maxSimplificationError: 0.01,
       minRegionArea: 1,
@@ -66,7 +66,7 @@ export async function loadNavMesh(objFile) {
   }
 }
 
-export async function findPath(navMesh, startPos, endPos, stepSize = 1) {
+export async function findPath(navMesh, startPos, endPos, stepSize = 0.25) {
   try {
     const navMeshQuery = new NavMeshQuery(navMesh);
 
@@ -139,8 +139,9 @@ function getSteeringTarget(currentPosition, path, lookaheadDistance = 2) {
   for (let i = 0; i < path.length; i++) {
     const point = path[i];
     const dx = point.x - currentPosition.x;
+    const dy = point.y - currentPosition.y;
     const dz = point.z - currentPosition.z;
-    const distance = Math.sqrt(dx * dx + dz * dz);
+    const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
     if (distance < closestDistance) {
       closestDistance = distance;
