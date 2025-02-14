@@ -29,6 +29,8 @@ export const config = {
     S_Chat: PACKET_ID.S_Chat,
   },
   newPlayerStatData: {
-    baseStatData
-  }
+    baseStatData,
+  },
 };
+
+export const packetIdEntries = Object.entries(PACKET_ID);
