@@ -49,7 +49,10 @@ const handleError = (socket, error) => {
       printCustomErrorConsole(nickname, error);
       break;
     case ErrorCodes.PACKET_STRUCTURE_MISMATCH:
-      const packetStructureMismatch_sChat = Packet.S_Chat(0, `서버에서 패킷 구조 오류가 발생하였습니다.`);
+      const packetStructureMismatch_sChat = Packet.S_Chat(
+        0,
+        `서버에서 패킷 구조 오류가 발생하였습니다.`,
+      );
       socket.write(packetStructureMismatch_sChat);
       printCustomErrorConsole(nickname, error);
       break;
@@ -66,17 +69,17 @@ const handleError = (socket, error) => {
     default:
       const defaultError_sChat = Packet.S_Chat(0, `서버에서 일반 오류가 발생하였습니다.`);
       socket.write(defaultError_sChat);
-      
+
       console.error('\x1b[31m-------------------- 일반 에러 발생 --------------------\x1b[0m');
-      console.error(`클라이언트: ${nickname?`${nickname}`:`로그인하지 않음`}`);
+      console.error(`클라이언트: ${nickname ? `${nickname}` : `로그인하지 않음`}`);
       console.error(error);
       break;
   }
 };
 
-function printCustomErrorConsole(nickname, error){
+function printCustomErrorConsole(nickname, error) {
   console.error('\x1b[31m-------------------- 커스텀 에러 발생 --------------------\x1b[0m');
-  console.error(`클라이언트: ${nickname?`${nickname}`:`로그인하지 않음`}`);
+  console.error(`클라이언트: ${nickname ? `${nickname}` : `로그인하지 않음`}`);
   console.error(error);
 }
 

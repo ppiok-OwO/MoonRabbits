@@ -32,8 +32,17 @@ enum MsgId {
   S_SET_MONSTER_HP = 23;
   S_PLAYER_ACTION = 24;
   S_MONSTER_ACTION = 25;
+<<<<<<<< HEAD:src/protobuf/protocol.proto
   C_LOCATION = 100;
   S_LOCATION = 101;
+========
+  C_REGISTER = 50;
+  S_REGISTER = 51;
+  C_LOGIN = 52;
+  S_LOGIN = 53;
+  C_CREATE_CHARACTER = 54;
+  S_CREATE_CHARACTER = 55;
+>>>>>>>> bccd00f2ba45fb34f9a1a02f479fc818c659f326:src/protobuf/Protocol.proto
 }
 
 // 응답 패킷 - S_Enter, S_Spawn
@@ -52,11 +61,9 @@ message S_Spawn {
   repeated PlayerInfo players = 1;
 }
 
-message C_Leave {
-}
+message C_Leave { }
 
-message S_Leave {
-}
+message S_Leave { }
 
 // 접속상태를 서버에서 판단해서 끊기도 다른 플레이어들 정보 전달
 // 응답 패킷 - S_Leave, S_Despawn
@@ -178,6 +185,38 @@ message S_Location {
   bool isValidTransform = 3;
 }
 
+message C_Register {
+  string email = 1;
+  string pw = 2;
+  string pwCheck = 3;
+}
+
+message S_Register {
+  bool isSuccess = 1;
+  string msg = 2;
+}
+
+message C_Login {
+  string email = 1;
+  string pw = 2;
+}
+
+message S_Login {
+  bool isSuccess = 1;
+  string msg = 2;
+  repeated OwnedCharacters ownedCharacters = 3;
+}
+
+message C_CreateCharacter {
+  string nickname = 1;
+  int32 class = 2;
+}
+
+message S_CreateCharacter {
+  bool isSuccess = 1;
+  string msg = 2;
+}
+
 // 정보 구조체
 
 message PlayerInfo {
@@ -264,4 +303,9 @@ message BattleLog {
 message BtnInfo {
   string msg = 1;
   bool enable = 2;
+}
+
+message OwnedCharacters {
+  string nickname = 1;
+  int32 class = 2;
 }

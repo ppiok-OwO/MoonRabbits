@@ -1,0 +1,66 @@
+{
+  "name": "player_class",
+  "version": "1.0.0",
+  "data": [
+    {
+      "class_id": 1001,
+      "class_name": "창술사",
+      "class_description": "공격에 특화된 근접 클래스입니다. 창을 사용하여 적을 공격합니다.",
+      "class_hp": 150,
+      "class_mp": 50,
+      "class_atk": 20,
+      "class_def": 10,
+      "class_magic": 5,
+      "class_speed": 0.2,
+      "class_skill": ["강하게 찌르기", "예리한 창"]
+    },
+    {
+      "class_id": 1002,
+      "class_name": "전사",
+      "class_description": "공격력과 방어를 조화롭게 사용하는 근접 클래스입니다. 한손검을 사용하여 적을 공격합니다.",
+      "class_hp": 200,
+      "class_mp": 50,
+      "class_atk": 15,
+      "class_def": 15,
+      "class_magic": 5,
+      "class_speed": 0.2,
+      "class_skill": ["힘껏 휘두르기", "절묘한 공방"]
+    },
+    {
+      "class_id": 1003,
+      "class_name": "사냥꾼",
+      "class_description": "먼 거리에서 적을 공격하는 원거리 클래스입니다. 석궁을 사용하여 적을 공격합니다.",
+      "class_hp": 100,
+      "class_mp": 80,
+      "class_atk": 20,
+      "class_def": 5,
+      "class_magic": 10,
+      "class_speed": 0.4,
+      "class_skill": ["집중공격", "신속사격"]
+    },
+    {
+      "class_id": 1004,
+      "class_name": "망치전사",
+      "class_description": "기본적으로 방어력이 높은 근접 클래스입니다. 망치를 사용하여 적을 공격합니다.",
+      "class_hp": 250,
+      "class_mp": 50,
+      "class_atk": 5,
+      "class_def": 20,
+      "class_magic": 10,
+      "class_speed": 0.2,
+      "class_skill": ["기합", "방탄유리"]
+    },
+    {
+      "class_id": 1005,
+      "class_name": "마법사",
+      "class_description": "마법을 사용하는 원거리 클래스입니다. 지팡이를 사용하여 적을 공격합니다. 기본공격으로 마법탄이 발사됩니다.",
+      "class_hp": 80,
+      "class_mp": 200,
+      "class_atk": 5,
+      "class_def": 5,
+      "class_magic": 25,
+      "class_speed": 0.3,
+      "class_skill": ["진(眞) 마법탄", "원기옥"]
+    }
+  ]
+}
