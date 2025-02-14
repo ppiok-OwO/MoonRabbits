@@ -49,24 +49,24 @@ const payloadData = {
     msg_string,
     typingAnimation_bool,
     alignment_ScreenTextAlignment_Optional = null,
-    textColor_Color_Optional = null,
-    screenColor_Color_optional = null,
+    textColor_ColorObj_Optional = null,
+    screenColor_ColorObj_optional = null,
   ) => {
     const payload = { msg: msg_string, typingAnimation: typingAnimation_bool };
 
     if (alignment_ScreenTextAlignment_Optional !== null)
       payload.alignment = alignment_ScreenTextAlignment_Optional;
-    if (textColor_Color_Optional !== null)
-      payload.textColor = textColor_Color_Optional;
-    if (screenColor_Color_optional !== null)
-      payload.screenColor = screenColor_Color_optional;
+    if (textColor_ColorObj_Optional !== null)
+      payload.textColor = textColor_ColorObj_Optional;
+    if (screenColor_ColorObj_optional !== null)
+      payload.screenColor = screenColor_ColorObj_optional;
 
     return payload;
   },
   ScreenTextAlignment: (x_int, y_int) => {
     return { x: x_int, y: y_int };
   },
-  Color: (r_int, g_int, b_int) => {
+  ColorObj: (r_int, g_int, b_int) => {
     return { r: r_int, g: g_int, b: b_int };
   },
   DungeonInfo: (dungeonCode_int, monsters_ArrayOfMonsterStatus) => {
@@ -132,20 +132,20 @@ const payloadData = {
       skillId: skillId_int,
     };
   },
-  Vector3: (x_float, y_float, z_float) => {
+  Vector3Obj: (x_float, y_float, z_float) => {
     return { x: x_float, y: y_float, z: z_float };
   },
   CollisionInfo: (
-    position1_Vector3,
-    position2_Vector3,
+    position1_Vector3Obj,
+    position2_Vector3Obj,
     radius1_float,
     radius2_float,
     height1_float,
     height2_float,
   ) => {
     return {
-      position: position1_Vector3,
-      position2: position2_Vector3,
+      position: position1_Vector3Obj,
+      position2: position2_Vector3Obj,
       radius1: radius1_float,
       radius2: radius2_float,
       height1: height1_float,
@@ -154,12 +154,12 @@ const payloadData = {
   },
   CollisionPushInfo: (
     hasCollision_bool,
-    pushDirection_Vector3,
+    pushDirection_Vector3Obj,
     pushDistance_float,
   ) => {
     return {
       hasCollision: hasCollision_bool,
-      pushDirection: pushDirection_Vector3,
+      pushDirection: pushDirection_Vector3Obj,
       pushDistance: pushDistance_float,
     };
   },

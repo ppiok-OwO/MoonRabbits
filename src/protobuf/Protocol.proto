@@ -305,8 +305,8 @@ message ScreenText{
   string msg = 1;
   bool typingAnimation = 2;
   optional ScreenTextAlignment alignment = 3;
-  optional Color textColor = 4;
-  optional Color screenColor = 5;
+  optional ColorObj textColor = 4;
+  optional ColorObj screenColor = 5;
 }
 
 message ScreenTextAlignment {
@@ -314,7 +314,7 @@ message ScreenTextAlignment {
   int32 y = 2;
 }
 
-message Color {
+message ColorObj {
   int32 r = 1;
   int32 g = 2;
   int32 b = 3;
@@ -372,15 +372,15 @@ message AttackType {
   int32 skillId = 2;
 }
 
-message Vector3 {
+message Vector3Obj {
   float x = 1;
   float y = 2;
   float z = 3;
 }
 
 message CollisionInfo {
-  Vector3 position1 = 1;
-  Vector3 position2 = 2;
+  Vector3Obj position1 = 1;
+  Vector3Obj position2 = 2;
   float radius1 = 3;
   float radius2 = 4;
   float height1 = 5;
@@ -389,6 +389,6 @@ message CollisionInfo {
 
 message CollisionPushInfo {
   bool hasCollision = 1;
-  Vector3 pushDirection = 2;
+  Vector3Obj pushDirection = 2;
   float pushDistance = 3;
 }
