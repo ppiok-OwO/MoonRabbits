@@ -17,6 +17,7 @@ import payloadData from '../../utils/packet/payloadData.js';
 //   { x: 20, y: 0, z: 30 }
 // ]
 
+// 이동중이라면 10프레임마다 location 패킷 전송
 const playerLocationUpdateHandler = (socket, packetData) => {
   try {
     const { transform } = packetData;
