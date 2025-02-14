@@ -27,27 +27,27 @@ export const animationHandler = (socket, packetData) => {
 
     // 패킷 직렬화
     // const packet = Packet.S_Animation(player.getId(), animCode);
-    const packet = Packet.S_Animation(player.id, animCode);
+    const packet = Packet.S2CAnimation(player.id, animCode);
 
     // 채팅창 알림 패킷 생성
     let chatPacket;
     switch (animCode) {
       case -1094458453:
-        chatPacket = Packet.S_Chat(
+        chatPacket = Packet.S2CChat(
           0,
           `${player.nickname}님이 행복한 표정을 짓습니다.`,
         );
         break;
 
       case 667595281:
-        chatPacket = Packet.S_Chat(
+        chatPacket = Packet.S2CChat(
           0,
           `${player.nickname}님이 무척 슬퍼합니다.`,
         );
         break;
 
       case 1355645575:
-        chatPacket = Packet.S_Chat(
+        chatPacket = Packet.S2CChat(
           0,
           `${player.nickname}님이 반갑게 인사합니다.`,
         );

@@ -123,6 +123,46 @@ const payloadData = {
   OwnedCharacters: (nickname_string, class_int) => {
     return { nickname: nickname_string, class: class_int };
   },
+  MemberId: (playerId_int) => {
+    return { playerId: playerId_int };
+  },
+  AttackType: (targetTransform_TransformInfo, skillId_int) => {
+    return {
+      targetTransform: targetTransform_TransformInfo,
+      skillId: skillId_int,
+    };
+  },
+  Vector3: (x_float, y_float, z_float) => {
+    return { x: x_float, y: y_float, z: z_float };
+  },
+  CollisionInfo: (
+    position1_Vector3,
+    position2_Vector3,
+    radius1_float,
+    radius2_float,
+    height1_float,
+    height2_float,
+  ) => {
+    return {
+      position: position1_Vector3,
+      position2: position2_Vector3,
+      radius1: radius1_float,
+      radius2: radius2_float,
+      height1: height1_float,
+      height2: height2_float,
+    };
+  },
+  CollisionPushInfo: (
+    hasCollision_bool,
+    pushDirection_Vector3,
+    pushDistance_float,
+  ) => {
+    return {
+      hasCollision: hasCollision_bool,
+      pushDirection: pushDirection_Vector3,
+      pushDistance: pushDistance_float,
+    };
+  },
 };
 
 export default payloadData;

@@ -2,14 +2,14 @@ import { packetIdEntries } from '../../config/config.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
 import printPacket from '../log/printPacket.js';
 
-function makePacket(packetId, packetData) {
+function makePacket(packetId, packetData = {}) {
   // 패킷 아이디 -> 타입
   const packetType = packetIdEntries.find(([, id]) => id === packetId)[0];
 
   // 페이로드
   const proto = getProtoMessages()[packetType];
   const packetDataBuffer = proto.encode(packetData).finish();
-  
+
   // 패킷 크기
   const packetSize = 5 + packetDataBuffer.length;
 

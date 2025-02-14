@@ -7,35 +7,36 @@ import bcrypt from 'bcrypt';
 
 /* 로그인 Handler */
 const loginHandler = async (socket, packetData) => {
-  const packet = Packet.S_Login(true,"로그인 성공",[]); // 지우기
+  // 패킷 구조 변경으로 S_Login -> S2CLogin 으로 일괄 변경해씀다
+  const packet = Packet.S2CLogin(true, '로그인 성공', []); // 지우기
   socket.write(packet); // 지우기
   // try {
-    // const { email, pw } = packetData;
+  // const { email, pw } = packetData;
 
-    // // 로그인 ID로 사용자 검색
-    // const userData = await findUserByEmail(email);
-    // if (!userData) {
-    //   const isSuccess = false;
-    //   const msg = '이메일을 찾을 수 없습니다.';
+  // // 로그인 ID로 사용자 검색
+  // const userData = await findUserByEmail(email);
+  // if (!userData) {
+  //   const isSuccess = false;
+  //   const msg = '이메일을 찾을 수 없습니다.';
 
-    //   const failResponse = Packet.S_Login(isSuccess, msg, []);
-    //   return socket.write(failResponse);
-    // }
+  //   const failResponse = Packet.S2CLogin(isSuccess, msg, []);
+  //   return socket.write(failResponse);
+  // }
 
-    // // 비밀번호 일치 여부 확인
-    // const passwordMatch = await bcrypt.compare(pw, userData.password);
+  // // 비밀번호 일치 여부 확인
+  // const passwordMatch = await bcrypt.compare(pw, userData.password);
 
-    // if (!passwordMatch) {
-    //   const isSuccess = false;
-    //   const msg = '비밀번호가 일치하지 않습니다.';
+  // if (!passwordMatch) {
+  //   const isSuccess = false;
+  //   const msg = '비밀번호가 일치하지 않습니다.';
 
-    //   const failResponse = Packet.S_Login(isSuccess, msg, []);
-    //   return socket.write(failResponse);
-    // }
+  //   const failResponse = Packet.S2CLogin(isSuccess, msg, []);
+  //   return socket.write(failResponse);
+  // }
 
-    // 중복 로그인도 방지 (중복 로그인 처리는 추후 구현)
+  // 중복 로그인도 방지 (중복 로그인 처리는 추후 구현)
 
-    // 로그인 성공 시, 사용자의 캐릭터 정보를 가져옴
+  // 로그인 성공 시, 사용자의 캐릭터 정보를 가져옴
 
   //   const isSuccess = true;
   //   const msg = '로그인에 성공했습니다.';
@@ -43,7 +44,7 @@ const loginHandler = async (socket, packetData) => {
   //   if (userData.character === null) {
   //     const ownedCharacters = [];
 
-  //     const packet = Packet.S_Login(isSuccess, msg, ownedCharacters);
+  //     const packet = Packet.S2CLogin(isSuccess, msg, ownedCharacters);
   //     return socket.write(packet);
   //   }
   //   // [case 02] 로그인 성공 - 캐릭터를 이미 보유하고 있을 경우
@@ -51,12 +52,12 @@ const loginHandler = async (socket, packetData) => {
   //     const ownedCharacters = [
   //       payloadData.OwnedCharacters(userData.character.nickname, userData.character.class),
   //     ];
-  //     const packet = Packet.S_Login(isSuccess, msg, ownedCharacters);
+  //     const packet = Packet.S2CLogin(isSuccess, msg, ownedCharacters);
   //     return socket.write(packet);
   //   }
   //   // await createPlayer(userData.id, 'test1', 1001);
 
-  //   // const packet = Packet.S_Login(isSuccess, msg, ownedCharacters);
+  //   // const packet = Packet.S2CLogin(isSuccess, msg, ownedCharacters);
   //   // socket.write(packet);
   // } catch (error) {
   //   console.error(error);

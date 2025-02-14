@@ -16,6 +16,8 @@ const playerSpawnNotificationHandler = (socket, packetData) => {
     return player.getPlayerInfo();
   });
 
+  // 패킷 정의 수정으로 S_Spawn이 제거됐슴다
+  // 아마 payload.S2CPlayerSpawn과 config.packetId.S2CPlayerSpawn 사용하시면 될 것 같슴다
   const spawn = payload.S_Spawn(playerInfoArray);
   const packet = makePacket(config.packetId.S_Spawn, spawn);
   const dungeonId = playerSession.getPlayer(socket).getDungeonId();
