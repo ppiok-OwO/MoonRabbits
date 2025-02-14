@@ -1,54 +1,65 @@
 import TransformInfo from './transformInfo.class.js';
 import User from './user.class.js';
-import stats from './stats.class.js';
 import payloadData from '../utils/packet/payloadData.js';
 import { config } from '../config/config.js';
-class Player extends User {
-  constructor(socket, playerId) {
-    super(socket);
-    this.id = playerId;
-    this.position = new TransformInfo();
-    this.stat = null;
-    this.class = null;
-    this.dungeonId = null;
-  }
-
-  setNewPlayerInfo(classCode, nickname) {
-    const newplayerstat = config.newPlayerStatData.baseStatData[classCode];
-    this.stat = new stats(
-      payloadData.StatInfo(
-        newplayerstat.level,
-        newplayerstat.hp,
-        newplayerstat.maxHp,
-        newplayerstat.mp,
-        newplayerstat.maxMp,
-        newplayerstat.atk,
-        newplayerstat.def,
-        newplayerstat.magic,
-        newplayerstat.speed,
-      ),
-    );
+import Entity from './stat.class.js';
+class Player extends Entity {
+  constructor(user, playerId, nickname, classCode) {
+    const newplayerstat = config.newPlayerStatData.BASE_STAT_DATA[classCode];
+    try {
+      super(
+        payloadData.StatInfo(
+          newplayerstat.level,
+          newplayerstat.hp,
+          newplayerstat.maxHp,
+          newplayerstat.mp,
+          newplayerstat.maxMp,
+          newplayerstat.atk,
+          newplayerstat.def,
+          newplayerstat.magic,
+          newplayerstat.speed,
+        ),
+      );
+    } catch (error) {}
     this.class = classCode;
     this.nickname = nickname;
+    this.user = user;
+    this.id = playerId;
+    this.position = new TransformInfo();
+    this.dungeonId = null;
+    this.lastBattleLog = 0;
+  }
+  sendPacket(packet) {
+    try {
+      this.socket.write(packet);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  setPlayerInfo(stat = new stats(), classCode) {
-    this.stat = stat;
-    this.class = classCode;
-  }
   getPlayerStatus() {
     return payloadData.PlayerStatus(
       this.class,
-      this.stat.getLevel(),
+      this.getLevel(),
       this.nickname,
-      this.stat.getMaxHp(),
-      this.stat.getMaxMp(),
-      this.stat.getHp(),
-      this.stat.getMp(),
+      this.getMaxHp(),
+      this.getMaxMp(),
+      this.getHp(),
+      this.getMp(),
     );
   }
-  getStatInfo() {
-    return this.stat.getPlayerStats();
+  getPlayerStats() {
+    return payloadData.StatInfo(
+      this.level,
+      this.hp,
+      this.maxHp,
+      this.mp,
+      this.maxMp,
+      this.atk,
+      this.def,
+      this.magic,
+      this.speed,
+    );
   }
   getPlayerInfo() {
     return payloadData.PlayerInfo(
@@ -56,7 +67,7 @@ class Player extends User {
       this.nickname,
       this.class,
       this.position,
-      this.getStatInfo(),
+      this.getPlayerStats(),
     );
   }
 
@@ -66,6 +77,9 @@ class Player extends User {
 
   getDungeonId() {
     return this.dungeonId;
+  }
+  getPlayerStat() {
+    return this.stat;
   }
 
   resetDungeonId() {

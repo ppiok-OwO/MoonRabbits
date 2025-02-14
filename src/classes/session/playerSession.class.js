@@ -4,12 +4,12 @@ class PlayerSession {
   players = new Map();
   playerId = 1;
 
-  addPlayer(socket) {
-    this.players.set(socket, new Player(socket, this.playerId++));
+  addPlayer(socket, user, nickname, classCode) {
+    this.players.set(socket, new Player(user, this.playerId++, nickname, classCode));
 
-    const newUser = this.players.get(socket);
+    const newPlayer = this.players.get(socket);
 
-    return newUser;
+    return newPlayer;
   }
 
   removePlayer(socket) {
@@ -18,6 +18,13 @@ class PlayerSession {
 
   getPlayer(socket) {
     return this.players.get(socket);
+  }
+  getPlayerById(id){
+    for (const player of this.players.values()) {
+      if(player.id === id)
+        return player;
+    }
+    return -1;
   }
 
   getAllPlayers() {
