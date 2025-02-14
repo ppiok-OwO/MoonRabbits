@@ -1,11 +1,11 @@
-import { PACKET_ID } from '../../constants/header.js';
 import {
   getDungeonSessions,
   getPlayerSession,
 } from '../../session/sessions.js';
+import CustomError from '../../utils/error/customError.js';
+import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import handleError from '../../utils/error/errorHandler.js';
-import makePacket from '../../utils/packet/makePacket.js';
-import payload from '../../utils/packet/payload.js';
+import Packet from '../../utils/packet/packet.js';
 
 export const animationHandler = (socket, packetData) => {
   try {
@@ -15,9 +15,47 @@ export const animationHandler = (socket, packetData) => {
     const playerSession = getPlayerSession();
     const player = playerSession.getPlayer(socket);
 
+    if (!player) {
+      socket.emit(
+        'error',
+        new CustomError(
+          ErrorCodes.USER_NOT_FOUND,
+          '플레이어 정보를 찾을 수 없습니다.',
+        ),
+      );
+    }
+
     // 패킷 직렬화
-    const animPayload = payload.S_Animation(player.id, animCode);
-    const packet = makePacket(PACKET_ID.S_Animation, animPayload);
+    // const packet = Packet.S_Animation(player.getId(), animCode);
+    const packet = Packet.S_Animation(player.id, animCode);
+
+    // 채팅창 알림 패킷 생성
+    let chatPacket;
+    switch (animCode) {
+      case -1094458453:
+        chatPacket = Packet.S_Chat(
+          0,
+          `${player.nickname}님이 행복한 표정을 짓습니다.`,
+        );
+        break;
+
+      case 667595281:
+        chatPacket = Packet.S_Chat(
+          0,
+          `${player.nickname}님이 무척 슬퍼합니다.`,
+        );
+        break;
+
+      case 1355645575:
+        chatPacket = Packet.S_Chat(
+          0,
+          `${player.nickname}님이 반갑게 인사합니다.`,
+        );
+        break;
+
+      default:
+        break;
+    }
 
     const dungeonId = player.getDungeonId();
     if (dungeonId) {
@@ -25,11 +63,14 @@ export const animationHandler = (socket, packetData) => {
       const dungeonSessions = getDungeonSessions();
       const dungeon = dungeonSessions.getDungeon(dungeonId);
       dungeon.notify(packet);
+      dungeon.notify(chatPacket);
     } else {
       // 던전이 아니면
       playerSession.notify(packet);
+      playerSession.notify(chatPacket);
     }
   } catch (error) {
     handleError(error);
+    // console.error(error);
   }
 };

@@ -23,11 +23,15 @@ client.connect(PORT, HOST, async () => {
 
   await delay(500);
 
-  // Vector3 형식으로 시작 위치와 목표 위치 전달
   const movePacket = Packet.C_Move(
-    { x: -4.5963, y: 0.6657553, z: 136.5156 }, // startPos
-    { x: 9.453333, y: 0.7933332, z: 119.18 }, // targetPos
+    -4.5963,
+    0.6657553,
+    136.5156,
+    9.453333,
+    0.7933332,
+    119.18,
   );
+
   client.write(movePacket);
 });
 
@@ -38,6 +42,7 @@ client.on('data', (data) => {
   }
 
   client.buffer = Buffer.concat([client.buffer, data]);
+
   const headerSize = config.packet.totalSize + config.packet.idLength;
 
   while (client.buffer.length >= headerSize) {
@@ -55,9 +60,11 @@ client.on('data', (data) => {
       }
 
       const packetData = decodedPacket(packetType, packetDataBuffer);
+
       if (packetId >= 0) {
         printPacket(packetSize, packetId, packetData, 'in');
       }
+
       handlePacket(packetId, packetData);
     } else {
       break;
@@ -84,21 +91,20 @@ const decodedPacket = (packetType, packetDataBuffer) => {
 
 const handlePacket = (packetId, packetData) => {
   switch (packetId) {
-    case config.packetIds.S_Enter: // 2
-      console.log('Login response:', packetData);
+    case 1:
+      console.log('Handle packet 1:', packetData);
       break;
-    case config.packetIds.S_Spawn: // 3
-      console.log('Spawn event:', packetData);
+    case 2:
+      console.log('Handle packet 2:', packetData);
       break;
-    case config.packetIds.S_Move: // 7
-      console.log('Move response:', packetData);
+    case 3:
+      console.log('Handle packet 3:', packetData);
       break;
-    case config.packetIds.S_PathResult: // 11
-      console.log('Path result:', packetData);
-      // 경로 데이터 시각화나 처리
-      if (packetData.path) {
-        console.log('Calculated path points:', packetData.path);
-      }
+    case 6:
+      console.log('Handle packet 6:', packetData);
+      break;
+    case 7:
+      console.log('Handle packet 7:', packetData);
       break;
     default:
       console.warn('Unhandled packet ID:', packetId);

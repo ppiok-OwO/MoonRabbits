@@ -1,18 +1,34 @@
 import { config } from '../config/config.js';
-import makePacket from '../utils/packet/makePacket.js';
+import CustomError from '../utils/error/customError.js';
+import { ErrorCodes } from '../utils/error/errorCodes.js';
 import { animationHandler } from './social/playerAnimation.handler.js';
 import { chatHandler } from './social/playerChat.handler.js';
 import playerMoveHandler from './town/playerMove.handler.js';
 import playerSpawnNotificationHandler from './town/playerSpawnNotification.handler.js';
 import townEnterHandler from './town/townEnter.handler.js';
+import { enterDungeonHandler } from './town/enterDungeon.handler.js';
+import { playerResponseHandler } from './dungeon/playerResponse.handler.js';
+import playerLocationUpdateHandler from './town/playerLocationUpdate.handler.js';
 
 // 패킷 ID별로 핸들러 맵핑
 const handlers = {
-  0: townEnterHandler,
-  2: playerSpawnNotificationHandler,
-  6: playerMoveHandler,
-  8: animationHandler,
-  12: chatHandler,
+  [config.packetId.C_Enter]: townEnterHandler,
+  [config.packetId.S_Spawn]: playerSpawnNotificationHandler,
+  [config.packetId.C_Location]: playerLocationUpdateHandler,
+  [config.packetId.C_Move]: playerMoveHandler,
+  [config.packetId.C_Animation]: animationHandler,
+  [config.packetId.C_Chat]: chatHandler,
+  [config.packetId.C_EnterDungeon]: enterDungeonHandler,
+  [config.packetId.C_PlayerResponse]: playerResponseHandler,
 };
 
-export default handlers;
+export const getHandlerByPacketId = (packetId) => {
+  const handler = handlers[packetId];
+  if (!handler) {
+    throw new CustomError(
+      ErrorCodes.UNKNOWN_HANDLER_ID,
+      `핸들러가 정의되지 않은 패킷ID : ${packetId}`,
+    );
+  }
+  return handler;
+};
