@@ -46,9 +46,7 @@ export const config = {
     S_MonsterAction: PACKET_ID.S_MonsterAction,
   },
   newPlayerStatData: {
-    baseStatData,
-  },
-    BASE_STAT_DATA,
+    baseStatData: BASE_STAT_DATA,
   },
   battletag: {
     Menu: BATTLE_LOG_ID.menu,
@@ -58,7 +56,5 @@ export const config = {
     tolerance: UPDATE_LOCATION.tolerance,
   },
 };
-
-export const packetIdEntries = Object.entries(PACKET_ID);
 
 export const packetIdEntries = Object.entries(config.packetId);

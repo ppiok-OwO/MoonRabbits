@@ -5,10 +5,9 @@ class NavMeshPathfinder {
     this.navMesh = null;
     this.config = {
       movementSpeed: 5, // 일정한 이동 속도
-      pathSmoothing: true, // 경로 스무딩 활성화
-      cornerThreshold: 0.5, // 코너 감지 임계값
+      playerRadius: 1.0, // 플레이어 충돌 반경
+      safetyMargin: 0.5, // 추가 안전 거리
     };
-    this.collisionAvoidance = new CollisionAvoidance();
   }
 
   async initializeNavMesh(navMeshData) {
@@ -21,133 +20,139 @@ class NavMeshPathfinder {
     }
   }
 
-  calculatePath(startPos, targetPos) {
+  // 기존 서버 패킷 구조에 맞춘 이동 처리
+  handlePlayerMovement(
+    startPosX,
+    startPosY,
+    startPosZ,
+    targetPosX,
+    targetPosY,
+    targetPosZ,
+  ) {
     if (!this.navMesh) {
       console.error('NavMesh not initialized');
       return null;
     }
 
-    const start = new Vector3(startPos.x, startPos.y, startPos.z);
-    const target = new Vector3(targetPos.x, targetPos.y, targetPos.z);
+    // YUKA Vector3로 변환
+    const startPos = new Vector3(startPosX, startPosY, startPosZ);
+    const targetPos = new Vector3(targetPosX, targetPosY, targetPosZ);
 
-    // 기본 경로 계산
-    const rawPath = this.navMesh.findPath(start, target);
-    if (!rawPath) {
+    // 경로 계산
+    const path = this.navMesh.findPath(startPos, targetPos);
+
+    if (!path) {
+      console.error('No valid path found');
       return null;
     }
 
-    // 경로 최적화
-    return this.optimizePath(rawPath);
+    // 경로의 각 점을 서버 형식으로 변환
+    return this.convertPathToServerFormat(path);
   }
 
-  optimizePath(path) {
-    if (path.length < 2) return path;
+  // YUKA Vector3 경로를 서버 형식으로 변환
+  convertPathToServerFormat(path) {
+    return path.map((point) => ({
+      posX: point.x,
+      posY: point.y,
+      posZ: point.z,
+    }));
+  }
 
-    const smoothedPath = [];
-    smoothedPath.push(path[0]);
+  // 충돌 체크 (기존 서버 좌표 형식 사용)
+  checkCollision(posX, posY, posZ, otherPlayers) {
+    const position = new Vector3(posX, posY, posZ);
 
-    // 경로 스무딩
-    for (let i = 1; i < path.length - 1; i++) {
-      const prev = path[i - 1];
-      const current = path[i];
-      const next = path[i + 1];
+    for (const player of otherPlayers) {
+      const otherPos = new Vector3(player.posX, player.posY, player.posZ);
+      const distance = position.distanceTo(otherPos);
 
-      if (this.isSignificantCorner(prev, current, next)) {
-        smoothedPath.push(current);
+      if (distance < this.config.playerRadius * 2 + this.config.safetyMargin) {
+        return true; // 충돌 발생
       }
     }
 
-    smoothedPath.push(path[path.length - 1]);
-    return this.addMovementData(smoothedPath);
+    return false; // 충돌 없음
   }
 
-  isSignificantCorner(prev, current, next) {
-    const v1 = new Vector3().subVectors(current, prev).normalize();
-    const v2 = new Vector3().subVectors(next, current).normalize();
-    const angle = v1.angleTo(v2);
-    return angle > this.config.cornerThreshold;
+  // 안전한 위치 찾기 (기존 서버 좌표 형식 사용)
+  findSafePoint(posX, posY, posZ, obstacles) {
+    const position = new Vector3(posX, posY, posZ);
+    let safePoint = position.clone();
+
+    for (const obstacle of obstacles) {
+      const obstaclePos = new Vector3(
+        obstacle.posX,
+        obstacle.posY,
+        obstacle.posZ,
+      );
+      const direction = position.clone().sub(obstaclePos).normalize();
+
+      safePoint.add(direction.multiplyScalar(this.config.safetyMargin));
+    }
+
+    // NavMesh 경계 내로 조정
+    const clampedPoint = this.navMesh.clampPoint(safePoint, new Vector3());
+
+    return {
+      posX: clampedPoint.x,
+      posY: clampedPoint.y,
+      posZ: clampedPoint.z,
+    };
   }
 
-  addMovementData(path) {
-    // 각 경로 포인트에 이동 데이터 추가
-    return path.map((point, index) => {
-      const nextPoint = path[index + 1];
-      if (!nextPoint)
-        return {
-          position: point,
-          direction: new Vector3(),
-          speed: this.config.movementSpeed,
-        };
+  // 경로 최적화
+  optimizePath(path) {
+    if (path.length < 3) return path;
 
-      // 다음 포인트를 향하는 방향 벡터 계산
-      const direction = new Vector3().subVectors(nextPoint, point).normalize();
+    const optimizedPath = [path[0]];
+    let currentPoint = path[0];
+    let index = 1;
 
-      return {
-        position: point,
-        direction: direction,
-        speed: this.config.movementSpeed, // 일정한 속도 유지
-      };
-    });
-  }
+    while (index < path.length) {
+      let checkPoint = path[index];
+      let canSkip = true;
 
-  handlePlayerMovement(
-    playerId,
-    startPos,
-    targetPos,
-    otherPlayers,
-    currentTime,
-  ) {
-    const initialPath = this.calculatePath(startPos, targetPos);
-    if (!initialPath) return null; // 충돌 회피가 적용된 경로 계산
-    const adjustedPath = this.collisionAvoidance.checkPathSegments(
-      initialPath,
-      otherPlayers,
-      currentTime,
-    );
-    return this.addMovementData(adjustedPath);
-  }
-
-  adjustPathForCollisions(path, currentPlayerId) {
-    const adjustedPath = [];
-    const playerRadius = 1.0;
-
-    for (const pathPoint of path) {
-      let point = pathPoint.position || pathPoint;
-      const players = playerSession.getPlayerAll();
-
-      let needsAdjustment = false;
-      for (const [playerId, playerInfo] of players.entries()) {
-        if (playerId === currentPlayerId) continue;
-
-        const playerPos = playerInfo.position;
-        const distance = point.distanceTo(
-          new Vector3(playerPos.x, playerPos.y, playerPos.z),
-        );
-
-        if (distance < playerRadius * 2) {
-          point = this.findSafePoint(point, playerPos);
-          needsAdjustment = true;
+      // 현재 점에서 다음 점까지 직선 경로 가능 여부 확인
+      for (let i = index + 1; i < path.length; i++) {
+        if (!this.hasLineOfSight(currentPoint, path[i])) {
+          canSkip = false;
           break;
         }
       }
 
-      adjustedPath.push(needsAdjustment ? point : pathPoint);
+      if (canSkip) {
+        currentPoint = checkPoint;
+        optimizedPath.push(checkPoint);
+        index += 2;
+      } else {
+        currentPoint = path[index];
+        optimizedPath.push(path[index]);
+        index++;
+      }
     }
 
-    return adjustedPath;
+    // 마지막 점 추가
+    if (
+      path.length > 0 &&
+      optimizedPath[optimizedPath.length - 1] !== path[path.length - 1]
+    ) {
+      optimizedPath.push(path[path.length - 1]);
+    }
+
+    return optimizedPath;
   }
 
-  findSafePoint(point, obstaclePos) {
-    const direction = new Vector3()
-      .copy(point)
-      .sub(new Vector3(obstaclePos.x, obstaclePos.y, obstaclePos.z))
-      .normalize();
+  // 두 점 사이 직선 경로 가능 여부 확인
+  hasLineOfSight(startPoint, endPoint) {
+    const start = new Vector3(
+      startPoint.posX,
+      startPoint.posY,
+      startPoint.posZ,
+    );
+    const end = new Vector3(endPoint.posX, endPoint.posY, endPoint.posZ);
 
-    const safePoint = new Vector3()
-      .copy(point)
-      .add(direction.multiplyScalar(2.0));
-
-    return this.navMesh.clampPoint(safePoint, new Vector3());
+    return this.navMesh.checkLineOfSight(start, end);
   }
 }
 

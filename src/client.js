@@ -2,8 +2,6 @@ import net from 'net';
 import { getProtoMessages, loadProtos } from './init/loadProtos.js';
 import { config, packetIdEntries } from './config/config.js';
 import Packet from './utils/packet/packet.js';
-import CustomError from './utils/error/customError.js';
-import { ErrorCodes } from './utils/error/errorCodes.js';
 import printPacket from './utils/log/printPacket.js';
 
 const HOST = 'localhost';
@@ -18,20 +16,21 @@ client.connect(PORT, HOST, async () => {
   console.log('Connected to server');
   await loadProtos();
 
+  // 캐릭터 입장
   const enterPacket = Packet.C_Enter('테스트클라', '1001');
   client.write(enterPacket);
 
   await delay(500);
 
+  // 이동 테스트
   const movePacket = Packet.C_Move(
-    -4.5963,
-    0.6657553,
-    136.5156,
-    9.453333,
-    0.7933332,
-    119.18,
+    -4.5963, // startPosX
+    0.6657553, // startPosY
+    136.5156, // startPosZ
+    9.453333, // targetPosX
+    0.7933332, // targetPosY
+    119.18, // targetPosZ
   );
-
   client.write(movePacket);
 });
 
@@ -42,7 +41,6 @@ client.on('data', (data) => {
   }
 
   client.buffer = Buffer.concat([client.buffer, data]);
-
   const headerSize = config.packet.totalSize + config.packet.idLength;
 
   while (client.buffer.length >= headerSize) {
@@ -60,11 +58,9 @@ client.on('data', (data) => {
       }
 
       const packetData = decodedPacket(packetType, packetDataBuffer);
-
       if (packetId >= 0) {
         printPacket(packetSize, packetId, packetData, 'in');
       }
-
       handlePacket(packetId, packetData);
     } else {
       break;
@@ -91,23 +87,31 @@ const decodedPacket = (packetType, packetDataBuffer) => {
 
 const handlePacket = (packetId, packetData) => {
   switch (packetId) {
-    case 1:
-      console.log('Handle packet 1:', packetData);
+    case 2: // S_Enter
+      console.log('Enter response:', packetData);
       break;
-    case 2:
-      console.log('Handle packet 2:', packetData);
+    case 3: // S_Spawn
+      console.log('Spawn event:', packetData);
       break;
-    case 3:
-      console.log('Handle packet 3:', packetData);
+    case 7: // S_Move
+      console.log('Move response:', packetData);
+      handleMoveResponse(packetData);
       break;
-    case 6:
-      console.log('Handle packet 6:', packetData);
-      break;
-    case 7:
-      console.log('Handle packet 7:', packetData);
+    case 13: // Chat 또는 에러 메시지
+      console.log('Server message:', packetData.chatMsg);
       break;
     default:
-      console.warn('Unhandled packet ID:', packetId);
+      if (packetId !== 13) {
+        // 13번 패킷은 일반적인 서버 메시지이므로 경고하지 않음
+        console.warn('Unhandled packet ID:', packetId);
+      }
       break;
   }
 };
+
+function handleMoveResponse(moveData) {
+  if (moveData.path) {
+    console.log('Path points:', moveData.path);
+    // 경로 포인트에 대한 추가 처리
+  }
+}
