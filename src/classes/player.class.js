@@ -28,6 +28,7 @@ class Player extends Entity {
     this.position = new TransformInfo();
     this.dungeonId = null;
     this.lastBattleLog = 0;
+    this.path = null;
   }
   sendPacket(packet) {
     try {
@@ -84,6 +85,14 @@ class Player extends Entity {
 
   resetDungeonId() {
     this.dungeonId = null;
+  }
+
+  setPath(path) {
+    this.path = path;
+  }
+
+  getPath() {
+    return this.path;
   }
 }
 

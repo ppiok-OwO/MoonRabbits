@@ -8,14 +8,17 @@ import playerSpawnNotificationHandler from './town/playerSpawnNotification.handl
 import townEnterHandler from './town/townEnter.handler.js';
 import { enterDungeonHandler } from './town/enterDungeon.handler.js';
 import { playerResponseHandler } from './dungeon/playerResponse.handler.js';
+import playerLocationUpdateHandler from './town/playerLocationUpdate.handler.js';
 import registerHandler from './account/register.handler.js';
 import loginHandler from './account/login.handler.js';
 import createCharacterHandler from './account/createCharacter.handler.js';
 
 // 패킷 ID별로 핸들러 맵핑
 const handlers = {
+  // 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
   [config.packetId.C2STownEnter]: townEnterHandler,
   [config.packetId.S2CPlayerSpawn]: playerSpawnNotificationHandler,
+  [config.packetId.C2SPlayerLocation]: playerLocationUpdateHandler,
   [config.packetId.C2SPlayerMove]: playerMoveHandler,
   [config.packetId.C2SAnimation]: animationHandler,
   [config.packetId.C2SChat]: chatHandler,

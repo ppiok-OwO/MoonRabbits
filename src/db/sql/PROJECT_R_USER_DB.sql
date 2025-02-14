@@ -13,8 +13,8 @@ CREATE TABLE IF NOT EXISTS Players
 (
     player_id  VARCHAR(36)  PRIMARY KEY,
     user_id    VARCHAR(36)  NOT NULL,
-    nickname   VARCHAR(255) NOT NULL,
-    class_code VARCHAR(36)  NOT NULL,
+    nickname   VARCHAR(255) NULL,
+    class_code VARCHAR(36)  NULL,
     created_at TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
         ON DELETE CASCADE ON UPDATE CASCADE
