@@ -38,8 +38,6 @@ export async function playerMoveHandler(socket, packetData) {
     const currentPos = { x: startPosX, y: startPosY, z: startPosZ };
     const navMesh = await loadNavMesh('Town Exported NavMesh.obj');
 
-    console.log('navMesh :', navMesh);
-
     // NavMesh 기반 경로 탐색
     const path = await findPath(navMesh, currentPos, targetPos);
 
