@@ -53,10 +53,13 @@ const payloadData = {
     screenColor_Color_optional = null,
   ) => {
     const payload = { msg: msg_string, typingAnimation: typingAnimation_bool };
-    
-    if(alignment_ScreenTextAlignment_Optional!==null) payload.alignment = alignment_ScreenTextAlignment_Optional;
-    if(textColor_Color_Optional!==null) payload.textColor = textColor_Color_Optional;
-    if(screenColor_Color_optional!==null) payload.screenColor = screenColor_Color_optional;
+
+    if (alignment_ScreenTextAlignment_Optional !== null)
+      payload.alignment = alignment_ScreenTextAlignment_Optional;
+    if (textColor_Color_Optional !== null)
+      payload.textColor = textColor_Color_Optional;
+    if (screenColor_Color_optional !== null)
+      payload.screenColor = screenColor_Color_optional;
 
     return payload;
   },
@@ -116,6 +119,9 @@ const payloadData = {
   },
   BtnInfo: (msg_string, enable_bool) => {
     return { msg: msg_string, enable: enable_bool };
+  },
+  OwnedCharacters: (nickname_string, class_int) => {
+    return { nickname: nickname_string, class: class_int };
   },
 };
 

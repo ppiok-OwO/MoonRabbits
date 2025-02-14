@@ -1,0 +1,61 @@
+{
+  "name": "skill",
+  "version": "1.0.0",
+  "data": [
+    {
+      "skill_id": 30000,
+      "skill_name": "스킬 이름",
+      "skill_type": "Type",
+      "skill_effect": "스킬 효과 설명",
+      "skill_description": "스킬 아이템은 30000부터 시작",
+      "skill_cost_mp": 10,
+      "skill_multiplier": 2,
+      "skill_effect_duration": 1,
+      "skill_cooltime": 1
+    },
+    {
+      "skill_id": 30001,
+      "skill_name": "강하게 찌르기",
+      "skill_type": "Attack",
+      "skill_effect": "적에게 2배의 데미지를 입힙니다.",
+      "skill_description": "창술사의 기본 스킬입니다.",
+      "skill_cost_mp": 10,
+      "skill_multiplier": 2,
+      "skill_effect_duration": 1,
+      "skill_cooltime": 10
+    },
+    {
+      "skill_id": 30002,
+      "skill_name": "예리한 창",
+      "skill_type": "Buff",
+      "skill_effect": "창끝을 마력으로 감쌓아 공격력을 2배 증가시킵니다.",
+      "skill_description": "창술사의 기본 스킬입니다.",
+      "skill_cost_mp": 10,
+      "skill_multiplier": 2,
+      "skill_effect_duration": 20,
+      "skill_cooltime": 60
+    },
+    {
+      "skill_id": 30003,
+      "skill_name": "힘껏 휘두르기",
+      "skill_type": "Attack",
+      "skill_effect": "적에게 2배의 데미지를 입힙니다.",
+      "skill_description": "전사의 기본 스킬입니다.",
+      "skill_cost_mp": 10,
+      "skill_multiplier": 2,
+      "skill_effect_duration": 1,
+      "skill_cooltime": 10
+    },
+    {
+      "skill_id": 30004,
+      "skill_name": "절묘한 공방",
+      "skill_type": "Buff",
+      "skill_effect": "아군의 공격력과 방어력을 1.25배 증가시킵니다",
+      "skill_description": "전사의 기본 스킬입니다.",
+      "skill_cost_mp": 10,
+      "skill_multiplier": 1.25,
+      "skill_effect_duration": 30,
+      "skill_cooltime": 60
+    }
+  ]
+}

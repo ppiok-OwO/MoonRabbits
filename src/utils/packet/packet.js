@@ -2,6 +2,12 @@ import { config } from '../../config/config.js';
 import makePacket from './makePacket.js';
 
 const Packet = {
+  C_Enter: (nickname_string, class_string) => {
+    return makePacket(config.packetId.C_Enter, {
+      nickname: nickname_string,
+      class: class_string,
+    });
+  },
   S_Enter: (player_PlayerInfo) => {
     return makePacket(config.packetId.S_Enter, { player: player_PlayerInfo });
   },
@@ -15,11 +21,36 @@ const Packet = {
       playerIds: playerIds_ArrayOfInt,
     });
   },
-  S_Move: (playerId_int, transform_TransformInfo) => {
-    return makePacket(config.packetId.S_Move, {
+  S_Location: (
+    playerId_int,
+    transform_TransformInfo,
+    isValidTransform_bool,
+  ) => {
+    return makePacket(config.packetId.S_Location, {
       playerId: playerId_int,
       transform: transform_TransformInfo,
+      isValidTransform: isValidTransform_bool,
     });
+  },
+  C_Move: (
+    startPosX_float,
+    startPosY_float,
+    startPosZ_float,
+    targetPosX_float,
+    targetPosY_float,
+    targetPosZ_float,
+  ) => {
+    return makePacket(config.packetId.C_Move, {
+      startPosX: startPosX_float,
+      startPosY: startPosY_float,
+      startPosZ: startPosZ_float,
+      targetPosX: targetPosX_float,
+      targetPosY: targetPosY_float,
+      targetPosZ: targetPosZ_float,
+    });
+  },
+  S_Move: () => {
+    return makePacket(config.packetId.S_Move, {});
   },
   S_Animation: (playerId_int, animCode_int) => {
     return makePacket(config.packetId.S_Animation, {
@@ -86,6 +117,29 @@ const Packet = {
       actionSet: actionSet_ActionSet,
     });
   },
+  S_Register: (isSuccess_bool, msg_string) => {
+    return makePacket(config.packetId.S_Register, {
+      isSuccess: isSuccess_bool,
+      msg: msg_string,
+    });
+  },
+  S_Login: (
+    isSuccess_bool,
+    msg_string,
+    ownedCharacters_ArrayOfOwnedCharacters,
+  ) => {
+    return makePacket(config.packetId.S_Login, {
+      isSuccess: isSuccess_bool,
+      msg: msg_string,
+      ownedCharacters: ownedCharacters_ArrayOfOwnedCharacters,
+    });
+  },
+  S_CreateCharacter: (isSuccess_bool,msg_string) => {
+    return makePacket(config.packetId.S_CreateCharacter, {
+        isSuccess : isSuccess_bool,
+        msg:msg_string
+    });
+  }
 };
 
 export default Packet;

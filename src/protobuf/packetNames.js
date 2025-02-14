@@ -3,6 +3,8 @@ export const packetNames = [
   'S_Enter',
   'S_Spawn',
   'S_Despawn',
+  'C_Location',
+  'S_Location',
   'C_Move',
   'S_Move',
   'C_Animation',
@@ -21,4 +23,11 @@ export const packetNames = [
   'S_SetMonsterHp',
   'S_PlayerAction',
   'S_MonsterAction',
+  'C_Register',
+  'S_Register',
+  'C_Login',
+  'S_Login',
+  'C_CreateCharacter',
+  'S_CreateCharacter'
 ];
+
