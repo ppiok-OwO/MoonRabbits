@@ -14,8 +14,12 @@ import { ec2Types } from './ec2Info.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const townUserDataScript = fs.readFileSync(path.join(__dirname, "town-user-data.sh"), "utf8");
+const townUserDataScript = fs.readFileSync(path.join(__dirname, "docker-user-data.sh"), "utf8");
 const townUserDataBase64 = Buffer.from(townUserDataScript).toString("base64");
+
+const encodingToBase64 = (script) => {
+  return Buffer.from(script).toString("base64");
+}
 
 const ec2Client = new EC2Client({
   region: 'ap-northeast-2',
@@ -73,7 +77,8 @@ export const AWS = {
   // #RUN
   runInstances: (type) => {
     //const userDataBase64 = type===ec2Types.town?townUserDataBase64:null;
-    const userDataBase64 = townUserDataBase64;
+    const userDataScript = setupPortInUserDataScript(3001);
+    const userDataBase64 = encodingToBase64(userDataScript);
     const run = new RunInstancesCommand({
       ImageId: 'ami-024ea438ab0376a47', // AMI ID
       InstanceType: 't2.micro',
@@ -109,10 +114,13 @@ export const AWS = {
     );
   },
 
-  // #GET IP
+  // #GET IP & INFORM NLB FOR TARGET GROUP
 };
 
-function setupInstance(host) {}
+const setupInstance = (host) => {};
+const setupPortInUserDataScript = (port) => townUserDataScript.replace('${PORT}', port);
 
 //AWS.runInstances(2);
 //AWS.describeInstances();
+
+//console.log(newTownUserDataScript);

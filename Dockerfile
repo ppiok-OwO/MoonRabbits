@@ -4,12 +4,12 @@ RUN mkdir /app
 
 WORKDIR /app
 
-COPY package*.json .env ./
+COPY package*.json .env /app/
 
 RUN npm install
 
-COPY src ./
+COPY . .
 
 EXPOSE 3000
 
-ENTRYPOINT [ "npm", "start" ]
+CMD [ "node", "src/server.js" ]

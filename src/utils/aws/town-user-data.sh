@@ -12,9 +12,8 @@ npm install pm2 -g
 cd /home/ubuntu
 git clone -b ft/kdw-aws https://github.com/ppiok-OwO/MoonRabbits.git
 cd MoonRabbits
+nano .env
 npm install
-
-nano ~/<project-directory>/.env
 
 # pm2로 프로젝트 실행
 pm2 start src/server.js

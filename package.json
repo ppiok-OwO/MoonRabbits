@@ -17,7 +17,6 @@
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-ec2": "^3.746.0",
-    "docker": "^1.0.0",
     "dotenv": "^16.4.7",
     "lodash": "^4.17.21",
     "long": "^5.2.4",
