@@ -1,7 +1,9 @@
-import { createUser, findUserByEmail } from '../../db/user/user.db.js';
+import { AddPlayerRow, createUser, findUserByEmail } from '../../db/user/user.db.js';
+import { getUserSessions } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import Packet from '../../utils/packet/packet.js';
+import chalk from 'chalk';
 
 /* 회원가입 Handler */
 const registerHandler = async (socket, packetData) => {
@@ -56,6 +58,7 @@ const registerHandler = async (socket, packetData) => {
 
     // 사용자 추가
     await createUser(email, pw);
+    await AddPlayerRow(email);
 
     // 모든 조건문을 뚫고 왔을 때
     // 회원가입 성공!
@@ -65,6 +68,11 @@ const registerHandler = async (socket, packetData) => {
     const successResponse = Packet.S_Register(isSuccess, msg);
     socket.write(successResponse);
   } catch (error) {
+    console.error(
+      `${chalk.redBright('[registerHandler Error]')}
+      ${error}
+      `,
+    );
     socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'registerHandler 에러'));
   }
 };
