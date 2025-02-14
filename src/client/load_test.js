@@ -1,7 +1,6 @@
 import { loadProtos } from '../init/loadProtos.js';
 import delay from '../utils/delay.js';
 import { Client } from './client.js';
-import si from 'systeminformation';
 
 let idNumber = 1;
 
@@ -51,4 +50,3 @@ async function gameTest() {
   console.log(`테스트 시간 : ${testTime}`);
   console.log('부하테스트 완료');
 }
-

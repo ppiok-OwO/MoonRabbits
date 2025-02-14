@@ -48,7 +48,6 @@ export class Client {
 
   async move() {
     this.transform.posX += Math.random() * 2 - 1;
-    this.transform.posY += Math.random() * 2 - 1;
     this.transform.posZ += Math.random() * 2 - 1;
     this.sendPacket(config.packetId.C_Move, cPacket.C_Move(this.transform));
   }
