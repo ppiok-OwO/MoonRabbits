@@ -14,21 +14,21 @@ const townEnterHandler = (socket, packetData) => {
         'error',
         new CustomError(ErrorCodes.USER_NOT_FOUND, 'getUser 에러'),
       );
-    console.log(10);
+    // console.log(10);
     const newPlayer = getPlayerSession().addPlayer(
       socket,
       user,
       packetData.nickname,
-      packetData.class,
+      packetData.classCode,
     );
 
     const playerInfo = newPlayer.getPlayerInfo();
 
-    const packet = Packet.S_Enter(playerInfo);
+    const packet = Packet.S2CTownEnter(playerInfo);
 
     socket.write(packet);
 
-    const chatPacket = Packet.S_Chat(
+    const chatPacket = Packet.S2CChat(
       0,
       `${newPlayer.nickname}님이 입장하였습니다.`,
     );
@@ -36,6 +36,7 @@ const townEnterHandler = (socket, packetData) => {
 
     playerSpawnNotificationHandler(socket, packetData);
   } catch (error) {
+    console.error(error);
     socket.emit(
       'error',
       new CustomError(ErrorCodes.HANDLER_ERROR, 'townEnterHanlder 에러'),

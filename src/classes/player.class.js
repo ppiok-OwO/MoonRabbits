@@ -20,7 +20,9 @@ class Player extends Entity {
           newplayerstat.speed,
         ),
       );
-    } catch (error) {}
+    } catch (error) {
+      console.error("!!! ",error)
+    }
     this.class = classCode;
     this.nickname = nickname;
     this.user = user;

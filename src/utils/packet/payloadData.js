@@ -120,8 +120,8 @@ const payloadData = {
   BtnInfo: (msg_string, enable_bool) => {
     return { msg: msg_string, enable: enable_bool };
   },
-  OwnedCharacters: (nickname_string, class_int) => {
-    return { nickname: nickname_string, class: class_int };
+  OwnedCharacters: (nickname_string, classCode_int) => {
+    return { nickname: nickname_string, classCode: classCode_int };
   },
   MemberId: (playerId_int) => {
     return { playerId: playerId_int };
