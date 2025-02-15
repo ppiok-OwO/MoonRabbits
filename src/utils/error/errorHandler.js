@@ -2,7 +2,7 @@ import { getPlayerSession } from '../../session/sessions.js';
 import Packet from '../packet/packet.js';
 import { ErrorCodes } from './errorCodes.js';
 
-// Packet.S_Chat -> Packet.S2CChat으로 일괄 수정해씀다
+// !!! Packet.S_Chat -> Packet.S2CChat으로 일괄 수정해씀다
 
 const handleError = (socket, error) => {
   

@@ -14,7 +14,7 @@ import { getUserSessions } from '../../session/sessions.js';
 /* 캐릭터 생성 Handler */
 const createCharacterHandler = async (socket, packetData) => {
   try {
-    // 패킷 수정에 따라 class -> classCode가 된 관계로 분해할당 그대로 하도록 수정했습니다!
+    // !!! 패킷 수정에 따라 class -> classCode가 된 관계로 분해할당 그대로 하도록 수정했습니다!
     const { nickname, classCode } = packetData;
 
     console.log('userSessions :', getUserSessions());

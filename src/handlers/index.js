@@ -13,9 +13,10 @@ import registerHandler from './account/register.handler.js';
 import loginHandler from './account/login.handler.js';
 import createCharacterHandler from './account/createCharacter.handler.js';
 
+// !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
+
 // 패킷 ID별로 핸들러 맵핑
 const handlers = {
-  // 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
   [config.packetId.C2STownEnter]: townEnterHandler,
   [config.packetId.S2CPlayerSpawn]: playerSpawnNotificationHandler,
   [config.packetId.C2SPlayerLocation]: playerLocationUpdateHandler,
@@ -23,7 +24,7 @@ const handlers = {
   [config.packetId.C2SAnimation]: animationHandler,
   [config.packetId.C2SChat]: chatHandler,
   [config.packetId.C2SDungeonEnter]: enterDungeonHandler,
-  // 제거된 패킷임다 [config.packetId.C_PlayerResponse]: playerResponseHandler,
+  // !!! 제거된 패킷임다 [config.packetId.C_PlayerResponse]: playerResponseHandler,
   [config.packetId.C2SRegister]: registerHandler,
   [config.packetId.C2SLogin]: loginHandler,
   [config.packetId.C2SCreateCharacter]: createCharacterHandler,

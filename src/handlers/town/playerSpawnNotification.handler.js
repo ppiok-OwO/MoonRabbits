@@ -6,6 +6,8 @@ import {
 import makePacket from '../../utils/packet/makePacket.js';
 import payload from '../../utils/packet/payload.js';
 
+// !!! 패킷 정의 변경에 따라 S_Spawn -> S2CPlayerSpawn으로 일괄 수정해씀다
+
 const playerSpawnNotificationHandler = (socket, packetData) => {
   const playerSession = getPlayerSession();
   const currentPlayer = playerSession.getPlayer(socket);
@@ -16,10 +18,8 @@ const playerSpawnNotificationHandler = (socket, packetData) => {
     return player.getPlayerInfo();
   });
 
-  // 패킷 정의 수정으로 S_Spawn이 제거됐슴다
-  // 아마 payload.S2CPlayerSpawn과 config.packetId.S2CPlayerSpawn 사용하시면 될 것 같슴다
-  const spawn = payload.S_Spawn(playerInfoArray);
-  const packet = makePacket(config.packetId.S_Spawn, spawn);
+  const spawn = payload.S2CPlayerSpawn(playerInfoArray);
+  const packet = makePacket(config.packetId.S2CPlayerSpawn, spawn);
   const dungeonId = playerSession.getPlayer(socket).getDungeonId();
 
   if (dungeonId) {

@@ -8,9 +8,10 @@ import payloadData from '../../utils/packet/payloadData.js';
 import bcrypt from 'bcrypt';
 import chalk from 'chalk';
 
+// !!! 패킷 정의 수정으로 S_Login -> S2CLogin 으로 일괄 수정해씀다
+
 /* 로그인 Handler */
 const loginHandler = async (socket, packetData) => {
-  // 패킷 정의 수정으로 S_Login -> S2CLogin 으로 일괄 수정해씀다
   try {
     const { email, pw } = packetData;
 
