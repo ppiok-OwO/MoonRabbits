@@ -2,14 +2,14 @@ const payloadData = {
   PlayerInfo: (
     playerId_int,
     nickname_string,
-    class_int,
+    classCode_int,
     transform_TransformInfo,
     statInfo_StatInfo,
   ) => {
     return {
       playerId: playerId_int,
       nickname: nickname_string,
-      class: class_int,
+      classCode: classCode_int,
       transform: transform_TransformInfo,
       statInfo: statInfo_StatInfo,
     };

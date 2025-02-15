@@ -277,7 +277,7 @@ message S2CMonsterLocation {
 message PlayerInfo {
   int32 playerId = 1;   // 입장할때 서버 내부에서 생성한 관리코드
   string nickname = 2;  
-  int32 class = 3;      
+  int32 classCode = 3;      
   TransformInfo transform = 4;
   StatInfo statInfo = 5;
 }
@@ -360,7 +360,7 @@ message BtnInfo {
 
 message OwnedCharacters {
   string nickname = 1;
-  int32 class = 2;
+  int32 classCode = 2;
 }
 
 message MemberId {
