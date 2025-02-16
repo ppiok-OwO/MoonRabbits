@@ -12,7 +12,7 @@ export const chatHandler = (socket, packetData) => {
     const { playerId, senderName, chatMsg } = packetData;
 
     // 패킷 직렬화
-    const packet = Packet.S_Chat(playerId, chatMsg);
+    const packet = Packet.S2CChat(playerId, chatMsg);
 
     // 플레이어 세션을 통해 플레이어 인스턴스를 불러온다.
     const playerSession = getPlayerSession();

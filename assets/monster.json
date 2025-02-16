@@ -1,5 +1,32 @@
 {
   "name": "monster",
   "version": "1.0.0",
-  "data": []
+  "data": [
+    {
+      "monster_id": 10000,
+      "monster_name": "몬스터 이름",
+      "dungeon_code": 1000,
+      "monster_type": "common",
+      "monster_description": "몬스터 설명",
+      "max_hp": 1,
+      "atk": 1,
+      "def": 1,
+      "magic": 1,
+      "speed": 0.1,
+      "drop_item": ["item1", "item2", "item3", "item4", "item5"]
+    },
+    {
+      "monster_id": 10001,
+      "monster_name": "움직이는버섯",
+      "dungeon_code": 1001,
+      "monster_type": "common",
+      "monster_description": "이 버섯이 움직이는 이유는 무엇일까?",
+      "max_hp": 100,
+      "atk": 10,
+      "def": 5,
+      "magic": 1,
+      "speed": 0.1,
+      "drop_item": ["item1", "item2", "item3", "item4", "item5"]
+    }
+  ]
 }

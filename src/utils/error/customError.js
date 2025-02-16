@@ -5,9 +5,7 @@ class CustomError extends Error {
     super(message);
     this.code = code;
     this.name =
-      '\x1b[31m[' +
-      Object.entries(ErrorCodes).find(([, value]) => value === code)[0] +
-      ']\x1b[0m';
+      '\x1b[31m[' + Object.entries(ErrorCodes).find(([, value]) => value === code)[0] + ']\x1b[0m';
   }
 }
 
