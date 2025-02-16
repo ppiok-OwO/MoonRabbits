@@ -41,10 +41,8 @@ export async function playerMoveHandler(socket, packetData) {
     // NavMesh 기반 경로 탐색
     const path = await findPath(navMesh, currentPos, targetPos);
 
-    let isValidPath;
     if (path.length > 1) {
       player.setPath(path);
-      isValidPath = true;
     }
   } catch (error) {
     console.error(error);
