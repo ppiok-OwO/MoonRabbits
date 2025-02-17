@@ -19,20 +19,6 @@ async function gameTest() {
   client.login('test@gmail.com', '1234');
   await delay(1000);
   client.enter('텟닉', 1001);
-  await delay(1000);
-  client.addExp(7);
-  await delay(1000);
-  client.addExp(7);
-  await delay(1000);
-  client.addExp(7);
-  await delay(1000);
-  client.addExp(7);
-  await delay(1000);
-  client.addExp(7);
-  await delay(1000);
-  client.addExp(7);
-  await delay(1000);
-  client.selectAP();
 }
 
 // 다중 클라이언트 테스트
