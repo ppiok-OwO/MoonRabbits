@@ -2,14 +2,18 @@ import { packetIdEntries } from '../../config/config.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
 import printPacket from '../log/printPacket.js';
 
-function makePacket(packetId, packetData) {
+// !!! payload 내용물이 없는 패킷들을 위해 packetData 매개변수에 default value 설정해씀다
+// !!! 빈 객체로 하는 것이 Buffer 메서드랑 호환도 좋고 최대한 성능에 지연 없다고 합니당
+// !!! 임시 조치니 편하신대로 수정해주세요!
+
+function makePacket(packetId, packetData = {}) {
   // 패킷 아이디 -> 타입
   const packetType = packetIdEntries.find(([, id]) => id === packetId)[0];
 
   // 페이로드
   const proto = getProtoMessages()[packetType];
   const packetDataBuffer = proto.encode(packetData).finish();
-  
+
   // 패킷 크기
   const packetSize = 5 + packetDataBuffer.length;
 

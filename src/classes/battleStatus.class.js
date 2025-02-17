@@ -3,7 +3,7 @@ import { createRnadNum } from '../utils/math/createRandNum.js';
 import { getPlayerSession } from '../session/sessions.js';
 import { config } from '../config/config.js';
 import payloadData from '../utils/packet/payloadData.js';
-import { leaveDungeonResponseHandler } from '../handlers/dungeon/response/LeaveDungeonResponse.handler.js';
+import { leaveDungeonResponseHandler } from '../handlers/dungeon/response/leaveDungeonResponse.handler.js';
 import { playerBattleLogResponseHandler } from '../handlers/dungeon/response/playerBattleLogResponse.handler.js';
 import { monsterActionResponseHandler } from '../handlers/dungeon/response/monsterActionResponse.handler.js';
 import { playerActionResponseHandler } from '../handlers/dungeon/response/playerActionResponse.handler.js';

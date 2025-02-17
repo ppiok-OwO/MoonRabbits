@@ -10,6 +10,8 @@ import Packet from '../../utils/packet/packet.js';
 import payload from '../../utils/packet/payload.js';
 import payloadData from '../../utils/packet/payloadData.js';
 
+// !!! 패킷 변경에 따라 S_Chat -> S2CChat, S_Location -> S2CPlayerLocation으로 일괄 수정해씀다
+
 // 경로 탐색 성공: [
 //   { x: 0, y: 0, z: 0 },
 //   { x: 5, y: 0, z: 5 },
@@ -56,13 +58,13 @@ const playerLocationUpdateHandler = (socket, packetData) => {
 
       if (minDistance > 1.4) {
         // 오차범위를 벗어나면 플레이어의 위치를 closestPoint로 재조정한다.
-        const syncLocationPacket = Packet.S_Chat(
+        const syncLocationPacket = Packet.S2CChat(
           0,
           '플레이어의 위치를 재조정합니다.',
         );
 
         const newTransform = { ...closestPoint, rot: transform.rot };
-        const packet = Packet.S_Location(player.id, newTransform, false);
+        const packet = Packet.S2CPlayerLocation(player.id, newTransform, false);
 
         // 위치동기화 브로드 캐스트
         const dungeonId = player.getDungeonId();
@@ -82,7 +84,7 @@ const playerLocationUpdateHandler = (socket, packetData) => {
       }
     }
 
-    const packet = Packet.S_Location(player.id, transform, true);
+    const packet = Packet.S2CPlayerLocation(player.id, transform, true);
 
     const dungeonId = player.getDungeonId();
     if (dungeonId) {

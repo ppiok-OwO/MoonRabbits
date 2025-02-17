@@ -14,7 +14,8 @@ import { getUserSessions } from '../../session/sessions.js';
 /* 캐릭터 생성 Handler */
 const createCharacterHandler = async (socket, packetData) => {
   try {
-    const { nickname, class: classCode } = packetData;
+    // !!! 패킷 수정에 따라 class -> classCode가 된 관계로 분해할당 그대로 하도록 수정했습니다!
+    const { nickname, classCode } = packetData;
 
     console.log('userSessions :', getUserSessions());
 
@@ -23,7 +24,7 @@ const createCharacterHandler = async (socket, packetData) => {
     if (duplicateNickname) {
       const isSuccess = false;
       const msg = '이미 존재하는 닉네임입니다.';
-      const failResponse = Packet.S_CreateCharacter(isSuccess, msg, []);
+      const failResponse = Packet.S2CCreateCharacter(isSuccess, msg, []);
       return socket.write(failResponse);
     }
 
@@ -32,7 +33,7 @@ const createCharacterHandler = async (socket, packetData) => {
     if (!userData || !userData.userId) {
       const isSuccess = false;
       const msg = '로그인 된 사용자 정보가 없습니다.';
-      return socket.write(Packet.S_CreateCharacter(isSuccess, msg, []));
+      return socket.write(Packet.S2CCreateCharacter(isSuccess, msg, []));
     }
 
     // 플레이어(캐릭터) 테이블에서 해당 사용자의 userId 검색
@@ -48,7 +49,7 @@ const createCharacterHandler = async (socket, packetData) => {
     else {
       const isSuccess = false;
       const msg = '이미 캐릭터 정보가 존재합니다.';
-      return socket.write(Packet.S_CreateCharacter(isSuccess, msg, []));
+      return socket.write(Packet.S2CCreateCharacter(isSuccess, msg, []));
     }
 
     // 캐릭터 생성 성공 여부
@@ -69,7 +70,7 @@ const createCharacterHandler = async (socket, packetData) => {
     - 현재 패킷이 S_Login이 되면 ownedCharacters를 확인한 후 Town에 접속하도록 설계되어 있음
     - 패킷 수정이 필요함
     */
-    const packet = Packet.S_Login(isSuccess, msg, ownedCharacters);
+    const packet = Packet.S2CLogin(isSuccess, msg, ownedCharacters);
     socket.write(packet);
   } catch (error) {
     console.error(

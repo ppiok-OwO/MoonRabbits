@@ -6,70 +6,128 @@ option csharp_namespace = "Google.Protobuf.Protocol";
 
 // 메세지 아이디
 enum MsgId {
-  C_ENTER = 0;
-  S_ENTER = 1;
-  S_SPAWN = 2;
-  C_LEAVE = 3;
-  S_LEAVE = 4;
-  S_DESPAWN = 5;
-  C_MOVE = 6;
-  S_MOVE = 7;
-  C_ANIMATION = 8;
-  S_ANIMATION = 9;
-  C_CHANGE_COSTUME = 10;
-  S_CHANGE_COSTUME = 11;
-  C_CHAT = 12;
-  S_CHAT = 13;
-  C_ENTER_DUNGEON = 14;
-  C_PLAYER_RESPONSE = 15;
-  S_ENTER_DUNGEON = 16;
-  S_LEAVE_DUNGEON = 17;
-  S_SCREEN_TEXT = 18;
-  S_SCREEN_DONE = 19;
-  S_BATTLE_LOG = 20;
-  S_SET_PLAYER_HP = 21;
-  S_SET_PLAYER_MP = 22;
-  S_SET_MONSTER_HP = 23;
-  S_PLAYER_ACTION = 24;
-  S_MONSTER_ACTION = 25;
-  C_LOCATION = 100;
-  S_LOCATION = 101;
-  C_REGISTER = 50;
-  S_REGISTER = 51;
-  C_LOGIN = 52;
-  S_LOGIN = 53;
-  C_CREATE_CHARACTER = 54;
-  S_CREATE_CHARACTER = 55;
+  C2S_REGISTER = 0;
+  S2C_REGISTER = 1;
+  C2S_LOGIN = 2;
+  S2C_LOGIN = 3;
+  C2S_CREATE_CHARACTER = 4;
+  S2C_CREATE_CHARACTER = 5;
+
+  C2S_TOWN_ENTER = 10;
+  S2C_TOWN_ENTER = 11;
+  C2S_TOWN_LEAVE = 12;
+  S2C_TOWN_LEAVE = 13;
+  C2S_ANIMATION = 14;
+  S2C_ANIMATION = 15;
+
+  C2S_CHAT = 20;
+  S2C_CHAT = 21;
+  S2C_PLAYER_SPAWN = 22;
+  S2C_PLAYER_DESPAWN = 23;
+
+  C2S_PLAYER_MOVE = 30;
+  S2C_PLAYER_MOVE = 31;
+  C2S_PLAYER_LOCATION = 32;
+  S2C_PLAYER_LOCATION = 33;
+ 
+  C2S_PLAYER_COLLISION = 40;
+  S2C_PLAYER_COLLISION = 41;
+  C2S_MONSTER_COLLISION = 42;
+  S2C_MONSTER_COLLISION = 43;
+
+  C2S_CREATE_PARTY = 100;
+  S2C_CREATE_PARTY = 101;
+  C2S_INVITE_PARTY = 102;
+  S2C_INVITE_PARTY = 103;
+  C2S_JOIN_PARTY = 104;
+  S2C_JOIN_PARTY = 105;
+  C2S_LEAVE_PARTY = 106;
+  S2C_LEAVE_PARTY = 107;
+  C2S_SET_PARTY_LEADER = 108;
+  S2C_SET_PARTY_LEADER = 109;
+  C2S_BUFF = 110;
+  S2C_BUFF = 111;
+
+  C2S_DUNGEON_ENTER = 500;
+  S2C_DUNGEON_ENTER = 501;
+  C2S_DUNGEON_LEAVE = 502;
+  S2C_DUNGEON_LEAVE = 503;
+
+  C2S_ATTACK = 504;
+  S2C_ATTACK = 505;
+  C2S_HIT = 506;
+  S2C_HIT = 507;
+  S2C_DIE = 508;
+
+  C2S_MONSTER_LOCATION = 509;
+  S2C_MONSTER_LOCATION = 510;
 }
 
-// 응답 패킷 - S_Enter, S_Spawn
-message C_Enter{
+/* 게임 시작 관련 */
+message C2SRegister {
+  string email = 1;
+  string pw = 2;
+  string pwCheck = 3;
+}
+message S2CRegister {
+  bool isSuccess = 1;
+  string msg = 2;
+}
+message C2SLogin {
+  string email = 1;
+  string pw = 2;
+}
+message S2CLogin {
+  bool isSuccess = 1;
+  string msg = 2;
+  repeated OwnedCharacters ownedCharacters = 3;
+}
+message C2SCreateCharacter {
   string nickname = 1;
-  int32 class = 2;
+  int32 classCode = 2;
+}
+message S2CCreateCharacter {
+  bool isSuccess = 1;
+  string msg = 2;
 }
 
-// MINE
-message S_Enter {
+/* 마을 관련 */
+message C2STownEnter {
+  string nickname = 1;
+  int32 classCode = 2;
+}
+message S2CTownEnter {
   PlayerInfo player = 1;
 }
+message C2STownLeave {}
+message S2CTownLeave {}
+message C2SAnimation {
+  int32 animCode = 1;
+}
+message S2CAnimation {
+  int32 playerId = 1;
+  int32 animCode = 2;
+}
 
-// OTHERS
-message S_Spawn {
+/* 공통 01 - 채팅, 소환 */
+message C2SChat {
+  int32 playerId = 1;
+  string senderName = 2;
+  string chatMsg = 3;
+}
+message S2CChat {
+  int32 playerId = 1;
+  string chatMsg = 2;
+}
+message S2CPlayerSpawn {
   repeated PlayerInfo players = 1;
 }
-
-message C_Leave { }
-
-message S_Leave { }
-
-// 접속상태를 서버에서 판단해서 끊기도 다른 플레이어들 정보 전달
-// 응답 패킷 - S_Leave, S_Despawn
-message S_Despawn {
-  repeated int32 playerIds = 1; // PlayerInfo 전부 말고 아이디만 받는다.
+message S2CPlayerDespawn {
+  repeated int32 playerIds = 1;
 }
 
-// 응답 패킷 - S_Move
-message C_Move {
+/* 공통 02 - 플레이어 이동 */
+message C2SPlayerMove {
   float startPosX = 1;
   float startPosY = 2;
   float startPosZ = 3;
@@ -77,155 +135,153 @@ message C_Move {
   float targetPosY = 5;
   float targetPosZ = 6;
 }
-
-// ALL
-message S_Move {
-}
-
-// 응답 패킷 - S_Animation
-message C_Animation {
-  int32 animCode = 1;
-}
-
-// ALL
-message S_Animation {
-  int32 playerId = 1;
-  int32 animCode = 2;
-}
-
-
-// 응답 패킷 - C_Chat
-message S_Chat{
-  int32 playerId = 1;
-  string chatMsg = 2;
-}
-
-
-// ALL
-message C_Chat{
-  int32 playerId = 1;
-  string senderName = 2;
-  string chatMsg = 3;
-}
-
-// 응답 패킷 - S_EnterDungeon
-message C_EnterDungeon{
-  int32 dungeonCode = 1;
-}
-
-message C_PlayerResponse{
-  int32 responseCode = 1;
-}
-
-
-// Me
-message S_EnterDungeon{
-  DungeonInfo dungeonInfo = 1;
-  PlayerStatus player = 2;
-  optional ScreenText screenText = 3;
-  optional BattleLog battleLog = 4;
-}
-
-// Me
-message S_LeaveDungeon { }
-
-// Me
-message S_ScreenText{
-  ScreenText screenText = 1;
-}
-
-// Me
-message S_ScreenDone { }
-
-// Me
-message S_BattleLog {
-  BattleLog battleLog = 1;
-}
-
-// Me
-message S_SetPlayerHp {
-  float hp = 1;
-}
-
-// Me
-message S_SetPlayerMp {
-  float mp = 1;
-}
-
-// Me
-message S_SetMonsterHp {
-  int32 monsterIdx = 1;
-  float hp = 2;
-}
-
-// Me
-message S_PlayerAction {
-  int32 targetMonsterIdx = 1;
-  ActionSet actionSet = 2;
-}
-
-// Me
-message S_MonsterAction {
-  int32 actionMonsterIdx = 1;
-  ActionSet actionSet = 2;
-}
-
-// 응답 패킷 - S_Move
-message C_Location {
+message S2CPlayerMove {}
+message C2SPlayerLocation {
   TransformInfo transform = 1;
 }
-
-// ALL
-message S_Location {
+message S2CPlayerLocation {
   int32 playerId = 1;
   TransformInfo transform = 2;
   bool isValidTransform = 3;
 }
-
-message C_Register {
-  string email = 1;
-  string pw = 2;
-  string pwCheck = 3;
+ 
+/* 공통 03 - 충돌 관련 */
+message C2SPlayerCollision {
+  int32 playerId = 1;
+  CollisionInfo collisionInfo = 2;
+}
+message S2CPlayerCollision {
+  int32 playerId = 1;
+  CollisionPushInfo collisionPushInfo = 2;
+}
+message C2SMonsterCollision {
+  int32 monsterId = 1;
+  CollisionInfo collisionInfo = 2;
+}
+message S2CMonsterCollision {
+  int32 monsterId = 1;
+  CollisionPushInfo collisionPushInfo = 2;
 }
 
-message S_Register {
-  bool isSuccess = 1;
-  string msg = 2;
+/* 파티 관련 */
+message C2SCreateParty {
+  int32 partyId = 1;
+  int32 leaderId = 2;
+}
+message S2CCreateParty {
+  int32 partyId = 1;
+  int32 leaderId = 2;
+  int32 memberCount = 3;
+  repeated MemberId members = 4;
+}
+message C2SInviteParty {
+  int32 partyId = 1;
+  string nickname = 2;
+}
+message S2CInviteParty {
+  int32 partyId = 1;
+  int32 leaderId = 2;
+  int32 memberCount = 3;
+  repeated MemberId members = 4;
+}
+message C2SJoinParty {
+  int32 partyId = 1;
+  int32 newMemberId = 2;
+}
+message S2CJoinParty {
+  int32 partyId = 1;
+  int32 leaderId = 2;
+  int32 memberCount = 3;
+  repeated MemberId members = 4;
+}
+message C2SLeaveParty {
+  int32 partyId = 1;
+  int32 leftPlayerId = 2;
+}
+message S2CLeaveParty {
+  int32 partyId = 1;
+  int32 leaderId = 2;
+  int32 memberCount = 3;
+  repeated MemberId members = 4;
+}
+message C2SSetPartyLeader {
+  int32 partyId = 1;
+  int32 memberId = 2;
+}
+message S2CSetPartyLeader {
+  int32 partyId = 1;
+  int32 leaderId = 2;
+  int32 memberCount = 3;
+  repeated MemberId members = 4;
+}
+message C2SBuff {
+  int32 partyId = 1;
+  int32 casterId = 2;
+  int32 skillCode = 3;
+  int32 targetId = 4;
+}
+message S2CBuff {
+  int32 partyId = 1;
+  repeated PlayerInfo players = 2;
+} 
+
+/* 던전 관련 */
+message C2SDungeonEnter {
+  int32 dungeonCode = 1;
+  optional int32 partyId = 2;
+}
+message S2CDungeonEnter {
+  DungeonInfo dungeonInfo = 1;
+  PlayerStatus player = 2;
+}
+message C2SDungeonLeave {}
+message S2CDungeonLeave {}
+
+/* 전투 관련 */
+message C2SAttack {
+  int32 targetId = 1;
+  AttackType attackType = 2;
+}
+message S2CAttack {
+  int32 attackerId = 1;
+  AttackType attackType = 2;
+  int32 animCode = 3;
+}
+message C2SHit {
+  int32 attackerId = 1;
+  AttackType attackType = 2;
+  int32 hitPlayerId = 3;
+}
+message S2CHit {
+  int32 hitPlayerId = 1;
+  int32 animCode = 2;
+  int32 damage = 3;
+  float updatedHp = 4;
+}
+message S2CDie {
+  int32 deadPlayerId = 1;
+  int32 animCode = 2;
 }
 
-message C_Login {
-  string email = 1;
-  string pw = 2;
+/* 몬스터 이동 관련 */
+message C2SMonsterLocation {
+  TransformInfo transform = 1;
+}
+message S2CMonsterLocation {
+  int32 monsterId = 1;
+  TransformInfo transform = 2;
 }
 
-message S_Login {
-  bool isSuccess = 1;
-  string msg = 2;
-  repeated OwnedCharacters ownedCharacters = 3;
-}
-
-message C_CreateCharacter {
-  string nickname = 1;
-  int32 class = 2;
-}
-
-message S_CreateCharacter {
-  bool isSuccess = 1;
-  string msg = 2;
-}
-
-// 정보 구조체
+/* 정보 구조체 */
 
 message PlayerInfo {
   int32 playerId = 1;   // 입장할때 서버 내부에서 생성한 관리코드
-  string nickname = 2;  // C_EnterGame 에서 지정한 이름
-  int32 class = 3;      // C_EnterGame 에서 지정한 직업 정보, 이 정보를 통해 캐릭터가 결정
+  string nickname = 2;  
+  int32 classCode = 3;      
   TransformInfo transform = 4;
   StatInfo statInfo = 5;
 }
 
-// C_Enter 를 통해 입장했을때는 서버에서 랜덤으로 위치값 생성 / 기본값은 하단 밸류 참조
-// C_Move 를 통해 전달된 데이터는 그대로 다른 사용자에게 릴레이
 message TransformInfo {
   float posX = 1; // 기본값 : -9 ~ 9
   float posY = 2; // 기본값 : 1
@@ -249,8 +305,8 @@ message ScreenText{
   string msg = 1;
   bool typingAnimation = 2;
   optional ScreenTextAlignment alignment = 3;
-  optional Color textColor = 4;
-  optional Color screenColor = 5;
+  optional ColorObj textColor = 4;
+  optional ColorObj screenColor = 5;
 }
 
 message ScreenTextAlignment {
@@ -258,7 +314,7 @@ message ScreenTextAlignment {
   int32 y = 2;
 }
 
-message Color {
+message ColorObj {
   int32 r = 1;
   int32 g = 2;
   int32 b = 3;
@@ -304,5 +360,35 @@ message BtnInfo {
 
 message OwnedCharacters {
   string nickname = 1;
-  int32 class = 2;
+  int32 classCode = 2;
+}
+
+message MemberId {
+  int32 playerId = 1;
+}
+
+message AttackType {
+  TransformInfo targetTransform = 1;
+  int32 skillId = 2;
+}
+
+message Vector3Obj {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+}
+
+message CollisionInfo {
+  Vector3Obj position1 = 1;
+  Vector3Obj position2 = 2;
+  float radius1 = 3;
+  float radius2 = 4;
+  float height1 = 5;
+  float height2 = 6;
+}
+
+message CollisionPushInfo {
+  bool hasCollision = 1;
+  Vector3Obj pushDirection = 2;
+  float pushDistance = 3;
 }
