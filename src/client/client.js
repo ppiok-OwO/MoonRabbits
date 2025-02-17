@@ -43,7 +43,10 @@ export class Client {
   }
 
   async enter(nickname = 'test', _class = 1001) {
-    this.sendPacket(config.packetId.C_Enter, cPacket.C_Enter(nickname, _class));
+    this.sendPacket(
+      config.packetId.C2STownEnter,
+      cPacket.C2STownEnter(nickname, _class),
+    );
   }
 
   async move() {
@@ -54,7 +57,7 @@ export class Client {
 
   async chat(chatMsg) {
     this.sendPacket(
-      config.packetId.C_Chat,
+      config.packetId.C2SChat,
       cPacket.C_Chat(this.id, this.nickname, chatMsg),
     );
   }
@@ -131,7 +134,10 @@ export class Client {
           const packetType = packetIdEntries.find(
             ([, id]) => id === packetId,
           )[0];
-          const packetDataBuffer = this.socket.buffer.slice(headerSize, packetSize);
+          const packetDataBuffer = this.socket.buffer.slice(
+            headerSize,
+            packetSize,
+          );
           this.socket.buffer = this.socket.buffer.slice(packetSize);
 
           const packetData =
