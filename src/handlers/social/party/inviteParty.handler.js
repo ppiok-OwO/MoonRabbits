@@ -7,6 +7,7 @@ import CustomError from '../../../utils/error/customError.js';
 import { ErrorCodes } from '../../../utils/error/errorCodes.js';
 import Packet from '../../../utils/packet/packet.js';
 
+// 클라이언트
 export const inviteParty = (socket, packetData) => {
   try {
     const { partyId, nickname } = packetData;
@@ -24,7 +25,7 @@ export const inviteParty = (socket, packetData) => {
       );
     }
 
-    // 새로운 멤버의 플레이어 인스턴스
+    // 초대를 보낸 멤버의 플레이어 인스턴스
     const playerSession = getPlayerSession();
     const newMember = playerSession.getPlayerByNickname(nickname);
     if (!newMember) {
@@ -37,18 +38,19 @@ export const inviteParty = (socket, packetData) => {
       );
     }
 
-    if (party.getMemberCount < config.party.MaxMember) {
-      party.addMember(socket, newMember);
+    // 해당 멤버에게 초대장 보내기
+    if (party.getMemberCount() < config.party.MaxMember) {
+      const packet = Packet.S2CInviteParty(
+        party.getId(),
+        party.getPartyLeaderId(),
+        party.getMemberCount(),
+        party.getAllMemberIds(),
+      );
+
+      newMember.getSocket().write(packet);
+    } else {
+      return;
     }
-
-    const packet = Packet.S2CInviteParty(
-      party.getId(),
-      party.getPartyLeaderId(),
-      party.getMemberCount(),
-      party.getAllMemberIds(),
-    );
-
-    party.notify(packet);
   } catch (error) {
     handleError(socket, error);
   }
