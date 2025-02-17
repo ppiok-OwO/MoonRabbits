@@ -3,17 +3,39 @@ import {
   getPartySessions,
   getPlayerSession,
 } from '../../../session/sessions.js';
+import CustomError from '../../../utils/error/customError.js';
+import { ErrorCodes } from '../../../utils/error/errorCodes.js';
 import Packet from '../../../utils/packet/packet.js';
 
 export const inviteParty = (socket, packetData) => {
   try {
     const { partyId, nickname } = packetData;
 
+    // 파티 인스턴스
     const partySession = getPartySessions();
     const party = partySession.getParty(partyId);
+    if (!party) {
+      socket.emit(
+        'error',
+        new CustomError(
+          ErrorCodes.PARTY_NOT_FOUND,
+          '파티 정보를 찾을 수 없습니다.',
+        ),
+      );
+    }
 
+    // 새로운 멤버의 플레이어 인스턴스
     const playerSession = getPlayerSession();
     const newMember = playerSession.getPlayerByNickname(nickname);
+    if (!newMember) {
+      socket.emit(
+        'error',
+        new CustomError(
+          ErrorCodes.USER_NOT_FOUND,
+          '플레이어 정보를 찾을 수 없습니다.',
+        ),
+      );
+    }
 
     if (party.getMemberCount < config.party.MaxMember) {
       party.addMember(socket, newMember);
