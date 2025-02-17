@@ -1,0 +1,56 @@
+{
+  "name": "target_exp",
+  "version": "1.0.0",
+  "data": [
+    {
+      "level": 1,
+      "targetLevel": 2,
+      "require_exp": 10
+    },
+    {
+      "level": 2,
+      "targetLevel": 3,
+      "require_exp": 20
+    },
+    {
+      "level": 3,
+      "targetLevel": 4,
+      "require_exp": 40
+    },
+    {
+      "level": 4,
+      "targetLevel": 5,
+      "require_exp": 80
+    },
+    {
+      "level": 5,
+      "targetLevel": 6,
+      "require_exp": 160
+    },
+    {
+      "level": 6,
+      "targetLevel": 7,
+      "require_exp": 320
+    },
+    {
+      "level": 7,
+      "targetLevel": 8,
+      "require_exp": 640
+    },
+    {
+      "level": 8,
+      "targetLevel": 9,
+      "require_exp": 1280
+    },
+    {
+      "level": 9,
+      "targetLevel": 10,
+      "require_exp": 2560
+    },
+    {
+      "level": 10,
+      "targetLevel": 10,
+      "require_exp": 5120
+    }
+  ]
+}

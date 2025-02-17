@@ -48,6 +48,10 @@ enum MsgId {
   C2S_BUFF = 110;
   S2C_BUFF = 111;
 
+  C2SGetExp = 200;
+  S2CGetExp = 201;
+  S2CLevelUp = 202;
+
   C2S_DUNGEON_ENTER = 500;
   S2C_DUNGEON_ENTER = 501;
   C2S_DUNGEON_LEAVE = 502;
@@ -225,6 +229,25 @@ message S2CBuff {
   repeated PlayerInfo players = 2;
 } 
 
+/* 플레이어 레벨업 */
+message C2SAddExp {
+  int32 count = 1;
+} 
+message S2CAddExp {
+  int32 updatedExp = 1;
+} 
+message S2CLevelUp {
+  int32 playerId = 1;
+  int32 updatedLevel = 2;
+  int32 newTargetExp = 3;
+} 
+message C2SSelectAP {
+  repeated InvestPoint investPoints = 1;
+}
+message S2CSelectAP {
+  StatInfo statInfo = 1;
+}
+
 /* 던전 관련 */
 message C2SDungeonEnter {
   int32 dungeonCode = 1;
@@ -391,4 +414,9 @@ message CollisionPushInfo {
   bool hasCollision = 1;
   Vector3Obj pushDirection = 2;
   float pushDistance = 3;
+}
+
+message InvestPoint {
+  int32 statCode = 1;
+  int32 point = 2;
 }

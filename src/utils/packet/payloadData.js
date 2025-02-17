@@ -163,6 +163,15 @@ const payloadData = {
       pushDistance: pushDistance_float,
     };
   },
+  InvestPoint: (
+    statCode_int,
+    point_int,
+  ) => {
+    return {
+      statCode: statCode_int,
+      point: point_int,
+    };
+  },
 };
 
 export default payloadData;
