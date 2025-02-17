@@ -5,6 +5,7 @@ import Packet from '../../utils/packet/packet.js';
 import { getUserSessions } from '../../session/sessions.js';
 
 import playerSpawnNotificationHandler from './playerSpawnNotification.handler.js';
+import chalk from 'chalk';
 
 const townEnterHandler = (socket, packetData) => {
   try {
@@ -26,11 +27,12 @@ const townEnterHandler = (socket, packetData) => {
 
     socket.write(packet);
 
-    const chatPacket = Packet.S_Chat(0, `${newPlayer.nickname}님이 입장하였습니다.`);
+    const chatPacket = Packet.S2CChat(0, `${newPlayer.nickname}님이 입장하였습니다.`);
     getPlayerSession().notify(chatPacket);
 
     playerSpawnNotificationHandler(socket, packetData);
   } catch (error) {
+    console.error(`${chalk.red('[createCharacterHandler Error]')}${error}`);
     socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'townEnterHanlder 에러'));
   }
 };
