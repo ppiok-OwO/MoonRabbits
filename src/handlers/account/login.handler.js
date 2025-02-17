@@ -8,6 +8,8 @@ import payloadData from '../../utils/packet/payloadData.js';
 import bcrypt from 'bcrypt';
 import chalk from 'chalk';
 
+// !!! 패킷 정의 수정으로 S_Login -> S2CLogin 으로 일괄 수정해씀다
+
 /* 로그인 Handler */
 const loginHandler = async (socket, packetData) => {
   try {
@@ -19,7 +21,7 @@ const loginHandler = async (socket, packetData) => {
       const isSuccess = false;
       const msg = '이메일을 찾을 수 없습니다.';
 
-      const failResponse = Packet.S_Login(isSuccess, msg, []);
+      const failResponse = Packet.S2CLogin(isSuccess, msg, []);
       return socket.write(failResponse);
     }
     // 비밀번호 일치 여부 확인
@@ -29,7 +31,7 @@ const loginHandler = async (socket, packetData) => {
       const isSuccess = false;
       const msg = '비밀번호가 일치하지 않습니다.';
 
-      const failResponse = Packet.S_Login(isSuccess, msg, []);
+      const failResponse = Packet.S2CLogin(isSuccess, msg, []);
       return socket.write(failResponse);
     }
 
@@ -56,7 +58,7 @@ const loginHandler = async (socket, packetData) => {
     // [case 01] 로그인 성공 - 캐릭터를 생성하지 않았을 경우
     if (findPlayer.nickname === null) {
       const ownedCharacters = [];
-      const packet = Packet.S_Login(isSuccess, msg, ownedCharacters);
+      const packet = Packet.S2CLogin(isSuccess, msg, ownedCharacters);
       return socket.write(packet);
     }
     // [case 02] 로그인 성공 - 캐릭터를 이미 보유하고 있을 경우
@@ -64,7 +66,7 @@ const loginHandler = async (socket, packetData) => {
       const ownedCharacters = [
         payloadData.OwnedCharacters(findPlayer.nickname, findPlayer.classCode),
       ];
-      const packet = Packet.S_Login(isSuccess, msg, ownedCharacters);
+      const packet = Packet.S2CLogin(isSuccess, msg, ownedCharacters);
       return socket.write(packet);
     }
   } catch (error) {

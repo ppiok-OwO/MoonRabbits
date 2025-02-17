@@ -15,14 +15,14 @@ const townEnterHandler = (socket, packetData) => {
       socket,
       user,
       packetData.nickname,
-      packetData.class,
+      packetData.classCode,
     );
 
     console.log('newPlayer : ', newPlayer);
 
     const playerInfo = newPlayer.getPlayerInfo();
 
-    const packet = Packet.S_Enter(playerInfo);
+    const packet = Packet.S2CTownEnter(playerInfo);
 
     socket.write(packet);
 

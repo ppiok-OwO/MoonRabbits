@@ -1,30 +1,54 @@
 import { config } from '../../config/config.js';
+import { getGameAssets } from '../../init/assets.js';
+import { findPath, loadNavMesh } from '../../init/navMeshLoader.js';
 import {
   getDungeonSessions,
   getPlayerSession,
 } from '../../session/sessions.js';
-import makePacket from '../../utils/packet/makePacket.js';
-import payload from '../../utils/packet/payload.js';
-import payloadData from '../../utils/packet/payloadData.js';
+import CustomError from '../../utils/error/customError.js';
+import { ErrorCodes } from '../../utils/error/errorCodes.js';
+import Packet from '../../utils/packet/packet.js';
 
-const playerMoveHandler = (socket, packetData) => {
-  const { transform } = packetData;
-  const playerSession = getPlayerSession();
-  const player = playerSession.getPlayer(socket);
-  const move = payload.S_Move(player.id, transform);
+// 클라이언트상에서 어떤 지점을 클릭했을 때 실행
+export async function playerMoveHandler(socket, packetData) {
+  try {
+    const {
+      startPosX,
+      startPosY,
+      startPosZ,
+      targetPosX,
+      targetPosY,
+      targetPosZ,
+    } = packetData;
 
-  const packet = makePacket(config.packetId.S_Move, move);
+    const playerSession = getPlayerSession();
+    const player = playerSession.getPlayer(socket);
 
-  //socket.write(packet);
+    if (!player) {
+      return socket.emit(
+        'error',
+        new CustomError(
+          ErrorCodes.USER_NOT_FOUND,
+          '플레이어 정보를 찾을 수 없습니다.',
+        ),
+      );
+    }
 
-  const dungeonId = player.getDungeonId();
-  if (dungeonId) {
-    const dungeonSessions = getDungeonSessions();
-    const dungeon = dungeonSessions.getDungeon(dungeonId);
-    dungeon.notify(packet);
-  } else {
-    playerSession.notify(packet);
+    const targetPos = { x: targetPosX, y: targetPosY, z: targetPosZ };
+    const currentPos = { x: startPosX, y: startPosY, z: startPosZ };
+    const navMesh = await loadNavMesh('Town Exported NavMesh.obj');
+
+    // NavMesh 기반 경로 탐색
+    const path = await findPath(navMesh, currentPos, targetPos);
+
+    let isValidPath;
+    if (path.length > 1) {
+      player.setPath(path);
+      isValidPath = true;
+    }
+  } catch (error) {
+    console.error(error);
   }
-};
+}
 
 export default playerMoveHandler;

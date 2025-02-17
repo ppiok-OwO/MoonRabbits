@@ -22,7 +22,7 @@ const registerHandler = async (socket, packetData) => {
       const isSuccess = false;
       const msg = '이메일 형식이 올바르지 않습니다.';
 
-      const failResponse = Packet.S_Register(isSuccess, msg);
+      const failResponse = Packet.S2CRegister(isSuccess, msg);
       return socket.write(failResponse);
     }
 
@@ -42,7 +42,7 @@ const registerHandler = async (socket, packetData) => {
       const isSuccess = false;
       const msg = '비밀번호가 일치하지 않습니다.';
 
-      const failResponse = Packet.S_Register(isSuccess, msg);
+      const failResponse = Packet.S2CRegister(isSuccess, msg);
       return socket.write(failResponse);
     }
 
@@ -52,7 +52,7 @@ const registerHandler = async (socket, packetData) => {
       const isSuccess = false;
       const msg = '이미 존재하는 이메일입니다.';
 
-      const failResponse = Packet.S_Register(isSuccess, msg);
+      const failResponse = Packet.S2CRegister(isSuccess, msg);
       return socket.write(failResponse);
     }
 
@@ -65,7 +65,7 @@ const registerHandler = async (socket, packetData) => {
     const isSuccess = true;
     const msg = '회원가입에 성공했습니다.';
 
-    const successResponse = Packet.S_Register(isSuccess, msg);
+    const successResponse = Packet.S2CRegister(isSuccess, msg);
     socket.write(successResponse);
   } catch (error) {
     console.error(
