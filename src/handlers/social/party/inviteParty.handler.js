@@ -23,10 +23,36 @@ export const inviteParty = (socket, packetData) => {
           '파티 정보를 찾을 수 없습니다.',
         ),
       );
+      return;
+    }
+
+    const playerSession = getPlayerSession();
+
+    // 파티장이 맞는지 검증
+    const player = playerSession.getPlayer(socket);
+    if (!player) {
+      socket.emit(
+        'error',
+        new CustomError(
+          ErrorCodes.USER_NOT_FOUND,
+          '플레이어 정보를 찾을 수 없습니다.',
+        ),
+      );
+      return;
+    }
+    const partyLeader = party.getPartyLeader();
+    if (player !== partyLeader) {
+      socket.emit(
+        'error',
+        new CustomError(
+          ErrorCodes.HANDLER_ERROR,
+          '파티원 초대 권한을 가지고 있지 않습니다.',
+        ),
+      );
+      return;
     }
 
     // 초대를 보낸 멤버의 플레이어 인스턴스
-    const playerSession = getPlayerSession();
     const newMember = playerSession.getPlayerByNickname(nickname);
     if (!newMember) {
       socket.emit(
@@ -36,6 +62,7 @@ export const inviteParty = (socket, packetData) => {
           '플레이어 정보를 찾을 수 없습니다.',
         ),
       );
+      return;
     }
 
     // 해당 멤버에게 초대장 보내기
@@ -47,7 +74,7 @@ export const inviteParty = (socket, packetData) => {
         party.getAllMemberIds(),
       );
 
-      newMember.getSocket().write(packet);
+      newMember.user.getSocket().write(packet);
     } else {
       return;
     }

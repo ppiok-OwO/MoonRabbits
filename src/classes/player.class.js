@@ -34,7 +34,7 @@ class Player extends Entity {
   }
   sendPacket(packet) {
     try {
-      this.socket.write(packet);
+      this.user.socket.write(packet);
     } catch (error) {
       console.error(error);
     }

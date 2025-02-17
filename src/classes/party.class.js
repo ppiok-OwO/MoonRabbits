@@ -48,6 +48,10 @@ class Party {
     return this.members;
   }
 
+  getAllMemberSockets() {
+    return this.members.values();
+  }
+
   getAllMemberIds() {
     const memberIds = [];
     for (const member of this.members.values()) {
@@ -76,7 +80,7 @@ class Party {
   getSocketById(playerId) {
     for (const member of this.members.values()) {
       if (member.id === playerId) {
-        return member.getSocket();
+        return member.user.getSocket();
       }
 
       return -1;

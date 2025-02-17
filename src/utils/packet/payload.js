@@ -207,6 +207,9 @@ const payload = {
       members: members_ArrayOfMemberId,
     };
   },
+  S2CDisbandParty: (msg_string) => {
+    return { msg: msg_string };
+  },
   /* 던전 관련 */
   C2SDungeonEnter: (dungeonCode_int, partyId_int) => {
     return partyId_int

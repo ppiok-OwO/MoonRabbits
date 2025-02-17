@@ -22,6 +22,8 @@ export const createParty = (socket, packetData) => {
           '플레이어 정보를 찾을 수 없습니다.',
         ),
       );
+
+      return;
     }
 
     const newParty = new Party(socket, player);

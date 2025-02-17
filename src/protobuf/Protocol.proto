@@ -218,6 +218,22 @@ message S2CSetPartyLeader {
   int32 memberCount = 3;
   repeated MemberId members = 4;
 }
+message C2SKickOutMember {
+  int32 partyId = 1;
+  int32 memberId  = 2;
+}
+message S2CKickOutMember {
+  int32 partyId = 1;
+  int32 leaderId = 2;
+  int32 memberCount = 3;
+  repeated MemberId members = 4;
+}
+message C2SDisbandParty {
+  int32 partyId = 1;
+}
+message S2CDisbandParty {
+  string msg = 1;
+}
 
 /* 던전 관련 */
 message C2SDungeonEnter {

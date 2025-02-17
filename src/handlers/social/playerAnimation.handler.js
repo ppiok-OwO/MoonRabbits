@@ -25,6 +25,7 @@ export const animationHandler = (socket, packetData) => {
           '플레이어 정보를 찾을 수 없습니다.',
         ),
       );
+      return;
     }
 
     // 패킷 직렬화

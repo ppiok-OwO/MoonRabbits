@@ -22,11 +22,17 @@ export const joinParty = (socket, packetData) => {
           '파티 정보를 찾을 수 없습니다.',
         ),
       );
+      return;
     }
 
     // 새로운 멤버의 플레이어 인스턴스
-    const playerSession = getPlayerSession();
-    const newMember = playerSession.getPlayerById(memberId);
+
+    const newMember = party
+      .getAllMemberSockets()
+      .find((value) => value.id === memberId);
+
+    // const playerSession = getPlayerSession();
+    // const newMember = playerSession.getPlayerById(memberId);
 
     if (party.getMemberCount() < config.party.MaxMember) {
       party.addMember(socket, newMember);

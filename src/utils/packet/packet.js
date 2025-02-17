@@ -306,6 +306,12 @@ const Packet = {
       ),
     );
   },
+  S2CDisbandParty: (msg_string) => {
+    return makePacket(
+      packetId.S2CDisbandParty,
+      payload.S2CDisbandParty(msg_string),
+    );
+  },
   /* 던전 관련 */
   C2SDungeonEnter: (dungeonCode_int, partyId_int) => {
     return makePacket(
