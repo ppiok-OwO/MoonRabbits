@@ -1,6 +1,9 @@
 yarn.lock
 package-lock.json
 /db
+docker-compose.yml
+Dockerfile
+.dockerignore
 
 # Logs
 logs
