@@ -16,7 +16,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "0x": "^5.8.0",
     "dotenv": "^16.4.7",
     "lodash": "^4.17.21",
     "long": "^5.2.4",
