@@ -11,7 +11,7 @@ export const selectAvailablePointHandler = (socket, packetData) => {
   const player = playerSession.getPlayer(socket);
 
   try {
-    investPoints.forEach(([statCode, point]) => {
+    investPoints.forEach(({statCode, point}) => {
       player.addStat(statCode, point);
       console.log(`${player.nickname}의 능력치(${statCode}) ${point}만큼 증가 (스탯 미구현)`);
     });
@@ -20,7 +20,7 @@ export const selectAvailablePointHandler = (socket, packetData) => {
   }
 
   try {
-    player.sendPacket(Packet.S2CSelectAP(player.getPlayerStats()));
+    socket.write(Packet.S2CSelectAP(player.getPlayerStats()));
   } catch (error) {
     throw new Error(`selectAP 오류 패킷 전송`);
   }

@@ -14,7 +14,8 @@ await loadProtos().then(gameTest);
 async function gameTest() {
   const client = new Client();
   await delay(1000);
-  //client.register('test@gmail.com', '1234', '1234');
+  // client.register('test@gmail.com', '1234', '1234');
+  // 테스트 계정
   client.login('test@gmail.com', '1234');
   await delay(1000);
   client.enter('텟닉', 1001);
@@ -30,6 +31,8 @@ async function gameTest() {
   client.addExp(7);
   await delay(1000);
   client.addExp(7);
+  await delay(1000);
+  client.selectAP();
 }
 
 // 다중 클라이언트 테스트

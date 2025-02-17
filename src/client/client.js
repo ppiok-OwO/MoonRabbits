@@ -87,39 +87,15 @@ export class Client {
     investPoints.push(payloadData.InvestPoint(1, 3));
     investPoints.push(payloadData.InvestPoint(2, 2));
     investPoints.forEach(({ statCode, point }) =>
-      console.log(`능력치(${statCode}) ${point}만큼 증가`),
+      console.log(`C2S 능력치(${statCode}) ${point}만큼 증가`),
     );
-    this.sendPacket(config.packetId.C2SSelectAP, cPacket.C2SSelectAP());
+    this.sendPacket(config.packetId.C2SSelectAP, cPacket.C2SSelectAP(investPoints));
   }
 
   // 핸들러
   handler = {
     S2CRegister: async (data) => {
       console.log(data.msg);
-    },
-    S_Enter: async (data) => {
-      this.id = data.player.playerId;
-      this.nickname = data.player.nickname;
-      this.class = data.player.class;
-      this.transform = data.player.transform;
-      this.statInfo = data.player.statInfo;
-      // Player 소환
-    },
-    S_Spawn: async (data) => {
-      this.players = data.players;
-      // Other Players 소환
-    },
-    S_Move: async (data) => {
-      // playerId 찾아서 이동
-      for (let i = 0; i < this.players.length; i++) {
-        if (this.players[i].id === data.playerId) {
-          this.players[i].transform = data.transform;
-          break;
-        }
-      }
-    },
-    S_Chat: async (data) => {
-      console.log(`[채팅] ${data.chatMsg}`);
     },
     S2CLogin: async (data) => {
       const { isSuccess, msg, ownedCharacters } = data;

@@ -11,6 +11,23 @@ const cPacket = {
   C2SCreateCharacter: (nickname_string, classCode_int) => {
     return { nickname: nickname_string, classCode: classCode_int };
   },
+  C2SPlayerMove: (
+    startPosX_float,
+    startPosY_float,
+    startPosZ_float,
+    targetPosX_float,
+    targetPosY_float,
+    targetPosZ_float,
+  ) => {
+    return {
+      startPosX: startPosX_float,
+      startPosY: startPosY_float,
+      startPosZ: startPosZ_float,
+      targetPosX: targetPosX_float,
+      targetPosY: targetPosY_float,
+      targetPosZ: targetPosZ_float,
+    };
+  },
   // !!! 기존 C_Enter와 같은 역할임다
   // !!! class -> classCode로 속성명 변경됐습니다
   C2STownEnter: (nickname_string, classCode_int) => {
