@@ -1,0 +1,30 @@
+{
+  "name": "item",
+  "version": "1.0.0",
+  "data": [
+    {
+      "item_id": 20000,
+      "item_name": "재료 이름",
+      "item_type": "Type",
+      "item_description": "재료 아이템은 20000부터 시작"
+    },
+    {
+      "item_id": 20001,
+      "item_name": "골드",
+      "item_type": "Material",
+      "item_description": "돈이 있어야 집을 짓겠죠?"
+    },
+    {
+      "item_id": 20002,
+      "item_name": "튼튼한 판자",
+      "item_type": "Material",
+      "item_description": "집을 짓기에 아주 적합해보이는 나무 판자이다."
+    },
+    {
+      "item_id": 20003,
+      "item_name": "네모난 돌",
+      "item_type": "Material",
+      "item_description": "집의 기반을 다지기에 적합해보이는 돌이다."
+    }
+  ]
+}

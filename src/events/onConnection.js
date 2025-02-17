@@ -11,7 +11,7 @@ export const onConnection = (socket) => {
   // 유저 생성
   const userSession = getUserSessions();
   const newUser = userSession.setUser(socket);
-  console.log('새로운 유저가 생성되었습니다:', newUser);
+  // console.log('새로운 유저가 생성되었습니다:', newUser);
 
   socket.on('data', onData(socket));
   socket.on('end', onEnd(socket));

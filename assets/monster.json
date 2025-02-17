@@ -27,6 +27,32 @@
       "magic": 1,
       "speed": 0.1,
       "drop_item": ["item1", "item2", "item3", "item4", "item5"]
+    },
+    {
+      "monster_id": 11001,
+      "monster_name": "퀸 비",
+      "dungeon_code": 1001,
+      "monster_type": "mid-boss",
+      "monster_description": "누군가 벌집을 건들인듯 하다. 매우 화나있다.",
+      "max_hp": 300,
+      "atk": 15,
+      "def": 5,
+      "magic": 15,
+      "speed": 0.2,
+      "drop_item": ["item1", "item2", "item3", "item4", "item5"]
+    },
+    {
+      "monster_id": 12001,
+      "monster_name": "웨어울프",
+      "dungeon_code": 1001,
+      "monster_type": "boss",
+      "monster_description": "사람이 늑대로 변할 걸까, 애초부터 늑대였을까?",
+      "max_hp": 600,
+      "atk": 30,
+      "def": 10,
+      "magic": 5,
+      "speed": 0.3,
+      "drop_item": ["item1", "item2", "item3", "item4", "item5"]
     }
   ]
 }

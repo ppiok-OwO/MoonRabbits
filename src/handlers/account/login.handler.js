@@ -43,11 +43,16 @@ const loginHandler = async (socket, packetData) => {
     const msg = '로그인에 성공했습니다.';
 
     // UserSession에 있는 id에 userData.userId를 저장해야함
-    // const userSessions = getUserSessions().getUser(socket);
-    // console.log('userSessions : ', userSessions);
 
     const findPlayer = await findPlayerByUserId(userData.userId);
-    console.log('findPlayer : ', findPlayer);
+
+    // 로그인 하고 나서 userSession에 id와 nickname, classCode를 업데이트
+    const user = getUserSessions().getUser(socket);
+    if (user) {
+      user.setUserInfo(userData.userId, findPlayer.nickname, findPlayer.classCode);
+    }
+    console.log('----- findPlayer ----- \n', findPlayer);
+    console.log('----- user ----- \n', user);
     // [case 01] 로그인 성공 - 캐릭터를 생성하지 않았을 경우
     if (findPlayer.nickname === null) {
       const ownedCharacters = [];
@@ -62,10 +67,6 @@ const loginHandler = async (socket, packetData) => {
       const packet = Packet.S_Login(isSuccess, msg, ownedCharacters);
       return socket.write(packet);
     }
-    // await createPlayer(userData.id, 'test1', 1001);
-
-    // const packet = Packet.S_Login(isSuccess, msg, ownedCharacters);
-    // socket.write(packet);
   } catch (error) {
     console.error(
       `${chalk.redBright('[loginHandler Error]')}

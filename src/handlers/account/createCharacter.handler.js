@@ -16,8 +16,6 @@ const createCharacterHandler = async (socket, packetData) => {
   try {
     const { nickname, class: classCode } = packetData;
 
-    console.log('userSessions :', getUserSessions());
-
     // nickname 중복 확인
     const duplicateNickname = await findUserByNickname(nickname);
     if (duplicateNickname) {
@@ -60,6 +58,12 @@ const createCharacterHandler = async (socket, packetData) => {
       nickname : ${nickname}, 
       classCode : ${classCode}
       `);
+
+    const user = getUserSessions().getUser(socket);
+    if (user) {
+      user.setUserInfo(userData.userId, nickname, classCode);
+    }
+    console.log('----- user ----- \n', user);
 
     // 캐릭터 생성 성공 시, 보유한 캐릭터 정보를 가져옴
     const ownedCharacters = [payloadData.OwnedCharacters(nickname, classCode)];
