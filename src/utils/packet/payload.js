@@ -194,16 +194,18 @@ const payload = {
       members: members_ArrayOfMemberId,
     };
   },
-  C2SBuff: (partyId_int, casterId_int, skillCode_int, targetId_int) => {
+  S2CKickOutMember: (
+    partyId_int,
+    leaderId_int,
+    memberCount_int,
+    members_ArrayOfMemberId,
+  ) => {
     return {
       partyId: partyId_int,
-      casterId: casterId_int,
-      skillCode: skillCode_int,
-      targetId: targetId_int,
+      leaderId: leaderId_int,
+      memberCount: memberCount_int,
+      members: members_ArrayOfMemberId,
     };
-  },
-  S2CBuff: (partyId_int, players_ArrayOfPlayerInfo) => {
-    return { partyId: partyId_int, players: players_ArrayOfPlayerInfo };
   },
   /* 던전 관련 */
   C2SDungeonEnter: (dungeonCode_int, partyId_int) => {

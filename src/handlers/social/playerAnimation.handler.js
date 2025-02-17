@@ -72,7 +72,7 @@ export const animationHandler = (socket, packetData) => {
       playerSession.notify(chatPacket);
     }
   } catch (error) {
-    handleError(error);
+    handleError(socket, error);
     // console.error(error);
   }
 };

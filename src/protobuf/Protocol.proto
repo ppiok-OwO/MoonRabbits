@@ -45,13 +45,17 @@ enum MsgId {
   S2C_LEAVE_PARTY = 107;
   C2S_SET_PARTY_LEADER = 108;
   S2C_SET_PARTY_LEADER = 109;
-  C2S_BUFF = 110;
-  S2C_BUFF = 111;
+  C2S_KICK_OUT_MEMBER = 110;
+  S2C_KICK_OUT_MEMBER = 111;
+  C2S_DISBAND_PARTY = 112;
+  S2C_DISBAND_PARTY = 113;
 
-  C2S_DUNGEON_ENTER = 500;
-  S2C_DUNGEON_ENTER = 501;
-  C2S_DUNGEON_LEAVE = 502;
-  S2C_DUNGEON_LEAVE = 503;
+  C2S_SECTOR_ENTER = 300;
+  S2C_SECTOR_ENTER = 301;
+  C2S_SECTOR_LEAVE = 302;
+  S2C_SECTOR_LEAVE = 303;
+  S2C_IN_PORTAL = 304;
+  C2S_IN_PORTAL = 305;
 
   C2S_ATTACK = 504;
   S2C_ATTACK = 505;
@@ -214,16 +218,6 @@ message S2CSetPartyLeader {
   int32 memberCount = 3;
   repeated MemberId members = 4;
 }
-message C2SBuff {
-  int32 partyId = 1;
-  int32 casterId = 2;
-  int32 skillCode = 3;
-  int32 targetId = 4;
-}
-message S2CBuff {
-  int32 partyId = 1;
-  repeated PlayerInfo players = 2;
-} 
 
 /* 던전 관련 */
 message C2SDungeonEnter {

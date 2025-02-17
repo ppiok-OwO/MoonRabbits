@@ -290,16 +290,20 @@ const Packet = {
       ),
     );
   },
-  C2SBuff: (partyId_int, casterId_int, skillCode_int, targetId_int) => {
+  S2CKickOutMember: (
+    partyId_int,
+    leaderId_int,
+    memberCount_int,
+    members_ArrayOfMemberId,
+  ) => {
     return makePacket(
-      packetId.C2SBuff,
-      payload.C2SBuff(partyId_int, casterId_int, skillCode_int, targetId_int),
-    );
-  },
-  S2CBuff: (partyId_int, players_ArrayOfPlayerInfo) => {
-    return makePacket(
-      packetId.S2CBuff,
-      payload.S2CBuff(partyId_int, players_ArrayOfPlayerInfo),
+      packetId.S2CKickOutMember,
+      payload.S2CKickOutMember(
+        partyId_int,
+        leaderId_int,
+        memberCount_int,
+        members_ArrayOfMemberId,
+      ),
     );
   },
   /* 던전 관련 */

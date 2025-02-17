@@ -62,6 +62,7 @@ export const config = {
     S2CPlayerCollision: PACKET_ID.S2CPlayerCollision,
     C2SMonsterCollision: PACKET_ID.C2SMonsterCollision,
     S2CMonsterCollision: PACKET_ID.S2CMonsterCollision,
+
     C2SCreateParty: PACKET_ID.C2SCreateParty,
     S2CCreateParty: PACKET_ID.S2CCreateParty,
     C2SInviteParty: PACKET_ID.C2SInviteParty,
@@ -72,14 +73,18 @@ export const config = {
     S2CLeaveParty: PACKET_ID.S2CLeaveParty,
     C2SSetPartyLeader: PACKET_ID.C2SSetPartyLeader,
     S2CSetPartyLeader: PACKET_ID.S2CSetPartyLeader,
-    C2SBuff: PACKET_ID.C2SBuff,
-    S2CBuff: PACKET_ID.S2CBuff,
-    C2SDungeonEnter: PACKET_ID.C2SDungeonEnter,
-    S2CDungeonEnter: PACKET_ID.S2CDungeonEnter,
-    C2SDungeonLeave: PACKET_ID.C2SDungeonLeave,
-    S2CDungeonLeave: PACKET_ID.S2CDungeonLeave,
-    C2SAttack: PACKET_ID.C2SAttack,
-    S2CAttack: PACKET_ID.S2CAttack,
+    C2SKickOutMember: PACKET_ID.C2SKickOutMember,
+    S2CKickOutMember: PACKET_ID.S2CKickOutMember,
+    C2SDisbandParty: PACKET_ID.C2SDisbandParty,
+    S2CDisbandParty: PACKET_ID.S2CDisbandParty,
+
+    C2SSectorEnter: PACKET_ID.C2SSectorEnter,
+    S2CSectorEnter: PACKET_ID.S2CSectorEnter,
+    C2SSectorLeave: PACKET_ID.C2SSectorLeave,
+    S2CSectorLeave: PACKET_ID.C2SSectorLeave,
+    C2SInPortal: PACKET_ID.C2SInPortal,
+    S2CInPortal: PACKET_ID.S2CInPortal,
+
     C2SHit: PACKET_ID.C2SHit,
     S2CHit: PACKET_ID.S2CHit,
     S2CDie: PACKET_ID.S2CDie,
@@ -126,6 +131,9 @@ export const config = {
   },
   updateLocation: {
     tolerance: UPDATE_LOCATION.tolerance,
+  },
+  party: {
+    MaxMember: 5,
   },
 };
 

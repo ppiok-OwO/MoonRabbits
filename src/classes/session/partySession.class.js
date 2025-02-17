@@ -2,13 +2,12 @@ import Party from '../party.class.js';
 
 class PartySession {
   parties = new Map();
-  partyId = 1;
 
   addParty(party) {
     const newParty = new Party();
-    this.parties.set(this.partyId++, newParty);
+    this.parties.set(newParty.getId(), newParty);
 
-    return newParty;
+    return parties;
   }
 
   removeParty(partyId) {

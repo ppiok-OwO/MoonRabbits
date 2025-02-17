@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 class Party {
   members = new Map();
 
@@ -5,6 +7,7 @@ class Party {
   constructor(socket, player) {
     this.partyLeader = player;
     this.members.set(socket, player);
+    this.id = uuidv4();
   }
 
   addMember(socket, player) {
@@ -15,8 +18,13 @@ class Party {
     return newMember;
   }
 
-  removeMember(socket) {
+  removeMember(plyaerId) {
+    const socket = getSocketById(plyaerId);
     this.members.delete(socket);
+  }
+
+  getId() {
+    return this.id;
   }
 
   getMember(socket) {
@@ -30,6 +38,10 @@ class Party {
 
   getPartyLeader() {
     return this.partyLeader;
+  }
+
+  getPartyLeaderId() {
+    return this.partyLeader.getId();
   }
 
   getAllMembers() {
@@ -48,7 +60,7 @@ class Party {
 
   disbandParty() {
     this.members.clear();
-    this.partyLeaderId = null;
+    this.partyLeader = null;
   }
 
   getPlayerInfoOfMembers() {
@@ -59,6 +71,20 @@ class Party {
     }
 
     return playerInfoOfMembers;
+  }
+
+  getSocketById(playerId) {
+    for (const member of this.members.values()) {
+      if (member.id === playerId) {
+        return member.getSocket();
+      }
+
+      return -1;
+    }
+  }
+
+  getMemberCount() {
+    return this.members.size;
   }
 
   notify(packet) {

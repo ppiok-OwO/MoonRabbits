@@ -21,7 +21,7 @@ class Player extends Entity {
         ),
       );
     } catch (error) {
-      console.error("!!! ",error)
+      console.error('!!! ', error);
     }
     this.class = classCode;
     this.nickname = nickname;
@@ -83,6 +83,10 @@ class Player extends Entity {
   }
   getPlayerStat() {
     return this.stat;
+  }
+
+  getPlayerId() {
+    return this.id;
   }
 
   resetDungeonId() {

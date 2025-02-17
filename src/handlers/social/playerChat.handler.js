@@ -39,6 +39,6 @@ export const chatHandler = (socket, packetData) => {
       playerSession.notify(packet);
     }
   } catch (error) {
-    handleError(error);
+    handleError(socket, error);
   }
 };
