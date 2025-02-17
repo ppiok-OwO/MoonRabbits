@@ -59,13 +59,14 @@ export const onData = (socket) => async (data) => {
         const handler = getHandlerByPacketId(packetId);
         handler(socket, packetData);
       } catch (error) {
-        socket.emit(
-          'error',
-          new CustomError(
-            error.code ? error.code : ErrorCodes.HANDLER_ERROR,
-            error,
-          ),
-        );
+        // socket.emit(
+        //   'error',
+        //   new CustomError(
+        //     error.code ? error.code : ErrorCodes.HANDLER_ERROR,
+        //     error,
+        //   ),
+        // );
+        console.log(error);
       }
     }
   }

@@ -121,7 +121,7 @@ class Player extends Entity {
     this.level = newLevel;
 
     // 요구 경험치 변경
-    const newTargetExp = this._getTargetExpByLevel(this.level);
+    const newTargetExp = this._getTargetExpByLevel(newLevel);
     this.targetExp = newTargetExp;
 
     // 레벨업하면 올릴 수 있는 능력치 개수
@@ -138,7 +138,7 @@ class Player extends Entity {
   _getTargetExpByLevel(level) {
     try {
       return getGameAssets().targetExps.data.find(
-        (targetExp) => targetExp.level === 1,
+        (targetExp) => targetExp.level === level,
       ).require_exp;
     } catch (error) {
       throw new Error(`${level}lv 요구경험치 조회 오류`);
