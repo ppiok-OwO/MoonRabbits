@@ -15,15 +15,13 @@ export const createParty = (socket, packetData) => {
     const player = playerSession.getPlayer(socket);
 
     if (!player) {
-      socket.emit(
+      return socket.emit(
         'error',
         new CustomError(
           ErrorCodes.USER_NOT_FOUND,
           '플레이어 정보를 찾을 수 없습니다.',
         ),
       );
-
-      return;
     }
 
     const newParty = new Party(socket, player);

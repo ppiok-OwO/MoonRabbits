@@ -15,14 +15,13 @@ export const joinParty = (socket, packetData) => {
     const partySession = getPartySessions();
     const party = partySession.getParty(partyId);
     if (!party) {
-      socket.emit(
+      return socket.emit(
         'error',
         new CustomError(
           ErrorCodes.PARTY_NOT_FOUND,
           '파티 정보를 찾을 수 없습니다.',
         ),
       );
-      return;
     }
 
     // 새로운 멤버의 플레이어 인스턴스
@@ -42,8 +41,7 @@ export const joinParty = (socket, packetData) => {
         '해당 파티는 정원이 모두 찼으므로 참가할 수 없습니다.',
       );
 
-      socket.write(packet);
-      return;
+      return socket.write(packet);
     }
 
     const packet = Packet.S2CJoinParty(

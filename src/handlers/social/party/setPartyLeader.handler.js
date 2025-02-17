@@ -11,14 +11,13 @@ export const setPartyLeader = (socket, packetData) => {
     const partySession = getPartySessions();
     const party = partySession.getParty(partyId);
     if (!party) {
-      socket.emit(
+      return socket.emit(
         'error',
         new CustomError(
           ErrorCodes.PARTY_NOT_FOUND,
           '파티 정보를 찾을 수 없습니다.',
         ),
       );
-      return;
     }
 
     const playerSession = getPlayerSession();
@@ -26,38 +25,35 @@ export const setPartyLeader = (socket, packetData) => {
     // 파티장이 맞는지 검증
     const player = playerSession.getPlayer(socket);
     if (!player) {
-      socket.emit(
+      return socket.emit(
         'error',
         new CustomError(
           ErrorCodes.USER_NOT_FOUND,
           '플레이어 정보를 찾을 수 없습니다.',
         ),
       );
-      return;
     }
     const partyLeader = party.getPartyLeader();
     if (player !== partyLeader) {
-      socket.emit(
+      return socket.emit(
         'error',
         new CustomError(
           ErrorCodes.HANDLER_ERROR,
           '파티장 변경 권한을 가지고 있지 않습니다.',
         ),
       );
-      return;
     }
 
     // 파티장을 위임하려는 멤버의 ID가 파티에 존재하는가?
     const memberIds = party.getAllMemberIds();
     if (!memberIds.find((value) => value === memberId)) {
-      socket.emit(
+      return socket.emit(
         'error',
         new CustomError(
           ErrorCodes.HANDLER_ERROR,
           '파티에 소속되지 않은 플레이어입니다.',
         ),
       );
-      return;
     }
 
     // 파티장 교체
