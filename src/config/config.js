@@ -85,6 +85,12 @@ export const config = {
     S2CDie: PACKET_ID.S2CDie,
     C2SMonsterLocation: PACKET_ID.C2SMonsterLocation,
     S2CMonsterLocation: PACKET_ID.S2CMonsterLocation,
+    C2SResourceRequest: PACKET_ID.C2SResourceRequest,
+    S2CResourceRequest: PACKET_ID.S2CResourceRequest,
+    C2SGatheringStart: PACKET_ID.C2SGatheringStart,
+    S2CGatheringStart: PACKET_ID.S2CGatheringStart,
+    C2S_GatheringSkillCheck: PACKET_ID.C2S_GatheringSkillCheck,
+    S2C_GatheringSkillCheck: PACKET_ID.S2C_GatheringSkillCheck,
     /* 기존 코드 */
     // C_Enter: PACKET_ID.C_Enter,
     // S_Enter: PACKET_ID.S_Enter,

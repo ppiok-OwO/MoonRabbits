@@ -49,6 +49,12 @@ export const PACKET_ID = {
   S2CDie: 508,
   C2SMonsterLocation: 509,
   S2CMonsterLocation: 510,
+  C2SResourceRequest: 551,
+  S2CResourceRequest: 552,
+  C2SGatheringStart: 553,
+  S2CGatheringStart: 554,
+  C2S_GatheringSkillCheck: 555,
+  S2C_GatheringSkillCheck: 556,
 };
 
 /* 기존 코드 */

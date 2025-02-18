@@ -6,7 +6,7 @@ import payloadData from './payloadData.js';
 const { packetId } = config;
 
 const Packet = {
-  /* 게임 시작 관련 */
+  //#region  /* 게임 시작 관련 */
   C2SRegister: (email_string, pw_string, pwCheck_string) => {
     return makePacket(
       packetId.C2SRegister,
@@ -51,7 +51,8 @@ const Packet = {
       payload.S2CCreateCharacter(isSuccess_bool, msg_string),
     );
   },
-  /* 마을 관련 */
+  //#endregion
+  //#region /* 마을 관련 */
   C2STownEnter: (nickname_string, classCode_int) => {
     return makePacket(
       packetId.C2STownEnter,
@@ -82,7 +83,8 @@ const Packet = {
       payload.S2CAnimation(playerId_int, animCode_int),
     );
   },
-  /* 공통 01 - 채팅, 소환 */
+  //#endregion
+  //#region  /* 공통 01 - 채팅, 소환 */
   C2SChat: (playerId_int, senderName_string, chatMsg_string) => {
     return makePacket(
       packetId.C2SChat,
@@ -107,7 +109,8 @@ const Packet = {
       payload.S2CPlayerDespawn(playerIds_ArrayOfInt),
     );
   },
-  /* 공통 02 - 플레이어 이동 */
+  //#endregion
+  //#region  /* 공통 02 - 플레이어 이동 */
   C2SPlayerMove: (
     startPosX_float,
     startPosY_float,
@@ -151,7 +154,8 @@ const Packet = {
       ),
     );
   },
-  /* 공통 03 - 충돌 관련 */
+  //#endregion
+  //#region /* 공통 03 - 충돌 관련 */
   C2SPlayerCollision: (playerId_int, collisionInfo_CollisionInfo) => {
     return makePacket(
       packetId.C2SPlayerCollision,
@@ -179,7 +183,8 @@ const Packet = {
       S2CMonsterCollision(playerId_int, collisionPushInfo_CollisionPushInfo),
     );
   },
-  /* 파티 관련 */
+  //#endregion
+  //#region  /* 파티 관련 */
   C2SCreateParty: (partyId_int, leaderId_int) => {
     return makePacket(
       packetId.C2SCreateParty,
@@ -302,7 +307,8 @@ const Packet = {
       payload.S2CBuff(partyId_int, players_ArrayOfPlayerInfo),
     );
   },
-  /* 던전 관련 */
+  //#endregion
+  //#region /* 던전 관련 */
   C2SDungeonEnter: (dungeonCode_int, partyId_int) => {
     return makePacket(
       packetId.C2SDungeonEnter,
@@ -321,7 +327,8 @@ const Packet = {
   S2CDungeonLeave: () => {
     return makePacket(packetId.S2CDungeonLeave);
   },
-  /* 전투 관련 */
+  //#endregion
+  //#region /* 전투 관련 */
   C2SAttack: (targetId_int, attackType_AttackType) => {
     return makePacket(
       packetId.C2SAttack,
@@ -357,7 +364,8 @@ const Packet = {
       payload.S2CDie(deadPlayerId_int, animCode_int),
     );
   },
-  /* 몬스터 이동 관련 */
+  //#endregion
+  //#region /* 몬스터 이동 관련 */
   C2SMonsterLocation: (transform_TransformInfo) => {
     return makePacket(
       packetId.C2SMonsterLocation,
@@ -370,6 +378,47 @@ const Packet = {
       payload.S2CMonsterLocation(monsterId_int, transform_TransformInfo),
     );
   },
+  //#endregion
+  //#region /* 채집 관련 */
+  C2SResourceRequest: (resourceSpawnId, resourceId) => {
+    return makePacket(
+      packetId.C2SResourceRequest,
+      payload.C2SResourceRequest(monsterId_int, transform_TransformInfo),
+    );
+  },
+  S2CResourceRequest: (resourceSpawnId, resourceId) => {
+    return makePacket(
+      packetId.S2CResourceRequest,
+      payload.C2SResourceRequest(monsterId_int, transform_TransformInfo),
+    );
+  },
+  C2SGatheringStart: (resourceSpawnId, resourceId) => {
+    return makePacket(
+      packetId.C2SGatheringStart,
+      payload.C2SResourceRequest(monsterId_int, transform_TransformInfo),
+    );
+  },
+  S2CGatheringStart: (resourceSpawnId, resourceId) => {
+    return makePacket(
+      packetId.S2CGatheringStart,
+      payload.C2SResourceRequest(monsterId_int, transform_TransformInfo),
+    );
+  },
+  C2S_GatheringSkillCheck: (resourceSpawnId, resourceId) => {
+    return makePacket(
+      packetId.C2S_GatheringSkillCheck,
+      payload.C2SResourceRequest(monsterId_int, transform_TransformInfo),
+    );
+  },
+  S2C_GatheringSkillCheck: (resourceSpawnId, resourceId) => {
+    return makePacket(
+      packetId.S2C_GatheringSkillCheck,
+      payload.C2SResourceRequest(monsterId_int, transform_TransformInfo),
+    );
+  },
+
+  //#endregion
+
   /* 기존 코드 */
   // S_Enter: (player_PlayerInfo) => {
   //   return makePacket(config.packetId.S_Enter, { player: player_PlayerInfo });

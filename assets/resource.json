@@ -1,77 +1,113 @@
 {
-    "name": "resource",
-    "version": "1.0.0",
-    "data": [
-        {
-          "resource_id": 0,
-          "resource_name": "연습용 더미",
-          "resource_type": "Training",
-          "resource_description": "평범한 나무다.",
-          "resource_difficulty": 1,
-          "resource_durability": 1,
-          "resource_respawn": 10,
-          "drop_item":[]
-        },
-        {
-          "resource_id": 1,
-          "resource_name": "평범한 나무",
-          "resource_type": "Tree",
-          "resource_description": "평범한 나무다.",
-          "resource_difficulty": 1,
-          "resource_durability": 1,
-          "resource_respawn": 10,
-          "drop_item":[]
-        },
-        {
-          "resource_id": 2,
-          "resource_name": "좋은 나무",
-          "resource_type": "Tree",
-          "resource_description": "쓸만한 나무다.",
-          "resource_difficulty": 5,
-          "resource_durability": 3,
-          "resource_respawn": 30,
-          "drop_item":[]
-        },
-        {
-          "resource_id": 3,
-          "resource_name": "훌륭한 나무",
-          "resource_type": "Tree",
-          "resource_description": "굉장한 나무다.",
-          "resource_difficulty": 10,
-          "resource_durability": 5,
-          "resource_respawn": 60,
-          "drop_item":[]
-        },
-        {
-          "resource_id": 51,
-          "resource_name": "평범한 돌",
-          "resource_type": "Ore",
-          "resource_description": "길가의 평범한 바위다.",
-          "resource_difficulty": 1,
-          "resource_durability": 1,
-          "resource_respawn": 10,
-          "drop_item":[]
-        },
-        {
-          "resource_id": 52,
-          "resource_name": "반짝이는 돌",
-          "resource_type": "Ore",
-          "resource_description": "광석이 있어보이는 바위다.",
-          "resource_difficulty": 5,
-          "resource_durability": 3,
-          "resource_respawn": 30,
-          "drop_item":[]
-        },
-        {
-          "resource_id": 53,
-          "resource_name": "빛나는 돌",
-          "resource_type": "Ore",
-          "resource_description": "있는 그대로도 보석으로 불린다.",
-          "resource_difficulty": 10,
-          "resource_durability": 5,
-          "resource_respawn": 60,
-          "drop_item":[]
-        }
-    ]
-  }
-  
+  "name": "resource",
+  "version": "1.0.0",
+  "data": [
+    {
+      "resource_id": 0,
+      "resource_name": "자원의 이름름",
+      "resource_type": "나무: Tree 광석/돌: Ore",
+      "resource_description": "difficulty: 난이도(스킬체크속도) durbility: 내구도(반복작업 횟수) drop_item: 드랍 아이템 목록({chance: 확율, item: 아이템} 현제 드랍이 없는 경우는 없음)",
+      "resource_difficulty": 1,
+      "resource_durability": 1,
+      "resource_respawn": 10,
+      "drop_item": [
+        { "chance": 10, "item": 20001 },
+        { "chance": 10, "item": 21001 }
+      ]
+    },
+    {
+      "resource_id": 1,
+      "resource_name": "평범한 나무",
+      "resource_type": "Tree",
+      "resource_description": "평범한 나무다.",
+      "resource_difficulty": 1,
+      "resource_durability": 1,
+      "resource_respawn": 10,
+      "drop_item": [
+        { "chance": 10, "item": 20001 },
+        { "chance": 10, "item": 20002 }
+      ]
+    },
+    {
+      "resource_id": 2,
+      "resource_name": "좋은 나무",
+      "resource_type": "Tree",
+      "resource_description": "쓸만한 나무다.",
+      "resource_difficulty": 5,
+      "resource_durability": 3,
+      "resource_respawn": 30,
+      "drop_item": [
+        { "chance": 10, "item": 20002 },
+        { "chance": 10, "item": 20003 }
+      ]
+    },
+    {
+      "resource_id": 3,
+      "resource_name": "훌륭한 나무",
+      "resource_type": "Tree",
+      "resource_description": "굉장한 나무다.",
+      "resource_difficulty": 10,
+      "resource_durability": 5,
+      "resource_respawn": 60,
+      "drop_item": [
+        { "chance": 10, "item": 20002 },
+        { "chance": 50, "item": 20003 }
+      ]
+    },
+    {
+      "resource_id": 51,
+      "resource_name": "평범한 돌",
+      "resource_type": "Ore",
+      "resource_description": "길가의 평범한 바위다.",
+      "resource_difficulty": 1,
+      "resource_durability": 1,
+      "resource_respawn": 10,
+      "drop_item": [
+        { "chance": 10, "item": 22001 },
+        { "chance": 10, "item": 22002 },
+        { "chance": 10, "item": 21001 }
+      ]
+    },
+    {
+      "resource_id": 52,
+      "resource_name": "반짝이는 돌",
+      "resource_type": "Ore",
+      "resource_description": "광석이 있어보이는 바위다.",
+      "resource_difficulty": 5,
+      "resource_durability": 3,
+      "resource_respawn": 30,
+      "drop_item": [
+        { "chance": 2, "item": 22001 },
+        { "chance": 10, "item": 22002 },
+        { "chance": 10, "item": 22005 },
+        { "chance": 10, "item": 21001 },
+        { "chance": 10, "item": 21001 }
+      ]
+    },
+    {
+      "resource_id": 53,
+      "resource_name": "빛나는 돌",
+      "resource_type": "Ore",
+      "resource_description": "있는 그대로도 보석으로 불린다.",
+      "resource_difficulty": 10,
+      "resource_durability": 5,
+      "resource_respawn": 60,
+      "drop_item": [
+        { "chance": 10, "item": 22005 },
+        { "chance": 10, "item": 21002 },
+        { "chance": 10, "item": 21003 },
+        { "chance": 10, "item": 21004 }
+      ]
+    },
+    {
+      "resource_id": 1000,
+      "resource_name": "연습용 더미",
+      "resource_type": "Training",
+      "resource_description": "평범한 나무다.",
+      "resource_difficulty": 1,
+      "resource_durability": 1,
+      "resource_respawn": 10,
+      "drop_item": [{ "chance": 10, "item": 20001 }]
+    }
+  ]
+}
