@@ -1,12 +1,10 @@
-import {
-  getPartySessions,
-  getPlayerSession,
-} from '../../../session/sessions.js';
+import { config } from '../../../config/config.js';
 import CustomError from '../../../utils/error/customError.js';
 import { ErrorCodes } from '../../../utils/error/errorCodes.js';
+import handleError from '../../../utils/error/errorHandler.js';
 import Packet from '../../../utils/packet/packet.js';
 
-export const kickOutPartyHandler = (socket, packetData) => {
+export const allowInviteHandler = (socket, packetData) => {
   try {
     const { partyId, memberId } = packetData;
 
@@ -42,46 +40,35 @@ export const kickOutPartyHandler = (socket, packetData) => {
         'error',
         new CustomError(
           ErrorCodes.HANDLER_ERROR,
-          '파티원 퇴출 권한을 가지고 있지 않습니다.',
+          '파티원 초대 권한을 가지고 있지 않습니다.',
         ),
       );
     }
 
-    // 퇴출시키려는 멤버가 파티에 존재하는가?
-    const member = party
+    // 새로운 멤버의 플레이어 인스턴스
+    const newMember = party
       .getAllMemberSockets()
       .find((value) => value.id === memberId);
-    if (!member) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.HANDLER_ERROR,
-          '파티에 소속되지 않은 플레이어입니다.',
-        ),
+
+    if (party.getMemberCount() < config.party.MaxMember) {
+      // 새 플레이어를 파티에 추가
+      party.addMember(newMember.user.getSocket(), newMember);
+      const packet = Packet.S2CAllowInvite(
+        party.getId(),
+        party.getPartyLeaderId(),
+        party.getMemberCount(),
+        party.getAllMemberCardInfo(player.id),
       );
+
+      party.notify(packet);
+    } else {
+      const packet = Packet.S2CChat(
+        0,
+        '해당 파티는 정원이 모두 찼으므로 참가할 수 없습니다.',
+      );
+
+      return newMember.user.getSocket().write(packet);
     }
-
-    // 멤버 퇴출
-    party.removeMember(memberId);
-
-    // 변경된 파티 데이터 브로드캐스트
-    const packet = Packet.S2CKickOutMember(
-      party.getId(),
-      party.getPartyLeaderId(),
-      party.getMemberCount(),
-      party.getAllMemberCardInfo(player.id),
-    );
-    const msgToParty = Packet.S2CChat(
-      0,
-      `${member.nickname}님이 파티에서 추방되었습니다.`,
-    );
-
-    party.notify(packet);
-    party.notify(msgToParty);
-
-    // 퇴출된 멤버에게 메시지 전송
-    const msgToKickedMember = Packet.S2CChat(0, '파티에서 추방당하셨습니다.');
-    party.notify(msgToKickedMember);
   } catch (error) {
     handleError(socket, error);
   }

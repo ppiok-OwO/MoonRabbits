@@ -26,7 +26,7 @@ export const PACKET_ID = {
   S2CPlayerCollision: 41,
   C2SMonsterCollision: 42,
   S2CMonsterCollision: 43,
-  
+
   C2SCreateParty: 100,
   S2CCreateParty: 101,
   C2SInviteParty: 102,
@@ -37,10 +37,12 @@ export const PACKET_ID = {
   S2CLeaveParty: 107,
   C2SSetPartyLeader: 108,
   S2CSetPartyLeader: 109,
-  C2SKickOutMember : 110,
-  S2CKickOutMember : 111,
-  C2SDisbandParty : 112,
-  S2CDisbandParty : 113,
+  C2SKickOutMember: 110,
+  S2CKickOutMember: 111,
+  C2SDisbandParty: 112,
+  S2CDisbandParty: 113,
+  C2SAllowInvite: 114,
+  S2CAllowInvite: 115,
 
   C2SSectorEnter: 300,
   S2CSectorEnter: 301,

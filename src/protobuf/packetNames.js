@@ -36,6 +36,8 @@ export const packetNames = [
   'C2SKickOutMember',
   'S2CKickOutMember',
   'C2SDisbandParty',
+  'C2SAllowInvite',
+  'S2CAllowInvite',
   'S2CDisbandParty',
   'C2SSectorEnter',
   'S2CSectorEnter',

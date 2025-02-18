@@ -25,13 +25,9 @@ export const joinPartyHandler = (socket, packetData) => {
     }
 
     // 새로운 멤버의 플레이어 인스턴스
-
     const newMember = party
       .getAllMemberSockets()
       .find((value) => value.id === memberId);
-
-    // const playerSession = getPlayerSession();
-    // const newMember = playerSession.getPlayerById(memberId);
 
     if (party.getMemberCount() < config.party.MaxMember) {
       party.addMember(socket, newMember);
@@ -48,7 +44,7 @@ export const joinPartyHandler = (socket, packetData) => {
       party.getId(),
       party.getPartyLeaderId(),
       party.getMemberCount(),
-      party.getAllMemberIds(),
+      party.getAllMemberCardInfo(player.id),
     );
 
     party.notify(packet);

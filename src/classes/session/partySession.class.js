@@ -3,11 +3,11 @@ import Party from '../party.class.js';
 class PartySession {
   parties = new Map();
 
-  addParty(party) {
-    const newParty = new Party();
+  addParty(socket, player) {
+    const newParty = new Party(socket, player);
     this.parties.set(newParty.getId(), newParty);
 
-    return this.parties;
+    return newParty;
   }
 
   removeParty(partyId) {

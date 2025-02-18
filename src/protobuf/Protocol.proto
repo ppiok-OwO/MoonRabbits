@@ -171,72 +171,81 @@ message S2CMonsterCollision {
 message C2SCreateParty {
 }
 message S2CCreateParty {
-  int32 partyId = 1;
+  string partyId = 1;
   int32 leaderId = 2;
   int32 memberCount = 3;
   repeated MemberCardInfo members = 4;
 }
 message C2SInviteParty {
-  int32 partyId = 1;
+  string partyId = 1;
   string nickname = 2;
 }
 message S2CInviteParty {
-  int32 partyId = 1;
-  int32 leaderId = 2;
-  int32 memberCount = 3;
-  repeated MemberCardInfo members = 4;
+  string leaderNickname = 1;
+  string partyId = 2;
+  int32 memberId = 3;
 }
 message C2SJoinParty {
-  int32 partyId = 1;
+  string partyId = 1;
   int32 newMemberId = 2;
 }
 message S2CJoinParty {
-  int32 partyId = 1;
+  string partyId = 1;
   int32 leaderId = 2;
   int32 memberCount = 3;
   repeated MemberCardInfo members = 4;
 }
 message C2SLeaveParty {
-  int32 partyId = 1;
+  string partyId = 1;
   int32 leftPlayerId = 2;
 }
 message S2CLeaveParty {
-  int32 partyId = 1;
+  string partyId = 1;
   int32 leaderId = 2;
   int32 memberCount = 3;
   repeated MemberCardInfo members = 4;
 }
 message C2SSetPartyLeader {
-  int32 partyId = 1;
+  string partyId = 1;
   int32 memberId = 2;
 }
 message S2CSetPartyLeader {
-  int32 partyId = 1;
+  string partyId = 1;
   int32 leaderId = 2;
   int32 memberCount = 3;
   repeated MemberCardInfo members = 4;
 }
 message C2SKickOutMember {
-  int32 partyId = 1;
+  string partyId = 1;
   int32 memberId  = 2;
 }
 message S2CKickOutMember {
-  int32 partyId = 1;
+  string partyId = 1;
   int32 leaderId = 2;
   int32 memberCount = 3;
   repeated MemberCardInfo members = 4;
 }
 message C2SDisbandParty {
-  int32 partyId = 1;
+  string partyId = 1;
 }
 message S2CDisbandParty {
   string msg = 1;
+}
+message C2SAllowInvite {
+  string partyId = 1;
+  int32 memberId  = 2;
+}
+message S2CAllowInvite {
+  string partyId = 1;
+  int32 leaderId = 2;
+  int32 memberCount = 3;
+  repeated MemberCardInfo members = 4;
 }
 
 /* 던전 관련 */
 message C2SSectorEnter {
   int32 sectorId = 1;
-  optional int32 partyId = 2;
+  optional string partyId = 2;
 }
 message S2CSectorEnter {
   SectorInfo sectorInfo = 1;
@@ -244,7 +253,7 @@ message S2CSectorEnter {
 }
 message C2SSectorLeave {
   int32 sectorId = 1;
-  optional int32 partyId = 2;
+  optional string partyId = 2;
 }
 message S2CSectorLeave {
 

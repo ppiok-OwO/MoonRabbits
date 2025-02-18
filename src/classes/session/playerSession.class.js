@@ -35,13 +35,12 @@ class PlayerSession {
   }
 
   getPlayerByNickname(nickname) {
-    for (const player of this.palyers.values()) {
+    for (const player of this.players.values()) {
       if (player.nickname === nickname) {
         return player;
       }
-
-      return -1;
     }
+    return -1;
   }
 
   clearSession() {

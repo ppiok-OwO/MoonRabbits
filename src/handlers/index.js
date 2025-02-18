@@ -41,6 +41,7 @@ const handlers = {
   [config.packetId.C2SDisbandParty]: disbandPartyHandler,
   [config.packetId.C2SKickOutMember]: kickOutPartyHandler,
   [config.packetId.C2SSetPartyLeader]: setPartyLeaderHandler,
+  
 };
 
 export const getHandlerByPacketId = (packetId) => {

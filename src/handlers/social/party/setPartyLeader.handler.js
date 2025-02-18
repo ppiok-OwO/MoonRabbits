@@ -66,7 +66,7 @@ export const setPartyLeaderHandler = (socket, packetData) => {
       party.getId(),
       party.getPartyLeaderId(),
       party.getMemberCount(),
-      party.getAllMemberIds(),
+      party.getAllMemberCardInfo(player.id),
     );
   } catch (error) {
     handleError(socket, error);

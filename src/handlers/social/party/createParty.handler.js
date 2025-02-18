@@ -24,19 +24,19 @@ export const createPartyHandler = (socket, packetData) => {
       );
     }
 
-    const newParty = new Party(socket, player);
     const partySession = getPartySessions();
-    partySession.addParty(newParty);
+    const party = partySession.addParty(socket, player);
+    party.setPartyLeader(player);
 
     const packet = Packet.S2CCreateParty(
-      newParty.getId(),
-      newParty.getPartyLeaderId(),
-      newParty.getMemberCount(),
-      newParty.getAllMemberCardInfo(player.id),
+      party.getId(),
+      party.getPartyLeaderId(),
+      party.getMemberCount(),
+      party.getAllMemberCardInfo(player.id),
     );
 
     // 파티 세션에 브로드캐스트
-    newParty.notify(packet);
+    party.notify(packet);
   } catch (error) {
     handleError(socket, error);
   }

@@ -12,6 +12,8 @@ export const invitePartyHandler = (socket, packetData) => {
   try {
     const { partyId, nickname } = packetData;
 
+    // TODO : 내 자신은 초대할 수 없게
+
     // 파티 인스턴스
     const partySession = getPartySessions();
     const party = partySession.getParty(partyId);
@@ -51,7 +53,7 @@ export const invitePartyHandler = (socket, packetData) => {
 
     // 초대를 보낸 멤버의 플레이어 인스턴스
     const newMember = playerSession.getPlayerByNickname(nickname);
-    if (!newMember) {
+    if (!newMember || newMember === -1) {
       return socket.emit(
         'error',
         new CustomError(
@@ -64,10 +66,9 @@ export const invitePartyHandler = (socket, packetData) => {
     // 해당 멤버에게 초대장 보내기
     if (party.getMemberCount() < config.party.MaxMember) {
       const packet = Packet.S2CInviteParty(
+        party.getPartyLeader().nickname,
         party.getId(),
-        party.getPartyLeaderId(),
-        party.getMemberCount(),
-        party.getAllMemberIds(),
+        newMember.id,
       );
 
       newMember.user.getSocket().write(packet);
