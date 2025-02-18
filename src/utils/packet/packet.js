@@ -1,3 +1,6 @@
+// 게임 클라이언트와 서버 간의 통신을 위한 패킷을 생성하는 Packet객체를 정의합니다.
+// packet.js
+
 import { config } from '../../config/config.js';
 import makePacket from './makePacket.js';
 import payload from './payload.js';
@@ -358,10 +361,10 @@ const Packet = {
     );
   },
   /* 몬스터 이동 관련 */
-  C2SMonsterLocation: (transform_TransformInfo) => {
+  C2SMonsterLocation: (monsterId_int, transform_TransformInfo) => {
     return makePacket(
       packetId.C2SMonsterLocation,
-      payload.C2SMonsterLocation(transform_TransformInfo),
+      payload.C2SMonsterLocation(monsterId_int, transform_TransformInfo),
     );
   },
   S2CMonsterLocation: (monsterId_int, transform_TransformInfo) => {

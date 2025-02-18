@@ -1,3 +1,6 @@
+// 다양한 페이로드 데이터를 생성하는 객체 정의
+// 명칭의 구분을 위해 재 정의
+// payload.js
 const payload = {
   /* 게임 시작 관련 */
   C2SRegister: (email_string, pw_string, pwCheck_string) => {
@@ -247,8 +250,11 @@ const payload = {
     return { deadPlayerId: deadPlayerId_int, animCode: animCode_int };
   },
   /* 몬스터 이동 관련 */
-  C2SMonsterLocation: (transform_TransformInfo) => {
-    return { transform: transform_TransformInfo };
+  C2SMonsterLocation: (monsterId_int, transform_TransformInfo) => {
+    return {
+      monsterId: monsterId_int,
+      transform: transform_TransformInfo,
+    };
   },
   S2CMonsterLocation: (monsterId_int, transform_TransformInfo) => {
     return { monsterId: monsterId_int, transform: transform_TransformInfo };

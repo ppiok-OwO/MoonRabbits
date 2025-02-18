@@ -1,3 +1,6 @@
+//페이로드 데이터 객체정의
+//payloadData.js
+
 const payloadData = {
   PlayerInfo: (
     playerId_int,
@@ -22,27 +25,12 @@ const payloadData = {
       rot: rot_float,
     };
   },
-  StatInfo: (
-    level_int,
-    hp_float,
-    maxHp_float,
-    mp_float,
-    maxMp_float,
-    atk_float,
-    def_float,
-    magic_float,
-    speed_float,
-  ) => {
+  StatInfo: (level_int, stamina_float, pick_speed_float, move_speed_float) => {
     return {
       level: level_int,
-      hp: hp_float,
-      maxHp: maxHp_float,
-      mp: mp_float,
-      maxMp: maxMp_float,
-      atk: atk_float,
-      def: def_float,
-      magic: magic_float,
-      speed: speed_float,
+      stemina: stamina_float,
+      pick_speed: pick_speed_float,
+      move_speed: move_speed_float,
     };
   },
   ScreenText: (
@@ -75,39 +63,21 @@ const payloadData = {
       monsters: monsters_ArrayOfMonsterStatus,
     };
   },
-  MonsterStatus: (
-    monsterIdx_int,
-    monsterModel_int,
-    monsterName_string,
-    monsterHp_float,
-  ) => {
+  MonsterStatus: (monsterIdx_int, monsterModel_int, monsterName_string) => {
     return {
       monsterIdx: monsterIdx_int,
       monsterModel: monsterModel_int,
       monsterName: monsterName_string,
-      monsterHp: monsterHp_float,
     };
   },
   ActionSet: (animCode_int, effectCode_int) => {
     return { animCode: animCode_int, effectCode: effectCode_int };
   },
-  PlayerStatus: (
-    playerClass_int,
-    playerLevel_int,
-    playerName_string,
-    playerFullHp_float,
-    playerFullMp_float,
-    playerCurHp_float,
-    playerCurMp_float,
-  ) => {
+  PlayerStatus: (playerClass_int, playerLevel_int, playerName_string) => {
     return {
       playerClass: playerClass_int,
       playerLevel: playerLevel_int,
       playerName: playerName_string,
-      playerFullHp: playerFullHp_float,
-      playerFullMp: playerFullMp_float,
-      playerCurHp: playerCurHp_float,
-      playerCurMp: playerCurMp_float,
     };
   },
   BattleLog: (msg_string, typingAnimation_bool, btns_ArrayOfBtnInfo) => {
