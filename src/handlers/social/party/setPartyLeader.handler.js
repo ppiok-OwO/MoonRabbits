@@ -3,7 +3,7 @@ import CustomError from '../../../utils/error/customError.js';
 import { ErrorCodes } from '../../../utils/error/errorCodes.js';
 import Packet from '../../../utils/packet/packet.js';
 
-export const setPartyLeader = (socket, packetData) => {
+export const setPartyLeaderHandler = (socket, packetData) => {
   try {
     const { partyId, memberId } = packetData;
 

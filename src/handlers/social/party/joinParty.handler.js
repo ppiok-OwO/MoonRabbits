@@ -7,7 +7,7 @@ import CustomError from '../../../utils/error/customError.js';
 import { ErrorCodes } from '../../../utils/error/errorCodes.js';
 import Packet from '../../../utils/packet/packet.js';
 
-export const joinParty = (socket, packetData) => {
+export const joinPartyHandler = (socket, packetData) => {
   try {
     const { partyId, memberId } = packetData;
 

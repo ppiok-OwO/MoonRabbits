@@ -6,7 +6,7 @@ import CustomError from '../../../utils/error/customError.js';
 import { ErrorCodes } from '../../../utils/error/errorCodes.js';
 import Packet from '../../../utils/packet/packet.js';
 
-export const kickOutParty = (socket, packetData) => {
+export const kickOutPartyHandler = (socket, packetData) => {
   try {
     const { partyId, memberId } = packetData;
 

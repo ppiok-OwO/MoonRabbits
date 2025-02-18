@@ -6,7 +6,7 @@ import CustomError from '../../../utils/error/customError.js';
 import { ErrorCodes } from '../../../utils/error/errorCodes.js';
 import Packet from '../../../utils/packet/packet.js';
 
-export const disbandParty = (socket, packetData) => {
+export const disbandPartyHandler = (socket, packetData) => {
   try {
     const { partyId } = packetData;
     // 파티 인스턴스

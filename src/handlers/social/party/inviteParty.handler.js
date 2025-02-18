@@ -8,7 +8,7 @@ import { ErrorCodes } from '../../../utils/error/errorCodes.js';
 import Packet from '../../../utils/packet/packet.js';
 
 // 클라이언트
-export const inviteParty = (socket, packetData) => {
+export const invitePartyHandler = (socket, packetData) => {
   try {
     const { partyId, nickname } = packetData;
 

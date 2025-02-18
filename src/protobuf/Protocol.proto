@@ -169,8 +169,6 @@ message S2CMonsterCollision {
 
 /* 파티 관련 */
 message C2SCreateParty {
-  int32 partyId = 1;
-  int32 leaderId = 2;
 }
 message S2CCreateParty {
   int32 partyId = 1;
@@ -236,16 +234,26 @@ message S2CDisbandParty {
 }
 
 /* 던전 관련 */
-message C2SDungeonEnter {
-  int32 dungeonCode = 1;
+message C2SSectorEnter {
+  int32 sectorId = 1;
   optional int32 partyId = 2;
 }
-message S2CDungeonEnter {
-  DungeonInfo dungeonInfo = 1;
+message S2CSectorEnter {
+  SectorInfo sectorInfo = 1;
   PlayerStatus player = 2;
 }
-message C2SDungeonLeave {}
-message S2CDungeonLeave {}
+message C2SSectorLeave {
+  int32 sectorId = 1;
+  optional int32 partyId = 2;
+}
+message S2CSectorLeave {
+
+}
+
+message C2SInPortal {
+}
+message S2CInPortal {
+}
 
 /* 전투 관련 */
 message C2SAttack {
@@ -286,10 +294,11 @@ message S2CMonsterLocation {
 
 message PlayerInfo {
   int32 playerId = 1;   // 입장할때 서버 내부에서 생성한 관리코드
-  string nickname = 2;  
-  int32 classCode = 3;      
-  TransformInfo transform = 4;
-  StatInfo statInfo = 5;
+  string nickname = 2;
+  int32 level = 3;
+  int32 classCode = 4;      
+  TransformInfo transform = 5;
+  StatInfo statInfo = 6;
 }
 
 message TransformInfo {
@@ -330,8 +339,8 @@ message ColorObj {
   int32 b = 3;
 }
 
-message DungeonInfo {
-  int32 dungeonCode = 1;
+message SectorInfo  {
+  int32 sectorId = 1;
   repeated MonsterStatus monsters = 2;
 }
 

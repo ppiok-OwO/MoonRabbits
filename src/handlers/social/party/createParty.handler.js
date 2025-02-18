@@ -8,7 +8,7 @@ import { ErrorCodes } from '../../../utils/error/errorCodes.js';
 import handleError from '../../../utils/error/errorHandler.js';
 import Packet from '../../../utils/packet/packet.js';
 
-export const createParty = (socket, packetData) => {
+export const createPartyHandler = (socket, packetData) => {
   try {
     // 플레이어 세션을 통해 플레이어 인스턴스를 불러온다.
     const playerSession = getPlayerSession();

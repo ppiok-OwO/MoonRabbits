@@ -41,7 +41,7 @@ class Party {
   }
 
   getPartyLeaderId() {
-    return this.partyLeader.getId();
+    return this.partyLeader.user.getId();
   }
 
   getAllMembers() {
@@ -55,7 +55,7 @@ class Party {
   getAllMemberIds() {
     const memberIds = [];
     for (const member of this.members.values()) {
-      const memberId = member.getId();
+      const memberId = member.user.getId();
       memberIds.push(memberId);
     }
 

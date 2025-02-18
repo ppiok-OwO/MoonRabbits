@@ -27,6 +27,7 @@ class Player extends Entity {
     this.nickname = nickname;
     this.user = user;
     this.id = playerId;
+    this.level = 1;
     this.position = new TransformInfo();
     this.dungeonId = null;
     this.lastBattleLog = 0;
@@ -66,8 +67,9 @@ class Player extends Entity {
   }
   getPlayerInfo() {
     return payloadData.PlayerInfo(
-      this.id,
+      this.user.id,
       this.nickname,
+      this.level,
       this.class,
       this.position,
       this.getPlayerStats(),

@@ -7,7 +7,7 @@ class PartySession {
     const newParty = new Party();
     this.parties.set(newParty.getId(), newParty);
 
-    return parties;
+    return this.parties;
   }
 
   removeParty(partyId) {
