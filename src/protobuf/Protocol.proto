@@ -174,7 +174,7 @@ message S2CCreateParty {
   int32 partyId = 1;
   int32 leaderId = 2;
   int32 memberCount = 3;
-  repeated MemberId members = 4;
+  repeated MemberCardInfo members = 4;
 }
 message C2SInviteParty {
   int32 partyId = 1;
@@ -184,7 +184,7 @@ message S2CInviteParty {
   int32 partyId = 1;
   int32 leaderId = 2;
   int32 memberCount = 3;
-  repeated MemberId members = 4;
+  repeated MemberCardInfo members = 4;
 }
 message C2SJoinParty {
   int32 partyId = 1;
@@ -194,7 +194,7 @@ message S2CJoinParty {
   int32 partyId = 1;
   int32 leaderId = 2;
   int32 memberCount = 3;
-  repeated MemberId members = 4;
+  repeated MemberCardInfo members = 4;
 }
 message C2SLeaveParty {
   int32 partyId = 1;
@@ -204,7 +204,7 @@ message S2CLeaveParty {
   int32 partyId = 1;
   int32 leaderId = 2;
   int32 memberCount = 3;
-  repeated MemberId members = 4;
+  repeated MemberCardInfo members = 4;
 }
 message C2SSetPartyLeader {
   int32 partyId = 1;
@@ -214,7 +214,7 @@ message S2CSetPartyLeader {
   int32 partyId = 1;
   int32 leaderId = 2;
   int32 memberCount = 3;
-  repeated MemberId members = 4;
+  repeated MemberCardInfo members = 4;
 }
 message C2SKickOutMember {
   int32 partyId = 1;
@@ -224,7 +224,7 @@ message S2CKickOutMember {
   int32 partyId = 1;
   int32 leaderId = 2;
   int32 memberCount = 3;
-  repeated MemberId members = 4;
+  repeated MemberCardInfo members = 4;
 }
 message C2SDisbandParty {
   int32 partyId = 1;
@@ -410,4 +410,11 @@ message CollisionPushInfo {
   bool hasCollision = 1;
   Vector3Obj pushDirection = 2;
   float pushDistance = 3;
+}
+
+message MemberCardInfo {
+  int32 id = 1;
+  string nickname = 2;
+  bool isPartyLeader = 3;
+  bool isMine = 4;
 }

@@ -165,6 +165,19 @@ const payloadData = {
       pushDistance: pushDistance_float,
     };
   },
+  MemberCardInfo: (
+    id_int,
+    nickname_string,
+    isPartyLeader_bool,
+    isMine_bool,
+  ) => {
+    return {
+      id: id_int,
+      nickname: nickname_string,
+      isPartyLeader: isPartyLeader_bool,
+      isMine: isMine_bool,
+    };
+  },
 };
 
 export default payloadData;

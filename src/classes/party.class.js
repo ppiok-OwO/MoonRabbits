@@ -41,7 +41,7 @@ class Party {
   }
 
   getPartyLeaderId() {
-    return this.partyLeader.user.getId();
+    return this.partyLeader.id;
   }
 
   getAllMembers() {
@@ -55,11 +55,27 @@ class Party {
   getAllMemberIds() {
     const memberIds = [];
     for (const member of this.members.values()) {
-      const memberId = member.user.getId();
+      const memberId = member.id;
       memberIds.push(memberId);
     }
 
     return memberIds;
+  }
+
+  getAllMemberCardInfo(playerId) {
+    const memberCardInfos = [];
+    for (const member of this.members.values()) {
+      const memberInfo = {
+        id: member.id,
+        nickname: member.nickname,
+        isPartyLeader: member === this.partyLeader,
+        isMine: member.id === playerId,
+      };
+
+      memberCardInfos.push(memberInfo);
+    }
+
+    return memberCardInfos;
   }
 
   disbandParty() {

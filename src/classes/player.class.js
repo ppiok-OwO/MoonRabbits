@@ -32,6 +32,7 @@ class Player extends Entity {
     this.dungeonId = null;
     this.lastBattleLog = 0;
     this.path = null;
+    this.isPartyLeader = false;
   }
   sendPacket(packet) {
     try {
@@ -67,7 +68,7 @@ class Player extends Entity {
   }
   getPlayerInfo() {
     return payloadData.PlayerInfo(
-      this.user.id,
+      this.id,
       this.nickname,
       this.level,
       this.class,

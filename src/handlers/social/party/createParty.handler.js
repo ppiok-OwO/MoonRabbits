@@ -32,7 +32,7 @@ export const createPartyHandler = (socket, packetData) => {
       newParty.getId(),
       newParty.getPartyLeaderId(),
       newParty.getMemberCount(),
-      newParty.getAllMemberIds(),
+      newParty.getAllMemberCardInfo(player.id),
     );
 
     // 파티 세션에 브로드캐스트

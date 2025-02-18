@@ -121,13 +121,13 @@ const payload = {
     partyId_int,
     leaderId_int,
     memberCount_int,
-    members_ArrayOfMemberId,
+    members_ArrayOfMemberCardInfo,
   ) => {
     return {
       partyId: partyId_int,
       leaderId: leaderId_int,
       memberCount: memberCount_int,
-      members: members_ArrayOfMemberId,
+      members: members_ArrayOfMemberCardInfo,
     };
   },
   C2SInviteParty: (partyId_int, nickname_string) => {
@@ -137,13 +137,13 @@ const payload = {
     partyId_int,
     leaderId_int,
     memberCount_int,
-    members_ArrayOfMemberId,
+    members_ArrayOfMemberCardInfo,
   ) => {
     return {
       partyId: partyId_int,
       leaderId: leaderId_int,
       memberCount: memberCount_int,
-      members: members_ArrayOfMemberId,
+      members: members_ArrayOfMemberCardInfo,
     };
   },
   C2SJoinParty: (partyId_int, newMemberId_int) => {
@@ -153,13 +153,13 @@ const payload = {
     partyId_int,
     leaderId_int,
     memberCount_int,
-    members_ArrayOfMemberId,
+    members_ArrayOfMemberCardInfo,
   ) => {
     return {
       partyId: partyId_int,
       leaderId: leaderId_int,
       memberCount: memberCount_int,
-      members: members_ArrayOfMemberId,
+      members: members_ArrayOfMemberCardInfo,
     };
   },
   C2SLeaveParty: (partyId_int, leftPlayerId_int) => {
@@ -169,13 +169,13 @@ const payload = {
     partyId_int,
     leaderId_int,
     memberCount_int,
-    members_ArrayOfMemberId,
+    members_ArrayOfMemberCardInfo,
   ) => {
     return {
       partyId: partyId_int,
       leaderId: leaderId_int,
       memberCount: memberCount_int,
-      members: members_ArrayOfMemberId,
+      members: members_ArrayOfMemberCardInfo,
     };
   },
   C2SSetPartyLeader: (partyId_int, memberId_int) => {
@@ -185,26 +185,26 @@ const payload = {
     partyId_int,
     leaderId_int,
     memberCount_int,
-    members_ArrayOfMemberId,
+    members_ArrayOfMemberCardInfo,
   ) => {
     return {
       partyId: partyId_int,
       leaderId: leaderId_int,
       memberCount: memberCount_int,
-      members: members_ArrayOfMemberId,
+      members: members_ArrayOfMemberCardInfo,
     };
   },
   S2CKickOutMember: (
     partyId_int,
     leaderId_int,
     memberCount_int,
-    members_ArrayOfMemberId,
+    members_ArrayOfMemberCardInfo,
   ) => {
     return {
       partyId: partyId_int,
       leaderId: leaderId_int,
       memberCount: memberCount_int,
-      members: members_ArrayOfMemberId,
+      members: members_ArrayOfMemberCardInfo,
     };
   },
   S2CDisbandParty: (msg_string) => {
