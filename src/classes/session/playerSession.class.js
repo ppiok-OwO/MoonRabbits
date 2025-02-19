@@ -6,16 +6,8 @@ class PlayerSession {
   players = new Map();
   playerId = 1;
 
-<<<<<<< HEAD
   async addPlayer(socket, user, nickname, classCode) {
     this.players.set(socket, new Player(user, this.playerId++, nickname, classCode));
-=======
-  addPlayer(socket, user, nickname, classCode) {
-    this.players.set(
-      socket,
-      new Player(user, this.playerId++, nickname, classCode),
-    );
->>>>>>> dev
 
     const newPlayer = this.players.get(socket);
 
@@ -35,15 +27,10 @@ class PlayerSession {
   getPlayer(socket) {
     return this.players.get(socket);
   }
-<<<<<<< HEAD
-  getPlayerById(id) {
-    for (const player of this.players.values()) {
-      if (player.id === id) return player;
-=======
+
   getPlayerById(playerId) {
     for (const player of this.players.values()) {
       if (player.id === playerId) return player;
->>>>>>> dev
     }
     return -1;
   }

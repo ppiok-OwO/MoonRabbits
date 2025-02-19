@@ -58,10 +58,8 @@ const payloadData = {
 
     if (alignment_ScreenTextAlignment_Optional !== null)
       payload.alignment = alignment_ScreenTextAlignment_Optional;
-    if (textColor_ColorObj_Optional !== null)
-      payload.textColor = textColor_ColorObj_Optional;
-    if (screenColor_ColorObj_optional !== null)
-      payload.screenColor = screenColor_ColorObj_optional;
+    if (textColor_ColorObj_Optional !== null) payload.textColor = textColor_ColorObj_Optional;
+    if (screenColor_ColorObj_optional !== null) payload.screenColor = screenColor_ColorObj_optional;
 
     return payload;
   },
@@ -77,12 +75,7 @@ const payloadData = {
       monsters: monsters_ArrayOfMonsterStatus,
     };
   },
-  MonsterStatus: (
-    monsterIdx_int,
-    monsterModel_int,
-    monsterName_string,
-    monsterHp_float,
-  ) => {
+  MonsterStatus: (monsterIdx_int, monsterModel_int, monsterName_string, monsterHp_float) => {
     return {
       monsterIdx: monsterIdx_int,
       monsterModel: monsterModel_int,
@@ -154,11 +147,7 @@ const payloadData = {
       height2: height2_float,
     };
   },
-  CollisionPushInfo: (
-    hasCollision_bool,
-    pushDirection_Vector3Obj,
-    pushDistance_float,
-  ) => {
+  CollisionPushInfo: (hasCollision_bool, pushDirection_Vector3Obj, pushDistance_float) => {
     return {
       hasCollision: hasCollision_bool,
       pushDirection: pushDirection_Vector3Obj,
@@ -166,26 +155,18 @@ const payloadData = {
     };
   },
 
-  MemberCardInfo: (
-    id_int,
-    nickname_string,
-    isPartyLeader_bool,
-    isMine_bool,
-  ) => {
+  MemberCardInfo: (id_int, nickname_string, isPartyLeader_bool, isMine_bool) => {
     return {
       id: id_int,
       nickname: nickname_string,
       isPartyLeader: isPartyLeader_bool,
       isMine: isMine_bool,
     };
-  Resource: (
-    resourceIdx_int,
-    resourceId_int,
-  ) => {
+  },
+  Resource: (resourceIdx_int, resourceId_int) => {
     return {
       resourceIdx: resourceIdx_int,
       resourceId: resourceId_int,
-
     };
   },
 };
