@@ -12,6 +12,8 @@ import playerLocationUpdateHandler from './town/playerLocationUpdate.handler.js'
 import registerHandler from './account/register.handler.js';
 import loginHandler from './account/login.handler.js';
 import createCharacterHandler from './account/createCharacter.handler.js';
+import { addExpHandler } from './player/addExp.handler.js';
+import { selectAvailablePointHandler } from './player/selectAvailablePoint.handler.js';
 
 import { createPartyHandler } from './social/party/createParty.handler.js';
 import { invitePartyHandler } from './social/party/inviteParty.handler.js';
@@ -41,6 +43,8 @@ const handlers = {
   [config.packetId.C2SRegister]: registerHandler,
   [config.packetId.C2SLogin]: loginHandler,
   [config.packetId.C2SCreateCharacter]: createCharacterHandler,
+  [config.packetId.C2SAddExp]: addExpHandler,
+  [config.packetId.C2SSelectAP]: selectAvailablePointHandler,
 
   // 파티 관련
   [config.packetId.C2SCreateParty]: createPartyHandler,

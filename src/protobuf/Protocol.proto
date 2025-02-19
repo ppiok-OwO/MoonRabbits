@@ -52,6 +52,16 @@ enum MsgId {
   C2S_ALLOW_INVITE = 114;
   S2C_ALLOW_INVITE = 115;
 
+  C2S_ADD_EXP = 200;
+  S2C_ADD_EXP = 201;
+  S2C_LEVEL_UP = 202;
+  C2S_SELECT_AP = 203;
+  S2C_SELECT_AP = 204;
+
+  C2S_DUNGEON_ENTER = 500;
+  S2C_DUNGEON_ENTER = 501;
+  C2S_DUNGEON_LEAVE = 502;
+  S2C_DUNGEON_LEAVE = 503;
   C2S_SECTOR_ENTER = 300;
   S2C_SECTOR_ENTER = 301;
   C2S_SECTOR_LEAVE = 302;
@@ -242,6 +252,27 @@ message S2CAllowInvite {
   int32 leaderId = 2;
   int32 memberCount = 3;
   repeated MemberCardInfo members = 4;
+}
+
+/* 플레이어 레벨업 */
+message C2SAddExp {
+  int32 count = 1;
+} 
+message S2CAddExp {
+  int32 updatedExp = 1;
+} 
+message S2CLevelUp {
+  int32 playerId = 1;
+  int32 updatedLevel = 2;
+  int32 newTargetExp = 3;
+  int32 updatedExp = 4;
+  int32 abilityPoint = 5;
+} 
+message C2SSelectAP {
+  repeated InvestPoint investPoints = 1;
+}
+message S2CSelectAP {
+  StatInfo statInfo = 1;
 }
 
 /* 던전 관련 */
@@ -449,6 +480,11 @@ message CollisionPushInfo {
   bool hasCollision = 1;
   Vector3Obj pushDirection = 2;
   float pushDistance = 3;
+}
+
+message InvestPoint {
+  int32 statCode = 1;
+  int32 point = 2;
 }
 
 message MemberCardInfo {

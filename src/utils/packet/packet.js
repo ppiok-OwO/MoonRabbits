@@ -321,6 +321,32 @@ const Packet = {
       ),
     );
   },
+  /* 플레이어 레벨업 */
+  C2SAddExp: (count_int) => {
+    return makePacket(packetId.C2SAddExp, { count: count_int });
+  },
+  S2CAddExp: (updatedExp_int) => {
+    return makePacket(packetId.S2CAddExp, { updatedExp: updatedExp_int });
+  },
+  S2CLevelUp: (playerId_int, updatedLevel_int, newTargetExp_int, updatedExp_int, abilityPoint_int) => {
+    return makePacket(packetId.S2CLevelUp, {
+      playerId: playerId_int,
+      updatedLevel: updatedLevel_int,
+      newTargetExp: newTargetExp_int,
+      updatedExp: updatedExp_int,
+      abilityPoint: abilityPoint_int,
+    });
+  },
+  C2SSelectAP: (investPoints_ArrayOfInvestPoint) => {
+    return makePacket(packetId.C2SSelectAP, {
+      investPoints: investPoints_ArrayOfInvestPoint,
+    });
+  },
+  S2CSelectAP: (statInfo_StatInfo) => {
+    return makePacket(packetId.S2CSelectAP, {
+      statInfo: statInfo_StatInfo,
+    });
+  },
   S2CDisbandParty: (msg_string) => {
     return makePacket(
       packetId.S2CDisbandParty,
