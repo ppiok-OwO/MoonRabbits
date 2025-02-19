@@ -1,4 +1,7 @@
-import { getPartySessions } from '../../../session/sessions.js';
+import {
+  getPartySessions,
+  getPlayerSession,
+} from '../../../session/sessions.js';
 import CustomError from '../../../utils/error/customError.js';
 import { ErrorCodes } from '../../../utils/error/errorCodes.js';
 import Packet from '../../../utils/packet/packet.js';
@@ -45,8 +48,10 @@ export const setPartyLeaderHandler = (socket, packetData) => {
     }
 
     // 파티장을 위임하려는 멤버의 ID가 파티에 존재하는가?
-    const memberIds = party.getAllMemberIds();
-    if (!memberIds.find((value) => value === memberId)) {
+    const newLeader = party
+      .getAllMemberIds()
+      .find((value) => value === memberId);
+    if (!newLeader) {
       return socket.emit(
         'error',
         new CustomError(
@@ -57,17 +62,20 @@ export const setPartyLeaderHandler = (socket, packetData) => {
     }
 
     // 파티장 교체
-    const newLeader = party
-      .getAllMemberSockets()
-      .find((value) => value.id === memberId);
-    party.setPartyLeader();
+    party.setPartyLeader(newLeader);
 
-    const packet = Packet.S2CSetPartyLeader(
-      party.getId(),
-      party.getPartyLeaderId(),
-      party.getMemberCount(),
-      party.getAllMemberCardInfo(player.id),
-    );
+    // 각 멤버에 대하여 맞춤형 패킷 생성
+    const members = party.getAllMemberEntries();
+
+    members.forEach(([key, value]) => {
+      const packet = Packet.S2CLeaveParty(
+        party.getId(),
+        party.getPartyLeaderId(),
+        party.getMemberCount(),
+        party.getAllMemberCardInfo(value.id),
+      );
+      key.write(packet);
+    });
   } catch (error) {
     handleError(socket, error);
   }
