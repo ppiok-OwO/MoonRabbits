@@ -5,10 +5,7 @@ class PlayerSession {
   playerId = 1;
 
   addPlayer(socket, user, nickname, classCode) {
-    this.players.set(
-      socket,
-      new Player(user, this.playerId++, nickname, classCode),
-    );
+    this.players.set(socket, new Player(user, this.playerId++, nickname, classCode));
 
     const newPlayer = this.players.get(socket);
 
@@ -22,9 +19,10 @@ class PlayerSession {
   getPlayer(socket) {
     return this.players.get(socket);
   }
-  getPlayerById(playerId) {
+  getPlayerById(id){
     for (const player of this.players.values()) {
-      if (player.id === playerId) return player;
+      if(player.id === id)
+        return player;
     }
     return -1;
   }
@@ -32,15 +30,6 @@ class PlayerSession {
   getAllPlayers() {
     // return this.players.values();
     return this.players;
-  }
-
-  getPlayerByNickname(nickname) {
-    for (const player of this.players.values()) {
-      if (player.nickname === nickname) {
-        return player;
-      }
-    }
-    return -1;
   }
 
   clearSession() {
