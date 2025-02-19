@@ -24,38 +24,24 @@ CREATE TABLE IF NOT EXISTS Stats
 (
     stat_id     VARCHAR(36) PRIMARY KEY,
     player_id   VARCHAR(36) NOT NULL,
-    level       INT         NOT NULL,
-    hp          INT         NOT NULL,
-    mp          INT         NOT NULL,
-    atk         INT         NOT NULL,
-    def         INT         NOT NULL,
-    magic       INT         NOT NULL,
-    speed       FLOAT       NOT NULL,
+    level              INT  DEFAULT 1,
+    exp                INT  DEFAULT 0,
+    stamina            INT  DEFAULT 100,
+    pick_speed         INT  DEFAULT 5,
+    move_speed       FLOAT  DEFAULT 1.0,
     FOREIGN KEY (player_id) REFERENCES Players(player_id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Inventory
+CREATE TABLE IF NOT EXISTS Inventories
 (
-    inventory_id VARCHAR(36) PRIMARY KEY,
+    inventory_id VARCHAR(36) NOT NULL,
     player_id    VARCHAR(36) NOT NULL,
-    item_id      VARCHAR(36) NOT NULL,
-    stack        INT         NOT NULL,
-    is_equipped  BOOLEAN     DEFAULT FALSE,
+    item_id      VARCHAR(36) NULL,
+    slot_idx     INT         NOT NULL,
+    stack        INT         NOT NULL DEFAULT 0,
     created_at   TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (player_id) REFERENCES Players(player_id)
-        ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS QuestProgress
-(
-    quest_progress_id VARCHAR(36) PRIMARY KEY,
-    player_id         VARCHAR(36) NOT NULL,
-    quest_id          VARCHAR(36) NOT NULL,
-    progress          INT         NOT NULL,
-    start_date        TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
-    update_date       TIMESTAMP   DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    finish_date       TIMESTAMP   DEFAULT NULL,
+    PRIMARY KEY (inventory_id, slot_idx),
     FOREIGN KEY (player_id) REFERENCES Players(player_id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );

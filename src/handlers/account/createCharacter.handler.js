@@ -2,6 +2,8 @@ import chalk from 'chalk';
 import Packet from '../../utils/packet/packet.js';
 import payloadData from '../../utils/packet/payloadData.js';
 import {
+  createInventory,
+  createStat,
   findPlayerByUserId,
   findUserByEmail,
   findUserByNickname,
@@ -16,8 +18,6 @@ const createCharacterHandler = async (socket, packetData) => {
   try {
     // !!! 패킷 수정에 따라 class -> classCode가 된 관계로 분해할당 그대로 하도록 수정했습니다!
     const { nickname, classCode } = packetData;
-
-    console.log('userSessions :', getUserSessions());
 
     // nickname 중복 확인
     const duplicateNickname = await findUserByNickname(nickname);
@@ -62,14 +62,21 @@ const createCharacterHandler = async (socket, packetData) => {
       classCode : ${classCode}
       `);
 
+    const user = getUserSessions().getUser(socket);
+    if (user) {
+      user.setUserInfo(userData.userId, nickname, classCode);
+    }
+    console.log('----- user ----- \n', user);
+
+    // 캐릭터 생성 성공 시, 스탯 및 인벤토리 생성
+    const findPlayerId = await findPlayerByUserId(userData.userId);
+
+    await createStat(findPlayerId.playerId);
+    await createInventory(findPlayerId.playerId);
+
     // 캐릭터 생성 성공 시, 보유한 캐릭터 정보를 가져옴
     const ownedCharacters = [payloadData.OwnedCharacters(nickname, classCode)];
 
-    /*
-    [2025-02-13]
-    - 현재 패킷이 S_Login이 되면 ownedCharacters를 확인한 후 Town에 접속하도록 설계되어 있음
-    - 패킷 수정이 필요함
-    */
     const packet = Packet.S2CLogin(isSuccess, msg, ownedCharacters);
     socket.write(packet);
   } catch (error) {
