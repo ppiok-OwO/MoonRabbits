@@ -20,17 +20,14 @@ class Player extends Entity {
           newplayerstat.speed,
         ),
       );
-    } catch (error) {
-      console.error("!!! ",error)
-    }
-    this.class = classCode;
+    } catch (error) {}
+    this.classCode = classCode;
     this.nickname = nickname;
     this.user = user;
     this.id = playerId;
     this.position = new TransformInfo();
     this.dungeonId = null;
     this.lastBattleLog = 0;
-    this.path = null;
   }
   sendPacket(packet) {
     try {
@@ -42,7 +39,7 @@ class Player extends Entity {
 
   getPlayerStatus() {
     return payloadData.PlayerStatus(
-      this.class,
+      this.classCode,
       this.getLevel(),
       this.nickname,
       this.getMaxHp(),
@@ -68,7 +65,7 @@ class Player extends Entity {
     return payloadData.PlayerInfo(
       this.id,
       this.nickname,
-      this.class,
+      this.classCode,
       this.position,
       this.getPlayerStats(),
     );

@@ -7,12 +7,12 @@ import { getUserSessions } from '../../session/sessions.js';
 import playerSpawnNotificationHandler from './playerSpawnNotification.handler.js';
 import chalk from 'chalk';
 
-const townEnterHandler = (socket, packetData) => {
+const townEnterHandler = async (socket, packetData) => {
   try {
     const user = getUserSessions().getUser(socket);
     if (!user) socket.emit('error', new CustomError(ErrorCodes.USER_NOT_FOUND, 'getUser 에러'));
     console.log(10);
-    const newPlayer = getPlayerSession().addPlayer(
+    const newPlayer = await getPlayerSession().addPlayer(
       socket,
       user,
       packetData.nickname,

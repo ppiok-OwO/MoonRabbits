@@ -1,8 +1,5 @@
 import { config } from '../../config/config.js';
-import {
-  getDungeonSessions,
-  getPlayerSession,
-} from '../../session/sessions.js';
+import { getDungeonSessions, getPlayerSession } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import makePacket from '../../utils/packet/makePacket.js';
@@ -30,10 +27,7 @@ const playerLocationUpdateHandler = (socket, packetData) => {
     if (!player) {
       socket.emit(
         'error',
-        new CustomError(
-          ErrorCodes.USER_NOT_FOUND,
-          '플레이어 정보를 찾을 수 없습니다.',
-        ),
+        new CustomError(ErrorCodes.USER_NOT_FOUND, '플레이어 정보를 찾을 수 없습니다.'),
       );
     }
 
@@ -58,10 +52,7 @@ const playerLocationUpdateHandler = (socket, packetData) => {
 
       if (minDistance > 1.4) {
         // 오차범위를 벗어나면 플레이어의 위치를 closestPoint로 재조정한다.
-        const syncLocationPacket = Packet.S2CChat(
-          0,
-          '플레이어의 위치를 재조정합니다.',
-        );
+        const syncLocationPacket = Packet.S2CChat(0, '플레이어의 위치를 재조정합니다.');
 
         const newTransform = { ...closestPoint, rot: transform.rot };
         const packet = Packet.S2CPlayerLocation(player.id, newTransform, false);
@@ -72,12 +63,12 @@ const playerLocationUpdateHandler = (socket, packetData) => {
           // 만약 던전이면
           const dungeonSessions = getDungeonSessions();
           const dungeon = dungeonSessions.getDungeon(dungeonId);
-          dungeon.notify(packet);
-          dungeon.notify(syncLocationPacket);
+          // dungeon.notify(packet);
+          // dungeon.notify(syncLocationPacket);
         } else {
-          // 던전이 아니면
+          // 던전이 아니면playerSession.notify(syncLocationPacket);
           playerSession.notify(packet);
-          playerSession.notify(syncLocationPacket);
+          //
         }
 
         return;
