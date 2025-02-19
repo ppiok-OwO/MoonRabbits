@@ -49,9 +49,6 @@ export const PACKET_ID = {
   S2CDie: 508,
   C2SMonsterLocation: 120,
   S2CMonsterLocation: 121,
-
-  C2SMonsterLocation: 509,
-  S2CMonsterLocation: 510,
   //#region /* 채집관련 */
   S2CResourcesList: 551,
   S2CUpdateDurability: 552,
