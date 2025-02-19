@@ -1,5 +1,4 @@
 import Packet from '../../utils/packet/packet.js';
-import Packet from '../../utils/packet/packet.js';
 import handleError from '../../utils/error/errorHandler.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
