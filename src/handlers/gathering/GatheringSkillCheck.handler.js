@@ -6,19 +6,24 @@ import {
 import handleError from '../../utils/error/errorHandler.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
+import { addExpHandler } from '../player/addExp.handler.js';
 
 export const gatheringSkillCheckHandler = (socket, packetData) => {
   const { placedId, deltatime } = packetData;
   const player = getPlayerSession().getPlayer(socket);
   const dungeon = getDungeonSessions().getDungeon(player.getDungeonId());
   if (placedId >= 0 && placedId < dungeon.resources.length) {
-    const durability =
-      dungeon.resources[placedId].CheckValidateTiming(deltatime);
+    if (dungeon.resources[placedId].CheckValidateTiming(deltatime)) {
+      const durability = dungeon.resources[placedId].subDurability();
 
-    if (durability >= 0) {
       socket.write(Packet.S2CGatheringSkillCheck(placedId, durability));
       const dropItem = dungeon.resources[placedId].dropItem();
       socket.write(Packet.S2CGatheringDone(placedId, dropItem.item, 1));
+
+      addExpHandler(socket, {
+        count: dungeon.resources[placedId].getDifficulty(),
+      });
+
       if (durability === 0) {
         setTimeout(
           dungeon.resetDurability(placedId),

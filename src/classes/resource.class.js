@@ -48,9 +48,9 @@ class Resource {
       Math.abs(deltatime - validTime) < validTimeRange &&
       Math.abs(Date.now() - this.startTime - validTime) < validTimeRange + 50
     ) {
-      return --this.durability;
+      return true;
     }
-    return -1;
+    return false;
   }
 
   dropItem() {
