@@ -25,6 +25,6 @@ export const addExpHandler = (socket, packetData) => {
     const updatedExp = playerExp + plusExp;
     player.setExp(updatedExp);
     // 본인 경험치 UI 반영
-    socket.write(Packet.S2CAddExp(updatedExp));v
+    socket.write(Packet.S2CAddExp(updatedExp));
   }
 };

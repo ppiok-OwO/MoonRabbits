@@ -2,7 +2,7 @@ import { getPlayerSession } from '../../session/sessions.js';
 import Packet from '../../utils/packet/packet.js';
 import handleError from '../../utils/error/errorHandler.js';
 import CustomError from '../../utils/error/customError.js';
-import { ErrorCodes } from '../../utils/error/errorCodes.js';v
+import { ErrorCodes } from '../../utils/error/errorCodes.js';
 
 export const selectAvailablePointHandler = (socket, packetData) => {
   const { investPoints } = packetData; // [[statCode:?, point:?],

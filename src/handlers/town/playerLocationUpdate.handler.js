@@ -28,7 +28,7 @@ const playerLocationUpdateHandler = (socket, packetData) => {
     const playerSession = getPlayerSession();
     const player = playerSession.getPlayer(socket);
     if (!player) {
-      return socket.emit(
+      socket.emit(
         'error',
         new CustomError(
           ErrorCodes.USER_NOT_FOUND,
@@ -58,11 +58,10 @@ const playerLocationUpdateHandler = (socket, packetData) => {
 
       if (minDistance > 1.4) {
         // 오차범위를 벗어나면 플레이어의 위치를 closestPoint로 재조정한다.
-        // const syncLocationPacket = Packet.S2CChat(
-        //   0,
-        //   '플레이어의 위치를 재조정합니다.',
-        // );
-        console.log('플레이어의 위치를 재조정합니다.');
+        const syncLocationPacket = Packet.S2CChat(
+          0,
+          '플레이어의 위치를 재조정합니다.',
+        );
 
         const newTransform = { ...closestPoint, rot: transform.rot };
         const packet = Packet.S2CPlayerLocation(player.id, newTransform, false);

@@ -14,19 +14,8 @@ import loginHandler from './account/login.handler.js';
 import createCharacterHandler from './account/createCharacter.handler.js';
 import { addExpHandler } from './player/addExp.handler.js';
 import { selectAvailablePointHandler } from './player/selectAvailablePoint.handler.js';
-
-import { createPartyHandler } from './social/party/createParty.handler.js';
-import { invitePartyHandler } from './social/party/inviteParty.handler.js';
-import { joinPartyHandler } from './social/party/joinParty.handler.js';
-import { disbandPartyHandler } from './social/party/disbandParty.handler.js';
-import { kickOutPartyHandler } from './social/party/kickOutParty.handler.js';
-import { setPartyLeaderHandler } from './social/party/setPartyLeader.handler.js';
-import { allowInviteHandler } from './social/party/allowInvite.handler.js';
-import { leavePartyHandler } from './social/party/leaveParty.handler.js';
-
 import { gatheringSkillCheckHandler } from './gathering/GatheringSkillCheck.handler.js';
 import { StartGatheringHandler } from './gathering/StartGathering.handler.js';
-
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 

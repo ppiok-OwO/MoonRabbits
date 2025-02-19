@@ -62,7 +62,6 @@ export const config = {
     S2CPlayerCollision: PACKET_ID.S2CPlayerCollision,
     C2SMonsterCollision: PACKET_ID.C2SMonsterCollision,
     S2CMonsterCollision: PACKET_ID.S2CMonsterCollision,
-
     C2SCreateParty: PACKET_ID.C2SCreateParty,
     S2CCreateParty: PACKET_ID.S2CCreateParty,
     C2SInviteParty: PACKET_ID.C2SInviteParty,
@@ -155,9 +154,6 @@ export const config = {
   },
   updateLocation: {
     tolerance: UPDATE_LOCATION.tolerance,
-  },
-  party: {
-    MaxMember: 5,
   },
 };
 

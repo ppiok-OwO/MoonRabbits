@@ -27,6 +27,7 @@ export const loadGameAssets = async () => {
       readFileAsync('monster.json'),
       readFileAsync('target_exp.json'),
       readFileAsync('resource.json'),
+      readFileAsync('target_exp.json'),
     ]);
     gameAssets = { monsters, targetExps, resources };
     return gameAssets;

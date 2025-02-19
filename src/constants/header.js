@@ -26,7 +26,6 @@ export const PACKET_ID = {
   S2CPlayerCollision: 41,
   C2SMonsterCollision: 42,
   S2CMonsterCollision: 43,
-
   C2SCreateParty: 100,
   S2CCreateParty: 101,
   C2SInviteParty: 102,

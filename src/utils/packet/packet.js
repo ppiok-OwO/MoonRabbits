@@ -183,16 +183,16 @@ const Packet = {
       S2CMonsterCollision(playerId_int, collisionPushInfo_CollisionPushInfo),
     );
   },
-
-  /* 파티 관련 */
-  C2SCreateParty: (partyId_string, leaderId_int) => {
+  //#endregion
+  //#region  /* 파티 관련 */
+  C2SCreateParty: (partyId_int, leaderId_int) => {
     return makePacket(
       packetId.C2SCreateParty,
-      payload.C2SCreateParty(partyId_string, leaderId_int),
+      payload.C2SCreateParty(partyId_int, leaderId_int),
     );
   },
   S2CCreateParty: (
-    partyId_string,
+    partyId_int,
     leaderId_int,
     memberCount_int,
     members_ArrayOfMemberId,
@@ -200,37 +200,43 @@ const Packet = {
     return makePacket(
       packetId.S2CCreateParty,
       payload.S2CCreateParty(
-        partyId_string,
+        partyId_int,
         leaderId_int,
         memberCount_int,
         members_ArrayOfMemberId,
       ),
     );
   },
-  C2SInviteParty: (partyId_string, nickname_string) => {
+  C2SInviteParty: (partyId_int, nickname_string) => {
     return makePacket(
       packetId.C2SInviteParty,
-      payload.C2SInviteParty(partyId_string, nickname_string),
+      payload.C2SInviteParty(partyId_int, nickname_string),
     );
   },
-  S2CInviteParty: (leaderNickname_string, partyId_string, memberId_int) => {
+  S2CInviteParty: (
+    partyId_int,
+    leaderId_int,
+    memberCount_int,
+    members_ArrayOfMemberId,
+  ) => {
     return makePacket(
       packetId.S2CInviteParty,
       payload.S2CInviteParty(
-        leaderNickname_string,
-        partyId_string,
-        memberId_int,
+        partyId_int,
+        leaderId_int,
+        memberCount_int,
+        members_ArrayOfMemberId,
       ),
     );
   },
-  C2SJoinParty: (partyId_string, newMemberId_int) => {
+  C2SJoinParty: (partyId_int, newMemberId_int) => {
     return makePacket(
       packetId.C2SJoinParty,
-      payload.C2SJoinParty(partyId_string, newMemberId_int),
+      payload.C2SJoinParty(partyId_int, newMemberId_int),
     );
   },
   S2CJoinParty: (
-    partyId_string,
+    partyId_int,
     leaderId_int,
     memberCount_int,
     members_ArrayOfMemberId,
@@ -238,21 +244,21 @@ const Packet = {
     return makePacket(
       packetId.S2CJoinParty,
       payload.S2CJoinParty(
-        partyId_string,
+        partyId_int,
         leaderId_int,
         memberCount_int,
         members_ArrayOfMemberId,
       ),
     );
   },
-  C2SLeaveParty: (partyId_string, leftPlayerId_int) => {
+  C2SLeaveParty: (partyId_int, leftPlayerId_int) => {
     return makePacket(
       packetId.C2SLeaveParty,
-      payload.C2SLeaveParty(partyId_string, leftPlayerId_int),
+      payload.C2SLeaveParty(partyId_int, leftPlayerId_int),
     );
   },
   S2CLeaveParty: (
-    partyId_string,
+    partyId_int,
     leaderId_int,
     memberCount_int,
     members_ArrayOfMemberId,
@@ -260,21 +266,21 @@ const Packet = {
     return makePacket(
       packetId.S2CLeaveParty,
       payload.S2CLeaveParty(
-        partyId_string,
+        partyId_int,
         leaderId_int,
         memberCount_int,
         members_ArrayOfMemberId,
       ),
     );
   },
-  C2SSetPartyLeader: (partyId_string, memberId_int) => {
+  C2SSetPartyLeader: (partyId_int, memberId_int) => {
     return makePacket(
       packetId.C2SSetPartyLeader,
-      payload.C2SSetPartyLeader(partyId_string, memberId_int),
+      payload.C2SSetPartyLeader(partyId_int, memberId_int),
     );
   },
   S2CSetPartyLeader: (
-    partyId_string,
+    partyId_int,
     leaderId_int,
     memberCount_int,
     members_ArrayOfMemberId,
@@ -282,43 +288,23 @@ const Packet = {
     return makePacket(
       packetId.S2CSetPartyLeader,
       payload.S2CSetPartyLeader(
-        partyId_string,
+        partyId_int,
         leaderId_int,
         memberCount_int,
         members_ArrayOfMemberId,
       ),
     );
   },
-  S2CKickOutMember: (
-    partyId_string,
-    leaderId_int,
-    memberCount_int,
-    members_ArrayOfMemberId,
-  ) => {
+  C2SBuff: (partyId_int, casterId_int, skillCode_int, targetId_int) => {
     return makePacket(
-      packetId.S2CKickOutMember,
-      payload.S2CKickOutMember(
-        partyId_string,
-        leaderId_int,
-        memberCount_int,
-        members_ArrayOfMemberId,
-      ),
+      packetId.C2SBuff,
+      payload.C2SBuff(partyId_int, casterId_int, skillCode_int, targetId_int),
     );
   },
-  S2CAllowInvite: (
-    partyId_string,
-    leaderId_int,
-    memberCount_int,
-    members_ArrayOfMemberId,
-  ) => {
+  S2CBuff: (partyId_int, players_ArrayOfPlayerInfo) => {
     return makePacket(
-      packetId.S2CAllowInvite,
-      payload.S2CAllowInvite(
-        partyId_string,
-        leaderId_int,
-        memberCount_int,
-        members_ArrayOfMemberId,
-      ),
+      packetId.S2CBuff,
+      payload.S2CBuff(partyId_int, players_ArrayOfPlayerInfo),
     );
   },
   
@@ -356,10 +342,12 @@ const Packet = {
   },
 
   /* 던전 관련 */
-  C2SDungeonEnter: (dungeonCode_int, partyId_string) => {
+  //#endregion
+  //#region /* 던전 관련 */
+  C2SDungeonEnter: (dungeonCode_int, partyId_int) => {
     return makePacket(
       packetId.C2SDungeonEnter,
-      payload.C2SDungeonEnter(dungeonCode_int, partyId_string),
+      payload.C2SDungeonEnter(dungeonCode_int, partyId_int),
     );
   },
   S2CDungeonEnter: (dungeonInfo_DungeonInfo, player_PlayerStatus) => {
