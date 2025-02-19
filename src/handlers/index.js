@@ -18,6 +18,7 @@ import { joinPartyHandler } from './social/party/joinParty.handler.js';
 import { disbandPartyHandler } from './social/party/disbandParty.handler.js';
 import { kickOutPartyHandler } from './social/party/kickOutParty.handler.js';
 import { setPartyLeaderHandler } from './social/party/setPartyLeader.handler.js';
+import { allowInviteHandler } from './social/party/allowInvite.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
@@ -41,7 +42,7 @@ const handlers = {
   [config.packetId.C2SDisbandParty]: disbandPartyHandler,
   [config.packetId.C2SKickOutMember]: kickOutPartyHandler,
   [config.packetId.C2SSetPartyLeader]: setPartyLeaderHandler,
-  
+  [config.packetId.C2SAllowInvite]: allowInviteHandler,
 };
 
 export const getHandlerByPacketId = (packetId) => {

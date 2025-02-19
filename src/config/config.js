@@ -77,7 +77,7 @@ export const config = {
     S2CKickOutMember: PACKET_ID.S2CKickOutMember,
     C2SDisbandParty: PACKET_ID.C2SDisbandParty,
     S2CDisbandParty: PACKET_ID.S2CDisbandParty,
-    C2SAllowInvite: PACKET_ID.S2CAllowInvite,
+    C2SAllowInvite: PACKET_ID.C2SAllowInvite,
     S2CAllowInvite: PACKET_ID.S2CAllowInvite,
 
     C2SSectorEnter: PACKET_ID.C2SSectorEnter,

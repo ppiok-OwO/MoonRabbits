@@ -36,7 +36,7 @@ export const createPartyHandler = (socket, packetData) => {
     );
 
     // 파티 세션에 브로드캐스트
-    party.notify(packet);
+    return party.notify(packet);
   } catch (error) {
     handleError(socket, error);
   }

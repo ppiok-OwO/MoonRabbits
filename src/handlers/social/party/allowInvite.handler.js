@@ -1,4 +1,8 @@
 import { config } from '../../../config/config.js';
+import {
+  getPartySessions,
+  getPlayerSession,
+} from '../../../session/sessions.js';
 import CustomError from '../../../utils/error/customError.js';
 import { ErrorCodes } from '../../../utils/error/errorCodes.js';
 import handleError from '../../../utils/error/errorHandler.js';
@@ -21,11 +25,10 @@ export const allowInviteHandler = (socket, packetData) => {
       );
     }
 
+    // 새로운 멤버의 플레이어 인스턴스
     const playerSession = getPlayerSession();
-
-    // 파티장이 맞는지 검증
-    const player = playerSession.getPlayer(socket);
-    if (!player) {
+    const newMember = playerSession.getPlayerById(memberId);
+    if (!newMember || newMember === -1) {
       return socket.emit(
         'error',
         new CustomError(
@@ -34,33 +37,27 @@ export const allowInviteHandler = (socket, packetData) => {
         ),
       );
     }
-    const partyLeader = party.getPartyLeader();
-    if (player !== partyLeader) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.HANDLER_ERROR,
-          '파티원 초대 권한을 가지고 있지 않습니다.',
-        ),
-      );
-    }
 
-    // 새로운 멤버의 플레이어 인스턴스
-    const newMember = party
-      .getAllMemberSockets()
-      .find((value) => value.id === memberId);
-
-    if (party.getMemberCount() < config.party.MaxMember) {
+    if (
+      newMember &&
+      newMember !== -1 &&
+      party.getMemberCount() < config.party.MaxMember
+    ) {
       // 새 플레이어를 파티에 추가
       party.addMember(newMember.user.getSocket(), newMember);
-      const packet = Packet.S2CAllowInvite(
-        party.getId(),
-        party.getPartyLeaderId(),
-        party.getMemberCount(),
-        party.getAllMemberCardInfo(player.id),
-      );
 
-      party.notify(packet);
+      // 각 멤버에 대하여 맞춤형 패킷 생성
+      const members = party.getAllMemberEntries();
+
+      members.forEach(([key, value]) => {
+        const packet = Packet.S2CAllowInvite(
+          party.getId(),
+          party.getPartyLeaderId(),
+          party.getMemberCount(),
+          party.getAllMemberCardInfo(value.id),
+        );
+        key.write(packet);
+      });
     } else {
       const packet = Packet.S2CChat(
         0,

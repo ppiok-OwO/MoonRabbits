@@ -22,9 +22,9 @@ class PlayerSession {
   getPlayer(socket) {
     return this.players.get(socket);
   }
-  getPlayerById(id) {
+  getPlayerById(playerId) {
     for (const player of this.players.values()) {
-      if (player.id === id) return player;
+      if (player.id === playerId) return player;
     }
     return -1;
   }

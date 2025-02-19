@@ -71,9 +71,13 @@ export const invitePartyHandler = (socket, packetData) => {
         newMember.id,
       );
 
-      newMember.user.getSocket().write(packet);
+      return newMember.user.getSocket().write(packet);
     } else {
-      return;
+      const packet = Packet.S2CChat(
+        0,
+        '해당 파티는 정원이 모두 찼으므로 참가할 수 없습니다.',
+      );
+      return newMember.user.getSocket().write(packet);
     }
   } catch (error) {
     handleError(socket, error);

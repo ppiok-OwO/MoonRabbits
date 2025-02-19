@@ -47,7 +47,7 @@ export const joinPartyHandler = (socket, packetData) => {
       party.getAllMemberCardInfo(player.id),
     );
 
-    party.notify(packet);
+    return party.notify(packet);
   } catch (error) {
     handleError(socket, error);
   }

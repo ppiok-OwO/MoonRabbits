@@ -44,12 +44,16 @@ class Party {
     return this.partyLeader.id;
   }
 
-  getAllMembers() {
-    return this.members;
+  getAllMembersSockets() {
+    return this.members.keys();
   }
 
-  getAllMemberSockets() {
+  getAllMembers() {
     return this.members.values();
+  }
+
+  getAllMemberEntries() {
+    return this.members.entries();
   }
 
   getAllMemberIds() {
