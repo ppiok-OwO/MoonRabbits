@@ -163,6 +163,15 @@ const payloadData = {
       pushDistance: pushDistance_float,
     };
   },
+  Resource: (
+    resourceIdx_int,
+    resourceId_int,
+  ) => {
+    return {
+      resourceIdx: resourceIdx_int,
+      resourceId: resourceId_int,
+    };
+  },
 };
 
 export default payloadData;
