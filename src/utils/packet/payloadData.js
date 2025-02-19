@@ -165,6 +165,7 @@ const payloadData = {
       pushDistance: pushDistance_float,
     };
   },
+
   MemberCardInfo: (
     id_int,
     nickname_string,
@@ -176,6 +177,15 @@ const payloadData = {
       nickname: nickname_string,
       isPartyLeader: isPartyLeader_bool,
       isMine: isMine_bool,
+    };
+  Resource: (
+    resourceIdx_int,
+    resourceId_int,
+  ) => {
+    return {
+      resourceIdx: resourceIdx_int,
+      resourceId: resourceId_int,
+
     };
   },
 };

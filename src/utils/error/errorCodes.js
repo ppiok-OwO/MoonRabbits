@@ -12,5 +12,6 @@ export const ErrorCodes = {
   HANDLER_ERROR: 10011,
   INVALID_NAVMESH: 10012,
   PARTY_NOT_FOUND: 10013,
+  INVALID_INPUT: 10014,
   // 추가적인 에러 코드들
 };

@@ -94,6 +94,7 @@ const handleError = (socket, error) => {
       socket.write(userNotFound_sChat);
       printCustomErrorConsole(nickname, error);
       break;
+
     case ErrorCodes.INVALID_NAVMESH:
       const invalidNavMesh_sChat = Packet.S2CChat(
         0,
@@ -110,6 +111,11 @@ const handleError = (socket, error) => {
       socket.write(partyNotFound_sChat);
       printCustomErrorConsole(nickname, error);
       break;
+    case ErrorCodes.INVALID_INPUT:
+        const invalidInput = Packet.S2CChat(0, `클라이언트에서 잘못된 값을 전송했습니다.`);
+        socket.write(invalidInput);
+        printCustomErrorConsole(nickname, error);
+        break;
     default:
       const defaultError_sChat = Packet.S2CChat(
         0,

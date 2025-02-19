@@ -23,3 +23,4 @@ export const getUserSessions = () => {
 export const getPartySessions = () => {
   return partySession;
 };
+

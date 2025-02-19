@@ -1,5 +1,5 @@
 const payload = {
-  /* 게임 시작 관련 */
+  //#region /* 게임 시작 관련 */
   C2SRegister: (email_string, pw_string, pwCheck_string) => {
     return { email: email_string, pw: pw_string, pwCheck: pwCheck_string };
   },
@@ -26,7 +26,8 @@ const payload = {
   S2CCreateCharacter: (isSuccess_bool, msg_string) => {
     return { isSuccess: isSuccess_bool, msg: msg_string };
   },
-  /* 마을 관련 */
+  //#endregion
+  //#region /* 마을 관련 */
   C2STownEnter: (nickname_string, classCode_int) => {
     return { nickname: nickname_string, classCode: classCode_int };
   },
@@ -39,7 +40,8 @@ const payload = {
   S2CAnimation: (playerId_int, animCode_int) => {
     return { playerId: playerId_int, animCode: animCode_int };
   },
-  /* 공통 01 - 채팅, 소환 */
+  //#endregion
+  //#region /* 공통 01 - 채팅, 소환 */
   C2SChat: (playerId_int, senderName_string, chatMsg_string) => {
     return {
       playerId: playerId_int,
@@ -56,7 +58,8 @@ const payload = {
   S2CPlayerDespawn: (playerIds_ArrayOfInt) => {
     return { playerIds: playerIds_ArrayOfInt };
   },
-  /* 공통 02 - 플레이어 이동 */
+  //#endregion
+  //#region /* 공통 02 - 플레이어 이동 */
   C2SPlayerMove: (
     startPosX_float,
     startPosY_float,
@@ -88,7 +91,8 @@ const payload = {
       isValidTransform: isValidTransform_bool,
     };
   },
-  /* 공통 03 - 충돌 관련 */
+  //#endregion
+  //#region /* 공통 03 - 충돌 관련 */
   C2SPlayerCollision: (playerId_int, collisionInfo_CollisionInfo) => {
     return {
       playerId: playerId_int,
@@ -217,6 +221,7 @@ const payload = {
   S2CDisbandParty: (msg_string) => {
     return { msg: msg_string };
   },
+
   /* 던전 관련 */
   C2SDungeonEnter: (dungeonCode_int, partyId_string) => {
     return partyId_string
@@ -229,7 +234,8 @@ const payload = {
       player: player_PlayerStatus,
     };
   },
-  /* 전투 관련 */
+  //#endregion
+  //#region /* 전투 관련 */
   C2SAttack: (targetId_int, attackType_AttackType) => {
     return { targetId: targetId_int, attackType: attackType_AttackType };
   },
@@ -258,13 +264,49 @@ const payload = {
   S2CDie: (deadPlayerId_int, animCode_int) => {
     return { deadPlayerId: deadPlayerId_int, animCode: animCode_int };
   },
-  /* 몬스터 이동 관련 */
+  //#endregion
+  //#region /* 몬스터 이동 관련 */
   C2SMonsterLocation: (transform_TransformInfo) => {
     return { transform: transform_TransformInfo };
   },
   S2CMonsterLocation: (monsterId_int, transform_TransformInfo) => {
     return { monsterId: monsterId_int, transform: transform_TransformInfo };
   },
+  //#endregion
+  //#region /* 채집 관련 */
+
+  S2CResourcesList: (resources_resource) => {
+    return { resources: resources_resource };
+  },
+  S2CUpdateDurability: (placedId_int, durabillity_int) => {
+    return { placedId: placedId_int, durabillity: durabillity_int };
+  },
+  C2SStartGathering: (placedId_int) => {
+    return { placedId: placedId_int };
+  },
+  S2CStartGathering: (placedId_int, angle_int, difficulty_int) => {
+    return {
+      placedId: placedId_int,
+      angle: angle_int,
+      difficulty: difficulty_int,
+    };
+  },
+  C2SGatheringSkillCheck: (placedId_int, deltatime_int) => {
+    return { placedId: placedId_int, deltatime: deltatime_int };
+  },
+  S2CGatheringSkillCheck: (placedId_int, durabillity_int) => {
+    return { placedId: placedId_int, durabillity: durabillity_int };
+  },
+  S2CGatheringDone: (placedId_int, ItemId_int, quentity_int) => {
+    return {
+      placedId: placedId_int,
+      ItemId: ItemId_int,
+      quentity: quentity_int,
+    };
+  },
+
+  //#endregion
+
   /*기존 코드 */
   // S_Enter: (player_PlayerInfo) => {
   //   return { player: player_PlayerInfo };
