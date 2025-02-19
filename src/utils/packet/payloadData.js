@@ -148,14 +148,12 @@ const payloadData = {
       isPartyLeader: isPartyLeader_bool,
       isMine: isMine_bool,
     };
-  Resource: (
-    resourceIdx_int,
-    resourceId_int,
-  ) => {
+  },
+
+  Resource: (resourceIdx_int, resourceId_int) => {
     return {
       resourceIdx: resourceIdx_int,
       resourceId: resourceId_int,
-
     };
   },
 };
