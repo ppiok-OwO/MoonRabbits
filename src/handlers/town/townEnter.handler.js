@@ -5,6 +5,7 @@ import Packet from '../../utils/packet/packet.js';
 import { getUserSessions } from '../../session/sessions.js';
 
 import playerSpawnNotificationHandler from './playerSpawnNotification.handler.js';
+import chalk from 'chalk';
 
 const townEnterHandler = (socket, packetData) => {
   try {
@@ -14,13 +15,15 @@ const townEnterHandler = (socket, packetData) => {
         'error',
         new CustomError(ErrorCodes.USER_NOT_FOUND, 'getUser 에러'),
       );
-    // console.log(10);
+    console.log(10);
     const newPlayer = getPlayerSession().addPlayer(
       socket,
       user,
       packetData.nickname,
       packetData.classCode,
     );
+
+    console.log('newPlayer : ', newPlayer);
 
     const playerInfo = newPlayer.getPlayerInfo();
 
@@ -36,7 +39,7 @@ const townEnterHandler = (socket, packetData) => {
 
     playerSpawnNotificationHandler(socket, packetData);
   } catch (error) {
-    console.error(error);
+    console.error(`${chalk.red('[createCharacterHandler Error]')}${error}`);
     socket.emit(
       'error',
       new CustomError(ErrorCodes.HANDLER_ERROR, 'townEnterHanlder 에러'),

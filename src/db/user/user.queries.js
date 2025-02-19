@@ -1,6 +1,8 @@
 export const SQL_QUERIES = {
   FIND_USER_BY_EMAIL: 'SELECT * FROM Users WHERE email = ?', // email로 user_id 찾기
   CREATE_USER: 'INSERT INTO Users (user_id, email, password) VALUES (?, ?, ?)', // user 생성
+  CREATE_STAT: 'INSERT INTO Stats (stat_id, player_id) VALUES (?, ?)', // stat_id, player_id 토대로 인벤토리 생성
+  CREATE_INVENTORY: 'INSERT INTO Inventories (inventory_id, player_id) VALUES (?, ?)', // inventory_id, player_id 토대로 인벤토리 생성
   ADD_PLAYER_TO_USERID: 'INSERT INTO Players (player_id, user_id) VALUES (?, ?)', // Players 테이블에 user_id만 들어간 데이터 생성
   FIND_PLAYER_BY_USER_ID: 'SELECT * FROM Players WHERE user_id = ?', // user_id로 player_id 찾기
   FIND_USER_BY_NICKNAME: 'SELECT * FROM Players WHERE nickname = ?', // nickname으로 user_id 찾기

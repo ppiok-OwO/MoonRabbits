@@ -26,6 +26,7 @@ export const PACKET_ID = {
   S2CPlayerCollision: 41,
   C2SMonsterCollision: 42,
   S2CMonsterCollision: 43,
+
   C2SCreateParty: 100,
   S2CCreateParty: 101,
   C2SInviteParty: 102,
@@ -49,11 +50,34 @@ export const PACKET_ID = {
   S2CDungeonLeave: 503,
   C2SAttack: 504,
   S2CAttack: 505,
+  C2SKickOutMember: 110,
+  S2CKickOutMember: 111,
+  C2SDisbandParty: 112,
+  S2CDisbandParty: 113,
+  C2SAllowInvite: 114,
+  S2CAllowInvite: 115,
+
+  C2SSectorEnter: 300,
+  S2CSectorEnter: 301,
+  C2SSectorLeave: 302,
+  S2CSectorLeave: 303,
+  C2SInPortal: 304,
+  S2CInPortal: 305,
+
   C2SHit: 506,
   S2CHit: 507,
   S2CDie: 508,
   C2SMonsterLocation: 509,
   S2CMonsterLocation: 510,
+  //#region /* 채집관련 */
+  S2CResourcesList: 551,
+  S2CUpdateDurability: 552,
+  C2SStartGathering: 553,
+  S2CStartGathering: 554,
+  C2SGatheringSkillCheck: 555,
+  S2CGatheringSkillCheck: 556,
+  S2CGatheringDone: 557,
+  //#endregion
 };
 
 /* 기존 코드 */

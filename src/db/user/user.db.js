@@ -35,6 +35,56 @@ export const createUser = async (email, password) => {
   return { userId, email }; // 새로 생성된 사용자 정보 반환
 };
 
+// 스탯 row 추가
+export const createStat = async (playerId) => {
+  const statId = uuidv4(); // UUID 생성
+
+  // 스탯 생성 쿼리 실행
+  await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.CREATE_STAT, [statId, playerId]);
+
+  return { statId, playerId }; // 새로 생성된 사용자 정보 반환
+};
+
+// 캐릭터 생성할 때 인벤토리도 생성, 인벤토리는 25개의 슬롯을 가짐(클라이언트의 인벤토리 개수에 따라 변경 가능)
+export const createInventory = async (playerId) => {
+  // 데이터베이스 커넥션 획득
+  const connection = await pools.PROJECT_R_USER_DB.getConnection();
+  try {
+    // 트랜잭션 시작
+    await connection.beginTransaction();
+
+    // 인벤토리 ID 생성
+    const inventoryId = uuidv4();
+
+    // 배치 삽입을 위한 값 생성 (25개의 슬롯)
+    const values = [];
+    for (let slotIdx = 0; slotIdx < 25; slotIdx++) {
+      values.push(inventoryId, playerId, slotIdx, 0);
+    }
+
+    // 25개의 슬롯에 대한 placeholder 생성
+    const placeholderSets = new Array(25).fill('(?, ?, ?, ?)').join(', ');
+    const query = `
+      INSERT INTO Inventories (inventory_id, player_id, slot_idx, stack)
+      VALUES ${placeholderSets}
+    `;
+
+    // 배치 삽입 쿼리 실행
+    await connection.query(query, values);
+
+    // 트랜잭션 커밋
+    await connection.commit();
+
+    return { inventoryId, playerId };
+  } catch (error) {
+    // 에러 발생 시 롤백 후 에러 재던짐
+    await connection.rollback();
+    throw error;
+  } finally {
+    connection.release();
+  }
+};
+
 // user_id 기반으로 플레이어 찾기
 export const findPlayerByUserId = async (userId) => {
   const [rows] = await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.FIND_PLAYER_BY_USER_ID, [userId]);

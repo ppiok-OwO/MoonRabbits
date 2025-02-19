@@ -1,17 +1,61 @@
 import payloadData from '../utils/packet/payloadData.js';
+import Resource from './resource.class.js';
+import { getGameAssets } from '../init/assets.js';
+import Packet from '../utils/packet/packet.js';
 //import BattleStatus from './battleStatus.class.js';
 class Dungeon {
-  constructor(dungeonId, dungeonCode) {
+  constructor(dungeonId, dungeonCode, resources = []) {
     this.id = dungeonId;
     this.code = dungeonCode;
     this.monsters = [];
-    this.players = [];
+    this.players = new Map();
+    this.resourceIdx = 0;
+    this.resources = [];
     //this.battleStatus = null;
+    resources.forEach((value) => {
+      this.setResource(value);
+    });
   }
 
-  // players는 player 인스턴스들이 담긴 일반 배열
-  setPlayers(players) {
-    this.players = players;
+  setResource(resourceId) {
+    const resource = getGameAssets().resources.data.find((value) => {
+      return value.resource_id === resourceId;
+    });
+    if (resource) {
+      this.resourceIdx++;
+      this.resources.push(new Resource(this.resourceIdx, id, resource));
+      return this.resourceIdx;
+    }
+    return -1;
+  }
+  subDurability(resourceIdx, sub = 1) {
+    if (resourceIdx >= 0 && resourceIdx < this.resources.length) {
+      const durability = this.resources[resourceIdx].subDurability(sub);
+      this.notify(Packet.S2CUpdateDurability(resourceIdx, durability));
+      return durability;
+    }
+    return -1;
+  }
+  resetDurability(resourceIdx) {
+    if (resourceIdx >= 0 && resourceIdx < this.resources.length) {
+      const durability = this.resources[resourceIdx].resetDurability();
+      this.notify(Packet.S2CUpdateDurability(resourceIdx, durability));
+      return durability;
+    }
+    return -1;
+  }
+
+  setPlayer(socket, player) {
+    const resourceData = resources.map((value, index) => {
+      payloadData.Resource(index, value.getResourceId());
+    });
+
+    player.sendPacket(Packet.S2CResourcesList(resourceData));
+    return this.players.set(socket, player);
+  }
+
+  deletePlayer(socket) {
+    return this.players.delete(socket);
   }
 
   // monsters는 monster 인스턴스들이 담긴 일반 배열
@@ -28,7 +72,7 @@ class Dungeon {
   }
 
   notify(packet) {
-    this.players.forEach((player) => {
+    this.players.values.forEach((player) => {
       player.sendPacket(packet);
     });
   }

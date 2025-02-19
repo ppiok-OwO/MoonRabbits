@@ -7,6 +7,7 @@ import {
 } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
+import handleError from '../../utils/error/errorHandler.js';
 import Packet from '../../utils/packet/packet.js';
 
 // 클라이언트상에서 어떤 지점을 클릭했을 때 실행
@@ -45,9 +46,13 @@ export async function playerMoveHandler(socket, packetData) {
     if (path.length > 1) {
       player.setPath(path);
       isValidPath = true;
+    } else {
+      isValidPath = false;
     }
+
+    return isValidPath;
   } catch (error) {
-    console.error(error);
+    handleError(error);
   }
 }
 
