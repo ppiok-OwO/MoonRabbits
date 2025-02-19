@@ -18,7 +18,7 @@ async function gameTest() {
   // 테스트 계정
   client.login('test@gmail.com', '1234');
   await delay(1000);
-  client.enter('텟닉', 1001);v
+  client.enter('텟닉', 1001);
 }
 
 // 다중 클라이언트 테스트
