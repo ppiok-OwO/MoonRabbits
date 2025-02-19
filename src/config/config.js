@@ -62,6 +62,7 @@ export const config = {
     S2CPlayerCollision: PACKET_ID.S2CPlayerCollision,
     C2SMonsterCollision: PACKET_ID.C2SMonsterCollision,
     S2CMonsterCollision: PACKET_ID.S2CMonsterCollision,
+
     C2SCreateParty: PACKET_ID.C2SCreateParty,
     S2CCreateParty: PACKET_ID.S2CCreateParty,
     C2SInviteParty: PACKET_ID.C2SInviteParty,
@@ -85,11 +86,34 @@ export const config = {
     S2CDungeonLeave: PACKET_ID.S2CDungeonLeave,
     C2SAttack: PACKET_ID.C2SAttack,
     S2CAttack: PACKET_ID.S2CAttack,
+    C2SKickOutMember: PACKET_ID.C2SKickOutMember,
+    S2CKickOutMember: PACKET_ID.S2CKickOutMember,
+    C2SDisbandParty: PACKET_ID.C2SDisbandParty,
+    S2CDisbandParty: PACKET_ID.S2CDisbandParty,
+    C2SAllowInvite: PACKET_ID.C2SAllowInvite,
+    S2CAllowInvite: PACKET_ID.S2CAllowInvite,
+
+    C2SSectorEnter: PACKET_ID.C2SSectorEnter,
+    S2CSectorEnter: PACKET_ID.S2CSectorEnter,
+    C2SSectorLeave: PACKET_ID.C2SSectorLeave,
+    S2CSectorLeave: PACKET_ID.C2SSectorLeave,
+    C2SInPortal: PACKET_ID.C2SInPortal,
+    S2CInPortal: PACKET_ID.S2CInPortal,
+
     C2SHit: PACKET_ID.C2SHit,
     S2CHit: PACKET_ID.S2CHit,
     S2CDie: PACKET_ID.S2CDie,
     C2SMonsterLocation: PACKET_ID.C2SMonsterLocation,
     S2CMonsterLocation: PACKET_ID.S2CMonsterLocation,
+    //#region /* 채집관련 */
+    S2CResourcesList: PACKET_ID.S2CResourcesList,
+    S2CUpdateDurability: PACKET_ID.S2CUpdateDurability,
+    C2SStartGathering: PACKET_ID.C2SStartGathering,
+    S2CStartGathering: PACKET_ID.S2CStartGathering,
+    C2SGatheringSkillCheck: PACKET_ID.C2SGatheringSkillCheck,
+    S2CGatheringSkillCheck: PACKET_ID.S2CGatheringSkillCheck,
+    S2CGatheringDone: PACKET_ID.S2CGatheringDone,
+    //#endregion
     /* 기존 코드 */
     // C_Enter: PACKET_ID.C_Enter,
     // S_Enter: PACKET_ID.S_Enter,
@@ -131,6 +155,9 @@ export const config = {
   },
   updateLocation: {
     tolerance: UPDATE_LOCATION.tolerance,
+  },
+  party: {
+    MaxMember: 5,
   },
 };
 

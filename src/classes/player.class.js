@@ -29,6 +29,7 @@ class Player extends Entity {
     this.nickname = nickname;
     this.user = user;
     this.id = playerId;
+    this.level = 1;
     this.position = new TransformInfo();
     this.dungeonId = null;
     this.lastBattleLog = 0;
@@ -37,10 +38,13 @@ class Player extends Entity {
     this.exp = 0;
     this.targetExp = this._getTargetExpByLevel(this.level);
     this.availablePoint = 0;
+    this.isInParty = false;
+    this.isInvited = false;
+    this.isPartyLeader = false;
   }
   sendPacket(packet) {
     try {
-      this.socket.write(packet);
+      this.user.socket.write(packet);
     } catch (error) {
       console.error(error);
     }
@@ -74,6 +78,7 @@ class Player extends Entity {
     return payloadData.PlayerInfo(
       this.id,
       this.nickname,
+      this.level,
       this.class,
       this.position,
       this.getPlayerStats(),
@@ -89,6 +94,10 @@ class Player extends Entity {
   }
   getPlayerStat() {
     return this.stat;
+  }
+
+  getPlayerId() {
+    return this.id;
   }
 
   resetDungeonId() {

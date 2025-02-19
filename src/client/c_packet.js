@@ -1,6 +1,3 @@
-import { config } from '../config/config.js';
-import makePacket from '../utils/packet/makePacket.js';
-
 const cPacket = {
   C2SRegister: (email_string, pw_string, pwCheck_string) => {
     return { email: email_string, pw: pw_string, pwCheck: pwCheck_string };
