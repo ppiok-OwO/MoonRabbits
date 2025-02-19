@@ -12,7 +12,11 @@ import playerLocationUpdateHandler from './town/playerLocationUpdate.handler.js'
 import registerHandler from './account/register.handler.js';
 import loginHandler from './account/login.handler.js';
 import createCharacterHandler from './account/createCharacter.handler.js';
+
 import { monsterLocationHandler } from './monster/monsterLocation.handler.js';
+
+import { gatheringSkillCheckHandler } from './gathering/GatheringSkillCheck.handler.js';
+import { StartGatheringHandler } from './gathering/StartGathering.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
@@ -29,8 +33,12 @@ const handlers = {
   [config.packetId.C2SRegister]: registerHandler,
   [config.packetId.C2SLogin]: loginHandler,
   [config.packetId.C2SCreateCharacter]: createCharacterHandler,
+
   [config.packetId.S2CMonsterLocation]: monsterLocationHandler,
   //[config.packetId.C2SMonsterLocation]: monsterLocationHandler,
+
+  [config.packetId.C2SGatheringSkillCheck]: gatheringSkillCheckHandler,
+  [config.packetId.C2SStartGathering]: StartGatheringHandler,
 };
 
 export const getHandlerByPacketId = (packetId) => {

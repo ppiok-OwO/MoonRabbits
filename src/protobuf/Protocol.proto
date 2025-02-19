@@ -271,9 +271,37 @@ message S2CMonsterLocation {
   int32 monsterId = 1;
   TransformInfo transform = 2;
 }
+/* 채집 관련*/
+message S2CResourcesList{
+  repeated Resource resources = 1;
+}
+message S2CUpdateDurability{
+  int32 placedId = 1;
+  int32 durabillity = 2;
+}
+message C2SStartGathering{
+  int32 placedId = 1;
+}
+message S2CStartGathering{
+  int32 placedId = 1;
+  int32 angle = 2;
+  int32 difficulty = 3;
+}
+message C2SGatheringSkillCheck{
+  int32 placedId = 1;
+  int32 deltatime = 2;
+}
+message S2CGatheringSkillCheck{
+  int32 placedId = 1;
+  int32 durabillity = 2;
+}
+message S2CGatheringDone{
+  int32 placedId = 1;
+  int32 ItemId = 2;
+  int32 quentity = 3;
+}
 
 /* 정보 구조체 */
-
 message PlayerInfo {
   int32 playerId = 1;   // 입장할때 서버 내부에서 생성한 관리코드
   string nickname = 2;  
@@ -391,4 +419,9 @@ message CollisionPushInfo {
   bool hasCollision = 1;
   Vector3Obj pushDirection = 2;
   float pushDistance = 3;
+}
+
+message Resource {
+  int32 idx = 1;
+  int32 resourceId = 2;
 }

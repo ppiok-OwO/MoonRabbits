@@ -46,6 +46,15 @@ export const packetNames = [
   'S2CDie',
   'C2SMonsterLocation',
   'S2CMonsterLocation',
+  //#region 채집 관련
+  'S2CResourcesList',
+  'S2CUpdateDurability',
+  'C2SStartGathering',
+  'S2CStartGathering',
+  'C2SGatheringSkillCheck',
+  'S2CGatheringSkillCheck',
+  'S2CGatheringDone',
+  //#endregion
 ];
 
 /* 기존 코드 */
