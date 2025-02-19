@@ -1,5 +1,5 @@
-export const PACKET_SIZE = 4; // 전체 길이를 나타내는 4바이트
-export const PACKET_ID_LENGTH = 1; // 패킷ID의 길이
+export const PACKET_SIZE = 1; // 전체 길이를 나타내는 4바이트
+export const PACKET_ID_LENGTH = 4; // 패킷ID의 길이
 
 export const PACKET_ID = {
   C2SRegister: 0,
@@ -47,8 +47,8 @@ export const PACKET_ID = {
   C2SHit: 506,
   S2CHit: 507,
   S2CDie: 508,
-  C2SMonsterLocation: 509,
-  S2CMonsterLocation: 510,
+  C2SMonsterLocation: 120,
+  S2CMonsterLocation: 121,
 };
 
 /* 기존 코드 */

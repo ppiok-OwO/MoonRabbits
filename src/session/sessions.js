@@ -9,6 +9,9 @@ const userSession = new UserSession();
 const monsterSession = new MonsterSession();
 
 monsterSession.initArea();
+setInterval(async () => {
+  await monsterSession.update();
+}, 16); // 게임 프레임 간격으로 호출
 
 export const getPlayerSession = () => {
   return playerSession;
