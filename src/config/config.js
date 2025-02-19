@@ -17,6 +17,7 @@ import { BASE_STAT_DATA } from '../constants/PlayerBaseStat.js';
 import { BATTLE_LOG_ID } from '../constants/BattleLog.js';
 import { UPDATE_LOCATION } from '../constants/UpdateLocation.js';
 import SCENE_CODE from '../constants/scene.js';
+
 export const config = {
   server: {
     port: PORT,
@@ -63,6 +64,7 @@ export const config = {
     S2CPlayerCollision: PACKET_ID.S2CPlayerCollision,
     C2SMonsterCollision: PACKET_ID.C2SMonsterCollision,
     S2CMonsterCollision: PACKET_ID.S2CMonsterCollision,
+
     C2SCreateParty: PACKET_ID.C2SCreateParty,
     S2CCreateParty: PACKET_ID.S2CCreateParty,
     C2SInviteParty: PACKET_ID.C2SInviteParty,
@@ -75,49 +77,45 @@ export const config = {
     S2CSetPartyLeader: PACKET_ID.S2CSetPartyLeader,
     C2SBuff: PACKET_ID.C2SBuff,
     S2CBuff: PACKET_ID.S2CBuff,
+    C2SAddExp: PACKET_ID.C2SAddExp,
+    S2CAddExp: PACKET_ID.S2CAddExp,
+    S2CLevelUp: PACKET_ID.S2CLevelUp,
+    C2SSelectAP: PACKET_ID.C2SSelectAP,
+    S2CSelectAP: PACKET_ID.S2CSelectAP,
     C2SDungeonEnter: PACKET_ID.C2SDungeonEnter,
     S2CDungeonEnter: PACKET_ID.S2CDungeonEnter,
     C2SDungeonLeave: PACKET_ID.C2SDungeonLeave,
     S2CDungeonLeave: PACKET_ID.S2CDungeonLeave,
     C2SAttack: PACKET_ID.C2SAttack,
     S2CAttack: PACKET_ID.S2CAttack,
+    C2SKickOutMember: PACKET_ID.C2SKickOutMember,
+    S2CKickOutMember: PACKET_ID.S2CKickOutMember,
+    C2SDisbandParty: PACKET_ID.C2SDisbandParty,
+    S2CDisbandParty: PACKET_ID.S2CDisbandParty,
+    C2SAllowInvite: PACKET_ID.C2SAllowInvite,
+    S2CAllowInvite: PACKET_ID.S2CAllowInvite,
+
+    C2SSectorEnter: PACKET_ID.C2SSectorEnter,
+    S2CSectorEnter: PACKET_ID.S2CSectorEnter,
+    C2SSectorLeave: PACKET_ID.C2SSectorLeave,
+    S2CSectorLeave: PACKET_ID.C2SSectorLeave,
+    C2SInPortal: PACKET_ID.C2SInPortal,
+    S2CInPortal: PACKET_ID.S2CInPortal,
+
     C2SHit: PACKET_ID.C2SHit,
     S2CHit: PACKET_ID.S2CHit,
     S2CDie: PACKET_ID.S2CDie,
     C2SMonsterLocation: PACKET_ID.C2SMonsterLocation,
     S2CMonsterLocation: PACKET_ID.S2CMonsterLocation,
-    /* 기존 코드 */
-    // C_Enter: PACKET_ID.C_Enter,
-    // S_Enter: PACKET_ID.S_Enter,
-    // S_Spawn: PACKET_ID.S_Spawn,
-    // S_Despawn: PACKET_ID.S_Despawn,
-    // C_Location: PACKET_ID.C_Location,
-    // S_Location: PACKET_ID.S_Location,
-    // C_Move: PACKET_ID.C_Move,
-    // S_Move: PACKET_ID.S_Move,
-    // C_Animation: PACKET_ID.C_Animation,
-    // S_Animation: PACKET_ID.S_Animation,
-    // C_Chat: PACKET_ID.C_Chat,
-    // S_Chat: PACKET_ID.S_Chat,
-    // C_EnterDungeon: PACKET_ID.C_EnterDungeon,
-    // C_PlayerResponse: PACKET_ID.C_PlayerResponse,
-    // S_EnterDungeon: PACKET_ID.S_EnterDungeon,
-    // S_LeaveDungeon: PACKET_ID.S_LeaveDungeon,
-    // S_ScreenText: PACKET_ID.S_ScreenText,
-    // S_ScreenDone: PACKET_ID.S_ScreenDone,
-    // S_BattleLog: PACKET_ID.S_BattleLog,
-    // S_SetPlayerHp: PACKET_ID.S_SetPlayerHp,
-    // S_SetPlayerMp: PACKET_ID.S_SetPlayerMp,
-    // S_SetMonsterHp: PACKET_ID.S_SetMonsterHp,
-    // S_PlayerAction: PACKET_ID.S_PlayerAction,
-    // S_MonsterAction: PACKET_ID.S_MonsterAction,
-    // C_Register: PACKET_ID.C_Register,
-    // S_Register: PACKET_ID.S_Register,
-    // C_Login: PACKET_ID.C_Login,
-    // S_Login: PACKET_ID.S_Login,
-    // C_CreateCharacter : PACKET_ID.C_CreateCharacter,
-    // S_CreateCharacter : PACKET_ID.S_CreateCharacter
-  },
+    //#region /* 채집관련 */
+    S2CResourcesList: PACKET_ID.S2CResourcesList,
+    S2CUpdateDurability: PACKET_ID.S2CUpdateDurability,
+    C2SStartGathering: PACKET_ID.C2SStartGathering,
+    S2CStartGathering: PACKET_ID.S2CStartGathering,
+    C2SGatheringSkillCheck: PACKET_ID.C2SGatheringSkillCheck,
+    S2CGatheringSkillCheck: PACKET_ID.S2CGatheringSkillCheck,
+    S2CGatheringDone: PACKET_ID.S2CGatheringDone,
+    //#endregion
   newPlayerStatData: {
     BASE_STAT_DATA,
   },
@@ -131,7 +129,11 @@ export const config = {
   sceneCode : {
     town : SCENE_CODE.TOWN,
     aSector : SCENE_CODE.A_SECTOR,
-  }
+  },
+  party: {
+    MaxMember: 5,
+  },
+}
 };
 
 export const packetIdEntries = Object.entries(config.packetId);

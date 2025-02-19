@@ -2,6 +2,7 @@ const payloadData = {
   PlayerInfo: (
     playerId_int,
     nickname_string,
+    level_int,
     classCode_int,
     transform_TransformInfo,
     statInfo_StatInfo,
@@ -10,6 +11,7 @@ const payloadData = {
     return {
       playerId: playerId_int,
       nickname: nickname_string,
+      level: level_int,
       classCode: classCode_int,
       transform: transform_TransformInfo,
       statInfo: statInfo_StatInfo,
@@ -163,6 +165,34 @@ const payloadData = {
       hasCollision: hasCollision_bool,
       pushDirection: pushDirection_Vector3Obj,
       pushDistance: pushDistance_float,
+    };
+  },
+  InvestPoint: (
+    statCode_int,
+    point_int,
+  ) => {
+    return {
+      statCode: statCode_int,
+      point: point_int,
+    }
+  },
+  MemberCardInfo: (
+    id_int,
+    nickname_string,
+    isPartyLeader_bool,
+    isMine_bool,
+  ) => {
+    return {
+      id: id_int,
+      nickname: nickname_string,
+      isPartyLeader: isPartyLeader_bool,
+      isMine: isMine_bool,
+    };
+  },
+  Resource: (resourceIdx_int, resourceId_int) => {
+    return {
+      resourceIdx: resourceIdx_int,
+      resourceId: resourceId_int,
     };
   },
 };

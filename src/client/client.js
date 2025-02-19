@@ -4,6 +4,7 @@ import { config, packetIdEntries } from '../config/config.js';
 import printPacket from '../utils/log/printPacket.js';
 import cPacket from './c_packet.js';
 import payloadData from '../utils/packet/payloadData.js';
+import bcrypt from 'bcrypt';
 
 const HOST = '127.0.0.1';
 const PORT = '3000';
@@ -23,6 +24,8 @@ export class Client {
     this.socket.on('end', this.onEnd.bind(this));
     this.socket.on('error', this.onError.bind(this));
 
+    this.email = null;
+    this.accountId = null;
     this.id = null;
     this.nickname = null;
     this.class = null;
@@ -31,19 +34,34 @@ export class Client {
     this.players = [];
   }
 
-  // 게임 로직
-  async register() {
+  // #C2S Request 요청 패킷
+  async register(email, pw, pwCheck) {
+    this.sendPacket(
+      config.packetId.C2SRegister,
+      cPacket.C2SRegister(email, pw, pwCheck),
+    );
     return;
   }
 
-  async login(id, password) {
+  async login(email, pw) {
+    const salt = await bcrypt.genSalt(10);
+    const hashed = await bcrypt.hash(pw, salt);
+    this.sendPacket(config.packetId.C2SLogin, cPacket.C2SLogin(email, pw));
     return;
-    this.id = id;
-    this.password = password;
+  }
+
+  async createCharacter(nickname, classCode) {
+    this.sendPacket(
+      config.packetId.C2SCreateCharacter,
+      cPacket.C2SCreateCharacter(this.nickname, this.class),
+    );
   }
 
   async enter(nickname = 'test', _class = 1001) {
-    this.sendPacket(config.packetId.C_Enter, cPacket.C_Enter(nickname, _class));
+    this.sendPacket(
+      config.packetId.C2STownEnter,
+      cPacket.C2STownEnter(nickname, _class),
+    );
   }
 
   async move() {
@@ -54,35 +72,116 @@ export class Client {
 
   async chat(chatMsg) {
     this.sendPacket(
-      config.packetId.C_Chat,
+      config.packetId.C2SChat,
       cPacket.C_Chat(this.id, this.nickname, chatMsg),
     );
   }
 
+  async addExp(count) {
+    console.log(`클라이언트 경험치 획득`);
+    this.sendPacket(config.packetId.C2SAddExp, cPacket.C2SAddExp(count));
+  }
+
+  async selectAP() {
+    const investPoints = [];
+    investPoints.push(payloadData.InvestPoint(1, 3));
+    investPoints.push(payloadData.InvestPoint(2, 2));
+    investPoints.forEach(({ statCode, point }) =>
+      console.log(`C2S 능력치(${statCode}) ${point}만큼 증가`),
+    );
+    this.sendPacket(config.packetId.C2SSelectAP, cPacket.C2SSelectAP(investPoints));
+  }
+
   // 핸들러
-  async S_EnterHandler(data) {
-    this.id = data.player.playerId;
-    this.nickname = data.player.nickname;
-    this.class = data.player.class;
-    this.transform = data.player.transform;
-    this.statInfo = data.player.statInfo;
-    // Player 소환
-  }
-  async S_SpawnHandler(data) {
-    this.players = data.players;
-    // Other Players 소환
-  }
-  async S_MoveHandler(data) {
-    // playerId 찾아서 이동
-    for (let i = 0; i < this.players.length; i++) {
-      if (this.players[i].id === data.playerId) {
-        this.players[i].transform = data.transform;
-      }
-    }
-  }
-  async S_ChatHandler(data) {
-    console.log(`[채팅] ${data.chatMsg}`);
-  }
+  handler = {
+    S2CRegister: async (data) => {
+      console.log(data.msg);
+    },
+    S2CLogin: async (data) => {
+      const { isSuccess, msg, ownedCharacters } = data;
+      console.log(`${msg}`);
+    },
+    S2CChat: async (data) => {
+      const { playerId, chatMsg } = data;
+      console.log(`${chatMsg}`);
+    },
+    S2CTownEnter: async (data) => {
+      const { player } = data;
+      this.id = player.playerId;
+      this.nickname = player.nickname;
+      this.class = player.classCode;
+      this.transform = player.transform;
+      this.statInfo = player.statInfo;
+    },
+    S2CTownLeave: async (data) => {
+      console.log(`${this.nickname} 마을 나감`);
+    },
+    S2CAnimation: async (data) => {
+      const { playerId, animCode } = data;
+      console.log(`플레이어${playerId} 애니메이션 시전 ${animCode}`);
+    },
+    S2CPlayerSpawn: async (data) => {
+      const { players } = data;
+      this.players = players;
+    },
+    S2CPlayerDespawn: async (data) => {
+      const { playerIds } = data;
+      this.players.filter((player) => !playerIds.includes(player.id));
+    },
+    S2CPlayerMove: async (data) => {
+      //?
+    },
+    S2CPlayerLocation: async (data) => {
+      const { playerId, transform, isValidTransform } = data;
+      console.log(`${isValidTransform ? '위치 응답' : '위치이상 응답'}`);
+    },
+    S2CPlayerCollision: async (data) => {
+      const { playerId, collisionPushInfo } = data;
+      console.log(`플레이어${playerId} 충돌 응답`);
+    },
+    S2CMonsterCollision: async (data) => {
+      const { monsterId, collisionPushInfo } = data;
+      console.log(`몬스터${monsterId} 충돌 응답`);
+    },
+    S2CCreateParty: async (data) => {
+      const { partyId, leaderId, memberCount, members } = data;
+      console.log(`파티 생성 응답`);
+    },
+    S2CInviteParty: async (data) => {
+      const { partyId, leaderId, memberCount, members } = data;
+      console.log(`파티 초대 응답`);
+    },
+    S2CJoinParty: async (data) => {
+      const { partyId, leaderId, memberCount, members } = data;
+      console.log(`파티 참가 응답`);
+    },
+    S2CLeaveParty: async (data) => {
+      const { partyId, leaderId, memberCount, members } = data;
+      console.log(`파티 탈퇴 응답`);
+    },
+    S2CSetPartyLeader: async (data) => {
+      const { partyId, leaderId, memberCount, members } = data;
+      console.log(`파티장 위임 응답`);
+    },
+    S2CBuff: async (data) => {
+      const { partyId, players } = data;
+      console.log(`버프 응답`);
+    },
+    S2CAddExp: async (data) => {
+      const { updatedExp } = data;
+      console.log(`경험치가 ${updatedExp}로 증가`);
+    },
+    S2CLevelUp: async (data) => {
+      const { playerId, updatedLevel, newTargetExp } = data;
+      console.log(
+        `레벨이 ${updatedLevel}레벨로 올랐습니다. 다음 레벨까지 필요한 경험치 : ${newTargetExp}`,
+      );
+    },
+    S2CSelectAP: async (data) => {
+      const { statInfo } = data;
+      console.log(`레벨업 능력치 선택 응답`);
+    },
+  };
 
   sendPacket(packetId, packetData) {
     // 패킷 아이디 -> 타입
@@ -131,7 +230,10 @@ export class Client {
           const packetType = packetIdEntries.find(
             ([, id]) => id === packetId,
           )[0];
-          const packetDataBuffer = this.socket.buffer.slice(headerSize, packetSize);
+          const packetDataBuffer = this.socket.buffer.slice(
+            headerSize,
+            packetSize,
+          );
           this.socket.buffer = this.socket.buffer.slice(packetSize);
 
           const packetData =
@@ -140,11 +242,27 @@ export class Client {
           printPacket(packetSize, packetId, packetData, 'in');
 
           switch (packetId) {
-            case config.packetId.S_Enter:
-              this.S_EnterHandler(packetData);
+            case config.packetId.S2CRegister:
+              this.handler.S2CRegister(packetData);
               break;
-            case config.packetId.S_Spawn:
-              this.S_SpawnHandler(packetData);
+            case config.packetId.S2CLogin:
+              this.handler.S2CLogin(packetData);
+              break;
+            case config.packetId.S2CChat:
+              this.handler.S2CChat(packetData);
+              break;
+            case config.packetId.S2CTownEnter:
+              this.handler.S2CTownEnter(packetData);
+              break;
+            case config.packetId.S2CAddExp:
+              this.handler.S2CAddExp(packetData);
+              break;
+            case config.packetId.S2CLevelUp:
+              this.handler.S2CLevelUp(packetData);
+              break;
+            case config.packetId.S2CSelectAP:
+              this.handler.S2CSelectAP(packetData);
+              break;
             default:
               break;
           }

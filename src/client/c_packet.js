@@ -1,11 +1,37 @@
-import { config } from '../config/config.js';
-import makePacket from '../utils/packet/makePacket.js';
-
 const cPacket = {
+  C2SRegister: (email_string, pw_string, pwCheck_string) => {
+    return { email: email_string, pw: pw_string, pwCheck: pwCheck_string };
+  },
+  C2SLogin: (email_string, pw_string) => {
+    return { email: email_string, pw: pw_string };
+  },
+  C2SCreateCharacter: (nickname_string, classCode_int) => {
+    return { nickname: nickname_string, classCode: classCode_int };
+  },
+  C2SPlayerMove: (
+    startPosX_float,
+    startPosY_float,
+    startPosZ_float,
+    targetPosX_float,
+    targetPosY_float,
+    targetPosZ_float,
+  ) => {
+    return {
+      startPosX: startPosX_float,
+      startPosY: startPosY_float,
+      startPosZ: startPosZ_float,
+      targetPosX: targetPosX_float,
+      targetPosY: targetPosY_float,
+      targetPosZ: targetPosZ_float,
+    };
+  },
   // !!! 기존 C_Enter와 같은 역할임다
   // !!! class -> classCode로 속성명 변경됐습니다
   C2STownEnter: (nickname_string, classCode_int) => {
     return { nickname: nickname_string, classCode: classCode_int };
+  },
+  C2STownLeave: () => {
+    return {};
   },
   // !!! 기존 C_Animation와 같은 역할임다
   C2SAnimation: (animCode_int) => {
@@ -31,6 +57,16 @@ const cPacket = {
       : { dungeonCode: dungeonCode_int };
   },
   // !!! 기존 C_PlayerResponse는 제거됐습니다!
+
+  // 플레이어 레벨업
+  C2SAddExp: (count_int) => {
+    return { count: count_int };
+  },
+  C2SSelectAP: (investPoints_ArrayOfInvestPoint) => {
+    return {
+      investPoints: investPoints_ArrayOfInvestPoint,
+    };
+  },
 
   /* 기존 코드 */
   C_Enter: (nickname_string, class_int) => {
