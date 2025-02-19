@@ -83,7 +83,7 @@ export const invitePartyHandler = (socket, packetData) => {
         newMember.id,
       );
 
-      newMember.isInvited = true;
+      newMember.isInvited = false;
 
       return newMember.user.getSocket().write(packet);
     } else {

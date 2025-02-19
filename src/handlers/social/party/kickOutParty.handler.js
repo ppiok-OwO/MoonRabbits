@@ -66,6 +66,7 @@ export const kickOutPartyHandler = (socket, packetData) => {
 
     // 멤버 퇴출
     party.removeMember(memberId);
+    member[1].isInParty = false;
 
     // 각 멤버에 대하여 맞춤형 패킷 생성
     const members = party.getAllMemberEntries();
