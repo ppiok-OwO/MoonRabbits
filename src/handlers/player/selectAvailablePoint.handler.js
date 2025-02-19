@@ -1,8 +1,8 @@
-import { getPlayerSession } from "../../session/sessions.js";
-import Packet from "../../utils/packet/packet.js";
-import handleError from "../../utils/error/errorHandler.js";
-import CustomError from "../../utils/error/customError.js";
-import { ErrorCodes } from "../../utils/error/errorCodes.js";
+import { getPlayerSession } from '../../session/sessions.js';
+import Packet from '../../utils/packet/packet.js';
+import handleError from '../../utils/error/errorHandler.js';
+import CustomError from '../../utils/error/customError.js';
+import { ErrorCodes } from '../../utils/error/errorCodes.js';
 
 export const selectAvailablePointHandler = (socket, packetData) => {
   const { investPoints } = packetData; // [[statCode:?, point:?],
@@ -11,7 +11,7 @@ export const selectAvailablePointHandler = (socket, packetData) => {
   const player = playerSession.getPlayer(socket);
 
   try {
-    investPoints.forEach(({statCode, point}) => {
+    investPoints.forEach(({ statCode, point }) => {
       player.addStat(statCode, point);
       console.log(`${player.nickname}의 능력치(${statCode}) ${point}만큼 증가 (스탯 미구현)`);
     });

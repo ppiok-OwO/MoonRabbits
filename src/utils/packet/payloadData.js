@@ -170,6 +170,15 @@ const payloadData = {
     return {
       statCode: statCode_int,
       point: point_int,
+    }
+  },
+  Resource: (
+    resourceIdx_int,
+    resourceId_int,
+  ) => {
+    return {
+      resourceIdx: resourceIdx_int,
+      resourceId: resourceId_int,
     };
   },
 };

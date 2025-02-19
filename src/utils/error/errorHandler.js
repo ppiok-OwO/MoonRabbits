@@ -68,6 +68,11 @@ const handleError = (socket, error) => {
       socket.write(userNotFound_sChat);
       printCustomErrorConsole(nickname, error);
       break;
+      case ErrorCodes.INVALID_INPUT:
+        const invalidInput = Packet.S2CChat(0, `클라이언트에서 잘못된 값을 전송했습니다다.`);
+        socket.write(invalidInput);
+        printCustomErrorConsole(nickname, error);
+        break;
     default:
       const defaultError_sChat = Packet.S2CChat(0, `서버에서 일반 오류가 발생하였습니다.`);
       socket.write(defaultError_sChat);

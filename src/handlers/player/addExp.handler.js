@@ -11,7 +11,6 @@ export const addExpHandler = (socket, packetData) => {
   const plusExp = count * 1; // 아이템 획득(count) 1당 경험치 1    // itemCode별 경험치 차별화?
   const targetExp = player.getTargetExp();
 
-  // 경험치 오르고 레벨업한 경우
   if (playerExp + plusExp >= targetExp) {
     const { newLevel, newTargetExp, availablePoint } = player.levelUp();
     const updatedExp = player.setExp(playerExp + plusExp - targetExp);
