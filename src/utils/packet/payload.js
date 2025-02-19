@@ -251,10 +251,7 @@ const payload = {
   },
   /* 몬스터 이동 관련 */
   C2SMonsterLocation: (monsterId_int, transform_TransformInfo) => {
-    return {
-      monsterId: monsterId_int,
-      transform: transform_TransformInfo,
-    };
+    return { monsterId: monsterId_int, transform: transform_TransformInfo };
   },
   S2CMonsterLocation: (monsterId_int, transform_TransformInfo) => {
     return { monsterId: monsterId_int, transform: transform_TransformInfo };

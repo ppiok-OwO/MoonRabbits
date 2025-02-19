@@ -361,16 +361,16 @@ const Packet = {
     );
   },
   /* 몬스터 이동 관련 */
-  C2SMonsterLocation: (monsterId_int, transform_TransformInfo) => {
+  C2SMonsterLocation: (monsterId_int, vector3_Object) => {
     return makePacket(
       packetId.C2SMonsterLocation,
-      payload.C2SMonsterLocation(monsterId_int, transform_TransformInfo),
+      payload.C2SMonsterLocation(monsterId_int, vector3_Object),
     );
   },
-  S2CMonsterLocation: (monsterId_int, transform_TransformInfo) => {
+  S2CMonsterLocation: (monsterId_int, vector3_Object) => {
     return makePacket(
       packetId.S2CMonsterLocation,
-      payload.S2CMonsterLocation(monsterId_int, transform_TransformInfo),
+      payload.S2CMonsterLocation(monsterId_int, vector3_Object),
     );
   },
   /* 기존 코드 */

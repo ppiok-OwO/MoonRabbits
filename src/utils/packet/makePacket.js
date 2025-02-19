@@ -1,3 +1,4 @@
+//makePacket.js
 import { packetIdEntries } from '../../config/config.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
 import printPacket from '../log/printPacket.js';
