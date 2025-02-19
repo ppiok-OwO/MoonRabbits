@@ -6,7 +6,7 @@ import payloadData from './payloadData.js';
 const { packetId } = config;
 
 const Packet = {
-  /* 게임 시작 관련 */
+  //#region  /* 게임 시작 관련 */
   C2SRegister: (email_string, pw_string, pwCheck_string) => {
     return makePacket(
       packetId.C2SRegister,
@@ -51,7 +51,8 @@ const Packet = {
       payload.S2CCreateCharacter(isSuccess_bool, msg_string),
     );
   },
-  /* 마을 관련 */
+  //#endregion
+  //#region /* 마을 관련 */
   C2STownEnter: (nickname_string, classCode_int) => {
     return makePacket(
       packetId.C2STownEnter,
@@ -82,7 +83,8 @@ const Packet = {
       payload.S2CAnimation(playerId_int, animCode_int),
     );
   },
-  /* 공통 01 - 채팅, 소환 */
+  //#endregion
+  //#region  /* 공통 01 - 채팅, 소환 */
   C2SChat: (playerId_int, senderName_string, chatMsg_string) => {
     return makePacket(
       packetId.C2SChat,
@@ -107,7 +109,8 @@ const Packet = {
       payload.S2CPlayerDespawn(playerIds_ArrayOfInt),
     );
   },
-  /* 공통 02 - 플레이어 이동 */
+  //#endregion
+  //#region  /* 공통 02 - 플레이어 이동 */
   C2SPlayerMove: (
     startPosX_float,
     startPosY_float,
@@ -151,7 +154,8 @@ const Packet = {
       ),
     );
   },
-  /* 공통 03 - 충돌 관련 */
+  //#endregion
+  //#region /* 공통 03 - 충돌 관련 */
   C2SPlayerCollision: (playerId_int, collisionInfo_CollisionInfo) => {
     return makePacket(
       packetId.C2SPlayerCollision,
@@ -179,15 +183,16 @@ const Packet = {
       S2CMonsterCollision(playerId_int, collisionPushInfo_CollisionPushInfo),
     );
   },
+
   /* 파티 관련 */
-  C2SCreateParty: (partyId_int, leaderId_int) => {
+  C2SCreateParty: (partyId_string, leaderId_int) => {
     return makePacket(
       packetId.C2SCreateParty,
-      payload.C2SCreateParty(partyId_int, leaderId_int),
+      payload.C2SCreateParty(partyId_string, leaderId_int),
     );
   },
   S2CCreateParty: (
-    partyId_int,
+    partyId_string,
     leaderId_int,
     memberCount_int,
     members_ArrayOfMemberId,
@@ -195,43 +200,37 @@ const Packet = {
     return makePacket(
       packetId.S2CCreateParty,
       payload.S2CCreateParty(
-        partyId_int,
+        partyId_string,
         leaderId_int,
         memberCount_int,
         members_ArrayOfMemberId,
       ),
     );
   },
-  C2SInviteParty: (partyId_int, nickname_string) => {
+  C2SInviteParty: (partyId_string, nickname_string) => {
     return makePacket(
       packetId.C2SInviteParty,
-      payload.C2SInviteParty(partyId_int, nickname_string),
+      payload.C2SInviteParty(partyId_string, nickname_string),
     );
   },
-  S2CInviteParty: (
-    partyId_int,
-    leaderId_int,
-    memberCount_int,
-    members_ArrayOfMemberId,
-  ) => {
+  S2CInviteParty: (leaderNickname_string, partyId_string, memberId_int) => {
     return makePacket(
       packetId.S2CInviteParty,
       payload.S2CInviteParty(
-        partyId_int,
-        leaderId_int,
-        memberCount_int,
-        members_ArrayOfMemberId,
+        leaderNickname_string,
+        partyId_string,
+        memberId_int,
       ),
     );
   },
-  C2SJoinParty: (partyId_int, newMemberId_int) => {
+  C2SJoinParty: (partyId_string, newMemberId_int) => {
     return makePacket(
       packetId.C2SJoinParty,
-      payload.C2SJoinParty(partyId_int, newMemberId_int),
+      payload.C2SJoinParty(partyId_string, newMemberId_int),
     );
   },
   S2CJoinParty: (
-    partyId_int,
+    partyId_string,
     leaderId_int,
     memberCount_int,
     members_ArrayOfMemberId,
@@ -239,21 +238,21 @@ const Packet = {
     return makePacket(
       packetId.S2CJoinParty,
       payload.S2CJoinParty(
-        partyId_int,
+        partyId_string,
         leaderId_int,
         memberCount_int,
         members_ArrayOfMemberId,
       ),
     );
   },
-  C2SLeaveParty: (partyId_int, leftPlayerId_int) => {
+  C2SLeaveParty: (partyId_string, leftPlayerId_int) => {
     return makePacket(
       packetId.C2SLeaveParty,
-      payload.C2SLeaveParty(partyId_int, leftPlayerId_int),
+      payload.C2SLeaveParty(partyId_string, leftPlayerId_int),
     );
   },
   S2CLeaveParty: (
-    partyId_int,
+    partyId_string,
     leaderId_int,
     memberCount_int,
     members_ArrayOfMemberId,
@@ -261,21 +260,21 @@ const Packet = {
     return makePacket(
       packetId.S2CLeaveParty,
       payload.S2CLeaveParty(
-        partyId_int,
+        partyId_string,
         leaderId_int,
         memberCount_int,
         members_ArrayOfMemberId,
       ),
     );
   },
-  C2SSetPartyLeader: (partyId_int, memberId_int) => {
+  C2SSetPartyLeader: (partyId_string, memberId_int) => {
     return makePacket(
       packetId.C2SSetPartyLeader,
-      payload.C2SSetPartyLeader(partyId_int, memberId_int),
+      payload.C2SSetPartyLeader(partyId_string, memberId_int),
     );
   },
   S2CSetPartyLeader: (
-    partyId_int,
+    partyId_string,
     leaderId_int,
     memberCount_int,
     members_ArrayOfMemberId,
@@ -283,30 +282,57 @@ const Packet = {
     return makePacket(
       packetId.S2CSetPartyLeader,
       payload.S2CSetPartyLeader(
-        partyId_int,
+        partyId_string,
         leaderId_int,
         memberCount_int,
         members_ArrayOfMemberId,
       ),
     );
   },
-  C2SBuff: (partyId_int, casterId_int, skillCode_int, targetId_int) => {
+  S2CKickOutMember: (
+    partyId_string,
+    leaderId_int,
+    memberCount_int,
+    members_ArrayOfMemberId,
+  ) => {
     return makePacket(
-      packetId.C2SBuff,
-      payload.C2SBuff(partyId_int, casterId_int, skillCode_int, targetId_int),
+      packetId.S2CKickOutMember,
+      payload.S2CKickOutMember(
+        partyId_string,
+        leaderId_int,
+        memberCount_int,
+        members_ArrayOfMemberId,
+      ),
     );
   },
-  S2CBuff: (partyId_int, players_ArrayOfPlayerInfo) => {
+  S2CAllowInvite: (
+    partyId_string,
+    leaderId_int,
+    memberCount_int,
+    members_ArrayOfMemberId,
+  ) => {
     return makePacket(
-      packetId.S2CBuff,
-      payload.S2CBuff(partyId_int, players_ArrayOfPlayerInfo),
+      packetId.S2CAllowInvite,
+      payload.S2CAllowInvite(
+        partyId_string,
+        leaderId_int,
+        memberCount_int,
+        members_ArrayOfMemberId,
+      ),
     );
   },
+  S2CDisbandParty: (msg_string) => {
+    return makePacket(
+      packetId.S2CDisbandParty,
+      payload.S2CDisbandParty(msg_string),
+    );
+  },
+
   /* 던전 관련 */
-  C2SDungeonEnter: (dungeonCode_int, partyId_int) => {
+  C2SDungeonEnter: (dungeonCode_int, partyId_string) => {
     return makePacket(
       packetId.C2SDungeonEnter,
-      payload.C2SDungeonEnter(dungeonCode_int, partyId_int),
+      payload.C2SDungeonEnter(dungeonCode_int, partyId_string),
     );
   },
   S2CDungeonEnter: (dungeonInfo_DungeonInfo, player_PlayerStatus) => {
@@ -321,7 +347,8 @@ const Packet = {
   S2CDungeonLeave: () => {
     return makePacket(packetId.S2CDungeonLeave);
   },
-  /* 전투 관련 */
+  //#endregion
+  //#region /* 전투 관련 */
   C2SAttack: (targetId_int, attackType_AttackType) => {
     return makePacket(
       packetId.C2SAttack,
@@ -357,7 +384,8 @@ const Packet = {
       payload.S2CDie(deadPlayerId_int, animCode_int),
     );
   },
-  /* 몬스터 이동 관련 */
+  //#endregion
+  //#region /* 몬스터 이동 관련 */
   C2SMonsterLocation: (transform_TransformInfo) => {
     return makePacket(
       packetId.C2SMonsterLocation,
@@ -370,6 +398,54 @@ const Packet = {
       payload.S2CMonsterLocation(monsterId_int, transform_TransformInfo),
     );
   },
+  //#endregion
+  //#region /* 채집 관련 */
+
+  S2CResourcesList: (resources_resource) => {
+    return makePacket(
+      packetId.S2CResourcesList,
+      payload.S2CResourcesList(resources_resource),
+    );
+  },
+  S2CUpdateDurability: (placedId_int, durabillity_int) => {
+    return makePacket(
+      packetId.S2CUpdateDurability,
+      payload.S2CUpdateDurability(placedId_int, durabillity_int),
+    );
+  },
+  C2SStartGathering: (placedId_int) => {
+    return makePacket(
+      packetId.C2SStartGathering,
+      payload.C2SStartGathering(placedId_int),
+    );
+  },
+  S2CStartGathering: (placedId_int, angle_int, difficulty_int) => {
+    return makePacket(
+      packetId.S2CStartGathering,
+      payload.S2CStartGathering(placedId_int, angle_int, difficulty_int),
+    );
+  },
+  C2SGatheringSkillCheck: (placedId_int, deltatime_int) => {
+    return makePacket(
+      packetId.C2SGatheringSkillCheck,
+      payload.C2SGatheringSkillCheck(placedId_int, deltatime_int),
+    );
+  },
+  S2CGatheringSkillCheck: (placedId_int, durabillity_int) => {
+    return makePacket(
+      packetId.S2CGatheringSkillCheck,
+      payload.S2CGatheringSkillCheck(placedId_int, durabillity_int),
+    );
+  },
+  S2CGatheringDone: (placedId_int, ItemId_int, quentity_int) => {
+    return makePacket(
+      packetId.S2CGatheringDone,
+      payload.S2CGatheringDone(placedId_int, ItemId_int, quentity_int),
+    );
+  },
+
+  //#endregion
+
   /* 기존 코드 */
   // S_Enter: (player_PlayerInfo) => {
   //   return makePacket(config.packetId.S_Enter, { player: player_PlayerInfo });

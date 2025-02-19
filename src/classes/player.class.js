@@ -25,13 +25,18 @@ class Player extends Entity {
     this.nickname = nickname;
     this.user = user;
     this.id = playerId;
+    this.level = 1;
     this.position = new TransformInfo();
     this.dungeonId = null;
     this.lastBattleLog = 0;
+    this.path = null;
+    this.isInParty = false;
+    this.isInvited = false;
+    this.isPartyLeader = false;
   }
   sendPacket(packet) {
     try {
-      this.socket.write(packet);
+      this.user.socket.write(packet);
     } catch (error) {
       console.error(error);
     }
@@ -80,6 +85,10 @@ class Player extends Entity {
   }
   getPlayerStat() {
     return this.stat;
+  }
+
+  getPlayerId() {
+    return this.id;
   }
 
   resetDungeonId() {
