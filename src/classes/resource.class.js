@@ -1,5 +1,5 @@
-import { getGameAssets } from '../init/assets';
-import { createRandNum } from '../utils/math/createRandNum';
+import { getGameAssets } from '../init/assets.js';
+import { createRandNum } from '../utils/math/createRandNum.js';
 
 class Resource {
   constructor(idx, resourceId, data) {

@@ -48,7 +48,7 @@ export const packetNames = [
   'S2CMonsterLocation',
   //#region 채집 관련
   'S2CResourcesList',
-  'S2CRestDurability',
+  'S2CUpdateDurability',
   'C2SStartGathering',
   'S2CStartGathering',
   'C2SGatheringSkillCheck',
