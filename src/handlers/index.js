@@ -12,8 +12,19 @@ import playerLocationUpdateHandler from './town/playerLocationUpdate.handler.js'
 import registerHandler from './account/register.handler.js';
 import loginHandler from './account/login.handler.js';
 import createCharacterHandler from './account/createCharacter.handler.js';
+
+import { createPartyHandler } from './social/party/createParty.handler.js';
+import { invitePartyHandler } from './social/party/inviteParty.handler.js';
+import { joinPartyHandler } from './social/party/joinParty.handler.js';
+import { disbandPartyHandler } from './social/party/disbandParty.handler.js';
+import { kickOutPartyHandler } from './social/party/kickOutParty.handler.js';
+import { setPartyLeaderHandler } from './social/party/setPartyLeader.handler.js';
+import { allowInviteHandler } from './social/party/allowInvite.handler.js';
+import { leavePartyHandler } from './social/party/leaveParty.handler.js';
+
 import { gatheringSkillCheckHandler } from './gathering/GatheringSkillCheck.handler.js';
 import { StartGatheringHandler } from './gathering/StartGathering.handler.js';
+
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
@@ -30,8 +41,20 @@ const handlers = {
   [config.packetId.C2SRegister]: registerHandler,
   [config.packetId.C2SLogin]: loginHandler,
   [config.packetId.C2SCreateCharacter]: createCharacterHandler,
+
+  // 파티 관련
+  [config.packetId.C2SCreateParty]: createPartyHandler,
+  [config.packetId.C2SInviteParty]: invitePartyHandler,
+  [config.packetId.C2SJoinParty]: joinPartyHandler,
+  [config.packetId.C2SLeaveParty]: leavePartyHandler,
+  [config.packetId.C2SDisbandParty]: disbandPartyHandler,
+  [config.packetId.C2SKickOutMember]: kickOutPartyHandler,
+  [config.packetId.C2SSetPartyLeader]: setPartyLeaderHandler,
+  [config.packetId.C2SAllowInvite]: allowInviteHandler,
+
   [config.packetId.C2SGatheringSkillCheck]: gatheringSkillCheckHandler,
   [config.packetId.C2SStartGathering]: StartGatheringHandler,
+
 };
 
 export const getHandlerByPacketId = (packetId) => {

@@ -117,104 +117,115 @@ const payload = {
       collisionPushInfo: collisionPushInfo_CollisionPushInfo,
     };
   },
-  //#endregion
-  //#region /* 파티 관련 */
-  C2SCreateParty: (partyId_int, leaderId_int) => {
-    return { partyId: partyId_int, leaderId: leaderId_int };
+  /* 파티 관련 */
+  C2SCreateParty: (partyId_string, leaderId_int) => {
+    return { partyId: partyId_string, leaderId: leaderId_int };
   },
   S2CCreateParty: (
-    partyId_int,
+    partyId_string,
     leaderId_int,
     memberCount_int,
-    members_ArrayOfMemberId,
+    members_ArrayOfMemberCardInfo,
   ) => {
     return {
-      partyId: partyId_int,
+      partyId: partyId_string,
       leaderId: leaderId_int,
       memberCount: memberCount_int,
-      members: members_ArrayOfMemberId,
+      members: members_ArrayOfMemberCardInfo,
     };
   },
-  C2SInviteParty: (partyId_int, nickname_string) => {
-    return { partyId: partyId_int, nickname: nickname_string };
+  C2SInviteParty: (partyId_string, nickname_string) => {
+    return { partyId: partyId_string, nickname: nickname_string };
   },
-  S2CInviteParty: (
-    partyId_int,
-    leaderId_int,
-    memberCount_int,
-    members_ArrayOfMemberId,
-  ) => {
+  S2CInviteParty: (leaderNickname_string, partyId_string, memberId_int) => {
     return {
-      partyId: partyId_int,
-      leaderId: leaderId_int,
-      memberCount: memberCount_int,
-      members: members_ArrayOfMemberId,
+      leaderNickname: leaderNickname_string,
+      partyId: partyId_string,
+      memberId: memberId_int,
     };
   },
-  C2SJoinParty: (partyId_int, newMemberId_int) => {
-    return { partyId: partyId_int, newMemberId: newMemberId_int };
+  C2SJoinParty: (partyId_string, newMemberId_int) => {
+    return { partyId: partyId_string, newMemberId: newMemberId_int };
   },
   S2CJoinParty: (
-    partyId_int,
+    partyId_string,
     leaderId_int,
     memberCount_int,
-    members_ArrayOfMemberId,
+    members_ArrayOfMemberCardInfo,
   ) => {
     return {
-      partyId: partyId_int,
+      partyId: partyId_string,
       leaderId: leaderId_int,
       memberCount: memberCount_int,
-      members: members_ArrayOfMemberId,
+      members: members_ArrayOfMemberCardInfo,
     };
   },
-  C2SLeaveParty: (partyId_int, leftPlayerId_int) => {
-    return { partyId: partyId_int, leftPlayerId: leftPlayerId_int };
+  C2SLeaveParty: (partyId_string, leftPlayerId_int) => {
+    return { partyId: partyId_string, leftPlayerId: leftPlayerId_int };
   },
   S2CLeaveParty: (
-    partyId_int,
+    partyId_string,
     leaderId_int,
     memberCount_int,
-    members_ArrayOfMemberId,
+    members_ArrayOfMemberCardInfo,
   ) => {
     return {
-      partyId: partyId_int,
+      partyId: partyId_string,
       leaderId: leaderId_int,
       memberCount: memberCount_int,
-      members: members_ArrayOfMemberId,
+      members: members_ArrayOfMemberCardInfo,
     };
   },
-  C2SSetPartyLeader: (partyId_int, memberId_int) => {
-    return { partyId: partyId_int, memberId: memberId_int };
+  C2SSetPartyLeader: (partyId_string, memberId_int) => {
+    return { partyId: partyId_string, memberId: memberId_int };
   },
   S2CSetPartyLeader: (
-    partyId_int,
+    partyId_string,
     leaderId_int,
     memberCount_int,
-    members_ArrayOfMemberId,
+    members_ArrayOfMemberCardInfo,
   ) => {
     return {
-      partyId: partyId_int,
+      partyId: partyId_string,
       leaderId: leaderId_int,
       memberCount: memberCount_int,
-      members: members_ArrayOfMemberId,
+      members: members_ArrayOfMemberCardInfo,
     };
   },
-  C2SBuff: (partyId_int, casterId_int, skillCode_int, targetId_int) => {
+  S2CKickOutMember: (
+    partyId_string,
+    leaderId_int,
+    memberCount_int,
+    members_ArrayOfMemberCardInfo,
+  ) => {
     return {
-      partyId: partyId_int,
-      casterId: casterId_int,
-      skillCode: skillCode_int,
-      targetId: targetId_int,
+      partyId: partyId_string,
+      leaderId: leaderId_int,
+      memberCount: memberCount_int,
+      members: members_ArrayOfMemberCardInfo,
     };
   },
-  S2CBuff: (partyId_int, players_ArrayOfPlayerInfo) => {
-    return { partyId: partyId_int, players: players_ArrayOfPlayerInfo };
+  S2CAllowInvite: (
+    partyId_string,
+    leaderId_int,
+    memberCount_int,
+    members_ArrayOfMemberCardInfo,
+  ) => {
+    return {
+      partyId: partyId_string,
+      leaderId: leaderId_int,
+      memberCount: memberCount_int,
+      members: members_ArrayOfMemberCardInfo,
+    };
   },
-  //#endregion
-  //#region /* 던전 관련 */
-  C2SDungeonEnter: (dungeonCode_int, partyId_int) => {
-    return partyId_int
-      ? { dungeonCode: dungeonCode_int, partyId: partyId_int }
+  S2CDisbandParty: (msg_string) => {
+    return { msg: msg_string };
+  },
+
+  /* 던전 관련 */
+  C2SDungeonEnter: (dungeonCode_int, partyId_string) => {
+    return partyId_string
+      ? { dungeonCode: dungeonCode_int, partyId: partyId_string }
       : { dungeonCode: dungeonCode_int };
   },
   S2CDungeonEnter: (dungeonInfo_DungeonInfo, player_PlayerStatus) => {
