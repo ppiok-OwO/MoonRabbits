@@ -4,6 +4,7 @@ import {
 } from '../../../session/sessions.js';
 import CustomError from '../../../utils/error/customError.js';
 import { ErrorCodes } from '../../../utils/error/errorCodes.js';
+import handleError from '../../../utils/error/errorHandler.js';
 import Packet from '../../../utils/packet/packet.js';
 
 export const kickOutPartyHandler = (socket, packetData) => {
@@ -48,9 +49,12 @@ export const kickOutPartyHandler = (socket, packetData) => {
     }
 
     // 퇴출시키려는 멤버가 파티에 존재하는가?
+    let memberSocket;
     const member = party
-      .getAllMemberSockets()
-      .find((value) => value.id === memberId);
+      .getAllMemberEntries()
+      .find(([key, value]) => value.id === memberId);
+    // member = ['Socket', { Player 인스턴스 }]
+
     if (!member) {
       return socket.emit(
         'error',
@@ -73,15 +77,16 @@ export const kickOutPartyHandler = (socket, packetData) => {
     );
     const msgToParty = Packet.S2CChat(
       0,
-      `${member.nickname}님이 파티에서 추방되었습니다.`,
+      `${member[1].nickname}님이 파티에서 추방되었습니다.`,
     );
 
     party.notify(packet);
     party.notify(msgToParty);
 
     // 퇴출된 멤버에게 메시지 전송
-    const msgToKickedMember = Packet.S2CChat(0, '파티에서 추방당하셨습니다.');
-    party.notify(msgToKickedMember);
+    const msgToKickedMember =
+      Packet.S2CDisbandParty('파티에서 추방되었습니다.');
+    member[0].write(msgToKickedMember);
   } catch (error) {
     handleError(socket, error);
   }

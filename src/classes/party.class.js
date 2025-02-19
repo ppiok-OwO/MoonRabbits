@@ -19,7 +19,7 @@ class Party {
   }
 
   removeMember(plyaerId) {
-    const socket = getSocketById(plyaerId);
+    const socket = this.getSocketById(plyaerId);
     this.members.delete(socket);
   }
 
