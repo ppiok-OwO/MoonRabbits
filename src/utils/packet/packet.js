@@ -309,11 +309,13 @@ const Packet = {
   S2CAddExp: (updatedExp_int) => {
     return makePacket(packetId.S2CAddExp, { updatedExp: updatedExp_int });
   },
-  S2CLevelUp: (playerId_int, updatedLevel_int, newTargetExp_int) => {
+  S2CLevelUp: (playerId_int, updatedLevel_int, newTargetExp_int, updatedExp_int, abilityPoint_int) => {
     return makePacket(packetId.S2CLevelUp, {
       playerId: playerId_int,
       updatedLevel: updatedLevel_int,
       newTargetExp: newTargetExp_int,
+      updatedExp: updatedExp_int,
+      abilityPoint: abilityPoint_int,
     });
   },
   C2SSelectAP: (investPoints_ArrayOfInvestPoint) => {

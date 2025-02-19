@@ -109,6 +109,7 @@ class Player extends Entity {
 
   setExp(exp) {
     this.exp = exp;
+    return this.exp;
   }
 
   getLevel() {
@@ -139,7 +140,7 @@ class Player extends Entity {
     try {
       return getGameAssets().targetExps.data.find(
         (targetExp) => targetExp.level === level,
-      ).require_exp;
+      ).target_exp;
     } catch (error) {
       throw new Error(`${level}lv 요구경험치 조회 오류`);
     }
