@@ -32,6 +32,8 @@ class Player extends Entity {
     this.dungeonId = null;
     this.lastBattleLog = 0;
     this.path = null;
+    this.isInParty = false;
+    this.isInvited = false;
     this.isPartyLeader = false;
   }
   sendPacket(packet) {

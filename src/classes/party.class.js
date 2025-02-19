@@ -102,9 +102,8 @@ class Party {
       if (member.id === playerId) {
         return member.user.getSocket();
       }
-
-      return -1;
     }
+    return -1;
   }
 
   getMemberCount() {

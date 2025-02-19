@@ -63,6 +63,18 @@ export const invitePartyHandler = (socket, packetData) => {
       );
     }
 
+    // 해당 플레이어가 파티 중이면 return
+    if (newMember.isInParty) {
+      const packet = Packet.S2CChat(0, '이미 파티에 소속된 플레이어입니다.');
+      return socket.write(packet);
+    }
+
+    // 상대방이 이미 초대를 받은 상태여도 return
+    if (newMember.isInvited) {
+      const packet = Packet.S2CChat(0, '지금은 초대장을 보낼 수 없습니다.');
+      return socket.write(packet);
+    }
+
     // 해당 멤버에게 초대장 보내기
     if (party.getMemberCount() < config.party.MaxMember) {
       const packet = Packet.S2CInviteParty(
@@ -70,6 +82,8 @@ export const invitePartyHandler = (socket, packetData) => {
         party.getId(),
         newMember.id,
       );
+
+      newMember.isInvited = true;
 
       return newMember.user.getSocket().write(packet);
     } else {

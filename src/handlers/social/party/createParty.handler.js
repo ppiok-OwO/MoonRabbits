@@ -27,6 +27,7 @@ export const createPartyHandler = (socket, packetData) => {
     const partySession = getPartySessions();
     const party = partySession.addParty(socket, player);
     party.setPartyLeader(player);
+    player.isInParty = true;
 
     const packet = Packet.S2CCreateParty(
       party.getId(),
