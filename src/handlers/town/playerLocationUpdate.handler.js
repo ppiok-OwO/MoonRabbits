@@ -64,7 +64,7 @@ const playerLocationUpdateHandler = (socket, packetData) => {
         );
 
         const newTransform = { ...closestPoint, rot: transform.rot };
-        const packet = Packet.S2CPlayerLocation(player.id, newTransform, false);
+        const packet = Packet.S2CPlayerLocation(player.id, newTransform, false, player.getCurrentScene());
 
         // 위치동기화 브로드 캐스트
         const dungeonId = player.getDungeonId();
@@ -73,18 +73,18 @@ const playerLocationUpdateHandler = (socket, packetData) => {
           const dungeonSessions = getDungeonSessions();
           const dungeon = dungeonSessions.getDungeon(dungeonId);
           dungeon.notify(packet);
-          dungeon.notify(syncLocationPacket);
+          // dungeon.notify(syncLocationPacket);
         } else {
           // 던전이 아니면
           playerSession.notify(packet);
-          playerSession.notify(syncLocationPacket);
+          // playerSession.notify(syncLocationPacket);
         }
 
         return;
       }
     }
 
-    const packet = Packet.S2CPlayerLocation(player.id, transform, true);
+    const packet = Packet.S2CPlayerLocation(player.id, transform, true, player.getCurrentScene());
 
     const dungeonId = player.getDungeonId();
     if (dungeonId) {

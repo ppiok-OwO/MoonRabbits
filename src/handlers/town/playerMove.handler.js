@@ -34,9 +34,21 @@ export async function playerMoveHandler(socket, packetData) {
       );
     }
 
+    let objFileName = "";
+    switch (player.getCurrentScene()) {
+      case config.sceneCode.town:
+        objFileName = "Town Exported NavMesh.obj";
+        break;
+      case config.sceneCode.aSector:
+        objFileName = "Test Exported NavMesh.obj"
+    }
+
+    console.log(`현재 씬? : ${player.getCurrentScene()}`);
+    console.log(`obj 파일명? : ${objFileName}`);
+
     const targetPos = { x: targetPosX, y: targetPosY, z: targetPosZ };
     const currentPos = { x: startPosX, y: startPosY, z: startPosZ };
-    const navMesh = await loadNavMesh('Town Exported NavMesh.obj');
+    const navMesh = await loadNavMesh(objFileName);
 
     // NavMesh 기반 경로 탐색
     const path = await findPath(navMesh, currentPos, targetPos);

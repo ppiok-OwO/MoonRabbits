@@ -12,12 +12,14 @@ import playerLocationUpdateHandler from './town/playerLocationUpdate.handler.js'
 import registerHandler from './account/register.handler.js';
 import loginHandler from './account/login.handler.js';
 import createCharacterHandler from './account/createCharacter.handler.js';
+import leaveHandler from './town/leaveHandler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
 // 패킷 ID별로 핸들러 맵핑
 const handlers = {
-  [config.packetId.C2STownEnter]: townEnterHandler,
+  [config.packetId.C2SEnter]: townEnterHandler,
+  [config.packetId.C2SLeave] : leaveHandler,
   [config.packetId.S2CPlayerSpawn]: playerSpawnNotificationHandler,
   [config.packetId.C2SPlayerLocation]: playerLocationUpdateHandler,
   [config.packetId.C2SPlayerMove]: playerMoveHandler,

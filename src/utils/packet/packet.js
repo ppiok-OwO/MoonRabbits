@@ -52,23 +52,23 @@ const Packet = {
     );
   },
   /* 마을 관련 */
-  C2STownEnter: (nickname_string, classCode_int) => {
+  C2SEnter: (nickname_string, classCode_int,targetScene_int) => {
     return makePacket(
-      packetId.C2STownEnter,
-      payload.C2STownEnter(nickname_string, classCode_int),
+      packetId.C2SEnter,
+      payload.C2SEnter(nickname_string, classCode_int,targetScene_int),
     );
   },
-  S2CTownEnter: (player_PlayerInfo) => {
+  S2CEnter: (player_PlayerInfo) => {
     return makePacket(
-      packetId.S2CTownEnter,
-      payload.S2CTownEnter(player_PlayerInfo),
+      packetId.S2CEnter,
+      payload.S2CEnter(player_PlayerInfo),
     );
   },
-  C2STownLeave: () => {
-    return makePacket(packetId.C2STownLeave);
+  C2SLeave: () => {
+    return makePacket(packetId.C2SLeave);
   },
-  S2CTownLeave: () => {
-    return makePacket(packetId.S2CTownLeave);
+  S2CLeave: () => {
+    return makePacket(packetId.S2CLeave);
   },
   C2SAnimation: (animCode_int) => {
     return makePacket(
@@ -101,10 +101,10 @@ const Packet = {
       payload.S2CPlayerSpawn(players_ArrayOfPlayerInfo),
     );
   },
-  S2CPlayerDespawn: (playerIds_ArrayOfInt) => {
+  S2CPlayerDespawn: (playerIds_ArrayOfInt,currentScene_int) => {
     return makePacket(
       packetId.S2CPlayerDespawn,
-      payload.S2CPlayerDespawn(playerIds_ArrayOfInt),
+      payload.S2CPlayerDespawn(playerIds_ArrayOfInt,currentScene_int),
     );
   },
   /* 공통 02 - 플레이어 이동 */
@@ -141,6 +141,7 @@ const Packet = {
     playerId_int,
     transform_TransformInfo,
     isValidTransform_bool,
+    currentScene_int
   ) => {
     return makePacket(
       packetId.S2CPlayerLocation,
@@ -148,6 +149,7 @@ const Packet = {
         playerId_int,
         transform_TransformInfo,
         isValidTransform_bool,
+        currentScene_int,
       ),
     );
   },

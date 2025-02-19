@@ -16,6 +16,7 @@ import {
 import { BASE_STAT_DATA } from '../constants/PlayerBaseStat.js';
 import { BATTLE_LOG_ID } from '../constants/BattleLog.js';
 import { UPDATE_LOCATION } from '../constants/UpdateLocation.js';
+import SCENE_CODE from '../constants/scene.js';
 export const config = {
   server: {
     port: PORT,
@@ -44,10 +45,10 @@ export const config = {
     S2CLogin: PACKET_ID.S2CLogin,
     C2SCreateCharacter: PACKET_ID.C2SCreateCharacter,
     S2CCreateCharacter: PACKET_ID.S2CCreateCharacter,
-    C2STownEnter: PACKET_ID.C2STownEnter,
-    S2CTownEnter: PACKET_ID.S2CTownEnter,
-    C2STownLeave: PACKET_ID.C2STownLeave,
-    S2CTownLeave: PACKET_ID.S2CTownLeave,
+    C2SEnter: PACKET_ID.C2SEnter,
+    S2CEnter: PACKET_ID.S2CEnter,
+    C2SLeave: PACKET_ID.C2SLeave,
+    S2CLeave: PACKET_ID.S2CLeave,
     C2SAnimation: PACKET_ID.C2SAnimation,
     S2CAnimation: PACKET_ID.S2CAnimation,
     C2SChat: PACKET_ID.C2SChat,
@@ -127,6 +128,10 @@ export const config = {
   updateLocation: {
     tolerance: UPDATE_LOCATION.tolerance,
   },
+  sceneCode : {
+    town : SCENE_CODE.TOWN,
+    aSector : SCENE_CODE.A_SECTOR,
+  }
 };
 
 export const packetIdEntries = Object.entries(config.packetId);
