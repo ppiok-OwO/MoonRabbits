@@ -18,7 +18,7 @@ export const animationHandler = (socket, packetData) => {
     const player = playerSession.getPlayer(socket);
 
     if (!player) {
-      socket.emit(
+      return socket.emit(
         'error',
         new CustomError(
           ErrorCodes.USER_NOT_FOUND,
@@ -72,7 +72,7 @@ export const animationHandler = (socket, packetData) => {
       playerSession.notify(chatPacket);
     }
   } catch (error) {
-    handleError(error);
+    handleError(socket, error);
     // console.error(error);
   }
 };
