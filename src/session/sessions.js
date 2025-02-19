@@ -1,12 +1,15 @@
 import PlayerSession from '../classes/session/playerSession.class.js';
 import DungeonSession from '../classes/session/dungeonSession.class.js';
 import UserSession from '../classes/session/userSession.class.js';
+
 import MonsterSession from '../classes/session/monsterSession.class.js';
 
+import PartySession from '../classes/session/partySession.class.js';
 const playerSession = new PlayerSession();
 const dungeonSession = new DungeonSession();
 const userSession = new UserSession();
 const monsterSession = new MonsterSession();
+const partySession = new PartySession();
 
 monsterSession.initArea();
 setInterval(async () => {
@@ -27,4 +30,8 @@ export const getUserSessions = () => {
 
 export const getMonsterSessions = () => {
   return monsterSession;
+};
+
+export const getPartySessions = () => {
+  return partySession;
 };
