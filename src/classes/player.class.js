@@ -32,9 +32,11 @@ class Player extends Entity {
     this.dungeonId = null;
     this.lastBattleLog = 0;
     this.path = null;
+
     this.isInParty = false;
     this.isInvited = false;
     this.isPartyLeader = false;
+    this.currentScene = null;
   }
   sendPacket(packet) {
     try {
@@ -42,6 +44,14 @@ class Player extends Entity {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  setCurrentScene(sceneCode) {
+    this.currentScene = sceneCode;
+  }
+
+  getCurrentScene() {
+    return this.currentScene;
   }
 
   getPlayerStatus() {
@@ -76,6 +86,7 @@ class Player extends Entity {
       this.class,
       this.position,
       this.getPlayerStats(),
+      this.getCurrentScene(),
     );
   }
 

@@ -3,9 +3,9 @@ import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import Packet from '../../utils/packet/packet.js';
 import { getUserSessions } from '../../session/sessions.js';
-
 import playerSpawnNotificationHandler from './playerSpawnNotification.handler.js';
 import chalk from 'chalk';
+import { config } from '../../config/config.js';
 
 const townEnterHandler = (socket, packetData) => {
   try {
@@ -24,10 +24,11 @@ const townEnterHandler = (socket, packetData) => {
     );
 
     console.log('newPlayer : ', newPlayer);
+    newPlayer.setCurrentScene(packetData.targetScene);
 
     const playerInfo = newPlayer.getPlayerInfo();
 
-    const packet = Packet.S2CTownEnter(playerInfo);
+    const packet = Packet.S2CEnter(playerInfo);
 
     socket.write(packet);
 

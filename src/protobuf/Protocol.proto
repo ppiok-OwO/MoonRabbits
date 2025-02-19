@@ -13,10 +13,10 @@ enum MsgId {
   C2S_CREATE_CHARACTER = 4;
   S2C_CREATE_CHARACTER = 5;
 
-  C2S_TOWN_ENTER = 10;
-  S2C_TOWN_ENTER = 11;
-  C2S_TOWN_LEAVE = 12;
-  S2C_TOWN_LEAVE = 13;
+  C2S_ENTER = 10;
+  S2C_ENTER = 11;
+  C2S_LEAVE = 12;
+  S2C_LEAVE = 13;
   C2S_ANIMATION = 14;
   S2C_ANIMATION = 15;
 
@@ -98,15 +98,17 @@ message S2CCreateCharacter {
 }
 
 /* 마을 관련 */
-message C2STownEnter {
+message C2SEnter {
   string nickname = 1;
   int32 classCode = 2;
+  int32 targetScene = 3;
 }
-message S2CTownEnter {
+message S2CEnter {
   PlayerInfo player = 1;
 }
-message C2STownLeave {}
-message S2CTownLeave {}
+message C2SLeave {}
+message S2CLeave {}
+
 message C2SAnimation {
   int32 animCode = 1;
 }
@@ -130,6 +132,7 @@ message S2CPlayerSpawn {
 }
 message S2CPlayerDespawn {
   repeated int32 playerIds = 1;
+  int32 currentScene = 2;
 }
 
 /* 공통 02 - 플레이어 이동 */
@@ -149,6 +152,7 @@ message S2CPlayerLocation {
   int32 playerId = 1;
   TransformInfo transform = 2;
   bool isValidTransform = 3;
+  int32 currentScene = 4;
 }
  
 /* 공통 03 - 충돌 관련 */
@@ -333,11 +337,11 @@ message S2CGatheringDone{
 /* 정보 구조체 */
 message PlayerInfo {
   int32 playerId = 1;   // 입장할때 서버 내부에서 생성한 관리코드
-  string nickname = 2;
-  int32 level = 3;
-  int32 classCode = 4;      
-  TransformInfo transform = 5;
-  StatInfo statInfo = 6;
+  string nickname = 2;  
+  int32 classCode = 3;      
+  TransformInfo transform = 4;
+  StatInfo statInfo = 5;
+  int32 currentScene = 6;
 }
 
 message TransformInfo {

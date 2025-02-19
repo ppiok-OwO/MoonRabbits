@@ -29,12 +29,15 @@ const payload = {
   S2CCreateCharacter: (isSuccess_bool, msg_string) => {
     return { isSuccess: isSuccess_bool, msg: msg_string };
   },
-  //#endregion
-  //#region /* 마을 관련 */
-  C2STownEnter: (nickname_string, classCode_int) => {
-    return { nickname: nickname_string, classCode: classCode_int };
+  /* 마을 관련 */
+  C2SEnter: (nickname_string, classCode_int, targetScene_int) => {
+    return {
+      nickname: nickname_string,
+      classCode: classCode_int,
+      targetScene: targetScene_int,
+    };
   },
-  S2CTownEnter: (player_PlayerInfo) => {
+  S2CEnter: (player_PlayerInfo) => {
     return { player: player_PlayerInfo };
   },
   C2SAnimation: (animCode_int) => {
@@ -58,8 +61,8 @@ const payload = {
   S2CPlayerSpawn: (players_ArrayOfPlayerInfo) => {
     return { players: players_ArrayOfPlayerInfo };
   },
-  S2CPlayerDespawn: (playerIds_ArrayOfInt) => {
-    return { playerIds: playerIds_ArrayOfInt };
+  S2CPlayerDespawn: (playerIds_ArrayOfInt, currentScene_int) => {
+    return { playerIds: playerIds_ArrayOfInt, currentScene: currentScene_int };
   },
   //#endregion
   //#region /* 공통 02 - 플레이어 이동 */
@@ -87,11 +90,13 @@ const payload = {
     playerId_int,
     transform_TransformInfo,
     isValidTransform_bool,
+    currentScene_int,
   ) => {
     return {
       playerId: playerId_int,
       transform: transform_TransformInfo,
       isValidTransform: isValidTransform_bool,
+      currentScene: currentScene_int,
     };
   },
   //#endregion

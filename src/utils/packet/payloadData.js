@@ -9,6 +9,7 @@ const payloadData = {
     classCode_int,
     transform_TransformInfo,
     statInfo_StatInfo,
+    currentScene_int
   ) => {
     return {
       playerId: playerId_int,
@@ -17,6 +18,7 @@ const payloadData = {
       classCode: classCode_int,
       transform: transform_TransformInfo,
       statInfo: statInfo_StatInfo,
+      currentScene:currentScene_int
     };
   },
   TransformInfo: (posX_float, posY_float, posZ_float, rot_float) => {
