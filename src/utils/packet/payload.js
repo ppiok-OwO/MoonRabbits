@@ -263,38 +263,35 @@ const payload = {
   },
   //#endregion
   //#region /* 채집 관련 */
-  C2SResourceRequest: (resourceSpawnId_int, resourceId_int) => {
-    return { resourceSpawnId: resourceSpawnId_int, resourceId: resourceId_int };
+
+  S2CResourcesList: (resources_resource) => {
+    return { resources: resources_resource };
   },
-  S2CResourceRequest: (resourceSpawnId, resourceId) => {
-    return makePacket(
-      packetId.S2CResourceRequest,
-      payload.C2SResourceRequest(monsterId_int, transform_TransformInfo),
-    );
+  S2CUpdateDurability: (placedId_int, durabillity_int) => {
+    return { placedId: placedId_int, durabillity: durabillity_int };
   },
-  C2SGatheringStart: (resourceSpawnId, resourceId) => {
-    return makePacket(
-      packetId.C2SGatheringStart,
-      payload.C2SResourceRequest(monsterId_int, transform_TransformInfo),
-    );
+  C2SStartGathering: (placedId_int) => {
+    return { placedId: placedId_int };
   },
-  S2CGatheringStart: (resourceSpawnId, resourceId) => {
-    return makePacket(
-      packetId.S2CGatheringStart,
-      payload.C2SResourceRequest(monsterId_int, transform_TransformInfo),
-    );
+  S2CStartGathering: (placedId_int, angle_int, difficulty_int) => {
+    return {
+      placedId: placedId_int,
+      angle: angle_int,
+      difficulty: difficulty_int,
+    };
   },
-  C2S_GatheringSkillCheck: (resourceSpawnId, resourceId) => {
-    return makePacket(
-      packetId.C2S_GatheringSkillCheck,
-      payload.C2SResourceRequest(monsterId_int, transform_TransformInfo),
-    );
+  C2SGatheringSkillCheck: (placedId_int, deltatime_int) => {
+    return { placedId: placedId_int, deltatime: deltatime_int };
   },
-  S2C_GatheringSkillCheck: (resourceSpawnId, resourceId) => {
-    return makePacket(
-      packetId.S2C_GatheringSkillCheck,
-      payload.C2SResourceRequest(monsterId_int, transform_TransformInfo),
-    );
+  S2CGatheringSkillCheck: (placedId_int, durabillity_int) => {
+    return { placedId: placedId_int, durabillity: durabillity_int };
+  },
+  S2CGatheringDone: (placedId_int, ItemId_int, quentity_int) => {
+    return {
+      placedId: placedId_int,
+      ItemId: ItemId_int,
+      quentity: quentity_int,
+    };
   },
 
   //#endregion

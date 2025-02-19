@@ -2,17 +2,14 @@ import { getGameAssets } from '../init/assets';
 import { createRandNum } from '../utils/math/createRandNum';
 
 class Resource {
-  constructor(id, resourceId, data) {
-    this.id = id;
+  constructor(idx, resourceId, data) {
+    this.idx = idx;
     this.resourceId = resourceId;
     this.startTime = 0;
     this.data = data;
-    this.durability = data.resource_durability;
-    this.difficulty = data.resource_difficulty;
-    this.angle = [];
-    for (let i = 0; i < this.durability; i++) {
-      this.angle.push(createRandNum(30, 330));
-    }
+    this.durability = this.data.resource_durability;
+    this.difficulty = this.data.resource_difficulty;
+    this.angle = 180;
   }
   getResourceId() {
     return this.resourceId;
@@ -23,17 +20,39 @@ class Resource {
   getData() {
     return this.data;
   }
+  getDurability() {
+    return this.durability;
+  }
+  getDifficulty() {
+    return this.difficulty;
+  }
+  getRespawnTime(){
+    return this.data.resource_respawn * 1000;
+  }
+  getAngle() {
+    this.startTime = Date.now();
+    return (this.angle = createRandNum(30, 330));
+  }
+  subDurability(sub = 1) {
+    return (this.durability -= sub);
+  }
+  resetDurability() {
+    return (this.durability = this.data.resource_durability);
+  }
 
-  CheckValidateTiming(skillcheckTime) {
-    const validTime =
-      (1000 / 360 / this.difficulty) * this.angle[this.durability - 1];
+  CheckValidateTiming(deltatime) {
+    const validTime = (5000 / 36 ) * this.angle;
+    const validTimeRange = (5000 / 36 ) * 60/ this.difficulty;
 
-    if (Math.abs(skillcheckTime - this.startTime - validTime) < 100) {
+    if (
+      Math.abs(deltatime - validTime) < validTimeRange &&
+      Math.abs(Date.now() - this.startTime - validTime) < validTimeRange + 50
+    ) {
       return --this.durability;
     }
     return -1;
   }
-  
+
   dropItem() {
     let sum = 0;
     const dropItemArr = [];

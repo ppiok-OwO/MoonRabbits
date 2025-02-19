@@ -380,40 +380,47 @@ const Packet = {
   },
   //#endregion
   //#region /* 채집 관련 */
-  C2SResourceRequest: (resourceSpawnId, resourceId) => {
+
+  S2CResourcesList: (resources_resource) => {
     return makePacket(
-      packetId.C2SResourceRequest,
-      payload.C2SResourceRequest(monsterId_int, transform_TransformInfo),
+      packetId.S2CResourcesList,
+      payload.S2CResourcesList(resources_resource),
     );
   },
-  S2CResourceRequest: (resourceSpawnId, resourceId) => {
+  S2CUpdateDurability: (placedId_int, durabillity_int) => {
     return makePacket(
-      packetId.S2CResourceRequest,
-      payload.C2SResourceRequest(monsterId_int, transform_TransformInfo),
+      packetId.S2CUpdateDurability,
+      payload.S2CUpdateDurability(placedId_int, durabillity_int),
     );
   },
-  C2SGatheringStart: (resourceSpawnId, resourceId) => {
+  C2SStartGathering: (placedId_int) => {
     return makePacket(
-      packetId.C2SGatheringStart,
-      payload.C2SResourceRequest(monsterId_int, transform_TransformInfo),
+      packetId.C2SStartGathering,
+      payload.C2SStartGathering(placedId_int),
     );
   },
-  S2CGatheringStart: (resourceSpawnId, resourceId) => {
+  S2CStartGathering: (placedId_int, angle_int, difficulty_int) => {
     return makePacket(
-      packetId.S2CGatheringStart,
-      payload.C2SResourceRequest(monsterId_int, transform_TransformInfo),
+      packetId.S2CStartGathering,
+      payload.S2CStartGathering(placedId_int, angle_int, difficulty_int),
     );
   },
-  C2S_GatheringSkillCheck: (resourceSpawnId, resourceId) => {
+  C2SGatheringSkillCheck: (placedId_int, deltatime_int) => {
     return makePacket(
-      packetId.C2S_GatheringSkillCheck,
-      payload.C2SResourceRequest(monsterId_int, transform_TransformInfo),
+      packetId.C2SGatheringSkillCheck,
+      payload.C2SGatheringSkillCheck(placedId_int, deltatime_int),
     );
   },
-  S2C_GatheringSkillCheck: (resourceSpawnId, resourceId) => {
+  S2CGatheringSkillCheck: (placedId_int, durabillity_int) => {
     return makePacket(
-      packetId.S2C_GatheringSkillCheck,
-      payload.C2SResourceRequest(monsterId_int, transform_TransformInfo),
+      packetId.S2CGatheringSkillCheck,
+      payload.S2CGatheringSkillCheck(placedId_int, durabillity_int),
+    );
+  },
+  S2CGatheringDone: (placedId_int, ItemId_int, quentity_int) => {
+    return makePacket(
+      packetId.S2CGatheringDone,
+      payload.S2CGatheringDone(placedId_int, ItemId_int, quentity_int),
     );
   },
 

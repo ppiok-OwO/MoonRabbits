@@ -3,16 +3,16 @@
   "version": "1.0.0",
   "data": [
     {
-      "resource_id": 0,
-      "resource_name": "자원의 이름름",
+      "resource_id": "1~50 나무 50~100 광석류",
+      "resource_name": "자원의 이름",
       "resource_type": "나무: Tree 광석/돌: Ore",
       "resource_description": "difficulty: 난이도(스킬체크속도) durbility: 내구도(반복작업 횟수) drop_item: 드랍 아이템 목록({chance: 확율, item: 아이템} 현제 드랍이 없는 경우는 없음)",
       "resource_difficulty": 1,
       "resource_durability": 1,
       "resource_respawn": 10,
       "drop_item": [
-        { "chance": 10, "item": 20001 },
-        { "chance": 10, "item": 21001 }
+        { "chance": 10, "item_id": 20001 },
+        { "chance": 10, "item_id": 21001 }
       ]
     },
     {
@@ -24,8 +24,8 @@
       "resource_durability": 1,
       "resource_respawn": 10,
       "drop_item": [
-        { "chance": 10, "item": 20001 },
-        { "chance": 10, "item": 20002 }
+        { "chance": 10, "item_id": 20001 },
+        { "chance": 10, "item_id": 20002 }
       ]
     },
     {
@@ -37,8 +37,8 @@
       "resource_durability": 3,
       "resource_respawn": 30,
       "drop_item": [
-        { "chance": 10, "item": 20002 },
-        { "chance": 10, "item": 20003 }
+        { "chance": 10, "item_id": 20002 },
+        { "chance": 10, "item_id": 20003 }
       ]
     },
     {
@@ -50,8 +50,8 @@
       "resource_durability": 5,
       "resource_respawn": 60,
       "drop_item": [
-        { "chance": 10, "item": 20002 },
-        { "chance": 50, "item": 20003 }
+        { "chance": 10, "item_id": 20002 },
+        { "chance": 50, "item_id": 20003 }
       ]
     },
     {
@@ -63,9 +63,9 @@
       "resource_durability": 1,
       "resource_respawn": 10,
       "drop_item": [
-        { "chance": 10, "item": 22001 },
-        { "chance": 10, "item": 22002 },
-        { "chance": 10, "item": 21001 }
+        { "chance": 10, "item_id": 22001 },
+        { "chance": 10, "item_id": 22002 },
+        { "chance": 10, "item_id": 21001 }
       ]
     },
     {
@@ -77,11 +77,11 @@
       "resource_durability": 3,
       "resource_respawn": 30,
       "drop_item": [
-        { "chance": 2, "item": 22001 },
-        { "chance": 10, "item": 22002 },
-        { "chance": 10, "item": 22005 },
-        { "chance": 10, "item": 21001 },
-        { "chance": 10, "item": 21001 }
+        { "chance": 2, "item_id": 22001 },
+        { "chance": 10, "item_id": 22002 },
+        { "chance": 10, "item_id": 22005 },
+        { "chance": 10, "item_id": 21001 },
+        { "chance": 10, "item_id": 21001 }
       ]
     },
     {
@@ -93,10 +93,10 @@
       "resource_durability": 5,
       "resource_respawn": 60,
       "drop_item": [
-        { "chance": 10, "item": 22005 },
-        { "chance": 10, "item": 21002 },
-        { "chance": 10, "item": 21003 },
-        { "chance": 10, "item": 21004 }
+        { "chance": 10, "item_id": 22005 },
+        { "chance": 10, "item_id": 21002 },
+        { "chance": 10, "item_id": 21003 },
+        { "chance": 10, "item_id": 21004 }
       ]
     },
     {
@@ -107,7 +107,7 @@
       "resource_difficulty": 1,
       "resource_durability": 1,
       "resource_respawn": 10,
-      "drop_item": [{ "chance": 10, "item": 20001 }]
+      "drop_item": [{ "chance": 10, "item_id": 20001 }]
     }
   ]
 }
