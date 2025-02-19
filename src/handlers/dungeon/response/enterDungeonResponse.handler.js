@@ -1,9 +1,11 @@
 import { PACKET_ID } from '../../../constants/header.js';
-import { getDungeonSessions, getPlayerSession } from '../../../session/sessions.js';
+import {
+  getDungeonSessions,
+  getPlayerSession,
+} from '../../../session/sessions.js';
 import makePacket from '../../../utils/packet/makePacket.js';
 import payload from '../../../utils/packet/payload.js';
 import payloadData from '../../../utils/packet/payloadData.js';
-import Monster from '../../../classes/monster.class.js';
 import { screenDoneResponseHandler } from './screenDoneResponse.handler.js';
 
 let monsterIdx = 0;

@@ -115,3 +115,5 @@ class MonsterSession {
     });
   }
 }
+
+export default MonsterSession;

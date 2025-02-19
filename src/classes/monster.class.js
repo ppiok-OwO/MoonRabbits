@@ -1,5 +1,4 @@
-import { findPath, loadNavMesh } from './navMeshLoader.js';
-import { Vectpr3Obj } from './vector3Object.class.js';
+import { findPath, loadNavMesh } from '../init/navMeshLoader.js';
 
 class Monster {
   constructor(mapcode, id, area) {
@@ -12,8 +11,8 @@ class Monster {
     this.target = null; // 현재 타겟
     this.lastUpdateTime = 0; // 마지막 업데이트 시간
     this.updateInterval = 100; // 10프레임 (100ms) 간격으로 위치 업데이트
-    this.position = new Vectpr3Obj();
-    this.homePosition = new Vectpr3Obj();
+    this.position = { x: 0, y: 0, z: 0 };
+    this.homePosition = { x: 0, y: 0, z: 0 };
     this.detectionRange = 60; // 감지 범위
     this.roamingRange = 45; // 배회 범위 (-45 ~ +45)
     this.collisionRange = 0.5; // 충돌 판정 범위

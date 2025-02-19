@@ -29,7 +29,8 @@ const handlers = {
   [config.packetId.C2SRegister]: registerHandler,
   [config.packetId.C2SLogin]: loginHandler,
   [config.packetId.C2SCreateCharacter]: createCharacterHandler,
-  [config.packetId.C2SMonsterLocation]: monsterLocationHandler,
+  [config.packetId.S2CMonsterLocation]: monsterLocationHandler,
+  //[config.packetId.C2SMonsterLocation]: monsterLocationHandler,
 };
 
 export const getHandlerByPacketId = (packetId) => {
