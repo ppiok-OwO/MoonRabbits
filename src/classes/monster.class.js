@@ -1,12 +1,12 @@
 import Entity from './stat.class.js';
-import payloadData from '../utils/packet/payloadData.js';
+import PAYLOAD_DATA from '../utils/packet/payloadData.js';
 
 class Monster extends Entity {
   constructor(
     monsterIdx,
     monsterModel,
     monsterName,
-    stat = payloadData.StatInfo(1, 100, 100, 100, 100, 20, 5, 10, 50),
+    stat = PAYLOAD_DATA.StatInfo(1, 100, 100, 100, 100, 20, 5, 10, 50),
   ) {
     super(stat);
     this.idx = monsterIdx;
@@ -19,7 +19,7 @@ class Monster extends Entity {
   }
 
   getMonsterStatus() {
-    return payloadData.MonsterStatus(
+    return PAYLOAD_DATA.MonsterStatus(
       this.idx,
       this.model,
       this.name,

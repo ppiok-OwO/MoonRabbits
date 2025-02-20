@@ -4,7 +4,7 @@ import { getUserSessions } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import Packet from '../../utils/packet/packet.js';
-import payloadData from '../../utils/packet/payloadData.js';
+import PAYLOAD_DATA from '../../utils/packet/payloadData.js';
 import bcrypt from 'bcrypt';
 import chalk from 'chalk';
 
@@ -51,7 +51,11 @@ const loginHandler = async (socket, packetData) => {
     // 로그인 하고 나서 userSession에 id와 nickname, classCode를 업데이트
     const user = getUserSessions().getUser(socket);
     if (user) {
-      user.setUserInfo(userData.userId, findPlayer.nickname, findPlayer.classCode);
+      user.setUserInfo(
+        userData.userId,
+        findPlayer.nickname,
+        findPlayer.classCode,
+      );
     }
     console.log('----- findPlayer ----- \n', findPlayer);
     console.log('----- user ----- \n', user);
@@ -64,7 +68,7 @@ const loginHandler = async (socket, packetData) => {
     // [case 02] 로그인 성공 - 캐릭터를 이미 보유하고 있을 경우
     if (findPlayer.nickname !== null) {
       const ownedCharacters = [
-        payloadData.OwnedCharacters(findPlayer.nickname, findPlayer.classCode),
+        PAYLOAD_DATA.OwnedCharacter(findPlayer.nickname, findPlayer.classCode),
       ];
       const packet = Packet.S2CLogin(isSuccess, msg, ownedCharacters);
       return socket.write(packet);
@@ -75,7 +79,10 @@ const loginHandler = async (socket, packetData) => {
       ${error}
       `,
     );
-    socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'loginHandler 에러'));
+    socket.emit(
+      'error',
+      new CustomError(ErrorCodes.HANDLER_ERROR, 'loginHandler 에러'),
+    );
   }
 };
 
