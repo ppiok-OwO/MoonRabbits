@@ -40,7 +40,6 @@ class Player extends Entity {
     this.availablePoint = 0;
     this.isInParty = false;
     this.isInvited = false;
-    this.isPartyLeader = false;
   }
   sendPacket(packet) {
     try {
