@@ -269,7 +269,7 @@ message S2CLevelUp {
   int32 abilityPoint = 5;
 } 
 message C2SSelectAP {
-  int32 statCode = 1;
+  repeated InvestPoint investPoints = 1;
 }
 message S2CSelectAP {
   StatInfo statInfo = 1;

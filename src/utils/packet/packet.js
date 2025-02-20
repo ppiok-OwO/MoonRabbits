@@ -337,9 +337,9 @@ const Packet = {
       abilityPoint: abilityPoint_int,
     });
   },
-  C2SSelectAP: (statCode_int) => {
+  C2SSelectAP: (investPoints_ArrayOfInvestPoint) => {
     return makePacket(packetId.C2SSelectAP, {
-      statCode: statCode_int,
+      investPoints: investPoints_ArrayOfInvestPoint,
     });
   },
   S2CSelectAP: (statInfo_StatInfo) => {
