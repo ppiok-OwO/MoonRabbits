@@ -113,8 +113,8 @@ export const config = {
     C2SAddExp: PACKET_ID.C2SAddExp,
     S2CAddExp: PACKET_ID.S2CAddExp,
     S2CLevelUp: PACKET_ID.S2CLevelUp,
-    C2SSelectAp: PACKET_ID.C2SSelectAp,
-    S2CSelectAp: PACKET_ID.S2CSelectAp,
+    C2SInvestPoint: PACKET_ID.C2SInvestPoint,
+    S2CInvestPoint: PACKET_ID.S2CInvestPoint,
   },
   newPlayerStatData: {
     BASE_STAT_DATA,

@@ -70,6 +70,6 @@ export const packetNames = [
   'C2SAddExp',
   'S2CAddExp',
   'S2CLevelUp',
-  'C2SSelectAp',
-  'S2CSelectAp',
+  'C2SInvestPoint',
+  'S2CInvestPoint',
 ];
