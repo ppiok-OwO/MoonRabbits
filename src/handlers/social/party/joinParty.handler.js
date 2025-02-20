@@ -26,11 +26,26 @@ export const joinPartyHandler = (socket, packetData) => {
 
     // 새로운 멤버의 플레이어 인스턴스
     const newMember = party
-      .getAllMemberSockets()
-      .find((value) => value.id === memberId);
+      .getAllMemberEntries()
+      .find(([key, value]) => value.id === memberId);
+
+    // 소켓으로 구한 player 인스턴스와 비교
+    const playerSession = getPlayerSession();
+    const player = playerSession.getPlayer(socket);
+    if (!player) {
+      return socket.emit(
+        'error',
+        new CustomError(
+          ErrorCodes.USER_NOT_FOUND,
+          '플레이어 정보를 찾을 수 없습니다.',
+        ),
+      );
+    }
+    if (player !== newMember) {
+    }
 
     if (party.getMemberCount() < config.party.MaxMember) {
-      party.addMember(socket, newMember);
+      party.addMember(socket, newMember[1]);
     } else {
       const packet = Packet.S2CChat(
         0,

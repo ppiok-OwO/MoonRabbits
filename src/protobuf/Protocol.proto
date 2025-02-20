@@ -91,8 +91,8 @@ enum MsgId {
   C2S_ADD_EXP=200;
   S2C_ADD_EXP=201;
   S2C_LEVEL_UP=202;
-  C2S_SELECT_AP=203;
-  S2C_SELECT_AP=204;
+  C2S_INVEST_POINT=203;
+  S2C_INVEST_POINT=204;
 }
 
 message C2SRegister{
@@ -268,10 +268,10 @@ message S2CLeaveParty{
   repeated MemberCardInfo members = 4;
 }
 message C2SCheckPartyList {
-  int32 memberId = 1;
 }
 message S2CCheckPartyList {
-  PartyInfo partyinfos = 1;
+  repeated PartyInfo partyinfos = 1;
+  int32 memberId = 2;
 }
 message C2SKickOutMember{
   string partyId = 1;

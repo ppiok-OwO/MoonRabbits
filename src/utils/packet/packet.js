@@ -230,10 +230,10 @@ const PACKET = {
       ),
     );
   },
-  S2CCheckPartyList: (partyInfos_PartyInfo_repeated) => {
+  S2CCheckPartyList: (partyInfos_PartyInfo_repeated, memberId_int) => {
     return makePacket(
       PACKET_ID.S2CCheckPartyList,
-      PAYLOAD.S2CCheckPartyList(partyInfos_PartyInfo_repeated),
+      PAYLOAD.S2CCheckPartyList(partyInfos_PartyInfo_repeated, memberId_int),
     );
   },
   S2CRejectInvite: () => {
@@ -299,7 +299,13 @@ const PACKET = {
   S2CAddExp: (updatedExp_int) => {
     return makePacket(PACKET_ID.S2CAddExp, { updatedExp: updatedExp_int });
   },
-  S2CLevelUp: (playerId_int, updatedLevel_int, newTargetExp_int, updatedExp_int, abilityPoint_int) => {
+  S2CLevelUp: (
+    playerId_int,
+    updatedLevel_int,
+    newTargetExp_int,
+    updatedExp_int,
+    abilityPoint_int,
+  ) => {
     return makePacket(PACKET_ID.S2CLevelUp, {
       playerId: playerId_int,
       updatedLevel: updatedLevel_int,
