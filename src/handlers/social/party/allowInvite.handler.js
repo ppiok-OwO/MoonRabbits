@@ -45,8 +45,8 @@ export const allowInviteHandler = (socket, packetData) => {
     ) {
       // 새 플레이어를 파티에 추가
       party.addMember(newMember.user.getSocket(), newMember);
-      party.isInParty = true;
-      party.isInvited = false;
+      newMember.isInParty = true;
+      newMember.isInvited = false;
 
       // 각 멤버에 대하여 맞춤형 패킷 생성
       const members = party.getAllMemberEntries();

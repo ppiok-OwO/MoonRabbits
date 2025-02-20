@@ -32,6 +32,7 @@ class Player extends Entity {
     this.targetExp = this._getTargetExpByLevel(this.level);
     this.abilityPoint = baseStat.abilityPoint;
     this.isInParty = false;
+    this.partyId = null
     this.isInvited = false;
   }
 

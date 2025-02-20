@@ -25,6 +25,7 @@ import { leavePartyHandler } from './social/party/leaveParty.handler.js';
 
 import { gatheringSkillCheckHandler } from './gathering/GatheringSkillCheck.handler.js';
 import { StartGatheringHandler } from './gathering/StartGathering.handler.js';
+import { rejectInviteHandler } from './social/party/rejectInvite.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
@@ -53,6 +54,7 @@ const handlers = {
   [config.packetId.C2SDisbandParty]: disbandPartyHandler,
   [config.packetId.C2SKickOutMember]: kickOutPartyHandler,
   [config.packetId.C2SAllowInvite]: allowInviteHandler,
+  [config.packetId.C2SRejectInvite]: rejectInviteHandler,
 
   [config.packetId.C2SGatheringSkillCheck]: gatheringSkillCheckHandler,
   [config.packetId.C2SStartGathering]: StartGatheringHandler,

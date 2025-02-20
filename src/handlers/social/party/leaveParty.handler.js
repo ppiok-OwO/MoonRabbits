@@ -120,7 +120,6 @@ export const leavePartyHandler = (socket, packetData) => {
     const msgToKickedMember = Packet.S2CDisbandParty('파티를 떠났습니다.');
     member[0].write(msgToKickedMember);
   } catch (error) {
-    // handleError(error);
-    console.error(error);
+    handleError(error);
   }
 };

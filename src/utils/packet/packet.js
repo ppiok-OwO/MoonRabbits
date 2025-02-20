@@ -230,6 +230,15 @@ const PACKET = {
       ),
     );
   },
+  S2CCheckPartyList: (partyInfos_PartyInfo_repeated) => {
+    return makePacket(
+      PACKET_ID.S2CCheckPartyList,
+      PAYLOAD.S2CCheckPartyList(partyInfos_PartyInfo_repeated),
+    );
+  },
+  S2CRejectInvite: () => {
+    return makePacket(PACKET_ID.S2CRejectInvite, PAYLOAD.S2CRejectInvite());
+  },
   S2CMonsterLocation: (monsterId_int32, transformInfo_TransformInfo) => {
     return makePacket(
       PACKET_ID.S2CMonsterLocation,
