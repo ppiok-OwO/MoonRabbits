@@ -10,13 +10,7 @@ export const StartGatheringHandler = (socket, packetData) => {
   const resource = dungeon.resources[placedId];
 
   if (resource.getDurability() > 0) {
-    socket.write(
-      Packet.S2CStartGathering(
-        placedId,
-        resource.getAngle(),
-        resource.getDifficulty(),
-      ),
-    );
+    socket.write(Packet.S2CStartGathering(placedId, resource.getAngle(), resource.getDifficulty()));
   } else {
     handleError(new CustomError(ErrorCodes.INVALID_INPUT, '잘못된 durability'));
   }
