@@ -18,11 +18,15 @@ const STRUCTS = `
 `;
 
 /* toJson 실행부 */
-// toJson('packet.ids.json', getPacketIds(MSG_IDS)); // src/packet/packet.id.js에 적용
-// toJson('packet.names.json', getPacketNames(MSG_IDS)); // src/protobuf/packetNames.js에 적용
-// toJson('payload.funcs.json', getDataFuncs(MESSAGES)); // src/packet/payload.js에 적용
-// toJson('struct.funcs.json', getDataFuncs(STRUCTS)); // src/packet/struct.data.js에 적용
-// toJson('packet.funcs.json', getPacketFuncs(MESSAGES)); // src/packet/packet.js에 적용
+toJson('packet.ids.json', getPacketIds(MSG_IDS)); // src/packet/packet.id.js에 적용
+toJson('packet.names.json', getPacketNames(MSG_IDS)); // src/protobuf/packetNames.js에 적용
+toJson('payload.funcs.json', getDataFuncs(MESSAGES)); // src/packet/payload.js에 적용
+toJson('struct.funcs.json', getDataFuncs(STRUCTS)); // src/packet/struct.data.js에 적용
+toJson('packet.funcs.json', getPacketFuncs(MESSAGES)); // src/packet/packet.js에 적용
+
+/* 주의 사항 */
+// getPacketFuncs() 함수는 슬프게도 payload가 없는 패킷이 누락됩니당
+// C2S는 상관없으나, S2C인데 payload가 없는 패킷이라면 수작업으로 추가시켜 주어야 합니다!
 
 /* 궁금하면 보십시오 */
 function getPacketIds(MsgIds) {

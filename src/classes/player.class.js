@@ -1,6 +1,6 @@
 import TransformInfo from './transformInfo.class.js';
 import User from './user.class.js';
-import payloadData from '../utils/packet/payloadData.js';
+import PAYLOAD_DATA from '../utils/packet/payloadData.js';
 import makePacket from '../utils/packet/makePacket.js';
 import { config } from '../config/config.js';
 import Entity from './stat.class.js';
@@ -10,7 +10,7 @@ class Player extends Entity {
     const newplayerstat = config.newPlayerStatData.BASE_STAT_DATA[classCode];
     try {
       super(
-        payloadData.StatInfo(
+        PAYLOAD_DATA.StatInfo(
           newplayerstat.level,
           newplayerstat.hp,
           newplayerstat.maxHp,
@@ -59,7 +59,7 @@ class Player extends Entity {
   }
 
   getPlayerStatus() {
-    return payloadData.PlayerStatus(
+    return PAYLOAD_DATA.PlayerStatus(
       this.class,
       this.getLevel(),
       this.nickname,
@@ -70,7 +70,7 @@ class Player extends Entity {
     );
   }
   getPlayerStats() {
-    return payloadData.StatInfo(
+    return PAYLOAD_DATA.StatInfo(
       this.level,
       this.hp,
       this.maxHp,
@@ -83,7 +83,7 @@ class Player extends Entity {
     );
   }
   getPlayerInfo() {
-    return payloadData.PlayerInfo(
+    return PAYLOAD_DATA.PlayerInfo(
       this.id,
       this.nickname,
       this.level,
