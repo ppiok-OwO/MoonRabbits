@@ -37,7 +37,7 @@ class Player extends Entity {
     this.stamina = 100;
     this.pickSpeed = 5;
     this.moveSpeed = 10;
-
+  }
 
   sendPacket(packet) {
     try {
@@ -141,6 +141,7 @@ class Player extends Entity {
     this.abilityPoint += 3;
 
     return { newLevel, newTargetExp, abilityPoint:this.abilityPoint };
+  }
 
   getTargetExp() {
     return this.targetExp;
