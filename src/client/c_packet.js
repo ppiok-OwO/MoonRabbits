@@ -69,10 +69,10 @@ const cPacket = {
   },
 
   /* 기존 코드 */
-  C_Enter: (nickname_string, class_int) => {
+  C_Enter: (nickname_string, classCode_int) => {
     return {
       nickname: nickname_string,
-      class: class_int,
+      classCode: class_int,
     };
   },
   C_Move: (transform_TransformInfo) => {

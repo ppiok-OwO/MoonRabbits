@@ -1,31 +1,24 @@
 import TransformInfo from './transformInfo.class.js';
-import User from './user.class.js';
 import PAYLOAD_DATA from '../utils/packet/payloadData.js';
-import makePacket from '../utils/packet/makePacket.js';
 import { config } from '../config/config.js';
 import Entity from './stat.class.js';
 import { getGameAssets } from '../init/assets.js';
+
 class Player extends Entity {
-  constructor(user, playerId, nickname, classCode) {
-    const newplayerstat = config.newPlayerStatData.BASE_STAT_DATA[classCode];
+  constructor(user, playerId, nickname, classCode, statData) {
+    const baseStat = statData || config.newPlayerStatData.BASE_STAT_DATA[classCode];
     try {
       super(
         PAYLOAD_DATA.StatInfo(
-          newplayerstat.level,
-          newplayerstat.hp,
-          newplayerstat.maxHp,
-          newplayerstat.mp,
-          newplayerstat.maxMp,
-          newplayerstat.atk,
-          newplayerstat.def,
-          newplayerstat.magic,
-          newplayerstat.speed,
+          baseStat.level,
+          baseStat.stamina,
+          baseStat.pickSpeed,
+          baseStat.moveSpeed,
+          baseStat.abilityPoint,
         ),
       );
-    } catch (error) {
-      console.error('!!! ', error);
-    }
-    this.class = classCode;
+    } catch (error) {}
+    this.classCode = classCode;
     this.nickname = nickname;
     this.user = user;
     this.id = playerId;
@@ -34,13 +27,14 @@ class Player extends Entity {
     this.dungeonId = null;
     this.lastBattleLog = 0;
     this.path = null;
-    this.currentScene = null;
-    this.exp = 0;
+    this.currentScene = 1;
+    this.exp = (statData && statData.exp) || 0;
     this.targetExp = this._getTargetExpByLevel(this.level);
-    this.availablePoint = 0;
+    this.abilityPoint = baseStat.abilityPoint;
     this.isInParty = false;
     this.isInvited = false;
   }
+
   sendPacket(packet) {
     try {
       this.user.socket.write(packet);
@@ -59,34 +53,31 @@ class Player extends Entity {
 
   getPlayerStatus() {
     return PAYLOAD_DATA.PlayerStatus(
-      this.class,
       this.getLevel(),
       this.nickname,
-      this.getMaxHp(),
-      this.getMaxMp(),
-      this.getHp(),
-      this.getMp(),
+      this.getStamina(),
+      this.getPickSpeed(),
+      this.getMoveSpeed(),
+      this.getAbilityPoint(),
     );
   }
+
   getPlayerStats() {
     return PAYLOAD_DATA.StatInfo(
       this.level,
-      this.hp,
-      this.maxHp,
-      this.mp,
-      this.maxMp,
-      this.atk,
-      this.def,
-      this.magic,
-      this.speed,
+      this.stamina,
+      this.pickSpeed,
+      this.moveSpeed,
+      this.abilityPoint,
     );
   }
+
   getPlayerInfo() {
     return PAYLOAD_DATA.PlayerInfo(
       this.id,
       this.nickname,
       this.level,
-      this.class,
+      this.classCode,
       this.position,
       this.getPlayerStats(),
       this.getCurrentScene(),
@@ -143,10 +134,10 @@ class Player extends Entity {
     this.targetExp = newTargetExp;
 
     // 레벨업하면 올릴 수 있는 능력치 개수
-    const availablePoint = 3;
-    this.availablePoint = availablePoint;
+    const abilityPoint = 3;
+    this.abilityPoint = abilityPoint;
 
-    return { newLevel, newTargetExp, availablePoint };
+    return { newLevel, newTargetExp, abilityPoint };
   }
 
   getTargetExp() {
@@ -155,9 +146,8 @@ class Player extends Entity {
 
   _getTargetExpByLevel(level) {
     try {
-      return getGameAssets().targetExps.data.find(
-        (targetExp) => targetExp.level === level,
-      ).target_exp;
+      return getGameAssets().targetExps.data.find((targetExp) => targetExp.level === level)
+        .target_exp;
     } catch (error) {
       throw new Error(`${level}lv 요구경험치 조회 오류`);
     }

@@ -15,9 +15,7 @@ export class Client {
     this.isConnected = true;
 
     this.socket.connect(PORT, HOST, () => {
-      console.log(
-        `Connected to server on ${this.socket.remoteAddress}:${this.socket.remotePort}`,
-      );
+      console.log(`Connected to server on ${this.socket.remoteAddress}:${this.socket.remotePort}`);
       this.socket.buffer = Buffer.alloc(0);
     });
     this.socket.on('data', this.onData.bind(this));
@@ -28,7 +26,7 @@ export class Client {
     this.accountId = null;
     this.id = null;
     this.nickname = null;
-    this.class = null;
+    this.classCode = null;
     this.transform = {};
     this.statInfo = {};
     this.players = [];
@@ -36,10 +34,7 @@ export class Client {
 
   // #C2S Request 요청 패킷
   async register(email, pw, pwCheck) {
-    this.sendPacket(
-      config.packetId.C2SRegister,
-      cPacket.C2SRegister(email, pw, pwCheck),
-    );
+    this.sendPacket(config.packetId.C2SRegister, cPacket.C2SRegister(email, pw, pwCheck));
     return;
   }
 
@@ -58,10 +53,7 @@ export class Client {
   }
 
   async enter(nickname = 'test', _class = 1001) {
-    this.sendPacket(
-      config.packetId.C2STownEnter,
-      cPacket.C2STownEnter(nickname, _class),
-    );
+    this.sendPacket(config.packetId.C2STownEnter, cPacket.C2STownEnter(nickname, _class));
   }
 
   async move() {
@@ -71,10 +63,7 @@ export class Client {
   }
 
   async chat(chatMsg) {
-    this.sendPacket(
-      config.packetId.C2SChat,
-      cPacket.C_Chat(this.id, this.nickname, chatMsg),
-    );
+    this.sendPacket(config.packetId.C2SChat, cPacket.C_Chat(this.id, this.nickname, chatMsg));
   }
 
   async addExp(count) {
@@ -109,7 +98,7 @@ export class Client {
       const { player } = data;
       this.id = player.playerId;
       this.nickname = player.nickname;
-      this.class = player.classCode;
+      this.classCode = player.classCode;
       this.transform = player.transform;
       this.statInfo = player.statInfo;
     },
@@ -188,15 +177,10 @@ export class Client {
     const packetType = packetIdEntries.find(([, id]) => id === packetId)[0];
 
     // 페이로드
-    const packetDataBuffer = getProtoMessages()
-      [packetType].encode(packetData)
-      .finish();
+    const packetDataBuffer = getProtoMessages()[packetType].encode(packetData).finish();
 
     // 패킷 크기
-    const packetSize =
-      config.packet.totalSize +
-      config.packet.idLength +
-      packetDataBuffer.length;
+    const packetSize = config.packet.totalSize + config.packet.idLength + packetDataBuffer.length;
 
     // 버퍼 쓰기 - 패킷 크기
     const packetSizeBuffer = Buffer.alloc(4);
@@ -209,9 +193,7 @@ export class Client {
     printPacket(packetSize, packetId, packetData, 'out');
 
     // 패킷 전송
-    this.socket.write(
-      Buffer.concat([packetSizeBuffer, packetIdBuffer, packetDataBuffer]),
-    );
+    this.socket.write(Buffer.concat([packetSizeBuffer, packetIdBuffer, packetDataBuffer]));
   }
 
   // EVENT
@@ -224,20 +206,12 @@ export class Client {
         const packetSize = this.socket.buffer.readUInt32LE(0);
 
         if (this.socket.buffer.length >= packetSize) {
-          const packetId = this.socket.buffer.readUInt8(
-            config.packet.totalSize,
-          );
-          const packetType = packetIdEntries.find(
-            ([, id]) => id === packetId,
-          )[0];
-          const packetDataBuffer = this.socket.buffer.slice(
-            headerSize,
-            packetSize,
-          );
+          const packetId = this.socket.buffer.readUInt8(config.packet.totalSize);
+          const packetType = packetIdEntries.find(([, id]) => id === packetId)[0];
+          const packetDataBuffer = this.socket.buffer.slice(headerSize, packetSize);
           this.socket.buffer = this.socket.buffer.slice(packetSize);
 
-          const packetData =
-            getProtoMessages()[packetType].decode(packetDataBuffer);
+          const packetData = getProtoMessages()[packetType].decode(packetDataBuffer);
 
           printPacket(packetSize, packetId, packetData, 'in');
 

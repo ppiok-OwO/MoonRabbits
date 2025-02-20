@@ -88,11 +88,7 @@ const PAYLOAD_DATA = {
       height2: height2_float,
     };
   },
-  CollisionPushInfo: (
-    hasCollision_bool,
-    pushDirection_Vec3,
-    pushDistance_float,
-  ) => {
+  CollisionPushInfo: (hasCollision_bool, pushDirection_Vec3, pushDistance_float) => {
     return {
       hasCollision: hasCollision_bool,
       pushDirection: pushDirection_Vec3,
@@ -108,13 +104,7 @@ const PAYLOAD_DATA = {
   InvestPoint: (statCode_int32, point_int32) => {
     return { statCode: statCode_int32, point: point_int32 };
   },
-  StatInfo: (
-    level_int32,
-    stamina_int32,
-    pickSpeed_int32,
-    moveSpeed_int32,
-    abilityPoint_int32,
-  ) => {
+  StatInfo: (level_int32, stamina_int32, pickSpeed_int32, moveSpeed_int32, abilityPoint_int32) => {
     return {
       level: level_int32,
       stamina: stamina_int32,

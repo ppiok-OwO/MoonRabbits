@@ -11,7 +11,7 @@ import {
 } from '../../db/user/user.db.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
-import { getUserSessions } from '../../session/sessions.js';
+import { getPlayerSession, getUserSessions } from '../../session/sessions.js';
 
 /* 캐릭터 생성 Handler */
 const createCharacterHandler = async (socket, packetData) => {
@@ -43,11 +43,7 @@ const createCharacterHandler = async (socket, packetData) => {
     // nickname 또는 class_code의 값이 비어있다면 업데이트
     if (player && (!player.nickname || !player.classCode)) {
       await updatePlayer(userData.userId, nickname, classCode);
-      console.log(
-        chalk.green(
-          `[DB Log] 플레이어 업데이트 완료: userId ${userData.userId}`,
-        ),
-      );
+      console.log(chalk.green(`[DB Log] 플레이어 업데이트 완료: userId ${userData.userId}`));
     }
     // 이미 캐릭터 정보가 존재하는 경우에는 재생성을 막습니다.
     else {
@@ -66,11 +62,22 @@ const createCharacterHandler = async (socket, packetData) => {
       classCode : ${classCode}
       `);
 
-    const user = getUserSessions().getUser(socket);
+    // UserSession 업데이트
+    const userSessionManager = getUserSessions();
+    const user = userSessionManager.getUser(socket);
     if (user) {
       user.setUserInfo(userData.userId, nickname, classCode);
+      console.log('----- User Session 업데이트 완료 ----- \n', user);
     }
-    console.log('----- user ----- \n', user);
+    // PlayerSession에 추가 및 Redis 저장
+    const playerSessionManager = getPlayerSession();
+    const newPlayer = await playerSessionManager.addPlayer(socket, userData, nickname, classCode);
+
+    // Redis에 playerSession 저장
+    const redisKey = `playerSession:${newPlayer.id}`;
+    await playerSessionManager.saveToRedis(redisKey, newPlayer);
+
+    console.log('----- Player Session 업데이트 및 Redis 저장 완료 ----- \n', newPlayer);
 
     // 캐릭터 생성 성공 시, 스탯 및 인벤토리 생성
     const findPlayerId = await findPlayerByUserId(userData.userId);
@@ -85,14 +92,11 @@ const createCharacterHandler = async (socket, packetData) => {
     socket.write(packet);
   } catch (error) {
     console.error(
-      `${chalk.red('[createCharacterHandler Error]')}
-      ${error}
+      `${chalk.red('[createCharacterHandler Error] ')}
+       ${error}
       `,
     );
-    socket.emit(
-      'error',
-      new CustomError(ErrorCodes.HANDLER_ERROR, 'createCharacterHandler 에러'),
-    );
+    socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'createCharacterHandler 에러'));
   }
 };
 
