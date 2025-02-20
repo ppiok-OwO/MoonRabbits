@@ -483,11 +483,6 @@ message Resource {
   int32 resourceId = 2;
 }
 
-message InvestPoint {
-  int32 statCode = 1;
-  int32 point = 2;
-}
-
 message StatInfo {
   int32 level = 1;
   int32 stamina = 2;

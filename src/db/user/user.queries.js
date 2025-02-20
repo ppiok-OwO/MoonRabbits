@@ -9,4 +9,8 @@ export const SQL_QUERIES = {
   UPDATE_PLAYER: 'UPDATE Players SET nickname = ?, class_code = ? WHERE user_id = ?', // player 생성
   UPDATE_USER_LOGIN: 'UPDATE Users SET last_login = CURRENT_TIMESTAMP WHERE id = ?', // user 로그인 시, last_login 업데이트
   UPDATE_USER_LAST_LOGIN: 'UPDATE Users SET last_login = CURRENT_TIMESTAMP WHERE user_id = ?', // findEmailByUser에서 사용
+  FIND_STAT_BY_PLAYERID: 'SELECT * FROM Stats WHERE player_id = ?',
+  UPDATE_STAT_EXP: 'UPDATE Stats SET exp = ? WHERE player_id = ?',
+  UPDATE_STAT_LEVEL: 'UPDATE Stats SET level = ?, exp = ?, ability_point = ? WHERE player_id = ?',
+  UPDATE_STAT: 'UPDATE Stats SET stamina = ?, pick_speed = ?, move_speed = ?, ability_point = ? WHERE player_id = ?',
 };

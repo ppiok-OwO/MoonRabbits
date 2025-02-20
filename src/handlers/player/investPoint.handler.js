@@ -3,40 +3,30 @@ import Packet from '../../utils/packet/packet.js';
 import handleError from '../../utils/error/errorHandler.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
+import { updatePlayerStat } from '../../db/user/user.db.js';
 
-export const investPointHandler = (socket, packetData) => {
+export const investPointHandler = async (socket, packetData) => {
   const { statCode } = packetData;
 
   const playerSession = getPlayerSession();
   const player = playerSession.getPlayer(socket);
 
-  player.addStat(statCode, 1);
-  switch(statCode){
-    case 1:
-      console.log('클라이언트 stamina 포인트 투자');
-      break;
-    case 2:
-      console.log('클라이언트 pickSpeed 포인트 투자');
-      break;
-    case 3:
-      console.log('클라이언트 moveSpeed 포인트 투자');
-      break;
-    default:
-      console.log('유효하지 않은 스탯코드', statCode);
-      return;
+  const validAP = player.addStat(statCode);
+
+  // 버튼 사라지기 전에 AP보다 더 많이 누른 경우
+  if(!validAP) {
+    return;
   }
 
-  // try {
-  //   investPoints.forEach(({ statCode, point }) => {
-  //     console.log(`${player.nickname}의 능력치(${statCode}) ${point}만큼 증가 (스탯 미구현)`);
-  //   });
-  // } catch (error) {
-  //   handleError(socket, new CustomError(ErrorCodes.INVALID_PACKET, 'selectAP 오류 패킷 전송'));
-  // }
+  const statInfo = player.getStatInfo();
 
+  // DB 반영
+  //await updatePlayerStat(statInfo.stamina, statInfo.pickSpeed, statInfo.moveSpeed, statInfo.abilityPoint, player.id);
+
+  // 클라이언트 반영
   try {
-    socket.write(Packet.S2CSelectAP(player.getPlayerStats()));
+    socket.write(Packet.S2CInvestPoint(statInfo));
   } catch (error) {
-    throw new Error(`selectAP 오류 패킷 전송`);
+    throw new Error(`S2CInvestPoint 오류 패킷 전송`);
   }
 };
