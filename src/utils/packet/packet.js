@@ -1,559 +1,316 @@
-import { config } from '../../config/config.js';
 import makePacket from './makePacket.js';
-import payload from './payload.js';
-import payloadData from './payloadData.js';
+import { PACKET_ID } from '../../constants/header.js';
+import PAYLOAD from './payload.js';
 
-const { packetId } = config;
-
-const Packet = {
-  //#region  /* 게임 시작 관련 */
-  C2SRegister: (email_string, pw_string, pwCheck_string) => {
-    return makePacket(
-      packetId.C2SRegister,
-      payload.C2SRegister(email_string, pw_string, pwCheck_string),
-    );
-  },
+const PACKET = {
   S2CRegister: (isSuccess_bool, msg_string) => {
     return makePacket(
-      packetId.S2CRegister,
-      payload.S2CRegister(isSuccess_bool, msg_string),
-    );
-  },
-  C2SLogin: (email_string, pw_string) => {
-    return makePacket(
-      packetId.C2SLogin,
-      payload.C2SLogin(email_string, pw_string),
+      PACKET_ID.S2CRegister,
+      PAYLOAD.S2CRegister(isSuccess_bool, msg_string),
     );
   },
   S2CLogin: (
     isSuccess_bool,
     msg_string,
-    ownedCharacters_ArrayOwnedCharacters,
+    ownedCharacters_OwnedCharacter_repeated,
   ) => {
     return makePacket(
-      packetId.S2CLogin,
-      payload.S2CLogin(
+      PACKET_ID.S2CLogin,
+      PAYLOAD.S2CLogin(
         isSuccess_bool,
         msg_string,
-        ownedCharacters_ArrayOwnedCharacters,
+        ownedCharacters_OwnedCharacter_repeated,
       ),
-    );
-  },
-  C2SCreateCharacter: (nickname_string, classCode_int) => {
-    return makePacket(
-      packetId.C2SCreateCharacter,
-      payload.C2SCreateCharacter(nickname_string, classCode_int),
     );
   },
   S2CCreateCharacter: (isSuccess_bool, msg_string) => {
     return makePacket(
-      packetId.S2CCreateCharacter,
-      payload.S2CCreateCharacter(isSuccess_bool, msg_string),
+      PACKET_ID.S2CCreateCharacter,
+      PAYLOAD.S2CCreateCharacter(isSuccess_bool, msg_string),
     );
   },
-  //#endregion
-  //#region /* 마을 관련 */
-  C2STownEnter: (nickname_string, classCode_int) => {
+  S2CEnter: (player_PlayerInfo) => {
+    return makePacket(PACKET_ID.S2CEnter, PAYLOAD.S2CEnter(player_PlayerInfo));
+  },
+  S2CLeave: () => {
+    return makePacket(PACKET_ID.S2CLeave);
+  },
+  S2CAnimation: (playerId_int32, animCode_int32) => {
     return makePacket(
-      packetId.C2STownEnter,
-      payload.C2STownEnter(nickname_string, classCode_int),
+      PACKET_ID.S2CAnimation,
+      PAYLOAD.S2CAnimation(playerId_int32, animCode_int32),
     );
   },
-  S2CTownEnter: (player_PlayerInfo) => {
+  S2CChat: (playerId_int32, chatMsg_string) => {
     return makePacket(
-      packetId.S2CTownEnter,
-      payload.S2CTownEnter(player_PlayerInfo),
+      PACKET_ID.S2CChat,
+      PAYLOAD.S2CChat(playerId_int32, chatMsg_string),
     );
   },
-  C2STownLeave: () => {
-    return makePacket(packetId.C2STownLeave);
-  },
-  S2CTownLeave: () => {
-    return makePacket(packetId.S2CTownLeave);
-  },
-  C2SAnimation: (animCode_int) => {
+  S2CPlayerSpawn: (players_PlayerInfo_repeated) => {
     return makePacket(
-      packetId.C2SAnimation,
-      payload.C2SAnimation(animCode_int),
+      PACKET_ID.S2CPlayerSpawn,
+      PAYLOAD.S2CPlayerSpawn(players_PlayerInfo_repeated),
     );
   },
-  S2CAnimation: (playerId_int, animCode_int) => {
+  S2CPlayerDespawn: (playerIds_int32_repeated, currentScene_int32) => {
     return makePacket(
-      packetId.S2CAnimation,
-      payload.S2CAnimation(playerId_int, animCode_int),
-    );
-  },
-  //#endregion
-  //#region  /* 공통 01 - 채팅, 소환 */
-  C2SChat: (playerId_int, senderName_string, chatMsg_string) => {
-    return makePacket(
-      packetId.C2SChat,
-      payload.C2SChat(playerId_int, senderName_string, chatMsg_string),
-    );
-  },
-  S2CChat: (playerId_int, chatMsg_string) => {
-    return makePacket(
-      packetId.S2CChat,
-      payload.S2CChat(playerId_int, chatMsg_string),
-    );
-  },
-  S2CPlayerSpawn: (players_ArrayOfPlayerInfo) => {
-    return makePacket(
-      packetId.S2CPlayerSpawn,
-      payload.S2CPlayerSpawn(players_ArrayOfPlayerInfo),
-    );
-  },
-  S2CPlayerDespawn: (playerIds_ArrayOfInt) => {
-    return makePacket(
-      packetId.S2CPlayerDespawn,
-      payload.S2CPlayerDespawn(playerIds_ArrayOfInt),
-    );
-  },
-  //#endregion
-  //#region  /* 공통 02 - 플레이어 이동 */
-  C2SPlayerMove: (
-    startPosX_float,
-    startPosY_float,
-    startPosZ_float,
-    targetPosX_float,
-    targetPosY_float,
-    targetPosZ_float,
-  ) => {
-    return makePacket(
-      packetId.C2SPlayerMove,
-      payload.C2SPlayerMove(
-        startPosX_float,
-        startPosY_float,
-        startPosZ_float,
-        targetPosX_float,
-        targetPosY_float,
-        targetPosZ_float,
-      ),
-    );
-  },
-  S2CPlayerMove: () => {
-    return makePacket(packetId.S2CPlayerMove);
-  },
-  C2SPlayerLocation: (transform_TransformInfo) => {
-    return makePacket(
-      packetId.C2SPlayerLocation,
-      payload.C2SPlayerLocation(transform_TransformInfo),
+      PACKET_ID.S2CPlayerDespawn,
+      PAYLOAD.S2CPlayerDespawn(playerIds_int32_repeated, currentScene_int32),
     );
   },
   S2CPlayerLocation: (
-    playerId_int,
+    playerId_int32,
     transform_TransformInfo,
     isValidTransform_bool,
+    currentScene_int32,
   ) => {
     return makePacket(
-      packetId.S2CPlayerLocation,
-      payload.S2CPlayerLocation(
-        playerId_int,
+      PACKET_ID.S2CPlayerLocation,
+      PAYLOAD.S2CPlayerLocation(
+        playerId_int32,
         transform_TransformInfo,
         isValidTransform_bool,
+        currentScene_int32,
       ),
     );
   },
-  //#endregion
-  //#region /* 공통 03 - 충돌 관련 */
-  C2SPlayerCollision: (playerId_int, collisionInfo_CollisionInfo) => {
+  S2CUpdateRanking: (status_string, data_RankingList) => {
     return makePacket(
-      packetId.C2SPlayerCollision,
-      payload.C2SPlayerCollision(playerId_int, collisionInfo_CollisionInfo),
+      PACKET_ID.S2CUpdateRanking,
+      PAYLOAD.S2CUpdateRanking(status_string, data_RankingList),
     );
   },
-  S2CPlayerCollision: (playerId_int, collisionPushInfo_CollisionPushInfo) => {
+  S2CPlayerCollision: (playerId_int32, collisionPushInfo_CollisionPushInfo) => {
     return makePacket(
-      packetId.S2CPlayerCollision,
-      payload.S2CPlayerCollision(
-        playerId_int,
+      PACKET_ID.S2CPlayerCollision,
+      PAYLOAD.S2CPlayerCollision(
+        playerId_int32,
         collisionPushInfo_CollisionPushInfo,
       ),
     );
   },
-  C2SMonsterCollision: (playerId_int, collisionInfo_CollisionInfo) => {
+  S2CMonsterCollision: (
+    monsterId_int32,
+    collisionPushInfo_CollisionPushInfo,
+  ) => {
     return makePacket(
-      packetId.C2SMonsterCollision,
-      payload.C2SMonsterCollision(playerId_int, collisionInfo_CollisionInfo),
+      PACKET_ID.S2CMonsterCollision,
+      PAYLOAD.S2CMonsterCollision(
+        monsterId_int32,
+        collisionPushInfo_CollisionPushInfo,
+      ),
     );
   },
-  S2CMonsterCollision: (playerId_int, collisionPushInfo_CollisionPushInfo) => {
+  S2CSelectStore: (storeInfo_StoreInfo, itemInfo_ItemInfo_repeated) => {
     return makePacket(
-      packetId.S2CMonsterCollision,
-      S2CMonsterCollision(playerId_int, collisionPushInfo_CollisionPushInfo),
+      PACKET_ID.S2CSelectStore,
+      PAYLOAD.S2CSelectStore(storeInfo_StoreInfo, itemInfo_ItemInfo_repeated),
     );
   },
-
-  /* 파티 관련 */
-  C2SCreateParty: (partyId_string, leaderId_int) => {
+  S2CBuyItem: (success_string, inventoryInfo_InventoryInfo, gold_int32) => {
     return makePacket(
-      packetId.C2SCreateParty,
-      payload.C2SCreateParty(partyId_string, leaderId_int),
+      PACKET_ID.S2CBuyItem,
+      PAYLOAD.S2CBuyItem(
+        success_string,
+        inventoryInfo_InventoryInfo,
+        gold_int32,
+      ),
     );
   },
   S2CCreateParty: (
     partyId_string,
-    leaderId_int,
-    memberCount_int,
-    members_ArrayOfMemberId,
+    leaderId_int32,
+    memberCount_int32,
+    members_MemberCardInfo_repeated,
   ) => {
     return makePacket(
-      packetId.S2CCreateParty,
-      payload.S2CCreateParty(
+      PACKET_ID.S2CCreateParty,
+      PAYLOAD.S2CCreateParty(
         partyId_string,
-        leaderId_int,
-        memberCount_int,
-        members_ArrayOfMemberId,
+        leaderId_int32,
+        memberCount_int32,
+        members_MemberCardInfo_repeated,
       ),
     );
   },
-  C2SInviteParty: (partyId_string, nickname_string) => {
+  S2CInviteParty: (leaderNickname_string, partyId_string, memberId_int32) => {
     return makePacket(
-      packetId.C2SInviteParty,
-      payload.C2SInviteParty(partyId_string, nickname_string),
-    );
-  },
-  S2CInviteParty: (leaderNickname_string, partyId_string, memberId_int) => {
-    return makePacket(
-      packetId.S2CInviteParty,
-      payload.S2CInviteParty(
+      PACKET_ID.S2CInviteParty,
+      PAYLOAD.S2CInviteParty(
         leaderNickname_string,
         partyId_string,
-        memberId_int,
+        memberId_int32,
       ),
-    );
-  },
-  C2SJoinParty: (partyId_string, newMemberId_int) => {
-    return makePacket(
-      packetId.C2SJoinParty,
-      payload.C2SJoinParty(partyId_string, newMemberId_int),
     );
   },
   S2CJoinParty: (
     partyId_string,
-    leaderId_int,
-    memberCount_int,
-    members_ArrayOfMemberId,
+    leaderId_int32,
+    memberCount_int32,
+    members_MemberCardInfo_repeated,
   ) => {
     return makePacket(
-      packetId.S2CJoinParty,
-      payload.S2CJoinParty(
+      PACKET_ID.S2CJoinParty,
+      PAYLOAD.S2CJoinParty(
         partyId_string,
-        leaderId_int,
-        memberCount_int,
-        members_ArrayOfMemberId,
+        leaderId_int32,
+        memberCount_int32,
+        members_MemberCardInfo_repeated,
       ),
-    );
-  },
-  C2SLeaveParty: (partyId_string, leftPlayerId_int) => {
-    return makePacket(
-      packetId.C2SLeaveParty,
-      payload.C2SLeaveParty(partyId_string, leftPlayerId_int),
     );
   },
   S2CLeaveParty: (
     partyId_string,
-    leaderId_int,
-    memberCount_int,
-    members_ArrayOfMemberId,
+    leaderId_int32,
+    memberCount_int32,
+    members_MemberCardInfo_repeated,
   ) => {
     return makePacket(
-      packetId.S2CLeaveParty,
-      payload.S2CLeaveParty(
+      PACKET_ID.S2CLeaveParty,
+      PAYLOAD.S2CLeaveParty(
         partyId_string,
-        leaderId_int,
-        memberCount_int,
-        members_ArrayOfMemberId,
+        leaderId_int32,
+        memberCount_int32,
+        members_MemberCardInfo_repeated,
       ),
-    );
-  },
-  C2SSetPartyLeader: (partyId_string, memberId_int) => {
-    return makePacket(
-      packetId.C2SSetPartyLeader,
-      payload.C2SSetPartyLeader(partyId_string, memberId_int),
     );
   },
   S2CSetPartyLeader: (
     partyId_string,
-    leaderId_int,
-    memberCount_int,
-    members_ArrayOfMemberId,
+    leaderId_int32,
+    memberCount_int32,
+    members_MemberCardInfo_repeated,
   ) => {
     return makePacket(
-      packetId.S2CSetPartyLeader,
-      payload.S2CSetPartyLeader(
+      PACKET_ID.S2CSetPartyLeader,
+      PAYLOAD.S2CSetPartyLeader(
         partyId_string,
-        leaderId_int,
-        memberCount_int,
-        members_ArrayOfMemberId,
+        leaderId_int32,
+        memberCount_int32,
+        members_MemberCardInfo_repeated,
       ),
     );
   },
   S2CKickOutMember: (
     partyId_string,
-    leaderId_int,
-    memberCount_int,
-    members_ArrayOfMemberId,
+    leaderId_int32,
+    memberCount_int32,
+    members_MemberCardInfo_repeated,
   ) => {
     return makePacket(
-      packetId.S2CKickOutMember,
-      payload.S2CKickOutMember(
+      PACKET_ID.S2CKickOutMember,
+      PAYLOAD.S2CKickOutMember(
         partyId_string,
-        leaderId_int,
-        memberCount_int,
-        members_ArrayOfMemberId,
-      ),
-    );
-  },
-  S2CAllowInvite: (
-    partyId_string,
-    leaderId_int,
-    memberCount_int,
-    members_ArrayOfMemberId,
-  ) => {
-    return makePacket(
-      packetId.S2CAllowInvite,
-      payload.S2CAllowInvite(
-        partyId_string,
-        leaderId_int,
-        memberCount_int,
-        members_ArrayOfMemberId,
+        leaderId_int32,
+        memberCount_int32,
+        members_MemberCardInfo_repeated,
       ),
     );
   },
   S2CDisbandParty: (msg_string) => {
     return makePacket(
-      packetId.S2CDisbandParty,
-      payload.S2CDisbandParty(msg_string),
+      PACKET_ID.S2CDisbandParty,
+      PAYLOAD.S2CDisbandParty(msg_string),
     );
   },
-
-  /* 던전 관련 */
-  C2SDungeonEnter: (dungeonCode_int, partyId_string) => {
+  S2CAllowInvite: (
+    partyId_string,
+    leaderId_int32,
+    memberCount_int32,
+    members_MemberCardInfo_repeated,
+  ) => {
     return makePacket(
-      packetId.C2SDungeonEnter,
-      payload.C2SDungeonEnter(dungeonCode_int, partyId_string),
-    );
-  },
-  S2CDungeonEnter: (dungeonInfo_DungeonInfo, player_PlayerStatus) => {
-    return makePacket(
-      packetId.S2CDungeonEnter,
-      payload.S2CDungeonEnter(dungeonInfo_DungeonInfo, player_PlayerStatus),
-    );
-  },
-  C2SDungeonLeave: () => {
-    return makePacket(packetId.C2SDungeonLeave);
-  },
-  S2CDungeonLeave: () => {
-    return makePacket(packetId.S2CDungeonLeave);
-  },
-  //#endregion
-  //#region /* 전투 관련 */
-  C2SAttack: (targetId_int, attackType_AttackType) => {
-    return makePacket(
-      packetId.C2SAttack,
-      payload.C2SAttack(targetId_int, attackType_AttackType),
-    );
-  },
-  S2CAttack: (attackerId_int, attackType_AttackType, animCode_int) => {
-    return makePacket(
-      packetId.S2CAttack,
-      payload.S2CAttack(attackerId_int, attackType_AttackType, animCode_int),
-    );
-  },
-  C2SHit: (attackerId_int, attackType_AttackType, hitPlayerId_int) => {
-    return makePacket(
-      packetId.C2SHit,
-      payload.C2SHit(attackerId_int, attackType_AttackType, hitPlayerId_int),
-    );
-  },
-  S2CHit: (hitPlayerId_int, animCode_int, damage_int, updatedHp_float) => {
-    return makePacket(
-      packetId.S2CHit,
-      payload.S2CHit(
-        hitPlayerId_int,
-        animCode_int,
-        damage_int,
-        updatedHp_float,
+      PACKET_ID.S2CAllowInvite,
+      PAYLOAD.S2CAllowInvite(
+        partyId_string,
+        leaderId_int32,
+        memberCount_int32,
+        members_MemberCardInfo_repeated,
       ),
     );
   },
-  S2CDie: (deadPlayerId_int, animCode_int) => {
+  S2CMonsterLocation: (monsterId_int32, transformInfo_TransformInfo) => {
     return makePacket(
-      packetId.S2CDie,
-      payload.S2CDie(deadPlayerId_int, animCode_int),
+      PACKET_ID.S2CMonsterLocation,
+      PAYLOAD.S2CMonsterLocation(monsterId_int32, transformInfo_TransformInfo),
     );
   },
-  //#endregion
-  //#region /* 몬스터 이동 관련 */
-  C2SMonsterLocation: (transform_TransformInfo) => {
+  S2CDetectedPlayer: (monsterId_int32, playerId_int32) => {
     return makePacket(
-      packetId.C2SMonsterLocation,
-      payload.C2SMonsterLocation(transform_TransformInfo),
+      PACKET_ID.S2CDetectedPlayer,
+      PAYLOAD.S2CDetectedPlayer(monsterId_int32, playerId_int32),
     );
   },
-  S2CMonsterLocation: (monsterId_int, transform_TransformInfo) => {
+  S2CMissingPlayer: (monsterId_int32, playerId_int32) => {
     return makePacket(
-      packetId.S2CMonsterLocation,
-      payload.S2CMonsterLocation(monsterId_int, transform_TransformInfo),
+      PACKET_ID.S2CMissingPlayer,
+      PAYLOAD.S2CMissingPlayer(monsterId_int32, playerId_int32),
     );
   },
-  //#endregion
-  //#region /* 채집 관련 */
-
-  S2CResourcesList: (resources_resource) => {
+  S2CResourceList: (resources_Resource_repeated) => {
     return makePacket(
-      packetId.S2CResourcesList,
-      payload.S2CResourcesList(resources_resource),
+      PACKET_ID.S2CResourceList,
+      PAYLOAD.S2CResourceList(resources_Resource_repeated),
     );
   },
-  S2CUpdateDurability: (placedId_int, durabillity_int) => {
+  S2CUpdateDurability: (placedId_int32, durability_int32) => {
     return makePacket(
-      packetId.S2CUpdateDurability,
-      payload.S2CUpdateDurability(placedId_int, durabillity_int),
+      PACKET_ID.S2CUpdateDurability,
+      PAYLOAD.S2CUpdateDurability(placedId_int32, durability_int32),
     );
   },
-  C2SStartGathering: (placedId_int) => {
+  S2CGatheringStart: (placedId_int32, angle_int32, difficulty_int32) => {
     return makePacket(
-      packetId.C2SStartGathering,
-      payload.C2SStartGathering(placedId_int),
+      PACKET_ID.S2CGatheringStart,
+      PAYLOAD.S2CGatheringStart(placedId_int32, angle_int32, difficulty_int32),
     );
   },
-  S2CStartGathering: (placedId_int, angle_int, difficulty_int) => {
+  S2CGatheringSkillCheck: (placedId_int32, durability_int32) => {
     return makePacket(
-      packetId.S2CStartGathering,
-      payload.S2CStartGathering(placedId_int, angle_int, difficulty_int),
+      PACKET_ID.S2CGatheringSkillCheck,
+      PAYLOAD.S2CGatheringSkillCheck(placedId_int32, durability_int32),
     );
   },
-  C2SGatheringSkillCheck: (placedId_int, deltatime_int) => {
+  S2CGatheringDone: (placedId_int32, itemId_int32, quantity_int32) => {
     return makePacket(
-      packetId.C2SGatheringSkillCheck,
-      payload.C2SGatheringSkillCheck(placedId_int, deltatime_int),
+      PACKET_ID.S2CGatheringDone,
+      PAYLOAD.S2CGatheringDone(placedId_int32, itemId_int32, quantity_int32),
     );
   },
-  S2CGatheringSkillCheck: (placedId_int, durabillity_int) => {
+  S2CSectorEnter: (sectorInfo_SectorInfo, player_PlayerStatus) => {
     return makePacket(
-      packetId.S2CGatheringSkillCheck,
-      payload.S2CGatheringSkillCheck(placedId_int, durabillity_int),
+      PACKET_ID.S2CSectorEnter,
+      PAYLOAD.S2CSectorEnter(sectorInfo_SectorInfo, player_PlayerStatus),
     );
   },
-  S2CGatheringDone: (placedId_int, ItemId_int, quentity_int) => {
+  S2CAddExp: (updatedExp_int32) => {
+    return makePacket(PACKET_ID.S2CAddExp, PAYLOAD.S2CAddExp(updatedExp_int32));
+  },
+  S2CLevelUp: (
+    playerId_int32,
+    updatedLevel_int32,
+    newTargetExp_int32,
+    updatedExp_int32,
+    abilityPoint_int32,
+  ) => {
     return makePacket(
-      packetId.S2CGatheringDone,
-      payload.S2CGatheringDone(placedId_int, ItemId_int, quentity_int),
+      PACKET_ID.S2CLevelUp,
+      PAYLOAD.S2CLevelUp(
+        playerId_int32,
+        updatedLevel_int32,
+        newTargetExp_int32,
+        updatedExp_int32,
+        abilityPoint_int32,
+      ),
     );
   },
-
-  //#endregion
-
-  /* 기존 코드 */
-  // S_Enter: (player_PlayerInfo) => {
-  //   return makePacket(config.packetId.S_Enter, { player: player_PlayerInfo });
-  // },
-  // S_Spawn: (players_ArrayOfPlayerInfo) => {
-  //   return makePacket(config.packetId.S_Spawn, {
-  //     players: players_ArrayOfPlayerInfo,
-  //   });
-  // },
-  // S_Despawn: (playerIds_ArrayOfInt) => {
-  //   return makePacket(config.packetId.S_Despawn, {
-  //     playerIds: playerIds_ArrayOfInt,
-  //   });
-  // },
-  // S_Move: (playerId_int, transform_TransformInfo) => {
-  //   return makePacket(config.packetId.S_Move, {
-  //     playerId: playerId_int,
-  //     transform: transform_TransformInfo,
-  //   });
-  // },
-  // S_Animation: (playerId_int, animCode_int) => {
-  //   return makePacket(config.packetId.S_Animation, {
-  //     playerId: playerId_int,
-  //     animCode: animCode_int,
-  //   });
-  // },
-  // S_Chat: (playerId_int, chatMsg_string) => {
-  //   return makePacket(config.packetId.S_Chat, {
-  //     playerId: playerId_int,
-  //     chatMsg: chatMsg_string,
-  //   });
-  // },
-  // S_EnterDungeon: (
-  //   dungeonInfo_DungeonInfo,
-  //   player_PlayerStatus,
-  //   screenText_ScreenText,
-  //   battleLog_BattleLog,
-  // ) => {
-  //   return makePacket(config.packetId.S_EnterDungeon, {
-  //     dungeonInfo: dungeonInfo_DungeonInfo,
-  //     player: player_PlayerStatus,
-  //     screenText: screenText_ScreenText,
-  //     battleLog: battleLog_BattleLog,
-  //   });
-  // },
-  // S_LeaveDungeon: () => {
-  //   return makePacket(config.packetId.S_LeaveDungeon, {});
-  // },
-  // S_ScreenText: (screenText_ScreenText) => {
-  //   return makePacket(config.packetId.S_ScreenText, {
-  //     screenText: screenText_ScreenText,
-  //   });
-  // },
-  // S_ScreenDone: () => {
-  //   return makePacket(config.packetId.S_ScreenDone, {});
-  // },
-  // S_BattleLog: (battleLog_BattleLog) => {
-  //   return makePacket(config.packetId.S_BattleLog, {
-  //     battleLog: battleLog_BattleLog,
-  //   });
-  // },
-  // S_SetPlayerHp: (hp_float) => {
-  //   return makePacket(config.packetId.S_SetPlayerHp, { hp: hp_float });
-  // },
-  // S_SetPlayerMp: (mp_float) => {
-  //   return makePacket(config.packetId.S_SetPlayerMp, { mp: mp_float });
-  // },
-  // S_SetMonsterHp: (monsterIdx_int, hp_float) => {
-  //   return makePacket(config.packetId.S_SetMonsterHp, {
-  //     monsterIdx: monsterIdx_int,
-  //     hp: hp_float,
-  //   });
-  // },
-  // S_PlayerAction: (targetMonsterIdx_int, actionSet_ActionSet) => {
-  //   return makePacket(config.packetId.S_PlayerAction, {
-  //     targetMonsterIdx: targetMonsterIdx_int,
-  //     actionSet: actionSet_ActionSet,
-  //   });
-  // },
-  // S_MonsterAction: (actionMonsterIdx_int, actionSet_ActionSet) => {
-  //   return makePacket(config.packetId.S_MonsterAction, {
-  //     actionMonsterIdx: actionMonsterIdx_int,
-  //     actionSet: actionSet_ActionSet,
-  //   });
-  // },
-  // S_Register: (isSuccess_bool, msg_string) => {
-  //   return makePacket(config.packetId.S_Register, {
-  //     isSuccess: isSuccess_bool,
-  //     msg: msg_string,
-  //   });
-  // },
-  // S_Login: (
-  //   isSuccess_bool,
-  //   msg_string,
-  //   ownedCharacters_ArrayOfOwnedCharacters,
-  // ) => {
-  //   return makePacket(config.packetId.S_Login, {
-  //     isSuccess: isSuccess_bool,
-  //     msg: msg_string,
-  //     ownedCharacters: ownedCharacters_ArrayOfOwnedCharacters,
-  //   });
-  // },
-  // S_CreateCharacter: (isSuccess_bool, msg_string) => {
-  //   return makePacket(config.packetId.S_CreateCharacter, {
-  //     isSuccess: isSuccess_bool,
-  //     msg: msg_string,
-  //   });
-  // },
+  S2CSelectAp: (statInfo_StatInfo) => {
+    return makePacket(
+      PACKET_ID.S2CSelectAp,
+      PAYLOAD.S2CSelectAp(statInfo_StatInfo),
+    );
+  },
 };
 
-export default Packet;
+export default PACKET;

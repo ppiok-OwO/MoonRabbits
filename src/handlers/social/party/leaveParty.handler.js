@@ -24,9 +24,10 @@ export const leavePartyHandler = (socket, packetData) => {
     }
 
     // 해당 파티에 소속 중인지 확인
+    // member = ['Socket', { Player 인스턴스 }]
     const member = party
-      .getAllMemberIds()
-      .find((value) => value === leftPlayerId);
+      .getAllMemberEntries()
+      .find(([key, value]) => value.id === leftPlayerId);
     if (!member) {
       return socket.emit(
         'error',
@@ -100,6 +101,7 @@ export const leavePartyHandler = (socket, packetData) => {
     const msgToKickedMember = Packet.S2CDisbandParty('파티를 떠났습니다.');
     member[0].write(msgToKickedMember);
   } catch (error) {
-    handleError(error);
+    // handleError(error);
+    console.error(error);
   }
 };

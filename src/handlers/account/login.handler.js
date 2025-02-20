@@ -4,7 +4,7 @@ import { getPlayerSession, getUserSessions } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import Packet from '../../utils/packet/packet.js';
-import payloadData from '../../utils/packet/payloadData.js';
+import PAYLOAD_DATA from '../../utils/packet/payloadData.js';
 import bcrypt from 'bcrypt';
 import chalk from 'chalk';
 
@@ -66,7 +66,7 @@ const loginHandler = async (socket, packetData) => {
     // 캐릭터가 존재한다면 playerSession 업데이트를 같이 진행
     if (findPlayer && findPlayer.nickname) {
       const ownedCharacters = [
-        payloadData.OwnedCharacters(findPlayer.nickname, findPlayer.classCode),
+        PAYLOAD_DATA.OwnedCharacter(findPlayer.nickname, findPlayer.classCode),
       ];
       const packet = Packet.S2CLogin(isSuccess, msg, ownedCharacters);
       return socket.write(packet);

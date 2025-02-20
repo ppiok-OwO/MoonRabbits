@@ -12,6 +12,9 @@ import playerLocationUpdateHandler from './town/playerLocationUpdate.handler.js'
 import registerHandler from './account/register.handler.js';
 import loginHandler from './account/login.handler.js';
 import createCharacterHandler from './account/createCharacter.handler.js';
+import leaveHandler from './town/leaveHandler.js';
+import { addExpHandler } from './player/addExp.handler.js';
+import { selectAvailablePointHandler } from './player/selectAvailablePoint.handler.js';
 
 import { createPartyHandler } from './social/party/createParty.handler.js';
 import { invitePartyHandler } from './social/party/inviteParty.handler.js';
@@ -30,7 +33,8 @@ import { StartGatheringHandler } from './gathering/StartGathering.handler.js';
 
 // 패킷 ID별로 핸들러 맵핑
 const handlers = {
-  [config.packetId.C2STownEnter]: townEnterHandler,
+  [config.packetId.C2SEnter]: townEnterHandler,
+  [config.packetId.C2SLeave] : leaveHandler,
   [config.packetId.S2CPlayerSpawn]: playerSpawnNotificationHandler,
   [config.packetId.C2SPlayerLocation]: playerLocationUpdateHandler,
   [config.packetId.C2SPlayerMove]: playerMoveHandler,
@@ -41,6 +45,8 @@ const handlers = {
   [config.packetId.C2SRegister]: registerHandler,
   [config.packetId.C2SLogin]: loginHandler,
   [config.packetId.C2SCreateCharacter]: createCharacterHandler,
+  [config.packetId.C2SAddExp]: addExpHandler,
+  [config.packetId.C2SSelectAP]: selectAvailablePointHandler,
 
   // 파티 관련
   [config.packetId.C2SCreateParty]: createPartyHandler,

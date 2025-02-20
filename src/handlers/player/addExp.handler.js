@@ -2,7 +2,7 @@ import { getPlayerSession } from '../../session/sessions.js';
 import Packet from '../../utils/packet/packet.js';
 
 export const addExpHandler = (socket, packetData) => {
-  const { count } = packetData;
+  const { count } = packetData; // 채집 개수
 
   const playerSession = getPlayerSession();
   const player = playerSession.getPlayer(socket);
@@ -11,17 +11,20 @@ export const addExpHandler = (socket, packetData) => {
   const plusExp = count * 1; // 아이템 획득(count) 1당 경험치 1    // itemCode별 경험치 차별화?
   const targetExp = player.getTargetExp();
 
+  // 경험치 오르고 레벨업한 경우
   if (playerExp + plusExp >= targetExp) {
     const { newLevel, newTargetExp, availablePoint } = player.levelUp();
-    const updatedExp = playerExp + plusExp - targetExp;
-    player.setExp(updatedExp);
-    // 본인 경험치 UI 반영
-    socket.write(Packet.S2CAddExp(updatedExp));
-    // 모두에게 레벨업 알림
-    playerSession.notify(Packet.S2CLevelUp(player.id, newLevel, newTargetExp, availablePoint));
-  } else {
+    const updatedExp = player.setExp(playerExp + plusExp - targetExp);
+    // 세션 내 모두에게 레벨업 알림
+    playerSession.notify(
+      Packet.S2CLevelUp(player.id, newLevel, newTargetExp, updatedExp, availablePoint),
+    );
+  } 
+  // 경험치만 오른 경우
+  else {
     const updatedExp = playerExp + plusExp;
     player.setExp(updatedExp);
+    // 본인 경험치 UI 반영
     socket.write(Packet.S2CAddExp(updatedExp));
   }
 };
