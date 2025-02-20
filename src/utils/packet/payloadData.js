@@ -1,19 +1,29 @@
-const payloadData = {
+const PAYLOAD_DATA = {
   PlayerInfo: (
-    playerId_int,
+    playerId_int32,
     nickname_string,
-    level_int,
-    classCode_int,
+    level_int32,
+    classCode_int32,
     transform_TransformInfo,
     statInfo_StatInfo,
+    currentScene_int32,
   ) => {
     return {
-      playerId: playerId_int,
+      playerId: playerId_int32,
       nickname: nickname_string,
-      level: level_int,
-      classCode: classCode_int,
+      level: level_int32,
+      classCode: classCode_int32,
       transform: transform_TransformInfo,
       statInfo: statInfo_StatInfo,
+      currentScene: currentScene_int32,
+    };
+  },
+  PlayerRank: (rank_int32, playerId_string, nickname_string, exp_int32) => {
+    return {
+      rank: rank_int32,
+      playerId: playerId_string,
+      nickname: nickname_string,
+      exp: exp_int32,
     };
   },
   TransformInfo: (posX_float, posY_float, posZ_float, rot_float) => {
@@ -24,130 +34,54 @@ const payloadData = {
       rot: rot_float,
     };
   },
-  StatInfo: (
-    level_int,
-    hp_float,
-    maxHp_float,
-    mp_float,
-    maxMp_float,
-    atk_float,
-    def_float,
-    magic_float,
-    speed_float,
-  ) => {
+  SectorInfo: (sectorId_int32, monsters_MonsterStatus_repeated) => {
     return {
-      level: level_int,
-      hp: hp_float,
-      maxHp: maxHp_float,
-      mp: mp_float,
-      maxMp: maxMp_float,
-      atk: atk_float,
-      def: def_float,
-      magic: magic_float,
-      speed: speed_float,
+      sectorId: sectorId_int32,
+      monsters: monsters_MonsterStatus_repeated,
     };
-  },
-  ScreenText: (
-    msg_string,
-    typingAnimation_bool,
-    alignment_ScreenTextAlignment_Optional = null,
-    textColor_ColorObj_Optional = null,
-    screenColor_ColorObj_optional = null,
-  ) => {
-    const payload = { msg: msg_string, typingAnimation: typingAnimation_bool };
-
-    if (alignment_ScreenTextAlignment_Optional !== null)
-      payload.alignment = alignment_ScreenTextAlignment_Optional;
-    if (textColor_ColorObj_Optional !== null)
-      payload.textColor = textColor_ColorObj_Optional;
-    if (screenColor_ColorObj_optional !== null)
-      payload.screenColor = screenColor_ColorObj_optional;
-
-    return payload;
-  },
-  ScreenTextAlignment: (x_int, y_int) => {
-    return { x: x_int, y: y_int };
-  },
-  ColorObj: (r_int, g_int, b_int) => {
-    return { r: r_int, g: g_int, b: b_int };
-  },
-  DungeonInfo: (dungeonCode_int, monsters_ArrayOfMonsterStatus) => {
-    return {
-      dungeonCode: dungeonCode_int,
-      monsters: monsters_ArrayOfMonsterStatus,
-    };
-  },
-  MonsterStatus: (
-    monsterIdx_int,
-    monsterModel_int,
-    monsterName_string,
-    monsterHp_float,
-  ) => {
-    return {
-      monsterIdx: monsterIdx_int,
-      monsterModel: monsterModel_int,
-      monsterName: monsterName_string,
-      monsterHp: monsterHp_float,
-    };
-  },
-  ActionSet: (animCode_int, effectCode_int) => {
-    return { animCode: animCode_int, effectCode: effectCode_int };
   },
   PlayerStatus: (
-    playerClass_int,
-    playerLevel_int,
+    playerLevel_int32,
     playerName_string,
-    playerFullHp_float,
-    playerFullMp_float,
-    playerCurHp_float,
-    playerCurMp_float,
+    playerStamina_int32,
+    playerPickSpeed_int32,
+    playerMoveSpeed_int32,
+    abilityPoint_int32,
   ) => {
     return {
-      playerClass: playerClass_int,
-      playerLevel: playerLevel_int,
+      playerLevel: playerLevel_int32,
       playerName: playerName_string,
-      playerFullHp: playerFullHp_float,
-      playerFullMp: playerFullMp_float,
-      playerCurHp: playerCurHp_float,
-      playerCurMp: playerCurMp_float,
+      playerStamina: playerStamina_int32,
+      playerPickSpeed: playerPickSpeed_int32,
+      playerMoveSpeed: playerMoveSpeed_int32,
+      abilityPoint: abilityPoint_int32,
     };
   },
-  BattleLog: (msg_string, typingAnimation_bool, btns_ArrayOfBtnInfo) => {
+  ItemInfo: (itemId_int32, stack_int32) => {
+    return { itemId: itemId_int32, stack: stack_int32 };
+  },
+  MemberCardInfo: (id_int32, nickname_string, isLeader_bool, isMine_bool) => {
     return {
-      msg: msg_string,
-      typingAnimation: typingAnimation_bool,
-      btns: btns_ArrayOfBtnInfo,
+      id: id_int32,
+      nickname: nickname_string,
+      isLeader: isLeader_bool,
+      isMine: isMine_bool,
     };
   },
-  BtnInfo: (msg_string, enable_bool) => {
-    return { msg: msg_string, enable: enable_bool };
-  },
-  OwnedCharacters: (nickname_string, classCode_int) => {
-    return { nickname: nickname_string, classCode: classCode_int };
-  },
-  MemberId: (playerId_int) => {
-    return { playerId: playerId_int };
-  },
-  AttackType: (targetTransform_TransformInfo, skillId_int) => {
-    return {
-      targetTransform: targetTransform_TransformInfo,
-      skillId: skillId_int,
-    };
-  },
-  Vector3Obj: (x_float, y_float, z_float) => {
-    return { x: x_float, y: y_float, z: z_float };
+  OwnedCharacter: (nickname_string, classCode_int32) => {
+    return { nickname: nickname_string, classCode: classCode_int32 };
   },
   CollisionInfo: (
-    position1_Vector3Obj,
-    position2_Vector3Obj,
+    position1_Vec3,
+    position2_Vec3,
     radius1_float,
     radius2_float,
     height1_float,
     height2_float,
   ) => {
     return {
-      position: position1_Vector3Obj,
-      position2: position2_Vector3Obj,
+      position1: position1_Vec3,
+      position2: position2_Vec3,
       radius1: radius1_float,
       radius2: radius2_float,
       height1: height1_float,
@@ -156,35 +90,52 @@ const payloadData = {
   },
   CollisionPushInfo: (
     hasCollision_bool,
-    pushDirection_Vector3Obj,
+    pushDirection_Vec3,
     pushDistance_float,
   ) => {
     return {
       hasCollision: hasCollision_bool,
-      pushDirection: pushDirection_Vector3Obj,
+      pushDirection: pushDirection_Vec3,
       pushDistance: pushDistance_float,
     };
   },
-
-  MemberCardInfo: (
-    id_int,
-    nickname_string,
-    isPartyLeader_bool,
-    isMine_bool,
+  Vec3: (x_float, y_float, z_float) => {
+    return { x: x_float, y: y_float, z: z_float };
+  },
+  Resource: (resourceIdx_int32, resourceId_int32) => {
+    return { resourceIdx: resourceIdx_int32, resourceId: resourceId_int32 };
+  },
+  InvestPoint: (statCode_int32, point_int32) => {
+    return { statCode: statCode_int32, point: point_int32 };
+  },
+  StatInfo: (
+    level_int32,
+    stamina_int32,
+    pickSpeed_int32,
+    moveSpeed_int32,
+    abilityPoint_int32,
   ) => {
     return {
-      id: id_int,
-      nickname: nickname_string,
-      isPartyLeader: isPartyLeader_bool,
-      isMine: isMine_bool,
+      level: level_int32,
+      stamina: stamina_int32,
+      pickSpeed: pickSpeed_int32,
+      moveSpeed: moveSpeed_int32,
+      abilityPoint: abilityPoint_int32,
     };
   },
-  Resource: (resourceIdx_int, resourceId_int) => {
+  MonsterStatus: (
+    monsterId_int32,
+    monsterModel_int32,
+    monsterName_string,
+    monsterMoveSpeed_float,
+  ) => {
     return {
-      resourceIdx: resourceIdx_int,
-      resourceId: resourceId_int,
+      monsterId: monsterId_int32,
+      monsterModel: monsterModel_int32,
+      monsterName: monsterName_string,
+      monsterMoveSpeed: monsterMoveSpeed_float,
     };
   },
 };
 
-export default payloadData;
+export default PAYLOAD_DATA;

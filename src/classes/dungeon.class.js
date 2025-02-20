@@ -1,4 +1,4 @@
-import payloadData from '../utils/packet/payloadData.js';
+import PAYLOAD_DATA from '../utils/packet/payloadData.js';
 import Resource from './resource.class.js';
 import { getGameAssets } from '../init/assets.js';
 import Packet from '../utils/packet/packet.js';
@@ -47,7 +47,7 @@ class Dungeon {
 
   setPlayer(socket, player) {
     const resourceData = resources.map((value, index) => {
-      payloadData.Resource(index, value.getResourceId());
+      PAYLOAD_DATA.Resource(index, value.getResourceId());
     });
 
     player.sendPacket(Packet.S2CResourcesList(resourceData));
@@ -68,7 +68,7 @@ class Dungeon {
       return monster.getMonsterStatus();
     });
 
-    return payloadData.DungeonInfo(this.code, monsterStatus);
+    return PAYLOAD_DATA.DungeonInfo(this.code, monsterStatus);
   }
 
   notify(packet) {
