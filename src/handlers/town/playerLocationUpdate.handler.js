@@ -64,7 +64,13 @@ const playerLocationUpdateHandler = (socket, packetData) => {
         // );
         console.log('플레이어의 위치를 재조정합니다.');
 
-        const newTransform = { ...closestPoint, rot: transform.rot };
+        const newTransform = {
+          posX: closestPoint.PosX,
+          posY: closestPoint.PosY,
+          posZ: closestPoint.PosZ,
+          rot: transform.rot,
+        };
+
         const packet = Packet.S2CPlayerLocation(
           player.id,
           newTransform,
