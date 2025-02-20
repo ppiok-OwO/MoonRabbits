@@ -30,10 +30,14 @@ class Player extends Entity {
     this.currentScene = 1;
     this.exp = (statData && statData.exp) || 0;
     this.targetExp = this._getTargetExpByLevel(this.level);
-    this.abilityPoint = baseStat.abilityPoint;
+    this.abilityPoint = 0;
     this.isInParty = false;
     this.partyId = null
     this.isInvited = false;
+    this.isPartyLeader = false;
+    this.stamina = 100;
+    this.pickSpeed = 5;
+    this.moveSpeed = 10;
   }
 
   sendPacket(packet) {
@@ -135,10 +139,9 @@ class Player extends Entity {
     this.targetExp = newTargetExp;
 
     // 레벨업하면 올릴 수 있는 능력치 개수
-    const abilityPoint = 3;
-    this.abilityPoint = abilityPoint;
+    this.abilityPoint += 3;
 
-    return { newLevel, newTargetExp, abilityPoint };
+    return { newLevel, newTargetExp, abilityPoint:this.abilityPoint };
   }
 
   getTargetExp() {
@@ -154,7 +157,29 @@ class Player extends Entity {
     }
   }
 
-  addStat(statCode, point) {}
+  addStat(statCode) {
+    if(this.abilityPoint<=0) return false;
+    
+    this.abilityPoint--;
+    switch(statCode){
+      case 1: 
+        this.stamina++;
+        break;
+      case 2:
+        this.pickSpeed++;
+        break;
+      case 3:
+        this.moveSpeed++;
+        break;
+      default:
+        throw new Error('유효하지 않은 능력치 투자 정보');
+    }
+    return true;
+  }
+
+  getStatInfo() {
+    return PAYLOAD_DATA.StatInfo(this.level, this.stamina, this.pickSpeed, this.moveSpeed, this.abilityPoint);
+  }
 }
 
 export default Player;

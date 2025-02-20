@@ -13,7 +13,7 @@ import loginHandler from './account/login.handler.js';
 import createCharacterHandler from './account/createCharacter.handler.js';
 import leaveHandler from './town/leaveHandler.js';
 import { addExpHandler } from './player/addExp.handler.js';
-import { selectAvailablePointHandler } from './player/selectAvailablePoint.handler.js';
+import { investPointHandler } from './player/investPoint.handler.js';
 
 import { createPartyHandler } from './social/party/createParty.handler.js';
 import { invitePartyHandler } from './social/party/inviteParty.handler.js';
@@ -44,7 +44,7 @@ const handlers = {
   [config.packetId.C2SLogin]: loginHandler,
   [config.packetId.C2SCreateCharacter]: createCharacterHandler,
   [config.packetId.C2SAddExp]: addExpHandler,
-  [config.packetId.C2SSelectAP]: selectAvailablePointHandler,
+  [config.packetId.C2SInvestPoint]: investPointHandler,
 
   // 파티 관련
   [config.packetId.C2SCreateParty]: createPartyHandler,

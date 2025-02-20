@@ -172,3 +172,18 @@ export const updatePlayer = async (userId, nickname, classCode) => {
 export const updateUserLogin = async (id) => {
   await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_USER_LOGIN, [id]);
 };
+
+// 경험치 획득 시 경험치 업데이트
+export const updatePlayerExp = async (exp, playerId) => {
+  await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_STAT_EXP, [exp, playerId]);
+}
+
+// 레벨업 시 레벨, 경험치, AP 업데이트
+export const updatePlayerLevel = async (level, exp, abilityPoint, playerId) => {
+  await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_STAT_LEVEL, [level, exp, abilityPoint, playerId]);
+}
+
+// AP 선택 시 능력치 업데이트
+export const updatePlayerStat = async (stamina, pickSpeed, moveSpeed, abilityPoint, playerId) => {
+  await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_STAT_STAMINA, [stamina, pickSpeed, moveSpeed, abilityPoint, playerId]);
+}

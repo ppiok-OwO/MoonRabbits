@@ -75,6 +75,6 @@ export const PACKET_ID = {
   C2SAddExp: 200,
   S2CAddExp: 201,
   S2CLevelUp: 202,
-  C2SSelectAp: 203,
-  S2CSelectAp: 204,
+  C2SInvestPoint: 203,
+  S2CInvestPoint: 204,
 };

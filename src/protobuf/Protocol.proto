@@ -379,23 +379,23 @@ message C2SInPortal{
 }
 message S2CInPortal{}
 
-message C2SAddExp{
+message C2SAddExp {
   int32 count = 1;
-}
-message S2CAddExp{
+} 
+message S2CAddExp {
   int32 updatedExp = 1;
-}
-message S2CLevelUp{
+} 
+message S2CLevelUp {
   int32 playerId = 1;
   int32 updatedLevel = 2;
   int32 newTargetExp = 3;
   int32 updatedExp = 4;
   int32 abilityPoint = 5;
+} 
+message C2SInvestPoint {
+  int32 statCode = 1;
 }
-message C2SSelectAp{
-  repeated InvestPoint investPoints = 1;
-}
-message S2CSelectAp{
+message S2CInvestPoint {
   StatInfo statInfo = 1;
 }
 
@@ -485,11 +485,6 @@ message Vec3 {
 message Resource {
   int32 resourceIdx = 1;
   int32 resourceId = 2;
-}
-
-message InvestPoint {
-  int32 statCode = 1;
-  int32 point = 2;
 }
 
 message StatInfo {
