@@ -34,7 +34,6 @@ class Player extends Entity {
     this.path = null;
     this.isInParty = false;
     this.isInvited = false;
-    this.isPartyLeader = false;
   }
   sendPacket(packet) {
     try {
