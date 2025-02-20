@@ -65,22 +65,8 @@ const loginHandler = async (socket, packetData) => {
 
     // 캐릭터가 존재한다면 playerSession 업데이트를 같이 진행
     if (findPlayer && findPlayer.nickname) {
-      // playerSession 생성 및 업데이트
-      const playerSessionManager = getPlayerSession();
-      // 반드시 await를 사용해서 Promise가 아닌 실제 Player 인스턴스를 받아야 함
-      const newPlayer = await playerSessionManager.addPlayer(
-        socket,
-        userData,
-        findPlayer.nickname,
-        findPlayer.classCode,
-      );
-      // Redis에 저장할 때 사용할 키
-      const redisKey = `playerSession:${newPlayer.id}`;
-      await playerSessionManager.saveToRedis(redisKey, newPlayer);
-      console.log('----- 업데이트된 playerSession & Redis 저장 완료 -----\n', newPlayer);
-
       const ownedCharacters = [
-        payloadData.OwnedCharacters(newPlayer.nickname, newPlayer.classCode),
+        payloadData.OwnedCharacters(findPlayer.nickname, findPlayer.classCode),
       ];
       const packet = Packet.S2CLogin(isSuccess, msg, ownedCharacters);
       return socket.write(packet);
