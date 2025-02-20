@@ -47,6 +47,7 @@ const loginHandler = async (socket, packetData) => {
 
     // UserSession에 있는 id에 userData.userId를 저장해야함
     const findPlayer = await findPlayerByUserId(userData.userId);
+    socket.player = findPlayer;
 
     // login 이후에 userSession의 소켓 기반 임시 세션을 userId를 키로 사용한 Redis 해시로 업데이트
     const userSessionManager = getUserSessions();
