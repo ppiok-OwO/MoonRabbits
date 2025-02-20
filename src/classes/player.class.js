@@ -21,7 +21,7 @@ class Player extends Entity {
         ),
       );
     } catch (error) {
-      console.error("!!! ",error)
+      console.error('!!! ', error);
     }
     this.class = classCode;
     this.nickname = nickname;
@@ -34,6 +34,7 @@ class Player extends Entity {
     this.currentScene = null;
   }
   sendPacket(packet) {
+    console.log('데이터 진짜 보냅니다~~~~~~~~~~');
     try {
       this.socket.write(packet);
     } catch (error) {
