@@ -60,26 +60,45 @@ export const leavePartyHandler = (socket, packetData) => {
     party.removeMember(leftPlayerId);
     member[1].isInParty = false;
 
-    const members = party.getAllMemberEntries();
-
-    // TOTO : 떠난 멤버가 파티장이면 setPartyLeader 패킷 전송
+    // TOTO : 떠난 멤버가 파티장이면 파티장 교체
     const partyLeader = party.getPartyLeader();
     if (member[1] === partyLeader) {
       // party클래스에서 파티장 교체
-      const newLeader = members[0];
-      party.setPartyLeader(newLeader);
+      const memberIds = party.getAllMemberIds();
+      if (memberIds.length > 0) {
+        const newLeaderId = memberIds[0];
 
-      // setPartyLeader 패킷 전송
-      members.forEach(([key, value]) => {
-        const packet = Packet.S2CSetPartyLeader(
-          party.getId(),
-          party.getPartyLeaderId(),
-          party.getMemberCount(),
-          party.getAllMemberCardInfo(value.id),
+        const newLeaderSocket = party.getSocketById(newLeaderId);
+        if (newLeaderSocket === -1) {
+          return console.log('핸들러 오류!!!');
+        }
+        const newLeader = party.getMember(newLeaderSocket);
+        party.setPartyLeader(newLeader);
+
+        const members = party.getAllMemberEntries();
+
+        members.forEach(([key, value]) => {
+          const packet = Packet.S2CLeaveParty(
+            party.getId(),
+            party.getPartyLeaderId(),
+            party.getMemberCount(),
+            party.getAllMemberCardInfo(value.id),
+          );
+          key.write(packet);
+        });
+        const msgToParty = Packet.S2CChat(
+          0,
+          `${member[1].nickname}님이 파티를 떠나셨습니다.`,
         );
-        key.write(packet);
-      });
+        party.notify(msgToParty);
+
+        // 떠난 멤버에게 메시지 전송
+        const msgToKickedMember = Packet.S2CDisbandParty('파티를 떠났습니다.');
+        member[0].write(msgToKickedMember);
+      }
     }
+
+    const members = party.getAllMemberEntries();
 
     // 각 멤버에 대하여 맞춤형 패킷 생성
     members.forEach(([key, value]) => {
