@@ -86,7 +86,7 @@ namespace Google.Protobuf.Protocol {
             "IAEoCRIQCghsZWFkZXJJZBgCIAEoBRITCgttZW1iZXJDb3VudBgDIAEoBRIp",
             "CgdtZW1iZXJzGAQgAygLMhgucHJvdG9jb2wuTWVtYmVyQ2FyZEluZm8iEwoR",
             "QzJTQ2hlY2tQYXJ0eUxpc3QiTgoRUzJDQ2hlY2tQYXJ0eUxpc3QSJwoKcGFy",
-            "dHlpbmZvcxgBIAMoCzITLnByb3RvY29sLlBhcnR5SW5mbxIQCghtZW1iZXJJ",
+            "dHlJbmZvcxgBIAMoCzITLnByb3RvY29sLlBhcnR5SW5mbxIQCghtZW1iZXJJ",
             "ZBgCIAEoBSI1ChBDMlNLaWNrT3V0TWVtYmVyEg8KB3BhcnR5SWQYASABKAkS",
             "EAoIbWVtYmVySWQYAiABKAUidQoQUzJDS2lja091dE1lbWJlchIPCgdwYXJ0",
             "eUlkGAEgASgJEhAKCGxlYWRlcklkGAIgASgFEhMKC21lbWJlckNvdW50GAMg",
@@ -245,7 +245,7 @@ namespace Google.Protobuf.Protocol {
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.C2SLeaveParty), global::Google.Protobuf.Protocol.C2SLeaveParty.Parser, new[]{ "PartyId", "LeftPlayerId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.S2CLeaveParty), global::Google.Protobuf.Protocol.S2CLeaveParty.Parser, new[]{ "PartyId", "LeaderId", "MemberCount", "Members" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.C2SCheckPartyList), global::Google.Protobuf.Protocol.C2SCheckPartyList.Parser, null, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.S2CCheckPartyList), global::Google.Protobuf.Protocol.S2CCheckPartyList.Parser, new[]{ "Partyinfos", "MemberId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.S2CCheckPartyList), global::Google.Protobuf.Protocol.S2CCheckPartyList.Parser, new[]{ "PartyInfos", "MemberId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.C2SKickOutMember), global::Google.Protobuf.Protocol.C2SKickOutMember.Parser, new[]{ "PartyId", "MemberId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.S2CKickOutMember), global::Google.Protobuf.Protocol.S2CKickOutMember.Parser, new[]{ "PartyId", "LeaderId", "MemberCount", "Members" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.C2SDisbandParty), global::Google.Protobuf.Protocol.C2SDisbandParty.Parser, new[]{ "PartyId" }, null, null, null, null),
@@ -10348,7 +10348,7 @@ namespace Google.Protobuf.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public S2CCheckPartyList(S2CCheckPartyList other) : this() {
-      partyinfos_ = other.partyinfos_.Clone();
+      partyInfos_ = other.partyInfos_.Clone();
       memberId_ = other.memberId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -10359,15 +10359,15 @@ namespace Google.Protobuf.Protocol {
       return new S2CCheckPartyList(this);
     }
 
-    /// <summary>Field number for the "partyinfos" field.</summary>
-    public const int PartyinfosFieldNumber = 1;
-    private static readonly pb::FieldCodec<global::Google.Protobuf.Protocol.PartyInfo> _repeated_partyinfos_codec
+    /// <summary>Field number for the "partyInfos" field.</summary>
+    public const int PartyInfosFieldNumber = 1;
+    private static readonly pb::FieldCodec<global::Google.Protobuf.Protocol.PartyInfo> _repeated_partyInfos_codec
         = pb::FieldCodec.ForMessage(10, global::Google.Protobuf.Protocol.PartyInfo.Parser);
-    private readonly pbc::RepeatedField<global::Google.Protobuf.Protocol.PartyInfo> partyinfos_ = new pbc::RepeatedField<global::Google.Protobuf.Protocol.PartyInfo>();
+    private readonly pbc::RepeatedField<global::Google.Protobuf.Protocol.PartyInfo> partyInfos_ = new pbc::RepeatedField<global::Google.Protobuf.Protocol.PartyInfo>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::Google.Protobuf.Protocol.PartyInfo> Partyinfos {
-      get { return partyinfos_; }
+    public pbc::RepeatedField<global::Google.Protobuf.Protocol.PartyInfo> PartyInfos {
+      get { return partyInfos_; }
     }
 
     /// <summary>Field number for the "memberId" field.</summary>
@@ -10397,7 +10397,7 @@ namespace Google.Protobuf.Protocol {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if(!partyinfos_.Equals(other.partyinfos_)) return false;
+      if(!partyInfos_.Equals(other.partyInfos_)) return false;
       if (MemberId != other.MemberId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -10406,7 +10406,7 @@ namespace Google.Protobuf.Protocol {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      hash ^= partyinfos_.GetHashCode();
+      hash ^= partyInfos_.GetHashCode();
       if (MemberId != 0) hash ^= MemberId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -10426,7 +10426,7 @@ namespace Google.Protobuf.Protocol {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      partyinfos_.WriteTo(output, _repeated_partyinfos_codec);
+      partyInfos_.WriteTo(output, _repeated_partyInfos_codec);
       if (MemberId != 0) {
         output.WriteRawTag(16);
         output.WriteInt32(MemberId);
@@ -10441,7 +10441,7 @@ namespace Google.Protobuf.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      partyinfos_.WriteTo(ref output, _repeated_partyinfos_codec);
+      partyInfos_.WriteTo(ref output, _repeated_partyInfos_codec);
       if (MemberId != 0) {
         output.WriteRawTag(16);
         output.WriteInt32(MemberId);
@@ -10456,7 +10456,7 @@ namespace Google.Protobuf.Protocol {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      size += partyinfos_.CalculateSize(_repeated_partyinfos_codec);
+      size += partyInfos_.CalculateSize(_repeated_partyInfos_codec);
       if (MemberId != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(MemberId);
       }
@@ -10472,7 +10472,7 @@ namespace Google.Protobuf.Protocol {
       if (other == null) {
         return;
       }
-      partyinfos_.Add(other.partyinfos_);
+      partyInfos_.Add(other.partyInfos_);
       if (other.MemberId != 0) {
         MemberId = other.MemberId;
       }
@@ -10496,7 +10496,7 @@ namespace Google.Protobuf.Protocol {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            partyinfos_.AddEntriesFrom(input, _repeated_partyinfos_codec);
+            partyInfos_.AddEntriesFrom(input, _repeated_partyInfos_codec);
             break;
           }
           case 16: {
@@ -10523,7 +10523,7 @@ namespace Google.Protobuf.Protocol {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            partyinfos_.AddEntriesFrom(ref input, _repeated_partyinfos_codec);
+            partyInfos_.AddEntriesFrom(ref input, _repeated_partyInfos_codec);
             break;
           }
           case 16: {

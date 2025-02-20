@@ -168,7 +168,7 @@ const PAYLOAD = {
   },
   S2CCheckPartyList: (partyInfos_PartyInfo_repeated, memberId_int) => {
     return {
-      partyinfos: partyInfos_PartyInfo_repeated,
+      partyInfos: partyInfos_PartyInfo_repeated,
       memberId: memberId_int,
     };
   },

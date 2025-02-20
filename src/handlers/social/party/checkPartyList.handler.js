@@ -26,7 +26,7 @@ export const chceckPartyListHandler = (socket, packetData) => {
     const partySession = getPartySessions();
     const parties = partySession.getAllPartyEntries();
 
-    let partyinfos = [];
+    let partyInfos = [];
     for (const party of parties) {
       const memberCount = party[1].getMemberCount();
       if (memberCount >= 1 && memberCount < 5) {
@@ -40,17 +40,16 @@ export const chceckPartyListHandler = (socket, packetData) => {
             ),
           );
         }
-        partyinfos.push(partyInfo);
+        partyInfos.push(partyInfo);
+
+        if (partyInfos.length >= 20) break;
       }
     }
-    console.log('파티 인포!!!! : ', partyinfos);
-    console.log('멤버 아이디!!!! : ', player.id);
-    const packet = PACKET.S2CCheckPartyList(partyinfos, player.id);
-    console.log('패킷!!!! : ', packet);
+
+    const packet = PACKET.S2CCheckPartyList(partyInfos, player.id);
 
     socket.write(packet);
   } catch (error) {
-    // handleError(error);
-    console.error(error);
+    handleError(error);
   }
 };

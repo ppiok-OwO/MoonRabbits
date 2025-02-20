@@ -270,7 +270,7 @@ message S2CLeaveParty{
 message C2SCheckPartyList {
 }
 message S2CCheckPartyList {
-  repeated PartyInfo partyinfos = 1;
+  repeated PartyInfo partyInfos = 1;
   int32 memberId = 2;
 }
 message C2SKickOutMember{
