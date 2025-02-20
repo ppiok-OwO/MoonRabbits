@@ -4,8 +4,8 @@ import handleError from '../../utils/error/errorHandler.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 
-export const selectAvailablePointHandler = (socket, packetData) => {
-  const { statCode } = packetData; // [[statCode:?, point:?],
+export const investPointHandler = (socket, packetData) => {
+  const { statCode } = packetData;
 
   const playerSession = getPlayerSession();
   const player = playerSession.getPlayer(socket);
@@ -28,7 +28,6 @@ export const selectAvailablePointHandler = (socket, packetData) => {
 
   // try {
   //   investPoints.forEach(({ statCode, point }) => {
-  //     player.addStat(statCode, point);
   //     console.log(`${player.nickname}의 능력치(${statCode}) ${point}만큼 증가 (스탯 미구현)`);
   //   });
   // } catch (error) {

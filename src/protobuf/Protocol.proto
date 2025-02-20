@@ -268,10 +268,10 @@ message S2CLevelUp {
   int32 updatedExp = 4;
   int32 abilityPoint = 5;
 } 
-message C2SSelectAP {
-  repeated InvestPoint investPoints = 1;
+message C2SInvestPoint {
+  int32 statCode = 1;
 }
-message S2CSelectAP {
+message S2CInvestPoint {
   StatInfo statInfo = 1;
 }
 
