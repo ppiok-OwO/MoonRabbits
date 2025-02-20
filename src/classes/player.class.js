@@ -1,6 +1,6 @@
 import TransformInfo from './transformInfo.class.js';
 import User from './user.class.js';
-import payloadData from '../utils/packet/payloadData.js';
+import PAYLOAD_DATA from '../utils/packet/payloadData.js';
 import makePacket from '../utils/packet/makePacket.js';
 import { config } from '../config/config.js';
 import Entity from './stat.class.js';
@@ -10,7 +10,7 @@ class Player extends Entity {
     const newplayerstat = config.newPlayerStatData.BASE_STAT_DATA[classCode];
     try {
       super(
-        payloadData.StatInfo(
+        PAYLOAD_DATA.StatInfo(
           newplayerstat.level,
           newplayerstat.hp,
           newplayerstat.maxHp,
@@ -34,7 +34,7 @@ class Player extends Entity {
     this.dungeonId = null;
     this.lastBattleLog = 0;
     this.path = null;
-    this.level = 1;
+    this.currentScene = null;
     this.exp = 0;
     this.targetExp = this._getTargetExpByLevel(this.level);
     this.availablePoint = 0;
@@ -50,8 +50,16 @@ class Player extends Entity {
     }
   }
 
+  setCurrentScene(sceneCode) {
+    this.currentScene = sceneCode;
+  }
+
+  getCurrentScene() {
+    return this.currentScene;
+  }
+
   getPlayerStatus() {
-    return payloadData.PlayerStatus(
+    return PAYLOAD_DATA.PlayerStatus(
       this.class,
       this.getLevel(),
       this.nickname,
@@ -62,7 +70,7 @@ class Player extends Entity {
     );
   }
   getPlayerStats() {
-    return payloadData.StatInfo(
+    return PAYLOAD_DATA.StatInfo(
       this.level,
       this.hp,
       this.maxHp,
@@ -75,13 +83,14 @@ class Player extends Entity {
     );
   }
   getPlayerInfo() {
-    return payloadData.PlayerInfo(
+    return PAYLOAD_DATA.PlayerInfo(
       this.id,
       this.nickname,
       this.level,
       this.class,
       this.position,
       this.getPlayerStats(),
+      this.getCurrentScene(),
     );
   }
 

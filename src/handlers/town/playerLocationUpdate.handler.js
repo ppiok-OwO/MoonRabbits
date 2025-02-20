@@ -8,7 +8,7 @@ import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import Packet from '../../utils/packet/packet.js';
 import payload from '../../utils/packet/payload.js';
-import payloadData from '../../utils/packet/payloadData.js';
+import PAYLOAD_DATA from '../../utils/packet/payloadData.js';
 
 // !!! 패킷 변경에 따라 S_Chat -> S2CChat, S_Location -> S2CPlayerLocation으로 일괄 수정해씀다
 
@@ -65,7 +65,12 @@ const playerLocationUpdateHandler = (socket, packetData) => {
         console.log('플레이어의 위치를 재조정합니다.');
 
         const newTransform = { ...closestPoint, rot: transform.rot };
-        const packet = Packet.S2CPlayerLocation(player.id, newTransform, false);
+        const packet = Packet.S2CPlayerLocation(
+          player.id,
+          newTransform,
+          false,
+          player.getCurrentScene(),
+        );
 
         // 위치동기화 브로드 캐스트
         const dungeonId = player.getDungeonId();
@@ -74,18 +79,23 @@ const playerLocationUpdateHandler = (socket, packetData) => {
           const dungeonSessions = getDungeonSessions();
           const dungeon = dungeonSessions.getDungeon(dungeonId);
           dungeon.notify(packet);
-          dungeon.notify(syncLocationPacket);
+          // dungeon.notify(syncLocationPacket);
         } else {
           // 던전이 아니면
           playerSession.notify(packet);
-          playerSession.notify(syncLocationPacket);
+          // playerSession.notify(syncLocationPacket);
         }
 
         return;
       }
     }
 
-    const packet = Packet.S2CPlayerLocation(player.id, transform, true);
+    const packet = Packet.S2CPlayerLocation(
+      player.id,
+      transform,
+      true,
+      player.getCurrentScene(),
+    );
 
     const dungeonId = player.getDungeonId();
     if (dungeonId) {

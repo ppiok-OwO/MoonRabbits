@@ -20,6 +20,7 @@ const playerSpawnNotificationHandler = (socket, packetData) => {
 
   const spawn = payload.S2CPlayerSpawn(playerInfoArray);
   const packet = makePacket(config.packetId.S2CPlayerSpawn, spawn);
+  
   const dungeonId = playerSession.getPlayer(socket).getDungeonId();
 
   if (dungeonId) {

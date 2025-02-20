@@ -5,6 +5,7 @@ import Packet from '../../utils/packet/packet.js';
 import { getUserSessions } from '../../session/sessions.js';
 
 import playerSpawnNotificationHandler from './playerSpawnNotification.handler.js';
+import { config } from '../../config/config.js';
 import chalk from 'chalk';
 
 const townEnterHandler = (socket, packetData) => {
@@ -23,11 +24,11 @@ const townEnterHandler = (socket, packetData) => {
       packetData.classCode,
     );
 
-    console.log('newPlayer : ', newPlayer);
+    newPlayer.setCurrentScene(packetData.targetScene);
 
     const playerInfo = newPlayer.getPlayerInfo();
 
-    const packet = Packet.S2CTownEnter(playerInfo);
+    const packet = Packet.S2CEnter(playerInfo);
 
     socket.write(packet);
 
