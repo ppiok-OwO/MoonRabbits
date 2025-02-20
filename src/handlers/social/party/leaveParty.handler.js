@@ -65,35 +65,37 @@ export const leavePartyHandler = (socket, packetData) => {
     if (member[1] === partyLeader) {
       // party클래스에서 파티장 교체
       const memberIds = party.getAllMemberIds();
-      const newLeaderId = memberIds[0];
+      if (memberIds.length > 0) {
+        const newLeaderId = memberIds[0];
 
-      const newLeaderSocket = party.getSocketById(newLeaderId);
-      if (newLeaderSocket === -1) {
-        return console.log('핸들러 오류!!!');
-      }
-      const newLeader = party.getMember(newLeaderSocket);
-      party.setPartyLeader(newLeader);
+        const newLeaderSocket = party.getSocketById(newLeaderId);
+        if (newLeaderSocket === -1) {
+          return console.log('핸들러 오류!!!');
+        }
+        const newLeader = party.getMember(newLeaderSocket);
+        party.setPartyLeader(newLeader);
 
-      const members = party.getAllMemberEntries();
+        const members = party.getAllMemberEntries();
 
-      members.forEach(([key, value]) => {
-        const packet = Packet.S2CLeaveParty(
-          party.getId(),
-          party.getPartyLeaderId(),
-          party.getMemberCount(),
-          party.getAllMemberCardInfo(value.id),
+        members.forEach(([key, value]) => {
+          const packet = Packet.S2CLeaveParty(
+            party.getId(),
+            party.getPartyLeaderId(),
+            party.getMemberCount(),
+            party.getAllMemberCardInfo(value.id),
+          );
+          key.write(packet);
+        });
+        const msgToParty = Packet.S2CChat(
+          0,
+          `${member[1].nickname}님이 파티를 떠나셨습니다.`,
         );
-        key.write(packet);
-      });
-      const msgToParty = Packet.S2CChat(
-        0,
-        `${member[1].nickname}님이 파티를 떠나셨습니다.`,
-      );
-      party.notify(msgToParty);
+        party.notify(msgToParty);
 
-      // 떠난 멤버에게 메시지 전송
-      const msgToKickedMember = Packet.S2CDisbandParty('파티를 떠났습니다.');
-      member[0].write(msgToKickedMember);
+        // 떠난 멤버에게 메시지 전송
+        const msgToKickedMember = Packet.S2CDisbandParty('파티를 떠났습니다.');
+        member[0].write(msgToKickedMember);
+      }
     }
 
     const members = party.getAllMemberEntries();
