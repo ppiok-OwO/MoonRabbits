@@ -41,7 +41,7 @@ const townEnterHandler = async (socket, packetData) => {
 
     playerSpawnNotificationHandler(socket, packetData);
   } catch (error) {
-    console.error(`${chalk.red('[createCharacterHandler Error]')}${error}`);
+    console.error(`${chalk.red('[createCharacterHandler Error]')} ${error}`);
     socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'townEnterHanlder 에러'));
   }
 };

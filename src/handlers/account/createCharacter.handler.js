@@ -43,11 +43,7 @@ const createCharacterHandler = async (socket, packetData) => {
     // nickname 또는 class_code의 값이 비어있다면 업데이트
     if (player && (!player.nickname || !player.classCode)) {
       await updatePlayer(userData.userId, nickname, classCode);
-      console.log(
-        chalk.green(
-          `[DB Log] 플레이어 업데이트 완료: userId ${userData.userId}`,
-        ),
-      );
+      console.log(chalk.green(`[DB Log] 플레이어 업데이트 완료: userId ${userData.userId}`));
     }
     // 이미 캐릭터 정보가 존재하는 경우에는 재생성을 막습니다.
     else {
@@ -100,10 +96,7 @@ const createCharacterHandler = async (socket, packetData) => {
        ${error}
       `,
     );
-    socket.emit(
-      'error',
-      new CustomError(ErrorCodes.HANDLER_ERROR, 'createCharacterHandler 에러'),
-    );
+    socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'createCharacterHandler 에러'));
   }
 };
 

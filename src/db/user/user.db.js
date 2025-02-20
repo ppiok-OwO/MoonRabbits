@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from 'uuid';
-import idAutoIncrement from 'id-auto-increment';
 import pools from '../database.js';
 import { SQL_QUERIES } from './user.queries.js';
 import { toCamelCase } from '../../utils/transformCase.js';
@@ -44,6 +43,41 @@ export const createStat = async (playerId) => {
   await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.CREATE_STAT, [statId, playerId]);
 
   return { statId, playerId }; // 새로 생성된 사용자 정보 반환
+};
+
+// Town에 접속하면 저장해둔 스탯을 DB에서 로드
+export const loadStat = async (playerId) => {
+  try {
+    const [rows] = await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.LOAD_STAT, [playerId]);
+    if (!rows || rows.length === 0) {
+      // 만약 DB에 스탯 정보가 없다면 null 또는 기본값을 반환할 수 있음
+      return null;
+    }
+    return rows[0]; // DB에서 가져온 스탯 정보 객체
+  } catch (error) {
+    console.error(`${playerId}에서 Stat을 로드하는데 실패했습니다. : `, error);
+    throw error;
+  }
+};
+
+export const updateStat = async (playerId, statData) => {
+  try {
+    // 필요한 파라미터들
+    const params = [
+      statData.level,
+      statData.exp,
+      statData.stamina,
+      statData.pick_speed,
+      statData.move_speed,
+      statData.ability_point,
+      playerId,
+    ];
+    const [result] = await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_STAT, params);
+    return result;
+  } catch (error) {
+    console.error(`${playerId}에서 stat을 가져오는데 실패했습니다 : `, error);
+    throw error;
+  }
 };
 
 // 캐릭터 생성할 때 인벤토리도 생성, 인벤토리는 25개의 슬롯을 가짐(클라이언트의 인벤토리 개수에 따라 변경 가능)

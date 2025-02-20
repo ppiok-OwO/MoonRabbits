@@ -20,7 +20,6 @@
     "bcrypt": "^5.1.1",
     "chalk": "^5.4.1",
     "dotenv": "^16.4.7",
-    "id-auto-increment": "^1.0.1",
     "ioredis": "^5.5.0",
     "lodash": "^4.17.21",
     "long": "^5.2.4",

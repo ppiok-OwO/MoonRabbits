@@ -1,18 +1,12 @@
 //몬스터, 플레이어 통합 관리용 클래스스
 class Entity {
-  constructor(
-    stat = payloadData.StatInfo(1, 100, 100, 100, 100, 20, 5, 10, 50),
-  ) {
-    const { level, hp, maxHp, mp, maxMp, atk, def, magic, speed } = stat;
+  constructor(stat = payloadData.StatInfo(1, 100, 5, 1, 0)) {
+    const { level, stamina, pickSpeed, moveSpeed, abilityPoint } = stat;
     this.level = level;
-    this.hp = hp;
-    this.maxHp = maxHp;
-    this.mp = mp;
-    this.maxMp = maxMp;
-    this.atk = atk;
-    this.def = def;
-    this.magic = magic;
-    this.speed = speed;
+    this.stamina = stamina;
+    this.pickSpeed = pickSpeed;
+    this.moveSpeed = moveSpeed;
+    this.abilityPoint = abilityPoint;
 
     this.effectLevel = 0;
     this.effectMaxHp = 0;
@@ -67,6 +61,27 @@ class Entity {
   getLevel() {
     return this.level + this.effectLevel;
   }
+
+  getExp() {
+    return this.exp;
+  }
+
+  getStamina() {
+    return this.stamina;
+  }
+
+  getPickSpeed() {
+    return this.pickSpeed;
+  }
+
+  getMoveSpeed() {
+    return this.moveSpeed;
+  }
+
+  getAbilityPoint() {
+    return this.abilityPoint;
+  }
+
   getHp() {
     return this.hp;
   }
