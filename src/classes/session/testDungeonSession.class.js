@@ -18,6 +18,10 @@ class TestDungeonSession {
     return this.players.get(socket);
   }
 
+  getPlayerCount() {
+    return this.players.size;
+  }
+
   getAllPlayer(sceneCode) {
     const samePlayers = [];
     console.log('---------플레이어 엔트리 시작');
