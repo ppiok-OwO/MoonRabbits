@@ -38,6 +38,7 @@ export const animationHandler = (socket, packetData) => {
         chatPacket = Packet.S2CChat(
           0,
           `${player.nickname}님이 행복한 표정을 짓습니다.`,
+          'System',
         );
         break;
 
@@ -45,6 +46,7 @@ export const animationHandler = (socket, packetData) => {
         chatPacket = Packet.S2CChat(
           0,
           `${player.nickname}님이 무척 슬퍼합니다.`,
+          'System',
         );
         break;
 
@@ -52,6 +54,7 @@ export const animationHandler = (socket, packetData) => {
         chatPacket = Packet.S2CChat(
           0,
           `${player.nickname}님이 반갑게 인사합니다.`,
+          'System',
         );
         break;
 

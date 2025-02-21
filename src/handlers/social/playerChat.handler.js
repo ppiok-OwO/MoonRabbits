@@ -6,6 +6,7 @@ import {
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import handleError from '../../utils/error/errorHandler.js';
+import PACKET from '../../utils/packet/packet.js';
 import Packet from '../../utils/packet/packet.js';
 
 export const chatHandler = (socket, packetData) => {
@@ -31,15 +32,20 @@ export const chatHandler = (socket, packetData) => {
     }
 
     const partyId = player.getPartyId();
-    if (partyId) {
-      // 만약 파티 id가 존재하면
+    if (partyId && chatType === '파티') {
+      // 만약 파티 id가 존재하고 chatType이 파티면
       const partySession = getPartySessions();
-      const party = partySession(partyId);
+      const party = partySession.getParty(partyId);
       party.notify(packet);
-      party.notify(chatPacket);
-    } else {
-      // 던전이 아니면
+    } else if (chatType === '전체') {
       playerSession.notify(packet);
+    } else {
+      const warningPacket = PACKET.S2CChat(
+        0,
+        '채팅 전송에 실패하였습니다.',
+        'System',
+      );
+      socket.write(warningPacket);
     }
   } catch (error) {
     handleError(socket, error);
