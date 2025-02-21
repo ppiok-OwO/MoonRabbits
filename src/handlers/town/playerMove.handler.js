@@ -2,7 +2,7 @@ import { config } from '../../config/config.js';
 import { getGameAssets } from '../../init/assets.js';
 import { findPath, loadNavMesh } from '../../init/navMeshLoader.js';
 import {
-  getDungeonSessions,
+  getSectorSessions,
   getPlayerSession,
 } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';

@@ -1,5 +1,5 @@
 import {
-  getDungeonSessions,
+  getSectorSessions,
   getPlayerSession,
 } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
@@ -28,12 +28,12 @@ export const chatHandler = (socket, packetData) => {
       );
     }
 
-    const dungeonId = player.getDungeonId();
-    if (dungeonId) {
+    const sectorId = player.getSectorId();
+    if (sectorId) {
       // 만약 던전이면
-      const dungeonSessions = getDungeonSessions();
-      const dungeon = dungeonSessions.getDungeon(dungeonId);
-      dungeon.notify(packet);
+      const sectorSessions = getSectorSessions();
+      const sector = sectorSessions.getSector(sectorId);
+      sector.notify(packet);
     } else {
       // 던전이 아니면
       playerSession.notify(packet);

@@ -6,7 +6,7 @@ import { config } from '../config/config.js';
 import Entity from './stat.class.js';
 import { getGameAssets } from '../init/assets.js';
 class Player extends Entity {
-  constructor(user, playerId, nickname, classCode) {
+  constructor(user, playerId, nickname, classCode, sectorId = 1) {
     const newplayerstat = config.newPlayerStatData.BASE_STAT_DATA[classCode];
     try {
       super(
@@ -31,10 +31,9 @@ class Player extends Entity {
     this.id = playerId;
     this.level = 1;
     this.position = new TransformInfo();
-    this.dungeonId = null;
+    this.currentSector = sectorId;
     this.lastBattleLog = 0;
     this.path = null;
-    this.currentScene = null;
     this.exp = 0;
     this.targetExp = this._getTargetExpByLevel(this.level);
     this.availablePoint = 0;
@@ -44,18 +43,11 @@ class Player extends Entity {
   }
   sendPacket(packet) {
     try {
-      this.user.socket.write(packet);
+      const socket = this.user.getSocket();
+      return socket.write(packet);
     } catch (error) {
       console.error(error);
     }
-  }
-
-  setCurrentScene(sceneCode) {
-    this.currentScene = sceneCode;
-  }
-
-  getCurrentScene() {
-    return this.currentScene;
   }
 
   getPlayerStatus() {
@@ -94,23 +86,20 @@ class Player extends Entity {
     );
   }
 
-  setDungeonId(dungeonId) {
-    this.dungeonId = dungeonId;
+  setSectorId(sectorId) {
+    return (this.currentSector = sectorId);
   }
 
-  getDungeonId() {
-    return this.dungeonId;
+  getSectorId() {
+    return this.currentSector;
   }
+
   getPlayerStat() {
     return this.stat;
   }
 
   getPlayerId() {
     return this.id;
-  }
-
-  resetDungeonId() {
-    this.dungeonId = null;
   }
 
   setPath(path) {

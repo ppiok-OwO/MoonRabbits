@@ -1,6 +1,6 @@
 import { config } from '../../config/config.js';
 import {
-  getDungeonSessions,
+  getSectorSessions,
   getPlayerSession,
 } from '../../session/sessions.js';
 import makePacket from '../../utils/packet/makePacket.js';
@@ -21,12 +21,12 @@ const playerSpawnNotificationHandler = (socket, packetData) => {
   const spawn = payload.S2CPlayerSpawn(playerInfoArray);
   const packet = makePacket(config.packetId.S2CPlayerSpawn, spawn);
   
-  const dungeonId = playerSession.getPlayer(socket).getDungeonId();
+  const sectorId = playerSession.getPlayer(socket).getSectionId();
 
-  if (dungeonId) {
-    const dungeonSessions = getDungeonSessions();
-    const dungeon = dungeonSessions.getDungeon(dungeonId);
-    dungeon?.notify(packet);
+  if (sectorId) {
+    const sectorSessions = getSectorSessions();
+    const sector = sectorSessions.getSector(sectorId);
+    sector?.notify(packet);
   } else {
     playerSession.notify(packet);
   }

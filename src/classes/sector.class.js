@@ -3,13 +3,12 @@ import Resource from './resource.class.js';
 import { getGameAssets } from '../init/assets.js';
 import Packet from '../utils/packet/packet.js';
 //import BattleStatus from './battleStatus.class.js';
-class Dungeon {
-  constructor(dungeonId, dungeonCode, resources = []) {
-    this.id = dungeonId;
-    this.code = dungeonCode;
+class Sector {
+  constructor(sectorId, sectorCode, resources = []) {
+    this.id = sectorId;
+    this.code = sectorCode;
     this.monsters = [];
     this.players = new Map();
-    this.resourceIdx = 0;
     this.resources = [];
     //this.battleStatus = null;
     resources.forEach((value) => {
@@ -22,9 +21,9 @@ class Dungeon {
       return value.resource_id === resourceId;
     });
     if (resource) {
-      this.resourceIdx++;
-      this.resources.push(new Resource(this.resourceIdx, id, resource));
-      return this.resourceIdx;
+      const resourceIdx = this.resources.length + 1;
+      this.resources.push(new Resource(resourceIdx, id, resource));
+      return resourceIdx;
     }
     return -1;
   }
@@ -50,7 +49,7 @@ class Dungeon {
       PAYLOAD_DATA.Resource(index, value.getResourceId());
     });
 
-    player.sendPacket(Packet.S2CResourcesList(resourceData));
+    player.sendPacket(Packet.S2CResourceList(resourceData));
     return this.players.set(socket, player);
   }
 
@@ -63,24 +62,11 @@ class Dungeon {
     this.monsters = monsters;
   }
 
-  getDungeonInfo() {
-    const monsterStatus = this.monsters.map((monster) => {
-      return monster.getMonsterStatus();
-    });
-
-    return PAYLOAD_DATA.DungeonInfo(this.code, monsterStatus);
-  }
-
   notify(packet) {
     this.players.values.forEach((player) => {
       player.sendPacket(packet);
     });
   }
-
-  //전투 게시 함수 (플레이어와 몬스터 반드시 설정 필요.)
-  // setBattleStatus() {
-  //   this.battleStatus = new BattleStatus(this, this.players, this.monsters);
-  // }
 }
 
-export default Dungeon;
+export default Sector;

@@ -3,11 +3,15 @@ import { loadGameAssets } from './assets.js';
 import { loadProtos } from './loadProtos.js';
 import { testAllConnections } from '../utils/db/testConnection.js';
 import pools from '../db/database.js';
+import { getSectorSessions } from '../session/sessions.js';
+import { config } from '../config/config.js';
 
 const initServer = async () => {
   try {
     await loadGameAssets();
     await loadProtos();
+    const sectionSessions = getSectorSessions();
+    sectionSessions.setSector(1,config.section.town);// 마을
     // await testAllConnections(pools);
     // 다음 작업
   } catch (err) {

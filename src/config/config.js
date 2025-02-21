@@ -124,14 +124,17 @@ export const config = {
   updateLocation: {
     tolerance: UPDATE_LOCATION.tolerance,
   },
-  sceneCode : {
-    town : SCENE_CODE.TOWN,
-    aSector : SCENE_CODE.A_SECTOR,
+  sceneCode: {
+    town: SCENE_CODE.TOWN,
+    aSector: SCENE_CODE.A_SECTOR,
   },
   party: {
     MaxMember: 5,
   },
+  section: {
+    town: 1,
+    testfield: 2,
+  },
 };
-
 
 export const packetIdEntries = Object.entries(config.packetId);

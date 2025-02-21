@@ -5,7 +5,6 @@ class UserSession {
   users = new Map();
 
   setUser(socket) {
-    const dungeonId = uuidV4();
     const newUser = new User(socket);
 
     this.users.set(socket, newUser);

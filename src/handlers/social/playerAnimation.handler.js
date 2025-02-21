@@ -1,5 +1,5 @@
 import {
-  getDungeonSessions,
+  getSectorSessions,
   getPlayerSession,
 } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
@@ -59,13 +59,13 @@ export const animationHandler = (socket, packetData) => {
         break;
     }
 
-    const dungeonId = player.getDungeonId();
-    if (dungeonId) {
+    const sectorId = player.getSectorId();
+    if (sectorId) {
       // 만약 던전이면
-      const dungeonSessions = getDungeonSessions();
-      const dungeon = dungeonSessions.getDungeon(dungeonId);
-      dungeon.notify(packet);
-      dungeon.notify(chatPacket);
+      const sectorSessions = getSectorSessions();
+      const sector = sectorSessions.getSector(sectorId);
+      sector.notify(packet);
+      sector.notify(chatPacket);
     } else {
       // 던전이 아니면
       playerSession.notify(packet);
