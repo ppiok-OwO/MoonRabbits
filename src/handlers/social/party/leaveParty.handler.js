@@ -60,7 +60,7 @@ export const leavePartyHandler = (socket, packetData) => {
     party.removeMember(leftPlayerId);
     member[1].isInParty = false;
 
-    // TOTO : 떠난 멤버가 파티장이면 파티장 교체
+    // 떠난 멤버가 파티장이면 파티장 교체
     const partyLeader = party.getPartyLeader();
     if (member[1] === partyLeader) {
       // party클래스에서 파티장 교체
@@ -70,7 +70,7 @@ export const leavePartyHandler = (socket, packetData) => {
 
         const newLeaderSocket = party.getSocketById(newLeaderId);
         if (newLeaderSocket === -1) {
-          return console.log('핸들러 오류!!!');
+          return console.log('새 파티장을 선출하는 과정에서 오류가 발생하였습니다.');
         }
         const newLeader = party.getMember(newLeaderSocket);
         party.setPartyLeader(newLeader);
@@ -120,7 +120,6 @@ export const leavePartyHandler = (socket, packetData) => {
     const msgToKickedMember = Packet.S2CDisbandParty('파티를 떠났습니다.');
     member[0].write(msgToKickedMember);
   } catch (error) {
-    // handleError(error);
-    console.error(error);
+    handleError(error);
   }
 };

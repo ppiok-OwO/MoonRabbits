@@ -1,4 +1,3 @@
-import Party from '../../../classes/party.class.js';
 import {
   getPartySessions,
   getPlayerSession,

@@ -82,6 +82,14 @@ class Party {
     return memberCardInfos;
   }
 
+  getPartyInfo() {
+    return {
+      partyId: this.getId(),
+      leaderId: this.getPartyLeaderId(),
+      memberCount: this.getMemberCount(),
+    };
+  }
+
   disbandParty() {
     this.members.clear();
     this.partyLeader = null;

@@ -11,9 +11,6 @@ import Packet from '../../../utils/packet/packet.js';
 export const invitePartyHandler = (socket, packetData) => {
   try {
     const { partyId, nickname } = packetData;
-
-    // TODO : 내 자신은 초대할 수 없게
-
     // 파티 인스턴스
     const partySession = getPartySessions();
     const party = partySession.getParty(partyId);
@@ -83,7 +80,7 @@ export const invitePartyHandler = (socket, packetData) => {
         newMember.id,
       );
 
-      newMember.isInvited = false;
+      newMember.isInvited = true;
 
       return newMember.user.getSocket().write(packet);
     } else {

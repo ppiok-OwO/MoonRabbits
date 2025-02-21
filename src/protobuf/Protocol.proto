@@ -55,14 +55,16 @@ enum MsgId {
   S2C_JOIN_PARTY=105;
   C2S_LEAVE_PARTY=106;
   S2C_LEAVE_PARTY=107;
-  C2S_SET_PARTY_LEADER=108;
-  S2C_SET_PARTY_LEADER=109;
+  C2S_CHECK_PARTY_LIST=108;
+  S2C_CHECK_PARTY_LIST=109;
   C2S_KICK_OUT_MEMBER=110;
   S2C_KICK_OUT_MEMBER=111;
   C2S_DISBAND_PARTY=112;
   S2C_DISBAND_PARTY=113;
   C2S_ALLOW_INVITE=114;
   S2C_ALLOW_INVITE=115;
+  C2S_REJECT_INVITE=116;
+  S2C_REJECT_INVITE=117;
 
   C2S_MONSTER_LOCATION=120;
   S2C_MONSTER_LOCATION=121;
@@ -89,8 +91,8 @@ enum MsgId {
   C2S_ADD_EXP=200;
   S2C_ADD_EXP=201;
   S2C_LEVEL_UP=202;
-  C2S_SELECT_AP=203;
-  S2C_SELECT_AP=204;
+  C2S_INVEST_POINT=203;
+  S2C_INVEST_POINT=204;
 }
 
 message C2SRegister{
@@ -265,15 +267,11 @@ message S2CLeaveParty{
   int32 memberCount = 3;
   repeated MemberCardInfo members = 4;
 }
-message C2SSetPartyLeader{
-  string partyId = 1;
-  int32 memberId = 2;
+message C2SCheckPartyList {
 }
-message S2CSetPartyLeader{
-  string partyId = 1;
-  int32 leaderId = 2;
-  int32 memberCount = 3;
-  repeated MemberCardInfo members = 4;
+message S2CCheckPartyList {
+  repeated PartyInfo partyInfos = 1;
+  int32 memberId = 2;
 }
 message C2SKickOutMember{
   string partyId = 1;
@@ -300,6 +298,12 @@ message S2CAllowInvite{
   int32 leaderId = 2;
   int32 memberCount = 3;
   repeated MemberCardInfo members = 4;
+}
+message C2SRejectInvite {
+  int32 memberId = 1;
+}
+
+message S2CRejectInvite {
 }
 
 message C2SMonsterLocation{
@@ -496,4 +500,10 @@ message MonsterStatus {
   int32 monsterModel = 2;
   string monsterName = 3;
   float monsterMoveSpeed = 4; 
+}
+
+message PartyInfo {
+  string partyId = 1;
+  int32 leaderId = 2;
+  int32 memberCount = 3;
 }
