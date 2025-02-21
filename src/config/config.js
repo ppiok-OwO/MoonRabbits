@@ -10,7 +10,11 @@ import {
   REDIS_HOST,
   REDIS_PORT,
 } from '../constants/env.js';
-import { PACKET_ID, PACKET_ID_LENGTH, PACKET_SIZE } from '../constants/header.js';
+import {
+  PACKET_ID,
+  PACKET_ID_LENGTH,
+  PACKET_SIZE,
+} from '../constants/header.js';
 import { BASE_STAT_DATA } from '../constants/PlayerBaseStat.js';
 import { BATTLE_LOG_ID } from '../constants/BattleLog.js';
 import { UPDATE_LOCATION } from '../constants/UpdateLocation.js';
@@ -83,14 +87,16 @@ export const config = {
     S2CJoinParty: PACKET_ID.S2CJoinParty,
     C2SLeaveParty: PACKET_ID.C2SLeaveParty,
     S2CLeaveParty: PACKET_ID.S2CLeaveParty,
-    C2SSetPartyLeader: PACKET_ID.C2SSetPartyLeader,
-    S2CSetPartyLeader: PACKET_ID.S2CSetPartyLeader,
+    C2SCheckPartyList: PACKET_ID.C2SCheckPartyList,
+    S2CCheckPartyList: PACKET_ID.S2CCheckPartyList,
     C2SKickOutMember: PACKET_ID.C2SKickOutMember,
     S2CKickOutMember: PACKET_ID.S2CKickOutMember,
     C2SDisbandParty: PACKET_ID.C2SDisbandParty,
     S2CDisbandParty: PACKET_ID.S2CDisbandParty,
     C2SAllowInvite: PACKET_ID.C2SAllowInvite,
     S2CAllowInvite: PACKET_ID.S2CAllowInvite,
+    C2SRejectInvite: PACKET_ID.C2SRejectInvite,
+    S2CRejectInvite: PACKET_ID.S2CRejectInvite,
     C2SMonsterLocation: PACKET_ID.C2SMonsterLocation,
     S2CMonsterLocation: PACKET_ID.S2CMonsterLocation,
     C2SDetectedPlayer: PACKET_ID.C2SDetectedPlayer,
@@ -126,14 +132,13 @@ export const config = {
   updateLocation: {
     tolerance: UPDATE_LOCATION.tolerance,
   },
-  sceneCode : {
-    town : SCENE_CODE.TOWN,
-    aSector : SCENE_CODE.A_SECTOR,
+  sceneCode: {
+    town: SCENE_CODE.TOWN,
+    aSector: SCENE_CODE.A_SECTOR,
   },
   party: {
     MaxMember: 5,
   },
 };
-
 
 export const packetIdEntries = Object.entries(config.packetId);

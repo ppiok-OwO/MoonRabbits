@@ -166,6 +166,13 @@ const PAYLOAD = {
       members: members_MemberCardInfo_repeated,
     };
   },
+  S2CCheckPartyList: (partyInfos_PartyInfo_repeated, memberId_int) => {
+    return {
+      partyInfos: partyInfos_PartyInfo_repeated,
+      memberId: memberId_int,
+    };
+  },
+  S2CRejectInvite: () => {},
   S2CMonsterLocation: (monsterId_int32, transformInfo_TransformInfo) => {
     return {
       monsterId: monsterId_int32,

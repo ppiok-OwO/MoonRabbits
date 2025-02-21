@@ -20,6 +20,8 @@ class Party {
 
   removeMember(plyaerId) {
     const socket = this.getSocketById(plyaerId);
+    const member = this.getMember(socket);
+    member.partyId = null;
     this.members.delete(socket);
   }
 
@@ -82,7 +84,19 @@ class Party {
     return memberCardInfos;
   }
 
+  getPartyInfo() {
+    return {
+      partyId: this.getId(),
+      leaderId: this.getPartyLeaderId(),
+      memberCount: this.getMemberCount(),
+    };
+  }
+
   disbandParty() {
+    const members = this.getAllMemberEntries();
+    members.forEach(([key, value]) => {
+      value.partyId = null;
+    });
     this.members.clear();
     this.partyLeader = null;
   }

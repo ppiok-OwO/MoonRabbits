@@ -22,6 +22,10 @@ class PartySession {
     return this.parties;
   }
 
+  getAllPartyEntries() {
+    return this.parties.entries();
+  }
+
   clearSession() {
     this.parties.clear();
   }

@@ -58,9 +58,8 @@ export const leavePartyHandler = (socket, packetData) => {
 
     // 멤버 퇴출
     party.removeMember(leftPlayerId);
-    member[1].isInParty = false;
 
-    // TOTO : 떠난 멤버가 파티장이면 파티장 교체
+    // 떠난 멤버가 파티장이면 파티장 교체
     const partyLeader = party.getPartyLeader();
     if (member[1] === partyLeader) {
       // party클래스에서 파티장 교체
@@ -70,7 +69,16 @@ export const leavePartyHandler = (socket, packetData) => {
 
         const newLeaderSocket = party.getSocketById(newLeaderId);
         if (newLeaderSocket === -1) {
-          return console.log('핸들러 오류!!!');
+          // 파티 해체
+          const packet = Packet.S2CDisbandParty(
+            '파티 기능에 오류가 발생하여, 파티가 해체되었습니다.',
+          );
+
+          party.forEach(([key, value]) => {
+            key.write(packet);
+          });
+
+          return party.disbandParty();
         }
         const newLeader = party.getMember(newLeaderSocket);
         party.setPartyLeader(newLeader);
@@ -93,7 +101,7 @@ export const leavePartyHandler = (socket, packetData) => {
         party.notify(msgToParty);
 
         // 떠난 멤버에게 메시지 전송
-        const msgToKickedMember = Packet.S2CDisbandParty('파티를 떠났습니다.');
+        const msgToKickedMember = Packet.S2CDisbandParty('파티를 떠났습니다.'); // 참고 : 멤버 카드 삭제를 위해 S2CDisbandParty패킷으로 전송
         member[0].write(msgToKickedMember);
       }
     }
@@ -120,7 +128,6 @@ export const leavePartyHandler = (socket, packetData) => {
     const msgToKickedMember = Packet.S2CDisbandParty('파티를 떠났습니다.');
     member[0].write(msgToKickedMember);
   } catch (error) {
-    // handleError(error);
-    console.error(error);
+    handleError(error);
   }
 };

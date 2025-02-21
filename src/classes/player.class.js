@@ -20,6 +20,7 @@ class Player {
     this.targetExp = this._getTargetExpByLevel(this.level);
     this.abilityPoint = baseStat.ability_point;
     this.isInParty = false;
+    this.partyId = null;
     this.isInvited = false;
     this.isPartyLeader = false;
     this.stamina = baseStat.stamina;
@@ -63,6 +64,14 @@ class Player {
       this.getPlayerStats(),
       this.getCurrentScene(),
     );
+  }
+
+  setPartyId(partyId) {
+    this.partyId = partyId;
+  }
+
+  getPartyId() {
+    return this.partyId;
   }
 
   setDungeonId(dungeonId) {
@@ -130,6 +139,7 @@ class Player {
     this.abilityPoint += 3;
 
     return { newLevel, newTargetExp, abilityPoint: this.abilityPoint };
+    return { newLevel, newTargetExp, abilityPoint: this.abilityPoint };
   }
 
   getTargetExp() {
@@ -148,7 +158,11 @@ class Player {
   addStat(statCode) {
     if (this.abilityPoint <= 0) return false;
 
+    if (this.abilityPoint <= 0) return false;
+
     this.abilityPoint--;
+    switch (statCode) {
+      case 1:
     switch (statCode) {
       case 1:
         this.stamina++;
@@ -166,13 +180,7 @@ class Player {
   }
 
   getStatInfo() {
-    return PAYLOAD_DATA.StatInfo(
-      this.level,
-      this.stamina,
-      this.pickSpeed,
-      this.moveSpeed,
-      this.abilityPoint,
-    );
+    return PAYLOAD_DATA.StatInfo(this.level, this.stamina, this.pickSpeed, this.moveSpeed, this.abilityPoint);
   }
 }
 
