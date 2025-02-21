@@ -87,67 +87,56 @@ class MonsterSession {
 
   async update() {
     const players = getPlayerSession().getAllPlayers();
+    if (players.size === 0 || this.isUpdating) return;
 
-    if (players.size === 0) return;
     const currentTime = Date.now();
-    // 200ms가 지났는지 확인
-    if (currentTime - this.lastUpdateTime >= this.updateInterval) {
-      // 플레이어가 있고 연결되어 있다면
+    if (currentTime - this.lastUpdateTime < this.updateInterval) return;
 
-      for (const monster of this.monsters.values()) {
-        monster.update(players, currentTime);
-        // 몬스터의 ID와 현재 위치 가져오기
-        // const monsterId = monster.id;
-        // const position = monster.position;
-        // // 패킷 전송
-        // const transformInfo = payloadData.TransformInfo(
-        //   position.x,
-        //   position.y,
-        //   position.z,
-        //   0,
-        // );
-        // const monsterInfo = payload.S2CMonsterLocation(
-        //   monsterId,
-        //   transformInfo,
-        // );
+    try {
+      this.isUpdating = true;
 
-        // const packet = makePacket(
-        //   config.packetId.S2CMonsterLocation,
-        //   monsterInfo,
-        // );
+      // 몬스터들을 그룹으로 나누어 병렬 처리
+      const monsterGroups = this.divideMonsters(
+        Array.from(this.monsters.values()),
+      );
 
-        // getTestDungeonSessions().notify(packet);
-      }
+      // 각 그룹을 비동기적으로 처리
+      const updatePromises = monsterGroups.map((group) =>
+        Promise.all(
+          group.map((monster) =>
+            this.updateMonster(monster, players, currentTime),
+          ),
+        ),
+      );
+
+      // 모든 그룹의 업데이트 완료 대기
+      await Promise.all(updatePromises);
 
       this.lastUpdateTime = currentTime;
+    } finally {
+      this.isUpdating = false;
     }
   }
 
-  // 특정 맵의 몬스터만 업데이트
-  async updateMapMonsters(mapcode, players) {
-    const currentTime = Date.now();
-    const updates = [];
-    const navMesh = this.navMeshes.get(mapcode);
+  // 몬스터 업데이트를 개별 Promise로 래핑
+  async updateMonster(monster, players, currentTime) {
+    try {
+      await monster.update(players, currentTime);
+    } catch (error) {
+      console.error(`Monster ${monster.id} update failed:`, error);
+    }
+  }
 
-    if (!navMesh) {
-      console.error(`NavMesh not found for map ${mapcode}`);
-      return updates;
+  // 몬스터들을 여러 그룹으로 나누기 (성능 최적화)
+  divideMonsters(monsters) {
+    const groupSize = 12; // 한 그룹당 몬스터 수 조절
+    const groups = [];
+
+    for (let i = 0; i < monsters.length; i += groupSize) {
+      groups.push(monsters.slice(i, i + groupSize));
     }
 
-    for (const monster of this.monsters.values()) {
-      if (monster.mapcode === mapcode) {
-        const updatePacket = await monster.update(
-          players,
-          currentTime,
-          navMesh,
-        );
-        if (updatePacket) {
-          updates.push(updatePacket);
-        }
-      }
-    }
-
-    return updates;
+    return groups;
   }
 
   // 특정 맵의 몬스터 모두 제거
