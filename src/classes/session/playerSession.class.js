@@ -6,8 +6,8 @@ class PlayerSession {
   players = new Map();
   playerId = 1;
 
-  async addPlayer(socket, user, nickname, classCode) {
-    this.players.set(socket, new Player(user, this.playerId++, nickname, classCode));
+  async addPlayer(socket, user, nickname, classCode, statData) {
+    this.players.set(socket, new Player(user, this.playerId++, nickname, classCode, statData));
 
     const newPlayer = this.players.get(socket);
 
