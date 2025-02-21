@@ -24,9 +24,6 @@ class TestDungeonSession {
 
   getAllPlayer(sceneCode) {
     const samePlayers = [];
-    console.log('---------플레이어 엔트리 시작');
-    console.log(this.players.entries());
-    console.log('---------플레이어 엔트리 ㄲ<ㅌ');
     for (const [socket, player] of this.players.entries()) {
       if (player.sceneCode === sceneCode) {
         samePlayers.push(player);
