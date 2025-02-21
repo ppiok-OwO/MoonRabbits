@@ -139,7 +139,6 @@ class Player {
     this.abilityPoint += 3;
 
     return { newLevel, newTargetExp, abilityPoint: this.abilityPoint };
-    return { newLevel, newTargetExp, abilityPoint: this.abilityPoint };
   }
 
   getTargetExp() {
@@ -158,11 +157,7 @@ class Player {
   addStat(statCode) {
     if (this.abilityPoint <= 0) return false;
 
-    if (this.abilityPoint <= 0) return false;
-
     this.abilityPoint--;
-    switch (statCode) {
-      case 1:
     switch (statCode) {
       case 1:
         this.stamina++;
@@ -180,7 +175,13 @@ class Player {
   }
 
   getStatInfo() {
-    return PAYLOAD_DATA.StatInfo(this.level, this.stamina, this.pickSpeed, this.moveSpeed, this.abilityPoint);
+    return PAYLOAD_DATA.StatInfo(
+      this.level,
+      this.stamina,
+      this.pickSpeed,
+      this.moveSpeed,
+      this.abilityPoint,
+    );
   }
 }
 
