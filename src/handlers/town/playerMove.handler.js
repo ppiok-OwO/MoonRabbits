@@ -35,13 +35,13 @@ export async function playerMoveHandler(socket, packetData) {
       );
     }
 
-    let objFileName = "";
+    let objFileName = '';
     switch (player.getCurrentScene()) {
       case config.sceneCode.town:
-        objFileName = "Town Exported NavMesh.obj";
+        objFileName = 'Town Exported NavMesh.obj';
         break;
       case config.sceneCode.aSector:
-        objFileName = "Test Exported NavMesh.obj"
+        objFileName = 'Test Exported NavMesh.obj';
     }
 
     console.log(`현재 씬? : ${player.getCurrentScene()}`);

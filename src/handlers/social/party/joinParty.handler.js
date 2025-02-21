@@ -5,6 +5,7 @@ import {
 } from '../../../session/sessions.js';
 import CustomError from '../../../utils/error/customError.js';
 import { ErrorCodes } from '../../../utils/error/errorCodes.js';
+import handleError from '../../../utils/error/errorHandler.js';
 import Packet from '../../../utils/packet/packet.js';
 
 export const joinPartyHandler = (socket, packetData) => {
@@ -25,12 +26,22 @@ export const joinPartyHandler = (socket, packetData) => {
     }
 
     // 새로운 멤버의 플레이어 인스턴스
-    const newMember = party
-      .getAllMemberSockets()
-      .find((value) => value.id === memberId);
+    const playerSession = getPlayerSession();
+    const player = playerSession.getPlayer(socket);
+    if (!player) {
+      return socket.emit(
+        'error',
+        new CustomError(
+          ErrorCodes.USER_NOT_FOUND,
+          '플레이어 정보를 찾을 수 없습니다.',
+        ),
+      );
+    }
 
     if (party.getMemberCount() < config.party.MaxMember) {
-      party.addMember(socket, newMember);
+      party.addMember(socket, player);
+      const partyId = party.getId();
+      player.setPartyId(partyId);
     } else {
       const packet = Packet.S2CChat(
         0,
@@ -40,14 +51,18 @@ export const joinPartyHandler = (socket, packetData) => {
       return socket.write(packet);
     }
 
-    const packet = Packet.S2CJoinParty(
-      party.getId(),
-      party.getPartyLeaderId(),
-      party.getMemberCount(),
-      party.getAllMemberCardInfo(player.id),
-    );
+    // 각 멤버에 대하여 맞춤형 패킷 생성
+    const members = party.getAllMemberEntries();
 
-    return party.notify(packet);
+    members.forEach(([key, value]) => {
+      const packet = Packet.S2CJoinParty(
+        party.getId(),
+        party.getPartyLeaderId(),
+        party.getMemberCount(),
+        party.getAllMemberCardInfo(value.id),
+      );
+      key.write(packet);
+    });
   } catch (error) {
     handleError(socket, error);
   }

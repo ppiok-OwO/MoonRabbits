@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { onEnd } from './onEnd.js';
 import { onError } from './onError.js';
 import { onData } from './onData.js';
@@ -7,11 +8,11 @@ export const onConnection = (socket) => {
 
   // 소켓 객체에 buffer 속성을 추가하여 각 클라이언트에 고유한 버퍼를 유지
   socket.buffer = Buffer.alloc(0);
+  socket.id = uuidv4();
 
   // 유저 생성
   const userSession = getUserSessions();
   const newUser = userSession.setUser(socket);
-  // console.log('새로운 유저가 생성되었습니다:', newUser);
 
   socket.on('data', onData(socket));
   socket.on('end', onEnd(socket));

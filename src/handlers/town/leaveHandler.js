@@ -31,6 +31,9 @@ const leaveHandler = (socket, packetData) => {
   // Leave에 targetScene 필요함 optional로
   player.setSectionId(targetScene || 2);
 
+  get
+  getTestDungeonSessions().addPlayer(socket, player);
+
   socket.write(Packet.S2CEnter(player.getPlayerInfo()));
 
 

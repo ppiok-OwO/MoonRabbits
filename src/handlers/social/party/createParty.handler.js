@@ -1,4 +1,3 @@
-import Party from '../../../classes/party.class.js';
 import {
   getPartySessions,
   getPlayerSession,
@@ -26,7 +25,9 @@ export const createPartyHandler = (socket, packetData) => {
 
     const partySession = getPartySessions();
     const party = partySession.addParty(socket, player);
+    const partyId = party.getId();
     party.setPartyLeader(player);
+    player.setPartyId(partyId);
     player.isInParty = true;
 
     const packet = Packet.S2CCreateParty(

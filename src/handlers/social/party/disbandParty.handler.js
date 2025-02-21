@@ -37,13 +37,8 @@ export const disbandPartyHandler = (socket, packetData) => {
     }
     const partyLeader = party.getPartyLeader();
     if (player !== partyLeader) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.HANDLER_ERROR,
-          '파티 해체 권한을 가지고 있지 않습니다.',
-        ),
-      );
+      const packet = Packet.S2CChat(0, '파티 해체 권한이 없습니다.');
+      return socket.write(packet);
     }
 
     const allMembers = party.getAllMemberEntries();

@@ -28,7 +28,8 @@ CREATE TABLE IF NOT EXISTS Stats
     exp                INT  DEFAULT 0,
     stamina            INT  DEFAULT 100,
     pick_speed         INT  DEFAULT 5,
-    move_speed       FLOAT  DEFAULT 1.0,
+    move_speed         INT  DEFAULT 1,
+    ability_point      INT  DEFAULT 0,
     FOREIGN KEY (player_id) REFERENCES Players(player_id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );

@@ -58,13 +58,13 @@ const playerLocationUpdateHandler = (socket, packetData) => {
 
       if (minDistance > 1.4) {
         // 오차범위를 벗어나면 플레이어의 위치를 closestPoint로 재조정한다.
-        // const syncLocationPacket = Packet.S2CChat(
-        //   0,
-        //   '플레이어의 위치를 재조정합니다.',
-        // );
-        console.log('플레이어의 위치를 재조정합니다.');
+        const newTransform = {
+          posX: closestPoint.PosX,
+          posY: closestPoint.PosY,
+          posZ: closestPoint.PosZ,
+          rot: transform.rot,
+        };
 
-        const newTransform = { ...closestPoint, rot: transform.rot };
         const packet = Packet.S2CPlayerLocation(
           player.id,
           newTransform,
@@ -83,7 +83,6 @@ const playerLocationUpdateHandler = (socket, packetData) => {
         } else {
           // 던전이 아니면
           playerSession.notify(packet);
-          // playerSession.notify(syncLocationPacket);
         }
 
         return;
