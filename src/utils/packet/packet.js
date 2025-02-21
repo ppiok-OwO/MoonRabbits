@@ -41,10 +41,10 @@ const PACKET = {
       PAYLOAD.S2CAnimation(playerId_int32, animCode_int32),
     );
   },
-  S2CChat: (playerId_int32, chatMsg_string) => {
+  S2CChat: (playerId_int32, chatMsg_string, chatType_string) => {
     return makePacket(
       PACKET_ID.S2CChat,
-      PAYLOAD.S2CChat(playerId_int32, chatMsg_string),
+      PAYLOAD.S2CChat(playerId_int32, chatMsg_string, chatType_string),
     );
   },
   S2CPlayerSpawn: (players_PlayerInfo_repeated) => {

@@ -9,7 +9,6 @@ import handleError from '../../utils/error/errorHandler.js';
 import Packet from '../../utils/packet/packet.js';
 
 // !!! 패킷 변경에 따라 S_Animation -> S2CAnimation, S_Chat -> S2CChat으로 일괄 수정해씀다
-
 export const animationHandler = (socket, packetData) => {
   try {
     const { animCode } = packetData;
@@ -39,6 +38,7 @@ export const animationHandler = (socket, packetData) => {
         chatPacket = Packet.S2CChat(
           0,
           `${player.nickname}님이 행복한 표정을 짓습니다.`,
+          'System',
         );
         break;
 
@@ -46,6 +46,7 @@ export const animationHandler = (socket, packetData) => {
         chatPacket = Packet.S2CChat(
           0,
           `${player.nickname}님이 무척 슬퍼합니다.`,
+          'System',
         );
         break;
 
@@ -53,6 +54,7 @@ export const animationHandler = (socket, packetData) => {
         chatPacket = Packet.S2CChat(
           0,
           `${player.nickname}님이 반갑게 인사합니다.`,
+          'System',
         );
         break;
 
