@@ -6,7 +6,8 @@ import { getGameAssets } from '../init/assets.js';
 
 class Player extends Entity {
   constructor(user, playerId, nickname, classCode, statData) {
-    const baseStat = statData || config.newPlayerStatData.BASE_STAT_DATA[classCode];
+    const baseStat =
+      statData || config.newPlayerStatData.BASE_STAT_DATA[classCode];
     try {
       super(
         PAYLOAD_DATA.StatInfo(
@@ -32,9 +33,8 @@ class Player extends Entity {
     this.targetExp = this._getTargetExpByLevel(this.level);
     this.abilityPoint = 0;
     this.isInParty = false;
-    this.partyId = null
+    this.partyId = null;
     this.isInvited = false;
-    this.isPartyLeader = false;
     this.stamina = 100;
     this.pickSpeed = 5;
     this.moveSpeed = 10;
@@ -89,6 +89,14 @@ class Player extends Entity {
     );
   }
 
+  setPartyId(partyId) {
+    this.partyId = partyId;
+  }
+
+  getPartyId() {
+    return this.partyId;
+  }
+
   setDungeonId(dungeonId) {
     this.dungeonId = dungeonId;
   }
@@ -141,7 +149,7 @@ class Player extends Entity {
     // 레벨업하면 올릴 수 있는 능력치 개수
     this.abilityPoint += 3;
 
-    return { newLevel, newTargetExp, abilityPoint:this.abilityPoint };
+    return { newLevel, newTargetExp, abilityPoint: this.abilityPoint };
   }
 
   getTargetExp() {
@@ -150,19 +158,20 @@ class Player extends Entity {
 
   _getTargetExpByLevel(level) {
     try {
-      return getGameAssets().targetExps.data.find((targetExp) => targetExp.level === level)
-        .target_exp;
+      return getGameAssets().targetExps.data.find(
+        (targetExp) => targetExp.level === level,
+      ).target_exp;
     } catch (error) {
       throw new Error(`${level}lv 요구경험치 조회 오류`);
     }
   }
 
   addStat(statCode) {
-    if(this.abilityPoint<=0) return false;
-    
+    if (this.abilityPoint <= 0) return false;
+
     this.abilityPoint--;
-    switch(statCode){
-      case 1: 
+    switch (statCode) {
+      case 1:
         this.stamina++;
         break;
       case 2:
@@ -178,7 +187,13 @@ class Player extends Entity {
   }
 
   getStatInfo() {
-    return PAYLOAD_DATA.StatInfo(this.level, this.stamina, this.pickSpeed, this.moveSpeed, this.abilityPoint);
+    return PAYLOAD_DATA.StatInfo(
+      this.level,
+      this.stamina,
+      this.pickSpeed,
+      this.moveSpeed,
+      this.abilityPoint,
+    );
   }
 }
 
