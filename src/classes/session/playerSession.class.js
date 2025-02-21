@@ -1,5 +1,5 @@
 import Player from '../player.class.js';
-
+import { getSectorSessions } from '../../session/sessions.js';
 class PlayerSession {
   players = new Map();
   playerId = 1;
@@ -9,8 +9,8 @@ class PlayerSession {
       socket,
       new Player(user, this.playerId++, nickname, classCode),
     );
-
     const newPlayer = this.players.get(socket);
+    getSectorSessions().getSector(1).addPlayer(socket, newPlayer);
 
     return newPlayer;
   }
