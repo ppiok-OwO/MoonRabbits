@@ -18,13 +18,26 @@ class TestDungeonSession {
     return this.players.get(socket);
   }
 
-  getPlayer() {}
+  getAllPlayer(sceneCode) {
+    const samePlayers = [];
+    console.log('---------플레이어 엔트리 시작');
+    console.log(this.players.entries());
+    console.log('---------플레이어 엔트리 ㄲ<ㅌ');
+    for (const [socket, player] of this.players.entries()) {
+      if (player.sceneCode === sceneCode) {
+        samePlayers.push(player);
+      }
+    }
 
-  getPlayerAll() {}
+    return samePlayers;
+  }
 
-  notify(packet) {
-    for (const player of this.players.keys()) {
-      player.write(packet);
+  notify(sceneCode, packet) {
+    if (this.players.size === 0) return;
+    for (const [socket, player] of this.players.entries()) {
+      if (player.currentScene === sceneCode) {
+        socket.write(packet);
+      }
     }
   }
 

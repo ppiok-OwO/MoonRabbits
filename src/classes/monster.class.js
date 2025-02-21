@@ -1,38 +1,35 @@
+import { config } from '../config/config.js';
 import { findPath, loadNavMesh } from '../init/navMeshLoader.js';
-import { getPlayerSession } from '../session/sessions.js';
+import makePacket from '../utils/packet/makePacket.js';
+import PAYLOAD from '../utils/packet/payload.js';
+import PAYLOAD_DATA from '../utils/packet/payloadData.js';
+import {
+  getTestDungeonSessions, // 이 import가 제대로 되어있는지 확인
+} from '../session/sessions.js';
 
 class Monster {
-  constructor(mapcode, id, area) {
-    this.mapcode = mapcode; // 맵 코드 - 어느 씬에 있는지
+  constructor(scenecode, id, area, navMesh) {
+    this.scenecode = scenecode; // 맵 코드 - 어느 씬에 있는지
     this.id = id; // 몬스터 ID - 어떤 몬스터인지 구분
     this.area = area; // 구역 정보
     this.moveSpeed = 7; // 이동 속도
     this.anglerSpeed = 150; // 회전 속도
     this.acc = 10; // 가속도
-    this.target = null; // 현재 타겟
     this.lastUpdateTime = 0; // 마지막 업데이트 시간
     this.updateInterval = 100; // 10프레임 (100ms) 간격으로 위치 업데이트
     this.position = { x: 0, y: 0, z: 0 };
     this.homePosition = { x: 0, y: 0, z: 0 };
-    this.detectionRange = 60; // 감지 범위
     this.roamingRange = 45; // 배회 범위 (-45 ~ +45)
-    this.collisionRange = 0.5; // 충돌 판정 범위
     this.currentPath = []; // 현재 이동 경로
     this.pathIndex = 0; // 현재 경로에서의 위치
-    this.stepSize = 10; // 경로 보간 간격 // 이전은 0.25였음
+    this.stepSize = 10; // 경로 보간 간격
+    this.navMesh = navMesh;
   }
 
   // 몬스터 초기 위치 설정
   initialize(areaData) {
     this.homePosition = { ...areaData };
     this.position = { ...areaData };
-  }
-
-  // 플레이어와의 거리 계산
-  getDistanceToPlayer(playerPosition) {
-    const dx = this.position.x - playerPosition.posX;
-    const dz = this.position.z - playerPosition.posZ;
-    return Math.sqrt(dx * dx + dz * dz);
   }
 
   // 홈 위치와의 거리 계산
@@ -47,41 +44,56 @@ class Monster {
     return this.getDistanceToHome() > this.roamingRange;
   }
 
-  // 플레이어가 감지 범위 안에 있는지 확인
-  isPlayerInRange(playerPosition) {
-    return this.getDistanceToPlayer(playerPosition) <= this.detectionRange;
-  }
-
-  // 플레이어와 충돌했는지 확인
-  hasCollisionWith(playerPosition) {
-    return this.getDistanceToPlayer(playerPosition) <= this.collisionRange;
-  }
-
-  // 새로운 경로 계산
-  async calculatePath(navMesh, targetPosition) {
+  async calculatePath(targetPosition) {
     try {
+      // 홈 포지션 근처로 제한하여 이동
+      const maxDistance = this.roamingRange;
+      const dx = targetPosition.x - this.homePosition.x;
+      const dz = targetPosition.z - this.homePosition.z;
+      const distance = Math.sqrt(dx * dx + dz * dz);
+
+      // 타겟 위치가 너무 멀면 제한된 범위 내로 조정
+      let adjustedTarget = { ...targetPosition };
+      if (distance > maxDistance) {
+        const ratio = maxDistance / distance;
+        adjustedTarget.x = this.homePosition.x + dx * ratio;
+        adjustedTarget.z = this.homePosition.z + dz * ratio;
+      }
+
       const path = await findPath(
-        navMesh,
+        this.navMesh,
         this.position,
-        targetPosition,
+        adjustedTarget,
         this.stepSize,
       );
 
+      // 경로를 찾지 못하면 현재 위치에서 다시 계산
       if (!path || path.length === 0) {
-        this.currentPath = [
-          {
-            x: targetPosition.x,
-            y: targetPosition.y,
-            z: targetPosition.z,
-          },
-        ];
-      } else {
+        const homewardPath = await findPath(
+          this.navMesh,
+          this.position,
+          this.homePosition,
+          this.stepSize,
+        );
+        if (!homewardPath || homewardPath.length === 0) {
+          this.currentPath = [];
+          this.pathIndex = 0;
+          return false;
+        }
+
         this.currentPath = path;
+        this.pathIndex = 0;
+        return true;
       }
+
+      this.currentPath = path;
       this.pathIndex = 0;
       return true;
     } catch (error) {
       console.error('Path finding error:', error);
+      // 에러 발생시 현재 위치 정지
+      this.currentPath = [];
+      this.pathIndex = 0;
       return false;
     }
   }
@@ -89,7 +101,7 @@ class Monster {
   // 경로를 따라 이동
   moveAlongPath() {
     if (!this.currentPath || this.pathIndex >= this.currentPath.length) {
-      return false;
+      return false; // 경로가 끝났음을 알림
     }
 
     const targetPoint = this.currentPath[this.pathIndex];
@@ -97,90 +109,80 @@ class Monster {
     const dz = targetPoint.z - this.position.z;
     const distance = Math.sqrt(dx * dx + dz * dz);
 
-    if (distance < this.stepSize) {
+    // 현재 경로 포인트에 도착했는지 체크
+    if (distance < 0.5) {
+      // 도착 판정 거리를 조금 늘림
       this.pathIndex++;
-      return true;
+      return this.pathIndex >= this.currentPath.length; // 전체 경로가 끝났는지 반환
     }
 
+    // 이동 속도 적용
     const movement = this.moveSpeed * (this.updateInterval / 1000);
     const ratio = Math.min(movement / distance, 1);
-    const minMovement = 0.01;
 
-    this.position.x += dx * Math.max(ratio, minMovement);
-    this.position.z += dz * Math.max(ratio, minMovement);
-    return true;
+    // 실제 이동
+    this.position.x += dx * ratio;
+    this.position.z += dz * ratio;
+
+    return false; // 아직 이동 중
   }
 
   // 몬스터 업데이트 함수
-  async update(players, currentTime, navMesh) {
-    // 10프레임마다 업데이트
+  async update(currentTime) {
+    if (this.id < 9) return;
     if (currentTime - this.lastUpdateTime < this.updateInterval) {
       return null;
     }
     this.lastUpdateTime = currentTime;
 
-    // 현재 경로가 없거나 끝나면
-    if (!this.currentPath || this.pathIndex >= this.currentPath.length) {
-      const randomAngle = ((Math.random() - 0.5) * Math.PI) / 2;
-      const randomDist = Math.random() * this.roamingRange;
-      const randomTarget = {
-        x: this.homePosition.x + Math.cos(randomAngle) * randomDist,
-        y: this.homePosition.y,
-        z: this.homePosition.z + Math.sin(randomAngle) * randomDist,
-      };
-      await this.calculatePath(navMesh, randomTarget);
-    }
+    try {
+      // 현재 홈으로부터의 거리 체크
+      const currentDistanceToHome = this.getDistanceToHome();
 
-    this.moveAlongPath();
+      // 현재 경로가 없거나, moveAlongPath가 true를 반환(경로 완료)했을 때 새로운 목적지 설정
+      if (!this.currentPath || this.pathIndex >= this.currentPath.length) {
+        if (currentDistanceToHome > this.roamingRange) {
+          // 범위를 벗어났다면 홈으로 복귀
+          await this.calculatePath(this.homePosition);
+        } else {
+          // 새로운 랜덤 위치 설정
+          const randomAngle = Math.random() * Math.PI * 2; // 360도 전 범위
+          const randomDist =
+            this.roamingRange * 0.3 + Math.random() * this.roamingRange * 0.7; // 최소 30% ~ 최대 100% 범위
 
-    // 구역을 벗어났다면 홈으로 복귀
-    if (this.isOutOfBounds()) {
-      this.target = null;
-      if (!this.currentPath || this.currentPath.length === 0) {
-        await this.calculatePath(navMesh, this.homePosition);
-      }
-      this.moveAlongPath();
-      return this.createUpdatePacket();
-    }
+          const randomTarget = {
+            x: this.homePosition.x + Math.cos(randomAngle) * randomDist,
+            y: this.homePosition.y,
+            z: this.homePosition.z + Math.sin(randomAngle) * randomDist,
+          };
 
-    // 주변 플레이어 탐색
-    let nearestPlayer = null;
-    let nearestDistance = Infinity;
-
-    const temp = players.entries();
-
-    for (const player of temp) {
-      const position = player[1].position;
-      if (this.isPlayerInRange(position)) {
-        const distance = this.getDistanceToPlayer(position);
-        if (distance < nearestDistance) {
-          nearestDistance = distance;
-          nearestPlayer = player;
+          // console.log(
+          //   `새로운 목표 지점 설정: x=${randomTarget.x}, z=${randomTarget.z}`,
+          // );
+          await this.calculatePath(randomTarget);
         }
       }
-    }
 
-    // 타겟 설정 및 이동
-    if (nearestPlayer) {
-      this.target = nearestPlayer;
-      await this.calculatePath(navMesh, nearestPlayer.position);
-      this.moveAlongPath();
-    } else {
-      this.target = null;
-      if (!this.currentPath || this.currentPath.length === 0) {
-        const randomAngle = ((Math.random() - 0.5) * Math.PI) / 2;
-        const randomDist = Math.random() * this.roamingRange;
-        const randomTarget = {
-          x: this.homePosition.x + Math.cos(randomAngle) * randomDist,
-          y: this.homePosition.y,
-          z: this.homePosition.z + Math.sin(randomAngle) * randomDist,
-        };
-        await this.calculatePath(navMesh, randomTarget);
-      }
-      this.moveAlongPath();
-    }
+      // 이동 실행
+      const pathCompleted = this.moveAlongPath();
 
-    return this.createUpdatePacket();
+      // 현재 위치 패킷 전송
+      const transformInfo = PAYLOAD_DATA.TransformInfo(
+        this.position.x,
+        this.position.y,
+        this.position.z,
+        0,
+      );
+      const monsterInfo = PAYLOAD.S2CMonsterLocation(this.id, transformInfo);
+      const packet = makePacket(
+        config.packetId.S2CMonsterLocation,
+        monsterInfo,
+      );
+      getTestDungeonSessions().notify(this.scenecode, packet);
+    } catch (error) {
+      console.error('Monster update error:', error);
+      this.position = { ...this.homePosition };
+    }
   }
 
   // 업데이트 패킷 생성
@@ -190,7 +192,6 @@ class Monster {
       mapcode: this.mapcode,
       area: this.area,
       position: { ...this.position },
-      hasTarget: this.target !== null,
     };
   }
 }

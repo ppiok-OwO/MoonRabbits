@@ -17,7 +17,7 @@ class MonsterSession {
     this.mapAreas = new Map();
     this.navMeshes = new Map(); // 맵별 NavMesh 저장
     this.lastUpdateTime = 0;
-    this.updateInterval = 200; // 200ms 간격 //Todo: 나중에 200ms 수정해야함
+    this.updateInterval = 50; // 200ms 간격 //Todo: 나중에 200ms 수정해야함 // 200ms는 gpt형님께서 오히려 몬스터의 계산처리를 느리게함
     this.socket = null;
 
     this.initArea(); // 클래스 내부 자동 호출
@@ -47,8 +47,9 @@ class MonsterSession {
 
   // 몬스터 생성
   spawnMonster(mapcode, area) {
+    const namesh = this.navMeshes.get(mapcode);
     const id = this.monsters.size + 1;
-    const monster = new Monster(mapcode, id, area);
+    const monster = new Monster(mapcode, id, area, namesh);
 
     // 해당 맵의 구역 정보 확인
     const mapAreas = this.getMapAreas(mapcode);
@@ -86,7 +87,7 @@ class MonsterSession {
 
   async update() {
     const players = getPlayerSession().getAllPlayers();
-    const navMesh = this.navMeshes.get(2);
+
     if (players.size === 0) return;
     const currentTime = Date.now();
     // 200ms가 지났는지 확인
@@ -94,28 +95,28 @@ class MonsterSession {
       // 플레이어가 있고 연결되어 있다면
 
       for (const monster of this.monsters.values()) {
-        monster.update(players, currentTime, navMesh);
+        monster.update(players, currentTime);
         // 몬스터의 ID와 현재 위치 가져오기
-        const monsterId = monster.id;
-        const position = monster.position;
-        // 패킷 전송
-        const transformInfo = payloadData.TransformInfo(
-          position.x,
-          position.y,
-          position.z,
-          0,
-        );
-        const monsterInfo = payload.S2CMonsterLocation(
-          monsterId,
-          transformInfo,
-        );
+        // const monsterId = monster.id;
+        // const position = monster.position;
+        // // 패킷 전송
+        // const transformInfo = payloadData.TransformInfo(
+        //   position.x,
+        //   position.y,
+        //   position.z,
+        //   0,
+        // );
+        // const monsterInfo = payload.S2CMonsterLocation(
+        //   monsterId,
+        //   transformInfo,
+        // );
 
-        const packet = makePacket(
-          config.packetId.S2CMonsterLocation,
-          monsterInfo,
-        );
+        // const packet = makePacket(
+        //   config.packetId.S2CMonsterLocation,
+        //   monsterInfo,
+        // );
 
-        getTestDungeonSessions().notify(packet);
+        // getTestDungeonSessions().notify(packet);
       }
 
       this.lastUpdateTime = currentTime;
