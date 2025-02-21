@@ -9,6 +9,7 @@ import makePacket from '../../utils/packet/makePacket.js';
 import Packet from '../../utils/packet/packet.js';
 import payload from '../../utils/packet/payload.js';
 import PAYLOAD_DATA from '../../utils/packet/payloadData.js';
+import PathValidator from '../../utils/validate/PathValidator.js';
 
 // !!! 패킷 변경에 따라 S_Chat -> S2CChat, S_Location -> S2CPlayerLocation으로 일괄 수정해씀다
 
@@ -20,7 +21,7 @@ import PAYLOAD_DATA from '../../utils/packet/payloadData.js';
 // ]
 
 // 이동중이라면 10프레임마다 location 패킷 전송
-const playerLocationUpdateHandler = (socket, packetData) => {
+const playerLocationUpdateHandler = async (socket, packetData) => {
   try {
     const { transform } = packetData;
 
@@ -41,30 +42,14 @@ const playerLocationUpdateHandler = (socket, packetData) => {
     if (path === null) {
       console.log('생성된 경로가 없음!!');
     } else {
-      // transform의 좌표로부터 가장 가까운 path상의 좌표 구하기
-      // 두 좌표 사이의 거리가 루트2(대락 1.4)보다 작아야 한다.
-      let minDistance = Infinity;
-      let closestPoint = null;
-      path.forEach((point) => {
-        const distance = calculateDistance(point, transform);
-        if (distance < minDistance) {
-          minDistance = distance;
-          closestPoint = { PosX: point.x, PosY: point.y, PosZ: point.z }; // transform과 가장 가까운 경로상의 좌표
-        }
-      });
-      console.log('closestPoint : ', closestPoint);
-      console.log('transform :', transform);
-      console.log('minDistance :', minDistance);
+      const validationResult = await PathValidator.validatePosition(
+        path,
+        transform,
+      );
 
-      if (minDistance > 1.4) {
-        // 오차범위를 벗어나면 플레이어의 위치를 closestPoint로 재조정한다.
-        const newTransform = {
-          posX: closestPoint.PosX,
-          posY: closestPoint.PosY,
-          posZ: closestPoint.PosZ,
-          rot: transform.rot,
-        };
-
+      if (validationResult && validationResult.distance > 1.4) {
+        console.log('플레이어의 위치를 재조정합니다.');
+        const newTransform = { ...validationResult.point, rot: transform.rot };
         const packet = Packet.S2CPlayerLocation(
           player.id,
           newTransform,
@@ -72,18 +57,14 @@ const playerLocationUpdateHandler = (socket, packetData) => {
           player.getCurrentScene(),
         );
 
-        // 위치동기화 브로드 캐스트
         const dungeonId = player.getDungeonId();
         if (dungeonId) {
-          // 만약 던전이면
           const dungeonSessions = getDungeonSessions();
           const dungeon = dungeonSessions.getDungeon(dungeonId);
           dungeon.notify(packet);
         } else {
-          // 던전이 아니면
           playerSession.notify(packet);
         }
-
         return;
       }
     }
