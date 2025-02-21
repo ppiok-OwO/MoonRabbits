@@ -15,7 +15,7 @@ export const StartGatheringHandler = (socket, packetData) => {
     socket.write(
       Packet.S2CStartGathering(
         placedId,
-        resource.getAngle(),
+        player.setAngle(resource.getAngle()),
         resource.getDifficulty(),
       ),
     );

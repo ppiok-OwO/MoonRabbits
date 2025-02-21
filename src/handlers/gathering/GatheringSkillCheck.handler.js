@@ -13,7 +13,7 @@ export const gatheringSkillCheckHandler = (socket, packetData) => {
   const player = getPlayerSession().getPlayer(socket);
   const sector = getSectorSessions().getSector(player.setSectorId());
   if (placedId >= 0 && placedId < sector.resources.length) {
-    if (sector.resources[placedId].CheckValidateTiming(deltatime)) {
+    if (sector.resources[placedId].CheckValidateTiming(player.gatheringAngle, player.gatheringStartTime, deltatime)) {
       const durability = sector.resources[placedId].subDurability();
 
       socket.write(Packet.S2CGatheringSkillCheck(placedId, durability));

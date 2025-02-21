@@ -40,6 +40,8 @@ class Player extends Entity {
     this.isInParty = false;
     this.isInvited = false;
     this.isPartyLeader = false;
+    this.gatheringAngle = 180;
+    this.gatheringStartTime = 0;
   }
   sendPacket(packet) {
     try {
@@ -88,6 +90,10 @@ class Player extends Entity {
 
   setSectorId(sectorId) {
     return (this.currentSector = sectorId);
+  }
+  setAngle(angle){
+    this.gatheringStartTime = Date.now();
+    return this.gatheringAngle = angle;
   }
 
   getSectorId() {

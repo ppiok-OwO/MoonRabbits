@@ -5,11 +5,9 @@ class Resource {
   constructor(idx, resourceId, data) {
     this.idx = idx;
     this.resourceId = resourceId;
-    this.startTime = 0;
     this.data = data;
     this.durability = this.data.resource_durability;
     this.difficulty = this.data.resource_difficulty;
-    this.angle = 180;
   }
   getResourceId() {
     return this.resourceId;
@@ -30,8 +28,7 @@ class Resource {
     return this.data.resource_respawn * 1000;
   }
   getAngle() {
-    this.startTime = Date.now();
-    return (this.angle = createRandNum(30, 330));
+    return (createRandNum(30, 330));
   }
   subDurability(sub = 1) {
     return (this.durability -= sub);
@@ -40,13 +37,13 @@ class Resource {
     return (this.durability = this.data.resource_durability);
   }
 
-  CheckValidateTiming(deltatime) {
-    const validTime = (5000 / 36 ) * this.angle;
+  CheckValidateTiming(angle, startTime, deltatime) {
+    const validTime = (5000 / 36 ) * angle;
     const validTimeRange = (5000 / 36 ) * 60/ this.difficulty;
 
     if (
       Math.abs(deltatime - validTime) < validTimeRange &&
-      Math.abs(Date.now() - this.startTime - validTime) < validTimeRange + 50
+      Math.abs(Date.now() - startTime - validTime) < validTimeRange + 50
     ) {
       return true;
     }
