@@ -1,16 +1,3 @@
-import { PACKET_ID } from '../../../constants/header.js';
-import {
-  getDungeonSessions,
-  getPlayerSession,
-} from '../../../session/sessions.js';
-import makePacket from '../../../utils/packet/makePacket.js';
-import payload from '../../../utils/packet/payload.js';
-import PAYLOAD_DATA from '../../../utils/packet/payloadData.js';
-import Monster from '../../../classes/monster.class.js';
-import { screenDoneResponseHandler } from './screenDoneResponse.handler.js';
-
-let monsterIdx = 0;
-
 export const enterDungeonResponseHandler = (socket, dungeonCode) => {
   //전투 관련 패킷 변경으로 사용 불가.
   // console.log('enterDungeonResponseHandler');

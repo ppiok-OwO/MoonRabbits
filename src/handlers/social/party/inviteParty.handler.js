@@ -11,9 +11,6 @@ import Packet from '../../../utils/packet/packet.js';
 export const invitePartyHandler = (socket, packetData) => {
   try {
     const { partyId, nickname } = packetData;
-
-    // TODO : 내 자신은 초대할 수 없게
-
     // 파티 인스턴스
     const partySession = getPartySessions();
     const party = partySession.getParty(partyId);
@@ -64,7 +61,7 @@ export const invitePartyHandler = (socket, packetData) => {
     }
 
     // 해당 플레이어가 파티 중이면 return
-    if (newMember.isInParty) {
+    if (newMember.getPartyId()) {
       const packet = Packet.S2CChat(0, '이미 파티에 소속된 플레이어입니다.');
       return socket.write(packet);
     }
@@ -83,13 +80,13 @@ export const invitePartyHandler = (socket, packetData) => {
         newMember.id,
       );
 
-      newMember.isInvited = false;
+      newMember.isInvited = true;
 
       return newMember.user.getSocket().write(packet);
     } else {
       const packet = Packet.S2CChat(
         0,
-        '해당 파티는 정원이 모두 찼으므로 참가할 수 없습니다.',
+        '해당 파티는 정원이 모두 찼으므로 초대할 수 없습니다.',
       );
       return newMember.user.getSocket().write(packet);
     }
