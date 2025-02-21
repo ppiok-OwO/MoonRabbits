@@ -1,28 +1,16 @@
 import TransformInfo from './transformInfo.class.js';
 import PAYLOAD_DATA from '../utils/packet/payloadData.js';
 import { config } from '../config/config.js';
-import Entity from './stat.class.js';
 import { getGameAssets } from '../init/assets.js';
 
-class Player extends Entity {
+class Player {
   constructor(user, playerId, nickname, classCode, statData) {
-    const baseStat = statData || config.newPlayerStatData.BASE_STAT_DATA[classCode];
-    try {
-      super(
-        PAYLOAD_DATA.StatInfo(
-          baseStat.level,
-          baseStat.stamina,
-          baseStat.pickSpeed,
-          baseStat.moveSpeed,
-          baseStat.abilityPoint,
-        ),
-      );
-    } catch (error) {}
+    const baseStat = statData;
     this.classCode = classCode;
     this.nickname = nickname;
     this.user = user;
     this.id = playerId;
-    this.level = 1;
+    this.level = baseStat.level;
     this.position = new TransformInfo();
     this.dungeonId = null;
     this.lastBattleLog = 0;
@@ -30,13 +18,13 @@ class Player extends Entity {
     this.currentScene = 1;
     this.exp = (statData && statData.exp) || 0;
     this.targetExp = this._getTargetExpByLevel(this.level);
-    this.abilityPoint = 0;
+    this.abilityPoint = baseStat.ability_point;
     this.isInParty = false;
     this.isInvited = false;
     this.isPartyLeader = false;
-    this.stamina = 100;
-    this.pickSpeed = 5;
-    this.moveSpeed = 10;
+    this.stamina = baseStat.stamina;
+    this.pickSpeed = baseStat.pick_speed;
+    this.moveSpeed = baseStat.move_speed;
   }
 
   sendPacket(packet) {
@@ -53,17 +41,6 @@ class Player extends Entity {
 
   getCurrentScene() {
     return this.currentScene;
-  }
-
-  getPlayerStatus() {
-    return PAYLOAD_DATA.PlayerStatus(
-      this.getLevel(),
-      this.nickname,
-      this.getStamina(),
-      this.getPickSpeed(),
-      this.getMoveSpeed(),
-      this.getAbilityPoint(),
-    );
   }
 
   getPlayerStats() {
@@ -128,6 +105,18 @@ class Player extends Entity {
     return this.level;
   }
 
+  getPickSpeed() {
+    return this.pickSpeed;
+  }
+
+  getMoveSpeed() {
+    return this.moveSpeed;
+  }
+
+  getAbilityPoint() {
+    return this.abilityPoint;
+  }
+
   levelUp() {
     // 레벨 변경
     const newLevel = this.level + 1;
@@ -140,7 +129,7 @@ class Player extends Entity {
     // 레벨업하면 올릴 수 있는 능력치 개수
     this.abilityPoint += 3;
 
-    return { newLevel, newTargetExp, abilityPoint:this.abilityPoint };
+    return { newLevel, newTargetExp, abilityPoint: this.abilityPoint };
   }
 
   getTargetExp() {
@@ -157,11 +146,11 @@ class Player extends Entity {
   }
 
   addStat(statCode) {
-    if(this.abilityPoint<=0) return false;
-    
+    if (this.abilityPoint <= 0) return false;
+
     this.abilityPoint--;
-    switch(statCode){
-      case 1: 
+    switch (statCode) {
+      case 1:
         this.stamina++;
         break;
       case 2:
@@ -177,7 +166,13 @@ class Player extends Entity {
   }
 
   getStatInfo() {
-    return PAYLOAD_DATA.StatInfo(this.level, this.stamina, this.pickSpeed, this.moveSpeed, this.abilityPoint);
+    return PAYLOAD_DATA.StatInfo(
+      this.level,
+      this.stamina,
+      this.pickSpeed,
+      this.moveSpeed,
+      this.abilityPoint,
+    );
   }
 }
 
