@@ -179,6 +179,15 @@ class Player extends Entity {
   getStatInfo() {
     return PAYLOAD_DATA.StatInfo(this.level, this.stamina, this.pickSpeed, this.moveSpeed, this.abilityPoint);
   }
+
+  setStatInfo(statInfo) {
+    this.level = statInfo.level;
+    this.exp = statInfo.exp;
+    this.stamina = statInfo.stamina;
+    this.pickSpeed = statInfo.pickSpeed;
+    this.moveSpeed = statInfo.moveSpeed;
+    this.abilityPoint = statInfo.abilityPoint;
+  }
 }
 
 export default Player;
