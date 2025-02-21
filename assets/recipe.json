@@ -1,0 +1,28 @@
+{
+    "name": "recipe",
+    "version": "1.0.0",
+    "data": [
+        {
+            "recipe_id" : 30001,
+            "material_items" : [
+                {
+                    "item_id" : 20001,
+                    "count" : 1
+                }
+            ],
+            "unlock_item":{
+                "item_id" : 12345
+            }
+        },
+        {
+            "recipe_id" : 30002,
+            "material_items" : [
+                {
+                    "item_id" : 20001,
+                    "count" : 2
+                }
+            ]
+        }
+    ]
+}
+  
