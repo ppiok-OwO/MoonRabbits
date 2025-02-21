@@ -19,7 +19,7 @@ const townEnterHandler = async (socket, packetData) => {
 
     // DB에서 스탯 정보 로드 (playerId를 키로 사용)
     const statData = await loadStat(playerId);
-    console.log('statData : ', statData);
+    if(statData) console.log(chalk.red('2. 스탯 DB 로드 완료'));
 
     // PlayerSession에 추가 및 Redis 저장
     const playerSessionManager = getPlayerSession();

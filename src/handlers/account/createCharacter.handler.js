@@ -83,6 +83,7 @@ const createCharacterHandler = async (socket, packetData) => {
     const findPlayerId = await findPlayerByUserId(userData.userId);
 
     await createStat(findPlayerId.playerId);
+    console.log(chalk.red('1. 스탯 DB 생성 완료'));
     await createInventory(findPlayerId.playerId);
 
     // 캐릭터 생성 성공 시, 보유한 캐릭터 정보를 가져옴
