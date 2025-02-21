@@ -9,7 +9,6 @@ import handleError from '../../utils/error/errorHandler.js';
 import Packet from '../../utils/packet/packet.js';
 
 // !!! 패킷 변경에 따라 S_Animation -> S2CAnimation, S_Chat -> S2CChat으로 일괄 수정해씀다
-
 export const animationHandler = (socket, packetData) => {
   try {
     const { animCode } = packetData;
