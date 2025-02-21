@@ -136,6 +136,13 @@ const PAYLOAD_DATA = {
       monsterMoveSpeed: monsterMoveSpeed_float,
     };
   },
+  PartyInfo: (partyId_string, leaderId_int, memeberCount_int) => {
+    return {
+      partyId: partyId_string,
+      leaderId: leaderId_int,
+      memeberCount: memeberCount_int,
+    };
+  },
 };
 
 export default PAYLOAD_DATA;
