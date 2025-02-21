@@ -187,8 +187,3 @@ export const updatePlayerLevel = async (level, exp, abilityPoint, playerId) => {
 export const updatePlayerStat = async (stamina, pickSpeed, moveSpeed, abilityPoint, playerId) => {
   await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_STAT_STAMINA, [stamina, pickSpeed, moveSpeed, abilityPoint, playerId]);
 }
-
-// playerId로 stat 찾기
-export const findStatByPlayerId = async (playerId) => {
-  await pools.PROJECT_R_USER_DB.query(SQL_QUERIESFIND_STAT_BY_PLAYERID, [playerId]);
-}
