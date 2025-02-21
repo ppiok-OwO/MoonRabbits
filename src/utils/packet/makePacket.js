@@ -27,7 +27,7 @@ function makePacket(packetId, packetData = {}) {
 
   // 디버그용 콘솔 출력, packetId 필터링해서 사용
   if (packetId >= 0) {
-    printPacket(packetSize, packetId, packetData, 'out');
+    //printPacket(packetSize, packetId, packetData, 'out');
   }
 
   // 패킷 만들기
