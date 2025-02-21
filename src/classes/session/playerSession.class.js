@@ -4,10 +4,10 @@ import Player from '../player.class.js';
 
 class PlayerSession {
   players = new Map();
-  playerId = 1;
+  playerIdx = 1;
 
   async addPlayer(socket, user, nickname, classCode, statData) {
-    this.players.set(socket, new Player(user, this.playerId++, nickname, classCode, statData));
+    this.players.set(socket, new Player(user, this.playerIdx++, nickname, classCode, statData));
 
     const newPlayer = this.players.get(socket);
 
@@ -66,7 +66,7 @@ class PlayerSession {
   async saveToRedis(key, player) {
     try {
       await redisClient.hset(key, {
-        id: player.id,
+        playerIdx: player.id,
         userId: player.user.userId,
         nickname: player.nickname,
         classCode: player.classCode,
