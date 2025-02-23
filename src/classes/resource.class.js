@@ -2,12 +2,12 @@ import { getGameAssets } from '../init/assets.js';
 import { createRandNum } from '../utils/math/createRandNum.js';
 
 class Resource {
-  constructor(idx, resourceId, data) {
-    this.idx = idx;
+  constructor(resourceIdx, resourceId, resourceData) {
+    this.resourceIdx = resourceIdx;
     this.resourceId = resourceId;
-    this.data = data;
-    this.durability = this.data.resource_durability;
-    this.difficulty = this.data.resource_difficulty;
+    this.resourceData = resourceData;
+    this.durability = this.resourceData.resource_durability;
+    this.difficulty = this.resourceData.resource_difficulty;
   }
   getResourceId() {
     return this.resourceId;
@@ -16,7 +16,7 @@ class Resource {
     return this.startTime;
   }
   getData() {
-    return this.data;
+    return this.resourceData;
   }
   getDurability() {
     return this.durability;
@@ -25,7 +25,7 @@ class Resource {
     return this.difficulty;
   }
   getRespawnTime(){
-    return this.data.resource_respawn * 1000;
+    return this.resourceData.resource_respawn * 1000;
   }
   getAngle() {
     return (createRandNum(30, 330));
@@ -34,7 +34,7 @@ class Resource {
     return (this.durability -= sub);
   }
   resetDurability() {
-    return (this.durability = this.data.resource_durability);
+    return (this.durability = this.resourceData.resource_durability);
   }
 
   CheckValidateTiming(angle, startTime, deltatime) {
@@ -53,11 +53,11 @@ class Resource {
   dropItem() {
     let sum = 0;
     const dropItemArr = [];
-    for (let i = 0; i < this.data.drop_item.length; i++) {
-      dropItemArr.push((sum += this.data.drop_item[i]));
+    for (let i = 0; i < this.resourceData.drop_item.length; i++) {
+      dropItemArr.push((sum += this.resourceData.drop_item[i]));
     }
     const randNum = createRandNum(0, sum);
-    return this.data.drop_item[
+    return this.resourceData.drop_item[
       dropItemArr.findIndex((value) => {
         return value >= randNum;
       })

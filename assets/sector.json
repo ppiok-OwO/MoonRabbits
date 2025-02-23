@@ -1,58 +1,36 @@
 {
-  "name": "monster",
+  "name": "sector",
   "version": "1.0.0",
   "data": [
     {
-      "monster_id": 10000,
-      "monster_name": "몬스터 이름",
-      "dungeon_code": 1000,
-      "monster_type": "common",
-      "monster_description": "몬스터 설명",
-      "max_hp": 1,
-      "atk": 1,
-      "def": 1,
-      "magic": 1,
-      "speed": 0.1,
-      "drop_item": ["item1", "item2", "item3", "item4", "item5"]
+      "sector_code": 0,
+      "monster_name": "지역명",
+      "nav_object_file": "네브메시 오브잭트 파일 이름",
+      "dungeon_code": "클라이언트상의 던전 코드",
+      "monster": ["몬스터코드, 이동정보  하나씩 할것"]
     },
     {
-      "monster_id": 10001,
-      "monster_name": "움직이는버섯",
-      "dungeon_code": 1001,
-      "monster_type": "common",
-      "monster_description": "이 버섯이 움직이는 이유는 무엇일까?",
-      "max_hp": 100,
-      "atk": 10,
-      "def": 5,
-      "magic": 1,
-      "speed": 0.1,
-      "drop_item": ["item1", "item2", "item3", "item4", "item5"]
+      "sector_code": 1,
+      "monster_name": "마을",
+      "nav_object_file": "Test Exported NavMesh.obj",
+      "monster": []
     },
     {
-      "monster_id": 11001,
-      "monster_name": "퀸 비",
-      "dungeon_code": 1001,
-      "monster_type": "mid-boss",
-      "monster_description": "누군가 벌집을 건들인듯 하다. 매우 화나있다.",
-      "max_hp": 300,
-      "atk": 15,
-      "def": 5,
-      "magic": 15,
-      "speed": 0.2,
-      "drop_item": ["item1", "item2", "item3", "item4", "item5"]
-    },
-    {
-      "monster_id": 12001,
-      "monster_name": "웨어울프",
-      "dungeon_code": 1001,
-      "monster_type": "boss",
-      "monster_description": "사람이 늑대로 변할 걸까, 애초부터 늑대였을까?",
-      "max_hp": 600,
-      "atk": 30,
-      "def": 10,
-      "magic": 5,
-      "speed": 0.3,
-      "drop_item": ["item1", "item2", "item3", "item4", "item5"]
+      "sector_code": 2,
+      "monster_name": "채집구역1",
+      "nav_object_file": "Town Exported NavMesh.obj",
+      "monster": [
+        {
+          "monster_id": 11001,
+          "area": 0,
+          "position": { "x": 0, "y": 0, "z": 0 }
+        },
+        {
+          "monster_id": 11001,
+          "area": 0,
+          "position": { "x": -69.04828, "y": 0, "z": 0 }
+        }
+      ]
     }
   ]
 }

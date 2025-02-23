@@ -3,15 +3,13 @@ import { findPath, loadNavMesh } from '../init/navMeshLoader.js';
 import makePacket from '../utils/packet/makePacket.js';
 import PAYLOAD from '../utils/packet/payload.js';
 import PAYLOAD_DATA from '../utils/packet/payloadData.js';
-import {
-  getTestDungeonSessions, // 이 import가 제대로 되어있는지 확인
-} from '../session/sessions.js';
-
+import { getSectorSessions } from '../session/sessions.js';
 class Monster {
-  constructor(scenecode, id, area, navMesh) {
-    this.scenecode = scenecode; // 맵 코드 - 어느 씬에 있는지
-    this.id = id; // 몬스터 ID - 어떤 몬스터인지 구분
+  constructor(sectorId, monsterIdx, area, navMesh) {
+    this.sectorId = sectorId; // 맵 코드 - 어느 섹터에 있는지
+    this.monsterIdx = monsterIdx; // 몬스터 ID - 어떤 몬스터인지 구분
     this.area = area; // 구역 정보
+    this.navMesh = navMesh; 
     this.moveSpeed = 7; // 이동 속도
     this.anglerSpeed = 150; // 회전 속도
     this.acc = 10; // 가속도
@@ -23,13 +21,20 @@ class Monster {
     this.currentPath = []; // 현재 이동 경로
     this.pathIndex = 0; // 현재 경로에서의 위치
     this.stepSize = 10; // 경로 보간 간격
-    this.navMesh = navMesh;
   }
 
   // 몬스터 초기 위치 설정
   initialize(areaData) {
     this.homePosition = { ...areaData };
     this.position = { ...areaData };
+  }
+
+  getArea() {
+    return this.area;
+  }
+
+  setArea(area) {
+    return (this.area = area);
   }
 
   // 홈 위치와의 거리 계산
@@ -129,7 +134,7 @@ class Monster {
 
   // 몬스터 업데이트 함수
   async update(currentTime) {
-    if (this.id < 9) return;
+    if (this.monsterIdx < 9) return;
     if (currentTime - this.lastUpdateTime < this.updateInterval) {
       return null;
     }
@@ -173,12 +178,12 @@ class Monster {
         this.position.z,
         0,
       );
-      const monsterInfo = PAYLOAD.S2CMonsterLocation(this.id, transformInfo);
+      const monsterInfo = PAYLOAD.S2CMonsterLocation(this.monsterIdx, transformInfo);
       const packet = makePacket(
         config.packetId.S2CMonsterLocation,
         monsterInfo,
       );
-      getTestDungeonSessions().notify(this.scenecode, packet);
+      getSectorSessions().getSector(this.sectorId).notify(packet);
     } catch (error) {
       console.error('Monster update error:', error);
       this.position = { ...this.homePosition };
@@ -188,7 +193,7 @@ class Monster {
   // 업데이트 패킷 생성
   createUpdatePacket() {
     return {
-      id: this.id,
+      id: this.monsterIdx,
       mapcode: this.mapcode,
       area: this.area,
       position: { ...this.position },

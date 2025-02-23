@@ -139,7 +139,7 @@ export const config = {
   party: {
     MaxMember: 5,
   },
-  section: {
+  sector: {
     town: 1,
     testfield: 2,
   },

@@ -28,6 +28,12 @@ class SectorSession {
     return this.sectors.get(sectorId);
   }
 
+  getAllPlayer(sectorId) {
+    const sector = this.getSector(sectorId);
+
+    return sector.getAllPlayer().values;
+  }
+
   getAllSectors() {
     return this.sectors.values();
   }

@@ -6,7 +6,6 @@ import { chatHandler } from './social/playerChat.handler.js';
 import playerMoveHandler from './town/playerMove.handler.js';
 import playerSpawnNotificationHandler from './town/playerSpawnNotification.handler.js';
 import townEnterHandler from './town/townEnter.handler.js';
-import { enterDungeonHandler } from './town/enterDungeon.handler.js';
 import playerLocationUpdateHandler from './town/playerLocationUpdate.handler.js';
 import registerHandler from './account/register.handler.js';
 import loginHandler from './account/login.handler.js';

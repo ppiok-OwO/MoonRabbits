@@ -10,9 +10,9 @@ const initServer = async () => {
   try {
     await loadGameAssets();
     await loadProtos();
-    const sectionSessions = getSectorSessions();
-    sectionSessions.setSector(config.section.town, 1);// 마을
-    sectionSessions.setSector(config.section.testfield);// 채집공간
+    const sectorSessions = getSectorSessions();
+    sectorSessions.setSector(config.sector.town, 1);// 마을
+    sectorSessions.setSector(config.sector.testfield, 2);// 채집공간
     // await testAllConnections(pools);
     // 다음 작업
   } catch (err) {

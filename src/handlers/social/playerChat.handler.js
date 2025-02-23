@@ -1,4 +1,5 @@
 import {
+  getPartySessions,
   getSectorSessions,
   getPlayerSession,
 } from '../../session/sessions.js';
@@ -28,12 +29,13 @@ export const chatHandler = (socket, packetData) => {
       );
     }
 
-    const sectorId = player.getSectorId();
-    if (sectorId) {
-      // 만약 던전이면
-      const sectorSessions = getSectorSessions();
-      const sector = sectorSessions.getSector(sectorId);
-      sector.notify(packet);
+    const partyId = player.getPartyId();
+    if (partyId) {
+      // 만약 파티 id가 존재하면
+      const partySession = getPartySessions();
+      const party = partySession(partyId);
+      party.notify(packet);
+      party.notify(chatPacket);
     } else {
       // 던전이 아니면
       playerSession.notify(packet);
