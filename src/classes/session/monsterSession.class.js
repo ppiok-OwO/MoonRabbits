@@ -83,9 +83,10 @@ import { Monster } from '../monster.class.js';
 //     }
 //   }
 
-//   async update() {
-//     const players = getPlayerSession().getAllPlayers();
-//     if (players.size === 0 || this.isUpdating) return;
+  // async update() {
+  //   const players = getPlayerSession().getAllPlayers();
+  //   const dungeonCount = getTestDungeonSessions().players.size;
+  //   if (dungeonCount === 0 || this.isUpdating) return;
 
 //     const currentTime = Date.now();
 //     if (currentTime - this.lastUpdateTime < this.updateInterval) return;

@@ -1,29 +1,16 @@
 import TransformInfo from './transformInfo.class.js';
 import PAYLOAD_DATA from '../utils/packet/payloadData.js';
 import { config } from '../config/config.js';
-import Entity from './stat.class.js';
 import { getGameAssets } from '../init/assets.js';
 
-class Player extends Entity {
+class Player {
   constructor(user, playerId, nickname, classCode, statData, sectorId = 1) {
-    const baseStat =
-      statData || config.newPlayerStatData.BASE_STAT_DATA[classCode];
-    try {
-      super(
-        PAYLOAD_DATA.StatInfo(
-          baseStat.level,
-          baseStat.stamina,
-          baseStat.pickSpeed,
-          baseStat.moveSpeed,
-          baseStat.abilityPoint,
-        ),
-      );
-    } catch (error) {}
+    const baseStat = statData;
     this.classCode = classCode;
     this.nickname = nickname;
     this.user = user;
     this.id = playerId;
-    this.level = 1;
+    this.level = baseStat.level;
     this.position = new TransformInfo();
     this.currentSector = sectorId;
     this.lastBattleLog = 0;
@@ -31,16 +18,16 @@ class Player extends Entity {
     this.currentScene = 1;
     this.exp = (statData && statData.exp) || 0;
     this.targetExp = this._getTargetExpByLevel(this.level);
-    this.abilityPoint = 0;
+    this.abilityPoint = baseStat.ability_point;
     this.isInParty = false;
     this.isPartyLeader = false;
     this.partyId = null;
     this.isInvited = false;
     this.gatheringAngle = 180;
     this.gatheringStartTime = 0;
-    this.stamina = 100;
-    this.pickSpeed = 5;
-    this.moveSpeed = 10;
+    this.stamina = baseStat.stamina;
+    this.pickSpeed = baseStat.pick_speed;
+    this.moveSpeed = baseStat.move_speed;
   }
 
   sendPacket(packet) {
@@ -61,6 +48,13 @@ class Player extends Entity {
       this.getMoveSpeed(),
       this.getAbilityPoint(),
     );
+  }
+  setCurrentScene(sceneCode) {
+    this.currentScene = sceneCode;
+  }
+
+  getCurrentScene() {
+    return this.currentScene;
   }
 
   getPlayerStats() {
@@ -87,9 +81,9 @@ class Player extends Entity {
   setSectorId(sectorId) {
     return (this.currentSector = sectorId);
   }
-  setAngle(angle){
+  setAngle(angle) {
     this.gatheringStartTime = Date.now();
-    return this.gatheringAngle = angle;
+    return (this.gatheringAngle = angle);
   }
   setPartyId(partyId) {
     this.partyId = partyId;
@@ -122,9 +116,6 @@ class Player extends Entity {
   getExp() {
     return this.exp;
   }
-  getCurrentScene(){
-    return this.currentScene;
-  }
 
   setExp(exp) {
     this.exp = exp;
@@ -133,6 +124,18 @@ class Player extends Entity {
 
   getLevel() {
     return this.level;
+  }
+
+  getPickSpeed() {
+    return this.pickSpeed;
+  }
+
+  getMoveSpeed() {
+    return this.moveSpeed;
+  }
+
+  getAbilityPoint() {
+    return this.abilityPoint;
   }
 
   levelUp() {

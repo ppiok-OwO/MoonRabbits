@@ -5,13 +5,12 @@ import {
   createInventory,
   createStat,
   findPlayerByUserId,
-  findUserByEmail,
   findUserByNickname,
   updatePlayer,
 } from '../../db/user/user.db.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
-import { getPlayerSession, getUserSessions } from '../../session/sessions.js';
+import { getUserSessions } from '../../session/sessions.js';
 
 /* 캐릭터 생성 Handler */
 const createCharacterHandler = async (socket, packetData) => {
@@ -62,31 +61,32 @@ const createCharacterHandler = async (socket, packetData) => {
       classCode : ${classCode}
       `);
 
+    // 캐릭터 생성 성공 시, 스탯 및 인벤토리 생성
+    const findPlayer = await findPlayerByUserId(userData.userId);
+
+    await createStat(findPlayer.playerId);
+    await createInventory(findPlayer.playerId);
+
     // UserSession 업데이트
+    // login 이후에 userSession의 소켓 기반 임시 세션을 userId를 키로 사용한 Redis 해시로 업데이트
     const userSessionManager = getUserSessions();
     const user = userSessionManager.getUser(socket);
     if (user) {
-      user.setUserInfo(userData.userId, nickname, classCode);
-      console.log('----- User Session 업데이트 완료 ----- \n', user);
+      // userSession.class.js의 updateUserSessionAfterLogin 메서드를 호출하여
+      // in-memory와 Redis에 로그인 정보를 업데이트
+      await userSessionManager.updateUserSessionAfterLogin(socket, {
+        userId: userData.userId,
+        // 캐릭터가 없다면 빈 문자열이나 null, 캐릭터가 있으면 해당 정보를 저장
+        nickname: findPlayer && findPlayer.nickname ? findPlayer.nickname : '',
+        classCode: findPlayer && findPlayer.classCode ? findPlayer.classCode : '',
+      });
+      console.log('----- 업데이트된 userSession ----- \n', user);
     }
-    // PlayerSession에 추가 및 Redis 저장
-    const playerSessionManager = getPlayerSession();
-    const newPlayer = await playerSessionManager.addPlayer(socket, userData, nickname, classCode);
-
-    // Redis에 playerSession 저장
-    const redisKey = `playerSession:${newPlayer.id}`;
-    await playerSessionManager.saveToRedis(redisKey, newPlayer);
-
-    console.log('----- Player Session 업데이트 및 Redis 저장 완료 ----- \n', newPlayer);
-
-    // 캐릭터 생성 성공 시, 스탯 및 인벤토리 생성
-    const findPlayerId = await findPlayerByUserId(userData.userId);
-
-    await createStat(findPlayerId.playerId);
-    await createInventory(findPlayerId.playerId);
 
     // 캐릭터 생성 성공 시, 보유한 캐릭터 정보를 가져옴
-    const ownedCharacters = [PAYLOAD_DATA.OwnedCharacter(nickname, classCode)];
+    const ownedCharacters = [
+      PAYLOAD_DATA.OwnedCharacter(findPlayer.nickname, findPlayer.classCode),
+    ];
 
     const packet = Packet.S2CLogin(isSuccess, msg, ownedCharacters);
     socket.write(packet);
