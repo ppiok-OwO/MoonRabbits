@@ -51,11 +51,13 @@ class Sector {
   }
 
   setPlayer(socket, player) {
-    const resourceData = resources.map((value, index) => {
-      PAYLOAD_DATA.Resource(index, value.getResourceId());
-    });
+    if (this.resources.size > 0) {
+      const resourceData = resources.map((value, index) => {
+        PAYLOAD_DATA.Resource(index, value.getResourceId());
+      });
 
-    player.sendPacket(Packet.S2CResourceList(resourceData));
+      player.sendPacket(Packet.S2CResourceList(resourceData));
+    }
     return this.players.set(socket, player);
   }
 
@@ -76,9 +78,9 @@ class Sector {
   }
 
   notify(packet) {
-    this.players.values.forEach((player) => {
+    for (const player in this.players.values) {
       player.sendPacket(packet);
-    });
+    }
   }
 
   // 맵의 구역 정보 추가
@@ -129,9 +131,29 @@ class Sector {
     }
   }
 
+  // 몬스터들을 여러 그룹으로 나누기 (성능 최적화)
+  divideMonsters(monsters) {
+    const groupSize = 12; // 한 그룹당 몬스터 수 조절
+    const groups = [];
+
+    for (let i = 0; i < monsters.length; i += groupSize) {
+      groups.push(monsters.slice(i, i + groupSize));
+    }
+
+    return groups;
+  }
+
+  // 몬스터 업데이트를 개별 Promise로 래핑
+  async updateMonster(monster, players, currentTime) {
+    try {
+      await monster.update(players, currentTime);
+    } catch (error) {
+      console.error(`Monster ${monster.id} update failed:`, error);
+    }
+  }
+
   async update() {
-    const players = getPlayerSession().getAllPlayers();
-    if (players.size === 0 || this.isUpdating) return;
+    if (this.players.size === 0 || this.isUpdating) return;
 
     const currentTime = Date.now();
     if (currentTime - this.lastUpdateTime < this.updateInterval) return;
@@ -148,7 +170,7 @@ class Sector {
       const updatePromises = monsterGroups.map((group) =>
         Promise.all(
           group.map((monster) =>
-            this.updateMonster(monster, players, currentTime),
+            this.updateMonster(monster, this.players, currentTime),
           ),
         ),
       );
@@ -166,7 +188,6 @@ class Sector {
     const sectorJsonData = getGameAssets().sector.data.find((value) => {
       return value.sector_code === this.sectorCode;
     });
-
 
     const navObjectName = sectorJsonData.nav_object_file;
 
@@ -187,7 +208,7 @@ class Sector {
       );
       await this.addMapAreas(sectorJsonData.monster[i].position);
     }
-    
+
     setInterval(async () => {
       await this.update();
     }, 16); // 게임 프레임 간격으로 호출

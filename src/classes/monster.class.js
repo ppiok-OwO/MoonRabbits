@@ -134,7 +134,7 @@ class Monster {
 
   // 몬스터 업데이트 함수
   async update(currentTime) {
-    if (this.monsterIdx < 9) return;
+    //if (this.monsterIdx < 9) return;
     if (currentTime - this.lastUpdateTime < this.updateInterval) {
       return null;
     }

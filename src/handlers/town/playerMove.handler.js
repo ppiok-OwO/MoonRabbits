@@ -64,7 +64,8 @@ export async function playerMoveHandler(socket, packetData) {
 
     return isValidPath;
   } catch (error) {
-    handleError(error);
+    console.error(error);
+    // handleError(error);
   }
 }
 

@@ -72,7 +72,6 @@ class Player extends Entity {
       this.abilityPoint,
     );
   }
-
   getPlayerInfo() {
     return PAYLOAD_DATA.PlayerInfo(
       this.id,
@@ -81,7 +80,7 @@ class Player extends Entity {
       this.classCode,
       this.position,
       this.getPlayerStats(),
-      this.getCurrentScene(),
+      this.currentScene,
     );
   }
 
@@ -122,6 +121,9 @@ class Player extends Entity {
 
   getExp() {
     return this.exp;
+  }
+  getCurrentScene(){
+    return this.currentScene;
   }
 
   setExp(exp) {

@@ -1,4 +1,4 @@
-import { getPlayerSession, getSectorSessions } from '../../session/sessions.js';
+import { getPlayerSession, getSectorSessions, getPartySessions } from '../../session/sessions.js';
 import Packet from '../../utils/packet/packet.js';
 import playerSpawnNotificationHandler from '../town/playerSpawnNotification.handler.js';
 

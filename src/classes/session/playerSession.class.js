@@ -10,7 +10,7 @@ class PlayerSession {
     const newPlayer = new Player(user, this.playerId++, nickname, classCode);
     this.players.set(socket, newPlayer);
 
-    getSectorSessions().getSector(1).addPlayer(socket, newPlayer);
+    getSectorSessions().getSector(1).setPlayer(socket, newPlayer);
 
     return newPlayer;
   }
