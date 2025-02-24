@@ -6,7 +6,6 @@ import { chatHandler } from './social/playerChat.handler.js';
 import playerMoveHandler from './town/playerMove.handler.js';
 import playerSpawnNotificationHandler from './town/playerSpawnNotification.handler.js';
 import townEnterHandler from './town/townEnter.handler.js';
-import { enterDungeonHandler } from './town/enterDungeon.handler.js';
 import playerLocationUpdateHandler from './town/playerLocationUpdate.handler.js';
 import registerHandler from './account/register.handler.js';
 import loginHandler from './account/login.handler.js';
@@ -39,7 +38,6 @@ const handlers = {
   [config.packetId.C2SPlayerMove]: playerMoveHandler,
   [config.packetId.C2SAnimation]: animationHandler,
   [config.packetId.C2SChat]: chatHandler,
-  [config.packetId.C2SDungeonEnter]: enterDungeonHandler,
   // !!! 제거된 패킷임다 [config.packetId.C_PlayerResponse]: playerResponseHandler,
   [config.packetId.C2SRegister]: registerHandler,
   [config.packetId.C2SLogin]: loginHandler,

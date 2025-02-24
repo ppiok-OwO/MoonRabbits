@@ -139,6 +139,10 @@ export const config = {
   party: {
     MaxMember: 5,
   },
+  sector: {
+    town: 1,
+    testfield: 2,
+  },
 };
 
 export const packetIdEntries = Object.entries(config.packetId);
