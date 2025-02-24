@@ -1,9 +1,9 @@
 {
-    "name": "recipe",
+    "name": "crafting",
     "version": "1.0.0",
     "data": [
         {
-            "recipe_id" : 30001,
+            "crafting_id" : 30001,
             "material_items" : [
                 {
                     "item_id" : 20001,
@@ -15,7 +15,7 @@
             }
         },
         {
-            "recipe_id" : 30002,
+            "crafting_id" : 30002,
             "material_items" : [
                 {
                     "item_id" : 20001,
