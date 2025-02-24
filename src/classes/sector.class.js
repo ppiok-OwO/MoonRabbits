@@ -60,6 +60,7 @@ class Sector {
 
       player.sendPacket(Packet.S2CResourceList(resourceData));
     }
+    console.log(this.players);
     return this.players.set(socket, player);
   }
 
@@ -80,7 +81,8 @@ class Sector {
   }
 
   notify(packet) {
-    for (const player in this.players.values) {
+    for (const player of this.players.values()) {
+      console.log('noti', packet);
       player.sendPacket(packet);
     }
   }
