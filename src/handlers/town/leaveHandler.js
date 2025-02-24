@@ -1,20 +1,34 @@
-import { getPlayerSession, getSectorSessions, getPartySessions } from '../../session/sessions.js';
+import {
+  getPlayerSession,
+  getSectorSessions,
+  getPartySessions,
+} from '../../session/sessions.js';
 import Packet from '../../utils/packet/packet.js';
 import playerSpawnNotificationHandler from '../town/playerSpawnNotification.handler.js';
 
 const leaveHandler = (socket, packetData) => {
+  const { targetScene } = packetData;
+
   const player = getPlayerSession().getPlayer(socket);
   const sector = getSectorSessions().getSector(player.getSectorId());
   const partySession = getPartySessions();
 
+  const partyMembers = [player]; // 본인만 혹은 파티원 배열에 넣을 것
+
+  // 파티가 있는지 체크
   if (player.isInParty && player.isPartyLeader) {
     // 파티 인스턴스
-
+    const party = partySession.getParty(player.partyId);
+    const allMembers = party.getAllMembers();
+    for (const member in allMembers) {
+      partyMembers.push(member);
+    }
+  } else if (player.isInParty) {
+    const packet = Packet.S2CChat(0, '당신은 파티장이 아닙니다.', 'System');
+    return socket.write(packet);
   }
 
-  const partyMembers = [player]; // 본인만 혹은 파티원 배열에 넣을 것
-  const { targetScene } = packetData;
-
+  // 디스폰
   sector.notify(
     Packet.S2CPlayerDespawn(
       partyMembers.map((partyMember) => {
@@ -23,22 +37,15 @@ const leaveHandler = (socket, packetData) => {
       player.getSectorId(),
     ),
   );
-  // 파티가 있는지 체크
-  // 파티가 있다면 파티원 전부의ㅏ playerId들을 가져와서 배열에 담는다
-  // 디스폰 시켜야하고
-  // 만약 어디로 갈 거라면 어디로 갈지 보내줘야하는데
-  // 패킷에 추가를 안해놨네 써글
-  // Leave에 targetScene 필요함 optional로
-  player.setSectorId(targetScene || 2);
 
   const newSector = getSectorSessions().getSector(targetScene || 2);
-  newSector.setPlayer(socket, player);
-
-  
-  socket.write(Packet.S2CEnter(player.getPlayerInfo()));
-
-  playerSpawnNotificationHandler(socket, packetData);
-
+  partyMembers.forEach((member) => {
+    member.setSectorId(targetScene || 2);
+    newSector.setPlayer(socket, member);
+    const memberSocket = member.user.getSocket();
+    memberSocket.write(Packet.S2CEnter(member.getPlayerInfo()));
+    playerSpawnNotificationHandler(memberSocket, {});
+  });
 };
 
 export default leaveHandler;
