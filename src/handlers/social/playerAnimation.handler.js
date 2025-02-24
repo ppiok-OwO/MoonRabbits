@@ -1,6 +1,5 @@
 import {
-  getDungeonSessions,
-  getPartySessions,
+  getSectorSessions,
   getPlayerSession,
 } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
@@ -62,13 +61,13 @@ export const animationHandler = (socket, packetData) => {
         break;
     }
 
-    const partyId = player.getPartyId();
-    if (partyId) {
-      // 만약 파티 id가 존재하면
-      const partySession = getPartySessions();
-      const party = partySession(partyId);
-      party.notify(packet);
-      party.notify(chatPacket);
+    const sectorId = player.getSectorId();
+    if (sectorId) {
+      // 만약 던전이면
+      const sectorSessions = getSectorSessions();
+      const sector = sectorSessions.getSector(sectorId);
+      sector.notify(packet);
+      sector.notify(chatPacket);
     } else {
       // 던전이 아니면
       playerSession.notify(packet);
