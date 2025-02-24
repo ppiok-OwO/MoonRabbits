@@ -10,7 +10,7 @@ import {
 } from '../../db/user/user.db.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
-import { getUserSessions } from '../../session/sessions.js';
+import { getPlayerSession, getUserSessions } from '../../session/sessions.js';
 
 /* 캐릭터 생성 Handler */
 const createCharacterHandler = async (socket, packetData) => {
