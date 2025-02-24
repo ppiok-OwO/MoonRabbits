@@ -4,7 +4,7 @@ import { config } from '../config/config.js';
 import { getGameAssets } from '../init/assets.js';
 
 class Player {
-  constructor(user, playerId, nickname, classCode, statData) {
+  constructor(user, playerId, nickname, classCode, statData, sectorId = 1) {
     const baseStat = statData;
     this.classCode = classCode;
     this.nickname = nickname;
@@ -12,17 +12,18 @@ class Player {
     this.id = playerId;
     this.level = baseStat.level;
     this.position = new TransformInfo();
-    this.dungeonId = null;
+    this.currentSector = sectorId;
     this.lastBattleLog = 0;
     this.path = null;
-    this.currentScene = 1;
     this.exp = (statData && statData.exp) || 0;
     this.targetExp = this._getTargetExpByLevel(this.level);
     this.abilityPoint = baseStat.ability_point;
     this.isInParty = false;
+    this.isPartyLeader = false;
     this.partyId = null;
     this.isInvited = false;
-    this.isPartyLeader = false;
+    this.gatheringAngle = 180;
+    this.gatheringStartTime = 0;
     this.stamina = baseStat.stamina;
     this.pickSpeed = baseStat.pick_speed;
     this.moveSpeed = baseStat.move_speed;
@@ -30,18 +31,22 @@ class Player {
 
   sendPacket(packet) {
     try {
-      this.user.socket.write(packet);
+      const socket = this.user.getSocket();
+      return socket.write(packet);
     } catch (error) {
       console.error(error);
     }
   }
 
-  setCurrentScene(sceneCode) {
-    this.currentScene = sceneCode;
-  }
-
-  getCurrentScene() {
-    return this.currentScene;
+  getPlayerStatus() {
+    return PAYLOAD_DATA.PlayerStatus(
+      this.getLevel(),
+      this.nickname,
+      this.getStamina(),
+      this.getPickSpeed(),
+      this.getMoveSpeed(),
+      this.getAbilityPoint(),
+    );
   }
 
   getPlayerStats() {
@@ -53,7 +58,6 @@ class Player {
       this.abilityPoint,
     );
   }
-
   getPlayerInfo() {
     return PAYLOAD_DATA.PlayerInfo(
       this.id,
@@ -62,10 +66,17 @@ class Player {
       this.classCode,
       this.position,
       this.getPlayerStats(),
-      this.getCurrentScene(),
+      this.currentSector,
     );
   }
 
+  setSectorId(sectorId) {
+    return (this.currentSector = sectorId);
+  }
+  setAngle(angle) {
+    this.gatheringStartTime = Date.now();
+    return (this.gatheringAngle = angle);
+  }
   setPartyId(partyId) {
     this.partyId = partyId;
   }
@@ -74,23 +85,16 @@ class Player {
     return this.partyId;
   }
 
-  setDungeonId(dungeonId) {
-    this.dungeonId = dungeonId;
+  getSectorId() {
+    return this.currentSector;
   }
 
-  getDungeonId() {
-    return this.dungeonId;
-  }
   getPlayerStat() {
     return this.stat;
   }
 
   getPlayerId() {
     return this.id;
-  }
-
-  resetDungeonId() {
-    this.dungeonId = null;
   }
 
   setPath(path) {
@@ -147,8 +151,9 @@ class Player {
 
   _getTargetExpByLevel(level) {
     try {
-      return getGameAssets().targetExps.data.find((targetExp) => targetExp.level === level)
-        .target_exp;
+      return getGameAssets().targetExps.data.find(
+        (targetExp) => targetExp.level === level,
+      ).target_exp;
     } catch (error) {
       throw new Error(`${level}lv 요구경험치 조회 오류`);
     }

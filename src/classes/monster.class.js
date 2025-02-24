@@ -3,27 +3,24 @@ import { findPath, loadNavMesh } from '../init/navMeshLoader.js';
 import makePacket from '../utils/packet/makePacket.js';
 import PAYLOAD from '../utils/packet/payload.js';
 import PAYLOAD_DATA from '../utils/packet/payloadData.js';
-import {
-  getTestDungeonSessions, // 이 import가 제대로 되어있는지 확인
-} from '../session/sessions.js';
-
+import { getSectorSessions } from '../session/sessions.js';
+import { getNaveMesh } from '../init/navMeshData.js';
 class Monster {
-  constructor(scenecode, id, area, navMesh) {
-    this.scenecode = scenecode; // 맵 코드 - 어느 씬에 있는지
-    this.id = id; // 몬스터 ID - 어떤 몬스터인지 구분
-    this.area = area; // 구역 정보
+  constructor(sectorCode, monsterIdx, area) {
+    this.sectorCode = sectorCode; // 맵 코드 - 어느 섹터에 있는지
+    this.monsterIdx = monsterIdx; // 몬스터 ID - 어떤 몬스터인지 구분
+    this.navMesh = getNaveMesh(sectorCode);
     this.moveSpeed = 7; // 이동 속도
     this.anglerSpeed = 150; // 회전 속도
     this.acc = 10; // 가속도
     this.lastUpdateTime = 0; // 마지막 업데이트 시간
     this.updateInterval = 100; // 10프레임 (100ms) 간격으로 위치 업데이트
-    this.position = { x: 0, y: 0, z: 0 };
-    this.homePosition = { x: 0, y: 0, z: 0 };
+    this.position = { ...area.position };
+    this.homePosition = { ...area.position };
     this.roamingRange = 45; // 배회 범위 (-45 ~ +45)
     this.currentPath = []; // 현재 이동 경로
     this.pathIndex = 0; // 현재 경로에서의 위치
     this.stepSize = 10; // 경로 보간 간격
-    this.navMesh = navMesh;
   }
 
   // 몬스터 초기 위치 설정
@@ -45,6 +42,7 @@ class Monster {
   }
 
   async calculatePath(targetPosition) {
+    console.log('타겟 경로:', targetPosition);
     try {
       // 홈 포지션 근처로 제한하여 이동
       const maxDistance = this.roamingRange;
@@ -81,7 +79,7 @@ class Monster {
           return false;
         }
 
-        this.currentPath = path;
+        this.currentPath = homewardPath;
         this.pathIndex = 0;
         return true;
       }
@@ -99,7 +97,7 @@ class Monster {
   }
 
   // 경로를 따라 이동
-  moveAlongPath() {
+  moveAlongPath(deltaTime) {
     if (!this.currentPath || this.pathIndex >= this.currentPath.length) {
       return false; // 경로가 끝났음을 알림
     }
@@ -117,25 +115,36 @@ class Monster {
     }
 
     // 이동 속도 적용
-    const movement = this.moveSpeed * (this.updateInterval / 1000);
+    const movement = this.moveSpeed * (deltaTime / 1000);
     const ratio = Math.min(movement / distance, 1);
 
-    // 실제 이동
-    this.position.x += dx * ratio;
-    this.position.z += dz * ratio;
+    this.position = {
+      x: this.position.x + dx * ratio,
+      y: this.position.y,
+      z: this.position.z + dz * ratio,
+    };
 
     return false; // 아직 이동 중
   }
 
   // 몬스터 업데이트 함수
   async update(currentTime) {
-    if (this.id < 9) return;
-    if (currentTime - this.lastUpdateTime < this.updateInterval) {
+    const deltaTime = currentTime - this.lastUpdateTime;
+    if (deltaTime < this.updateInterval) {
       return null;
     }
     this.lastUpdateTime = currentTime;
 
     try {
+      // 디버깅 콘솔
+      // console.log(`Monster ${this.monsterIdx} - Current state:`, {
+      //   position: this.position,
+      //   homePosition: this.homePosition,
+      //   currentPath: this.currentPath ? this.currentPath.length : 0,
+      //   pathIndex: this.pathIndex,
+      //   distanceToHome: this.getDistanceToHome(),
+      // });
+
       // 현재 홈으로부터의 거리 체크
       const currentDistanceToHome = this.getDistanceToHome();
 
@@ -164,7 +173,7 @@ class Monster {
       }
 
       // 이동 실행
-      const pathCompleted = this.moveAlongPath();
+      const pathCompleted = this.moveAlongPath(deltaTime);
 
       // 현재 위치 패킷 전송
       const transformInfo = PAYLOAD_DATA.TransformInfo(
@@ -173,12 +182,15 @@ class Monster {
         this.position.z,
         0,
       );
-      const monsterInfo = PAYLOAD.S2CMonsterLocation(this.id, transformInfo);
+      const monsterInfo = PAYLOAD.S2CMonsterLocation(
+        this.monsterIdx,
+        transformInfo,
+      );
       const packet = makePacket(
         config.packetId.S2CMonsterLocation,
         monsterInfo,
       );
-      getTestDungeonSessions().notify(this.scenecode, packet);
+      getSectorSessions().getSector(this.sectorCode).notify(packet);
     } catch (error) {
       console.error('Monster update error:', error);
       this.position = { ...this.homePosition };
@@ -188,7 +200,7 @@ class Monster {
   // 업데이트 패킷 생성
   createUpdatePacket() {
     return {
-      id: this.id,
+      id: this.monsterIdx,
       mapcode: this.mapcode,
       area: this.area,
       position: { ...this.position },

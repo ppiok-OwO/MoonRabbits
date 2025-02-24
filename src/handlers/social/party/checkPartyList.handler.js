@@ -26,7 +26,7 @@ export const chceckPartyListHandler = (socket, packetData) => {
     const partySession = getPartySessions();
     const parties = partySession.getAllPartyEntries();
 
-    let partyInfos = [];
+    const partyInfos = [];
     for (const party of parties) {
       const memberCount = party[1].getMemberCount();
       if (memberCount >= 1 && memberCount < 5) {
