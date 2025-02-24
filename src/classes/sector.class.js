@@ -80,7 +80,7 @@ class Sector {
   }
 
   notify(packet) {
-    for (const player in this.players.values) {
+    for (const player of this.players.values()) {
       player.sendPacket(packet);
     }
   }

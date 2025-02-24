@@ -20,7 +20,7 @@ const leaveHandler = (socket, packetData) => {
     // 파티 인스턴스
     const party = partySession.getParty(player.partyId);
     const allMembers = party.getAllMembers();
-    for (const member in allMembers) {
+    for (const member of allMembers) {
       partyMembers.push(member);
     }
   } else if (player.isInParty) {
@@ -39,6 +39,7 @@ const leaveHandler = (socket, packetData) => {
   );
 
   const newSector = getSectorSessions().getSector(targetScene || 2);
+  console.log(newSector.players.size);
   partyMembers.forEach((member) => {
     member.setSectorId(targetScene || 2);
     newSector.setPlayer(socket, member);
@@ -46,6 +47,7 @@ const leaveHandler = (socket, packetData) => {
     memberSocket.write(Packet.S2CEnter(member.getPlayerInfo()));
     playerSpawnNotificationHandler(memberSocket, {});
   });
+  console.log(newSector.players.size);
 };
 
 export default leaveHandler;
