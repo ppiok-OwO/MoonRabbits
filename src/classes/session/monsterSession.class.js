@@ -97,17 +97,11 @@ class MonsterSession {
       this.isUpdating = true;
 
       // 몬스터들을 그룹으로 나누어 병렬 처리
-      const monsterGroups = this.divideMonsters(
-        Array.from(this.monsters.values()),
-      );
+      const monsterGroups = this.divideMonsters(Array.from(this.monsters.values()));
 
       // 각 그룹을 비동기적으로 처리
       const updatePromises = monsterGroups.map((group) =>
-        Promise.all(
-          group.map((monster) =>
-            this.updateMonster(monster, players, currentTime),
-          ),
-        ),
+        Promise.all(group.map((monster) => this.updateMonster(monster, players, currentTime))),
       );
 
       // 모든 그룹의 업데이트 완료 대기

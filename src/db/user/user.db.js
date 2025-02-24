@@ -4,6 +4,7 @@ import { SQL_QUERIES } from './user.queries.js';
 import { toCamelCase } from '../../utils/transformCase.js';
 import chalk from 'chalk';
 import bcrypt from 'bcrypt';
+import redisClient from '../../utils/redis/redis.config.js';
 
 // Email 기반으로 사용자 찾기
 export const findUserByEmail = async (email) => {
@@ -120,6 +121,97 @@ export const createInventory = async (playerId) => {
   }
 };
 
+export const updateInventory = async (playerId) => {
+  try {
+    // 플레이어의 인벤토리 ID 조회 (인벤토리는 이미 생성되어 있음)
+    const [inventoryRows] = await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.SEARCH_INVENTORY, [
+      playerId,
+    ]);
+    // 플레이어의 DB에 해당되는 인벤토리 row가 없을 때
+    if (!inventoryRows || inventoryRows.length === 0) {
+      console.error(
+        `${chalk.green('[DB Log]')} 플레이어 ${playerId}의 인벤토리 정보가 존재하지 않습니다.`,
+      );
+      return;
+    }
+    const inventoryId = inventoryRows[0].inventory_id;
+
+    // Redis에서 인벤토리 데이터 전체를 읽어옴 (해시 형식으로 저장됨)
+    const redisKey = `inventory:${playerId}`;
+    const inventoryData = await redisClient.hGetAll(redisKey);
+    if (!inventoryData || Object.keys(inventoryData).length === 0) {
+      console.log(
+        `${chalk.green('[DB Log]')} 플레이어 ${playerId}의 Redis 인벤토리가 비어 있습니다.`,
+      );
+      return;
+    }
+
+    // Redis에 저장된 각 슬롯 데이터를 순회하며 MySQL에 업데이트 진행
+    for (const slotKey in inventoryData) {
+      if (Object.hasOwnProperty.call(inventoryData, slotKey)) {
+        let slotData;
+        try {
+          slotData = JSON.parse(inventoryData[slotKey]);
+        } catch (parseError) {
+          console.error(`슬롯 ${slotKey} 데이터 파싱 실패: ${parseError}`);
+          continue;
+        }
+        const { itemId, stack } = slotData;
+        // 각 슬롯에 대해 UPDATE 쿼리 실행
+        await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_INVENTORY, [
+          itemId,
+          stack,
+          inventoryId,
+          parseInt(slotKey, 10),
+        ]);
+      }
+    }
+
+    console.log(
+      `${chalk.green('[DB Log]')} 플레이어 ${playerId}의 인벤토리가 성공적으로 업데이트되었습니다.`,
+    );
+  } catch (error) {
+    console.error(`${chalk.red('[DB Error]')} updateInventory 오류: ${error}`);
+    throw error;
+  }
+};
+
+export const syncInventoryToRedisAndSend = async (playerId) => {
+  try {
+    // MySQL에서 플레이어 인벤토리 전체 데이터를 슬롯 순서대로 조회
+    const [rows] = await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.SEARCH_ALL_INVENTORY, [
+      playerId,
+    ]);
+
+    if (!rows || rows.length === 0) {
+      console.log(
+        `${chalk.green('[DB Log]')} 플레이어 ${playerId}의 MySQL 인벤토리가 비어 있습니다.`,
+      );
+      return;
+    }
+
+    // Redis에 사용할 키를 생성하고 기존 데이터를 삭제
+    const redisKey = `inventory:${playerId}`;
+    await redisClient.del(redisKey);
+
+    // MySQL에서 가져온 각 슬롯 데이터를 Redis 해시에 저장
+    for (const row of rows) {
+      // row: { inventory_id, player_id, item_id, slot_idx, stack, created_at, ... }
+      await redisClient.hSet(
+        redisKey,
+        row.slot_idx.toString(),
+        JSON.stringify({
+          itemId: row.item_id,
+          stack: row.stack,
+        }),
+      );
+    }
+  } catch (error) {
+    console.error(`${chalk.red('[DB Error]')} syncInventoryToRedisAndSend 오류: ${error}`);
+    throw error;
+  }
+};
+
 // user_id 기반으로 플레이어 찾기
 export const findPlayerByUserId = async (userId) => {
   const [rows] = await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.FIND_PLAYER_BY_USER_ID, [userId]);
@@ -132,7 +224,6 @@ export const findPlayerByUserId = async (userId) => {
 };
 
 // DB에 nickname이 존재하는지 확인
-
 // nickname 기반으로 user_id 찾기
 export const findUserByNickname = async (nickname) => {
   const [rows] = await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.FIND_USER_BY_NICKNAME, [nickname]);
@@ -176,14 +267,25 @@ export const updateUserLogin = async (id) => {
 // 경험치 획득 시 경험치 업데이트
 export const updatePlayerExp = async (exp, playerId) => {
   await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_STAT_EXP, [exp, playerId]);
-}
+};
 
 // 레벨업 시 레벨, 경험치, AP 업데이트
 export const updatePlayerLevel = async (level, exp, abilityPoint, playerId) => {
-  await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_STAT_LEVEL, [level, exp, abilityPoint, playerId]);
-}
+  await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_STAT_LEVEL, [
+    level,
+    exp,
+    abilityPoint,
+    playerId,
+  ]);
+};
 
 // AP 선택 시 능력치 업데이트
 export const updatePlayerStat = async (stamina, pickSpeed, moveSpeed, abilityPoint, playerId) => {
-  await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_STAT_STAMINA, [stamina, pickSpeed, moveSpeed, abilityPoint, playerId]);
-}
+  await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_STAT_STAMINA, [
+    stamina,
+    pickSpeed,
+    moveSpeed,
+    abilityPoint,
+    playerId,
+  ]);
+};

@@ -9,6 +9,10 @@ export const SQL_QUERIES = {
     'UPDATE Stats SET level = ?, exp = ?, stamina = ?, pick_speed = ?, move_speed = ?, ability_point = ? WHERE player_id = ?',
   // 인벤토리 관련 SQL
   CREATE_INVENTORY: 'INSERT INTO Inventories (inventory_id, player_id) VALUES (?, ?)', // inventory_id, player_id 토대로 인벤토리 생성
+  SEARCH_INVENTORY: 'SELECT inventory_id FROM Inventories WHERE player_id = ? LIMIT 1', // player_id를 사용해서 inventory 탐색
+  SEARCH_ALL_INVENTORY: 'SELECT * FROM Inventories WHERE player_id = ? ORDER BY slot_idx ASC',
+  UPDATE_INVENTORY:
+    'UPDATE Inventories SET item_id = ?, stack = ? WHERE inventory_id = ? AND slot_idx = ?', // 인벤토리에 들어갈 데이터들 순서대로 MySQL에 업데이트
   ADD_PLAYER_TO_USERID: 'INSERT INTO Players (player_id, user_id) VALUES (?, ?)', // Players 테이블에 user_id만 들어간 데이터 생성
   FIND_PLAYER_BY_USER_ID: 'SELECT * FROM Players WHERE user_id = ?', // user_id로 player_id 찾기
   FIND_USER_BY_NICKNAME: 'SELECT * FROM Players WHERE nickname = ?', // nickname으로 user_id 찾기
@@ -18,5 +22,6 @@ export const SQL_QUERIES = {
   FIND_STAT_BY_PLAYERID: 'SELECT * FROM Stats WHERE player_id = ?',
   UPDATE_STAT_EXP: 'UPDATE Stats SET exp = ? WHERE player_id = ?',
   UPDATE_STAT_LEVEL: 'UPDATE Stats SET level = ?, exp = ?, ability_point = ? WHERE player_id = ?',
-  UPDATE_STAT: 'UPDATE Stats SET stamina = ?, pick_speed = ?, move_speed = ?, ability_point = ? WHERE player_id = ?',
+  UPDATE_STAT:
+    'UPDATE Stats SET stamina = ?, pick_speed = ?, move_speed = ?, ability_point = ? WHERE player_id = ?',
 };
