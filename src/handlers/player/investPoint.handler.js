@@ -21,7 +21,7 @@ export const investPointHandler = async (socket, packetData) => {
   const statInfo = player.getStatInfo();
 
   // DB 반영
-  await updatePlayerStat(statInfo.stamina, statInfo.pickSpeed, statInfo.moveSpeed, statInfo.abilityPoint, player.id);
+  await updatePlayerStat(statInfo.stamina, statInfo.pickSpeed, statInfo.moveSpeed, statInfo.abilityPoint, socket.player.playerId);
   console.log('5. 스탯 DB 능력치 업데이트 완료');
 
   // 클라이언트 반영
