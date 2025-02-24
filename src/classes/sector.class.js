@@ -2,9 +2,9 @@ import PAYLOAD_DATA from '../utils/packet/payloadData.js';
 import Resource from './resource.class.js';
 import { getGameAssets } from '../init/assets.js';
 import Packet from '../utils/packet/packet.js';
-import { loadNavMesh } from '../init/navMeshLoader.js';
 import { Monster } from './monster.class.js';
-import { getPlayerSession } from '../session/sessions.js';
+import { getNaveMesh } from '../init/navMeshData.js';
+
 class Sector {
   constructor(sectorId, sectorCode, resourcesId = []) {
     this.sectorId = sectorId;
@@ -14,6 +14,8 @@ class Sector {
     this.navMeshes = new Map(); // 맵별 NavMesh 저장
     this.players = new Map();
     this.resources = [];
+    this.lastUpdateTime = Date.now();
+    this.isUpdating = false;
     //this.battleStatus = null;
     resourcesId.forEach((value) => {
       this.setResource(value);
@@ -92,21 +94,6 @@ class Sector {
   getMapAreas() {
     return this.mapAreas;
   }
-
-  // NavMesh 로드 및 설정
-  async loadMapNavMesh(objFile) {
-    try {
-      const navMesh = await loadNavMesh(objFile);
-      this.navMeshes.set(this.sectorCode, navMesh);
-      return true;
-    } catch (error) {
-      console.error(
-        `Failed to load NavMesh for map ${this.sectorCode}:`,
-        error,
-      );
-      return false;
-    }
-  }
   // 몬스터 생성
   spawnMonster(monster, mapcode) {
     const namesh = this.navMeshes.get(mapcode);
@@ -122,14 +109,6 @@ class Sector {
     this.monsters.set(id, monster);
     return monster;
   }
-  // 맵 초기화 (구역당 2마리씩 배치)
-  async initializeMap(objFile) {
-    // NavMesh 로드
-    if (!this.navMeshes.has(this.sectorCode)) {
-      const success = await this.loadMapNavMesh(objFile);
-      if (!success) return;
-    }
-  }
 
   // 몬스터들을 여러 그룹으로 나누기 (성능 최적화)
   divideMonsters(monsters) {
@@ -144,11 +123,12 @@ class Sector {
   }
 
   // 몬스터 업데이트를 개별 Promise로 래핑
-  async updateMonster(monster, players, currentTime) {
+  async updateMonster(monster, currentTime) {
+    if (!monster) return;
     try {
-      await monster.update(players, currentTime);
+      await monster.update(currentTime);
     } catch (error) {
-      console.error(`Monster ${monster.id} update failed:`, error);
+      console.error(`Monster ${monster.monsterIdx} update failed:`, error);
     }
   }
 
@@ -169,9 +149,7 @@ class Sector {
       // 각 그룹을 비동기적으로 처리
       const updatePromises = monsterGroups.map((group) =>
         Promise.all(
-          group.map((monster) =>
-            this.updateMonster(monster, this.players, currentTime),
-          ),
+          group.map((monster) => this.updateMonster(monster, currentTime)),
         ),
       );
 
@@ -186,28 +164,38 @@ class Sector {
 
   async initArea() {
     const sectorJsonData = getGameAssets().sector.data.find((value) => {
-      return value.sector_code === this.sectorCode;
+      return Number(value.sector_code) === Number(this.sectorCode);
     });
 
-    const navObjectName = sectorJsonData.nav_object_file;
+    if (!sectorJsonData) {
+      console.error(
+        `섹터 코드 ${this.sectorCode}에 대한 데이터를 찾을 수 없습니다`,
+      );
+      return;
+    }
 
-    await this.loadMapNavMesh(navObjectName);
+    // monsters 배열이 있는지 확인
+    if (!Array.isArray(sectorJsonData.monsters)) {
+      console.error('몬스터 데이터가 올바른 형식이 아닙니다:', sectorJsonData);
+      return;
+    }
 
-    await this.initializeMap(navObjectName);
+    this.navMeshes.set(this.sectorCode, getNaveMesh(this.sectorCode));
 
-    for (let i = 0; i < sectorJsonData.monster.length; i++) {
-      const monsterIdx = i + 1;
+    // 모든 area를 한번에 추가
+    this.mapAreas = sectorJsonData.areas || [];
+
+    sectorJsonData.monsters.forEach((monster, index) => {
+      const monsterIdx = index + 1;
       this.monsters.set(
         monsterIdx,
         new Monster(
           this.sectorCode,
           monsterIdx,
-          this.mapAreas.length,
-          this.navMeshes.get(this.sectorCode),
+          sectorJsonData.areas[monster.areaIdx],
         ),
       );
-      await this.addMapAreas(sectorJsonData.monster[i].position);
-    }
+    });
 
     setInterval(async () => {
       await this.update();

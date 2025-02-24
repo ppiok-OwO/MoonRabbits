@@ -1,5 +1,5 @@
 import { v4 as uuidV4 } from 'uuid';
-import sector from '../sector.class.js'
+import sector from '../sector.class.js';
 import { config } from '../../config/config.js';
 
 // class TestSectorSession {

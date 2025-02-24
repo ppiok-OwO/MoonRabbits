@@ -1,8 +1,6 @@
 import { config } from '../../config/config.js';
 import { loadNavMesh } from '../../init/navMeshLoader.js';
-import {
-  getPlayerSession,
-} from '../../session/sessions.js';
+import { getPlayerSession } from '../../session/sessions.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import payload from '../../utils/packet/payload.js';
 import payloadData from '../../utils/packet/payloadData.js';
@@ -83,10 +81,10 @@ import { Monster } from '../monster.class.js';
 //     }
 //   }
 
-  // async update() {
-  //   const players = getPlayerSession().getAllPlayers();
-  //   const dungeonCount = getTestDungeonSessions().players.size;
-  //   if (dungeonCount === 0 || this.isUpdating) return;
+// async update() {
+//   const players = getPlayerSession().getAllPlayers();
+//   const dungeonCount = getTestDungeonSessions().players.size;
+//   if (dungeonCount === 0 || this.isUpdating) return;
 
 //     const currentTime = Date.now();
 //     if (currentTime - this.lastUpdateTime < this.updateInterval) return;
