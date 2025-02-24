@@ -23,7 +23,7 @@ export const addExpHandler = async (socket, packetData) => {
 
     // DB 반영
     await updatePlayerLevel(newLevel, updatedExp, abilityPoint, socket.player.playerId);
-    console.log(chalk.red('4. 스탯 DB 레벨 업데이트 완료'));
+    console.log('4. 스탯 DB 레벨 업데이트 완료');
 
     // 세션 내 모든 클라이언트에게 반영
     playerSession.notify(
@@ -37,7 +37,7 @@ export const addExpHandler = async (socket, packetData) => {
 
     // DB 반영
     await updatePlayerExp(updatedExp, socket.player.playerId);
-    console.log(chalk.red('3. 스탯 DB 경험치 업데이트 완료'));
+    console.log('3. 스탯 DB 경험치 업데이트 완료');
 
     // 클라이언트 반영
     socket.write(Packet.S2CAddExp(updatedExp));

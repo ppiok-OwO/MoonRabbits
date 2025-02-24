@@ -51,6 +51,9 @@ class Player {
       this.pickSpeed,
       this.moveSpeed,
       this.abilityPoint,
+      this.stamina,
+      this.exp,
+      this.targetExp,
     );
   }
 
@@ -181,6 +184,9 @@ class Player {
       this.pickSpeed,
       this.moveSpeed,
       this.abilityPoint,
+      this.stamina,
+      this.exp,
+      this.targetExp,
     );
   }
 
@@ -191,6 +197,7 @@ class Player {
     this.pickSpeed = statInfo.pickSpeed;
     this.moveSpeed = statInfo.moveSpeed;
     this.abilityPoint = statInfo.abilityPoint;
+    this.targetExp = statInfo.targetExp;
   }
 }
 

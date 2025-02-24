@@ -22,7 +22,7 @@ export const investPointHandler = async (socket, packetData) => {
 
   // DB 반영
   await updatePlayerStat(statInfo.stamina, statInfo.pickSpeed, statInfo.moveSpeed, statInfo.abilityPoint, player.id);
-  console.log(chalk.red('5. 스탯 DB 능력치 업데이트 완료'));
+  console.log('5. 스탯 DB 능력치 업데이트 완료');
 
   // 클라이언트 반영
   try {

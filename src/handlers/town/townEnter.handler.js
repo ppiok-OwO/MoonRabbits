@@ -19,7 +19,6 @@ const townEnterHandler = async (socket, packetData) => {
 
     // DB에서 스탯 정보 로드 (playerId를 키로 사용)
     const statData = await loadStat(playerId);
-    if(statData) console.log(chalk.red('2. 스탯 DB 로드 완료'));
 
     // PlayerSession에 추가 및 Redis 저장
     const playerSessionManager = getPlayerSession();
@@ -30,16 +29,17 @@ const townEnterHandler = async (socket, packetData) => {
       packetData.classCode,
       statData, // DB에서 로드한 스탯 데이터를 전달
     );
-    console.log('newPlayer : ', newPlayer);
+    //console.log('newPlayer : ', newPlayer);
 
     // Redis에 playerSession 저장
     const redisKey = `playerSession:${newPlayer.id}`;
     await playerSessionManager.saveToRedis(redisKey, newPlayer);
 
-    console.log('----- Player Session 업데이트 및 Redis 저장 완료 ----- \n', newPlayer);
+    //console.log('----- Player Session 업데이트 및 Redis 저장 완료 ----- \n', newPlayer);
 
     const playerInfo = newPlayer.getPlayerInfo();
     const packet = Packet.S2CEnter(playerInfo);
+    console.log('ㄹㄹㄹ', playerInfo);
 
     socket.write(packet);
 

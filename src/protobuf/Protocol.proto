@@ -493,6 +493,9 @@ message StatInfo {
   int32 pickSpeed = 3;
   int32 moveSpeed = 4;
   int32 abilityPoint = 5;
+  int32 curStamina = 6;
+  int32 exp = 7;
+  int32 targetExp = 8;
 }
 
 message MonsterStatus {
