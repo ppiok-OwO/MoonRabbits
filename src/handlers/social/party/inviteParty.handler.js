@@ -62,13 +62,21 @@ export const invitePartyHandler = (socket, packetData) => {
 
     // 해당 플레이어가 파티 중이면 return
     if (newMember.getPartyId()) {
-      const packet = Packet.S2CChat(0, '이미 파티에 소속된 플레이어입니다.');
+      const packet = Packet.S2CChat(
+        0,
+        '이미 파티에 소속된 플레이어입니다.',
+        'System',
+      );
       return socket.write(packet);
     }
 
     // 상대방이 이미 초대를 받은 상태여도 return
     if (newMember.isInvited) {
-      const packet = Packet.S2CChat(0, '지금은 초대장을 보낼 수 없습니다.');
+      const packet = Packet.S2CChat(
+        0,
+        '지금은 초대장을 보낼 수 없습니다.',
+        'System',
+      );
       return socket.write(packet);
     }
 
@@ -87,6 +95,7 @@ export const invitePartyHandler = (socket, packetData) => {
       const packet = Packet.S2CChat(
         0,
         '해당 파티는 정원이 모두 찼으므로 초대할 수 없습니다.',
+        'System',
       );
       return newMember.user.getSocket().write(packet);
     }

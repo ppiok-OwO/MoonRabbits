@@ -82,6 +82,7 @@ export const kickOutPartyHandler = (socket, packetData) => {
     const msgToParty = Packet.S2CChat(
       0,
       `${member[1].nickname}님이 파티에서 추방되었습니다.`,
+      'System',
     );
     party.notify(msgToParty);
 

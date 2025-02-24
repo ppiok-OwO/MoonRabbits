@@ -148,10 +148,13 @@ message C2SChat{
   string senderName = 2;
   string chatMsg = 3;
   int32 currentScene = 4;
+  string chatType = 5;
 }
+
 message S2CChat{
   int32 playerId = 1;
   string chatMsg = 2;
+  string chatType = 3;
 }
 
 message S2CPlayerSpawn{

@@ -22,8 +22,12 @@ const PAYLOAD = {
   S2CAnimation: (playerId_int32, animCode_int32) => {
     return { playerId: playerId_int32, animCode: animCode_int32 };
   },
-  S2CChat: (playerId_int32, chatMsg_string) => {
-    return { playerId: playerId_int32, chatMsg: chatMsg_string };
+  S2CChat: (playerId_int32, chatMsg_string, chatType_string) => {
+    return {
+      playerId: playerId_int32,
+      chatMsg: chatMsg_string,
+      chatType: chatType_string,
+    };
   },
   S2CPlayerSpawn: (players_PlayerInfo_repeated) => {
     return { players: players_PlayerInfo_repeated };
