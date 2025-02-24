@@ -12,13 +12,13 @@
     {
       "sector_code": 1,
       "monster_name": "마을",
-      "nav_object_file": "Test Exported NavMesh.obj",
+      "nav_object_file": "Town Exported NavMesh.obj",
       "monster": []
     },
     {
       "sector_code": 2,
       "monster_name": "채집구역1",
-      "nav_object_file": "Town Exported NavMesh.obj",
+      "nav_object_file": "Sector1 Exported NavMesh.obj",
       "monster": [
         {
           "monster_id": 11001,

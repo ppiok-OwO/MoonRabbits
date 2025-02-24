@@ -93,7 +93,7 @@ const playerLocationUpdateHandler = (socket, packetData) => {
       player.id,
       transform,
       true,
-      player.getCurrentScene(),
+      player.getSectorId(),
     );
 
     const sectorId = player.getSectorId();

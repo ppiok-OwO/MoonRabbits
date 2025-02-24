@@ -15,7 +15,6 @@ class Player {
     this.currentSector = sectorId;
     this.lastBattleLog = 0;
     this.path = null;
-    this.currentScene = 1;
     this.exp = (statData && statData.exp) || 0;
     this.targetExp = this._getTargetExpByLevel(this.level);
     this.abilityPoint = baseStat.ability_point;
@@ -49,13 +48,6 @@ class Player {
       this.getAbilityPoint(),
     );
   }
-  setCurrentScene(sceneCode) {
-    this.currentScene = sceneCode;
-  }
-
-  getCurrentScene() {
-    return this.currentScene;
-  }
 
   getPlayerStats() {
     return PAYLOAD_DATA.StatInfo(
@@ -74,7 +66,7 @@ class Player {
       this.classCode,
       this.position,
       this.getPlayerStats(),
-      this.currentScene,
+      this.currentSector,
     );
   }
 
