@@ -18,7 +18,11 @@ const handleError = (socket, error) => {
       printCustomErrorConsole(nickname, error);
       break;
     case ErrorCodes.GAME_NOT_FOUND:
-      const gameNotFound_sChat = Packet.S2CChat(0, `게임을 찾을 수 없습니다.`);
+      const gameNotFound_sChat = Packet.S2CChat(
+        0,
+        `게임을 찾을 수 없습니다.`,
+        'System',
+      );
       socket.write(gameNotFound_sChat);
       printCustomErrorConsole(nickname, error);
       break;
@@ -26,6 +30,7 @@ const handleError = (socket, error) => {
       const handerError_sChat = Packet.S2CChat(
         0,
         `서버에서 핸들러 오류가 발생하였습니다.`,
+        'System',
       );
       socket.write(handerError_sChat);
       printCustomErrorConsole(nickname, error);
@@ -34,6 +39,7 @@ const handleError = (socket, error) => {
       const invalidPacket_sChat = Packet.S2CChat(
         0,
         `유효하지 않은 패킷입니다.`,
+        'System',
       );
       socket.write(invalidPacket_sChat);
       printCustomErrorConsole(nickname, error);
@@ -42,6 +48,7 @@ const handleError = (socket, error) => {
       const invalidSequence_sChat = Packet.S2CChat(
         0,
         `시퀀스 오류가 발생하였습니다.`,
+        'System',
       );
       socket.write(invalidSequence_sChat);
       printCustomErrorConsole(nickname, error);
@@ -50,6 +57,7 @@ const handleError = (socket, error) => {
       const missingFields_sChat = Packet.S2CChat(
         0,
         `패킷에서 필드값이 누락되었습니다.`,
+        'System',
       );
       socket.write(missingFields_sChat);
       printCustomErrorConsole(nickname, error);
@@ -58,6 +66,7 @@ const handleError = (socket, error) => {
       const notEnoughMoney_sChat = Packet.S2CChat(
         0,
         `금액이 충분하지 않습니다.`,
+        'System',
       );
       socket.write(notEnoughMoney_sChat);
       printCustomErrorConsole(nickname, error);
@@ -66,6 +75,7 @@ const handleError = (socket, error) => {
       const packetDecode_sChat = Packet.S2CChat(
         0,
         `서버에서 패킷 읽기 오류가 발생하였습니다.`,
+        'System',
       );
       socket.write(packetDecode_sChat);
       printCustomErrorConsole(nickname, error);
@@ -74,6 +84,7 @@ const handleError = (socket, error) => {
       const packetStructureMismatch_sChat = Packet.S2CChat(
         0,
         `서버에서 패킷 구조 오류가 발생하였습니다.`,
+        'System',
       );
       socket.write(packetStructureMismatch_sChat);
       printCustomErrorConsole(nickname, error);
@@ -82,6 +93,7 @@ const handleError = (socket, error) => {
       const unknownHandler_sChat = Packet.S2CChat(
         0,
         `서버에서 핸들러 오류가 발생하였습니다.`,
+        'System',
       );
       socket.write(unknownHandler_sChat);
       printCustomErrorConsole(nickname, error);
@@ -90,6 +102,7 @@ const handleError = (socket, error) => {
       const userNotFound_sChat = Packet.S2CChat(
         0,
         `서버에서 사용자 조회 오류가 발생하였습니다.`,
+        'System',
       );
       socket.write(userNotFound_sChat);
       printCustomErrorConsole(nickname, error);
@@ -99,6 +112,7 @@ const handleError = (socket, error) => {
       const invalidNavMesh_sChat = Packet.S2CChat(
         0,
         `NavMesh 데이터가 일치하지 않습니다.`,
+        'System',
       );
       socket.write(invalidNavMesh_sChat);
       printCustomErrorConsole(nickname, error);
@@ -107,19 +121,25 @@ const handleError = (socket, error) => {
       const partyNotFound_sChat = Packet.S2CChat(
         0,
         `파티 정보를 찾을 수 없습니다.`,
+        'System',
       );
       socket.write(partyNotFound_sChat);
       printCustomErrorConsole(nickname, error);
       break;
     case ErrorCodes.INVALID_INPUT:
-        const invalidInput = Packet.S2CChat(0, `클라이언트에서 잘못된 값을 전송했습니다.`);
-        socket.write(invalidInput);
-        printCustomErrorConsole(nickname, error);
-        break;
+      const invalidInput = Packet.S2CChat(
+        0,
+        `클라이언트에서 잘못된 값을 전송했습니다.`,
+        'System',
+      );
+      socket.write(invalidInput);
+      printCustomErrorConsole(nickname, error);
+      break;
     default:
       const defaultError_sChat = Packet.S2CChat(
         0,
         `서버에서 일반 오류가 발생하였습니다.`,
+        'System',
       );
       socket.write(defaultError_sChat);
 

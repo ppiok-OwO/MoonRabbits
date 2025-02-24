@@ -1,6 +1,6 @@
 import { config } from '../../config/config.js';
 import {
-  getDungeonSessions,
+  getSectorSessions,
   getPlayerSession,
 } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
@@ -73,12 +73,13 @@ const playerLocationUpdateHandler = (socket, packetData) => {
         );
 
         // 위치동기화 브로드 캐스트
-        const dungeonId = player.getDungeonId();
-        if (dungeonId) {
+        const sectorId = player.getSectorId();
+        if (sectorId) {
           // 만약 던전이면
-          const dungeonSessions = getDungeonSessions();
-          const dungeon = dungeonSessions.getDungeon(dungeonId);
-          dungeon.notify(packet);
+          const sectorSessions = getSectorSessions();
+          const sector = sectorSessions.getSector(sectorId);
+          sector.notify(packet);
+          // dungeon.notify(syncLocationPacket);
         } else {
           // 던전이 아니면
           playerSession.notify(packet);
@@ -92,15 +93,15 @@ const playerLocationUpdateHandler = (socket, packetData) => {
       player.id,
       transform,
       true,
-      player.getCurrentScene(),
+      player.getSectorId(),
     );
 
-    const dungeonId = player.getDungeonId();
-    if (dungeonId) {
+    const sectorId = player.getSectorId();
+    if (sectorId) {
       // 만약 던전이면
-      const dungeonSessions = getDungeonSessions();
-      const dungeon = dungeonSessions.getDungeon(dungeonId);
-      dungeon.notify(packet);
+      const sectorSessions = getSectorSessions();
+      const sector = sectorSessions.getSector(sectorId);
+      sector.notify(packet);
     } else {
       // 던전이 아니면
       playerSession.notify(packet);

@@ -1,8 +1,9 @@
 import { config } from '../../config/config.js';
 import { getGameAssets } from '../../init/assets.js';
+import { aSectorNavMesh, townNavMesh } from '../../init/navMeshData.js';
 import { findPath, loadNavMesh } from '../../init/navMeshLoader.js';
 import {
-  getDungeonSessions,
+  getSectorSessions,
   getPlayerSession,
 } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
@@ -35,21 +36,20 @@ export async function playerMoveHandler(socket, packetData) {
       );
     }
 
-    let objFileName = '';
+    console.log(`현재 씬? : ${player.getCurrentScene()}`);
+
+    let navMesh;
     switch (player.getCurrentScene()) {
       case config.sceneCode.town:
-        objFileName = 'Town Exported NavMesh.obj';
+        navMesh = townNavMesh;
         break;
       case config.sceneCode.aSector:
-        objFileName = 'Test Exported NavMesh.obj';
+        navMesh = aSectorNavMesh;
+        break;
     }
-
-    console.log(`현재 씬? : ${player.getCurrentScene()}`);
-    console.log(`obj 파일명? : ${objFileName}`);
 
     const targetPos = { x: targetPosX, y: targetPosY, z: targetPosZ };
     const currentPos = { x: startPosX, y: startPosY, z: startPosZ };
-    const navMesh = await loadNavMesh(objFileName);
 
     // NavMesh 기반 경로 탐색
     const path = await findPath(navMesh, currentPos, targetPos);
@@ -64,7 +64,8 @@ export async function playerMoveHandler(socket, packetData) {
 
     return isValidPath;
   } catch (error) {
-    handleError(error);
+    console.error(error);
+    // handleError(error);
   }
 }
 
