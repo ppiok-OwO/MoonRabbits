@@ -4,31 +4,75 @@
   "data": [
     {
       "sector_code": 0,
-      "monster_name": "지역명",
-      "nav_object_file": "네브메시 오브잭트 파일 이름",
-      "dungeon_code": "클라이언트상의 던전 코드",
-      "monster": ["몬스터코드, 이동정보  하나씩 할것"]
+      "sector_name": "지역명",
+      "areas": "각 분할된 구역 위치",
+      "monsters": ["몬스터코드, 이동정보  하나씩 할것"]
     },
     {
       "sector_code": 1,
-      "monster_name": "마을",
-      "nav_object_file": "Town Exported NavMesh.obj",
-      "monster": []
+      "sector_name": "마을",
+      "areas": [],
+      "monsters": []
     },
     {
       "sector_code": 2,
-      "monster_name": "채집구역1",
-      "nav_object_file": "Sector1 Exported NavMesh.obj",
-      "monster": [
+      "sector_name": "채집구역1",
+      "areas": [
+        { "position": { "x": 0, "y": 0, "z": 0 } },
+        { "position": { "x": -69.04828, "y": 0, "z": 0 } },
+        { "position": { "x": -69.04828, "y": 0, "z": -69.04828 } },
+        { "position": { "x": 0, "y": 0, "z": -69.04828 } },
+        { "position": { "x": 69.04828, "y": 0, "z": -69.04828 } },
+        { "position": { "x": 69.04828, "y": 0, "z": 0 } }
+      ],
+      "monsters": [
         {
           "monster_id": 11001,
-          "area": 0,
-          "position": { "x": 0, "y": 0, "z": 0 }
+          "areaIdx": 0
         },
         {
           "monster_id": 11001,
-          "area": 0,
-          "position": { "x": -69.04828, "y": 0, "z": 0 }
+          "areaIdx": 0
+        },
+        {
+          "monster_id": 11001,
+          "areaIdx": 1
+        },
+        {
+          "monster_id": 11001,
+          "areaIdx": 1
+        },
+        {
+          "monster_id": 11001,
+          "areaIdx": 2
+        },
+        {
+          "monster_id": 11001,
+          "areaIdx": 2
+        },
+        {
+          "monster_id": 11001,
+          "areaIdx": 3
+        },
+        {
+          "monster_id": 11001,
+          "areaIdx": 3
+        },
+        {
+          "monster_id": 11001,
+          "areaIdx": 4
+        },
+        {
+          "monster_id": 11001,
+          "areaIdx": 4
+        },
+        {
+          "monster_id": 11001,
+          "areaIdx": 5
+        },
+        {
+          "monster_id": 11001,
+          "areaIdx": 5
         }
       ]
     }
