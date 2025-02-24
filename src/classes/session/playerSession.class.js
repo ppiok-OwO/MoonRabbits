@@ -1,15 +1,16 @@
 import chalk from 'chalk';
 import redisClient from '../../utils/redis/redis.config.js';
 import Player from '../player.class.js';
-
+import { getSectorSessions } from '../../session/sessions.js';
 class PlayerSession {
   players = new Map();
   playerIdx = 1;
 
   async addPlayer(socket, user, nickname, classCode, statData) {
-    this.players.set(socket, new Player(user, this.playerIdx++, nickname, classCode, statData));
+    const newPlayer = new Player(user, this.playerId++, nickname, classCode, statData);
+    this.players.set(socket, newPlayer);
 
-    const newPlayer = this.players.get(socket);
+    getSectorSessions().getSector(1).setPlayer(socket, newPlayer);
 
     return newPlayer;
   }

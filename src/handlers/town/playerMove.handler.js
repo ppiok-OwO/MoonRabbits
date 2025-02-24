@@ -1,11 +1,12 @@
 import { config } from '../../config/config.js';
 import { getGameAssets } from '../../init/assets.js';
-import { aSectorNavMesh, townNavMesh } from '../../init/navMeshData.js';
-import { findPath, loadNavMesh } from '../../init/navMeshLoader.js';
 import {
-  getDungeonSessions,
-  getPlayerSession,
-} from '../../session/sessions.js';
+  aSectorNavMesh,
+  getNaveMesh,
+  townNavMesh,
+} from '../../init/navMeshData.js';
+import { findPath, loadNavMesh } from '../../init/navMeshLoader.js';
+import { getSectorSessions, getPlayerSession } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import handleError from '../../utils/error/errorHandler.js';
@@ -36,17 +37,7 @@ export async function playerMoveHandler(socket, packetData) {
       );
     }
 
-    console.log(`현재 씬? : ${player.getCurrentScene()}`);
-
-    let navMesh;
-    switch (player.getCurrentScene()) {
-      case config.sceneCode.town:
-        navMesh = townNavMesh;
-        break;
-      case config.sceneCode.aSector:
-        navMesh = aSectorNavMesh;
-        break;
-    }
+    let navMesh = getNaveMesh(player.getSectorId());
 
     const targetPos = { x: targetPosX, y: targetPosY, z: targetPosZ };
     const currentPos = { x: startPosX, y: startPosY, z: startPosZ };
@@ -64,7 +55,8 @@ export async function playerMoveHandler(socket, packetData) {
 
     return isValidPath;
   } catch (error) {
-    handleError(error);
+    console.error(error);
+    // handleError(error);
   }
 }
 

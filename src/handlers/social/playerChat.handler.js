@@ -1,6 +1,6 @@
 import {
-  getDungeonSessions,
   getPartySessions,
+  getSectorSessions,
   getPlayerSession,
 } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
