@@ -30,7 +30,7 @@ const leaveHandler = (socket, packetData) => {
 
   // 디스폰
   sector.notify(
-    Packet.S2CPlayerDespawn(
+    Packet.S2CDespawn(
       partyMembers.map((partyMember) => {
         return partyMember.id;
       }),
