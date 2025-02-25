@@ -23,7 +23,6 @@ const townEnterHandler = async (socket, packetData) => {
 
     // DB에서 스탯 정보 로드 (playerId를 키로 사용)
     const statData = await loadStat(playerId);
-    console.log('statData : ', statData);
 
     // PlayerSession에 추가 및 Redis 저장
     const playerSessionManager = getPlayerSession();
@@ -34,7 +33,7 @@ const townEnterHandler = async (socket, packetData) => {
       packetData.classCode,
       statData, // DB에서 로드한 스탯 데이터를 전달
     );
-    console.log('newPlayer : ', newPlayer);
+    //console.log('newPlayer : ', newPlayer);
 
     // Redis에 playerSession 저장
     const redisKey = `playerSession:${newPlayer.id}`;

@@ -61,7 +61,7 @@ const loginHandler = async (socket, packetData) => {
         nickname: findPlayer && findPlayer.nickname ? findPlayer.nickname : '',
         classCode: findPlayer && findPlayer.classCode ? findPlayer.classCode : '',
       });
-      console.log('----- 업데이트된 userSession ----- \n', user);
+      //console.log('----- 업데이트된 userSession ----- \n', user);
     }
 
     // 캐릭터가 존재한다면 playerSession 업데이트를 같이 진행
