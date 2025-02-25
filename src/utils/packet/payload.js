@@ -54,18 +54,8 @@ const PAYLOAD = {
   S2CUpdateRanking: (status_string, data_RankingList) => {
     return { status: status_string, data: data_RankingList };
   },
-  S2CPlayerCollision: (playerId_int32, collisionPushInfo_CollisionPushInfo) => {
+  S2CCollision: (collisionPushInfo_CollisionPushInfo) => {
     return {
-      playerId: playerId_int32,
-      collisionPushInfo: collisionPushInfo_CollisionPushInfo,
-    };
-  },
-  S2CMonsterCollision: (
-    monsterId_int32,
-    collisionPushInfo_CollisionPushInfo,
-  ) => {
-    return {
-      monsterId: monsterId_int32,
       collisionPushInfo: collisionPushInfo_CollisionPushInfo,
     };
   },
