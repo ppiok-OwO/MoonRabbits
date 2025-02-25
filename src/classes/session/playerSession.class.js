@@ -7,7 +7,7 @@ class PlayerSession {
   playerIdx = 1;
 
   async addPlayer(socket, user, nickname, classCode, statData) {
-    const newPlayer = new Player(user, this.playerId++, nickname, classCode, statData);
+    const newPlayer = new Player(user, this.playerIdx++, nickname, classCode, statData);
     this.players.set(socket, newPlayer);
 
     getSectorSessions().getSector(1).setPlayer(socket, newPlayer);

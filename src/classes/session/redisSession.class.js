@@ -1,110 +1,171 @@
+// redisSession.class.js
 import redisClient from '../../utils/redis/redis.config.js';
 import chalk from 'chalk';
 import {
   getUserSessions,
   getPlayerSession,
-  getPartySession,
+  getPartySessions,
   getSectorSessions,
 } from '../../session/sessions.js';
 
 class RedisSession {
   /**
-   * 소켓을 기반으로 모든 세션 정보를 한 사용자 통합 세션으로 Redis에 저장
-   * 각 세션 매니저에서 소켓에 대응하는 데이터를 조회하여 하나의 객체로 구성
-   * @param {Object} socket - 클라이언트 소켓 (고유식별자(socket.id)와 연결된 정보)
+   * 사용자 세션 데이터를 fullSession:{userId}의 "user" 필드에 저장
+   * @param {Object} socket - 현재 클라이언트 소켓
    */
-  async saveSession(socket) {
-    // userSession: 로그인 및 사용자 관련 정보
+  async saveToRedisUserSession(socket) {
     const userSessionManager = getUserSessions();
-    // playerSession: 플레이어 객체 관련 정보
-    const playerSessionManager = getPlayerSession();
-    // partySession: 파티 관련 데이터
-    const partySessionManager = getPartySession();
-    // sectorSession: 유저가 속한 섹터(Town, Sector 등) 관련 데이터
-    const sectorSessionManager = getSectorSessions();
-
     const user = userSessionManager.getUser(socket);
     if (!user || !user.userId) {
       console.error(
         chalk.red(
-          `RedisSession.saveSession - 유효한 user session이 존재하지 않습니다. socket id: ${socket.id}`,
+          `[saveToRedisUserSession Error] socket에서 userId를 찾을 수 없습니다. : ${socket.id}`,
+        ),
+      );
+      return;
+    }
+    const key = `fullSession:${user.userId}`;
+    const userData = {
+      userId: user.userId,
+      loginTime: user.loginTime,
+      status: user.status,
+      currentSector: user.currentSector || null,
+    };
+    await redisClient.hset(key, 'user', JSON.stringify(userData));
+    await redisClient.expire(key, 3600);
+    console.log(chalk.green(`[Redis Log] userSession이 '${key}'에 저장되었습니다.`));
+  }
+
+  /**
+   * 플레이어 세션 데이터를 fullSession:{userId}의 "player" 필드에 저장
+   * @param {Object} socket - 현재 클라이언트 소켓
+   */
+  async saveToRedisPlayerSession(socket) {
+    const playerSessionManager = getPlayerSession();
+    const player = playerSessionManager.getPlayer(socket);
+    if (!player) {
+      console.error(
+        chalk.red(
+          `[saveToRedisPlayerSession Error] socket에서 playerId를 찾을 수 없습니다. : ${socket.id}`,
+        ),
+      );
+      return;
+    }
+    const userId = player.user.userId;
+    if (!userId) {
+      console.error(
+        chalk.red(
+          `[saveToRedisPlayerSession Error] player socket 데이터에서 userId를 찾을 수 없습니다. : ${socket.id}`,
+        ),
+      );
+      return;
+    }
+    const key = `fullSession:${userId}`;
+    const playerData = {
+      playerIdx: player.id,
+      nickname: player.nickname,
+      classCode: player.classCode,
+      status: 'active',
+      currentSector: 'Town', // Town 입장 시 기본값, 필요에 따라 변경 가능
+      loginTime: new Date().toISOString(),
+    };
+    await redisClient.hset(key, 'player', JSON.stringify(playerData));
+    await redisClient.expire(key, 3600);
+    console.log(chalk.green(`[Redis Log] playerSession이 '${key}'에 저장되었습니다`));
+  }
+
+  /**
+   * 파티 세션 데이터를 fullSession:{userId}의 "party" 필드에 저장합니다.
+   * 소켓에 연결된 사용자가 속한 파티를 partySession 매니저에서 조회합니다.
+   * @param {Object} socket - 현재 클라이언트 소켓
+   */
+  async saveToRedisPartySession(socket) {
+    const userSessionManager = getUserSessions();
+    const user = userSessionManager.getUser(socket);
+    if (!user || !user.userId) {
+      console.error(
+        chalk.red(
+          `[saveToRedisPartySession Error] socket에서 User를 찾을 수 없습니다. : ${socket.id}`,
+        ),
+      );
+      return;
+    }
+    const partySessionManager = getPartySessions();
+    // partySession은 Map에 파티 객체를 모두 저장합니다.
+    // 여기에서는 해당 사용자가 리더이거나 구성원으로 포함된 첫번째 파티를 검색합니다.
+    let partyData = null;
+    for (const party of partySessionManager.getAllParties().values()) {
+      // 예시로, 파티에 leader 속성이 있고 사용자가 리더인 경우를 확인
+      if (party.leader && party.leader.userId === user.userId) {
+        partyData = party;
+        break;
+      }
+      // 추가적으로 파티 멤버 리스트에서 해당 userId를 찾을 수도 있습니다.
+    }
+    const key = `fullSession:${user.userId}`;
+    if (partyData) {
+      const partyObj = {
+        partyId: partyData.getId(),
+        // 파티의 추가 정보를 포함: 예를 들어 멤버 리스트 등
+      };
+      await redisClient.hset(key, 'party', JSON.stringify(partyObj));
+      await redisClient.expire(key, 3600);
+      console.log(chalk.green(`[Redis Log] partySession이 '${key}'에 저장되었습니다`));
+    }
+  }
+
+  /**
+   * 섹터 세션 데이터를 fullSession:{userId}의 "sector" 필드에 저장합니다.
+   * @param {Object} socket - 현재 클라이언트 소켓
+   */
+  async saveToRedisSectorSession(socket) {
+    // sectorSession 매니저에서 socket에 해당하는 섹터 정보를 가져온다고 가정합니다.
+    const sectorSessionManager = getSectorSessions();
+    const sector = sectorSessionManager.getSector(socket);
+    if (!sector) {
+      console.error(
+        chalk.red(
+          `[saveToRedisSectorSession Error] socket에 해당하는 sector 정보를 찾을 수 없습니다. : ${socket.id}`,
         ),
       );
       return;
     }
 
-    // 같은 소켓에 연결된 player 세션 데이터. 없으면 null.
-    const player = playerSessionManager.getPlayer(socket) || null;
-
-    // 파티 정보는 상황에 따라 여러 방식으로 조회할 수 있습니다.
-    // 여기서는 파티 세션 매니저에 유저가 속한 파티가 있다고 가정하고 예시로 처리합니다.
-    // 만약 partySessionManager에서 별도의 조회 함수(getPartyByUserId 등)가 있다면 사용.
-    const party = partySessionManager.getParty(user.userId) || null;
-
-    // 섹터 정보도 별도로 관리되는 경우, 해당 userId 또는 소켓 기반으로 조회합니다.
-    // 예시로 sectorSession은 여러 섹터를 관리하므로, 현재 연결된 섹터를 찾는 메서드를 사용합니다.
-    // 아래는 단순히 첫 번째 섹터를 조회하는 예시입니다.
-    const sectors = Array.from(sectorSessionManager.getAllSectors());
-    // 필드에 사용자 관련 섹터가 여러 개일 수 있으므로 조건에 맞게 필터하거나 첫 번째 항목만 선택
-    const sector = sectors.length > 0 ? sectors[0] : null;
-
-    // 모든 세션 정보를 하나의 객체로 통합
-    const fullSession = {
-      user: {
-        userId: user.userId,
-        nickname: user.nickname,
-        loginTime: user.loginTime,
-        status: user.status,
-        currentSector: user.currentSector || null,
-      },
-      player: player
-        ? {
-            playeridx: player.id,
-            playerId: player.playerId,
-            nickname: player.nickname,
-            classCode: player.classCode,
-            // 필요한 추가 플레이어 필드들을 여기에 추가할 수 있음
-          }
-        : null,
-      party: party ? party : null,
-      sector: sector
-        ? {
-            sectorId: sector.id,
-            sectorCode: sector.sectorCode,
-            // 필요에 따라 섹터 내 플레이어 목록 등도 포함 가능
-          }
-        : null,
+    // sector 객체에 userId 정보가 있다고 가정합니다.
+    const key = `fullSession:${sector.userId}`;
+    const sectorData = {
+      currentSector: sector.currentSector || null,
+      // 필요한 추가 데이터가 있다면 여기에 포함할 수 있습니다.
     };
 
-    // Redis 키를 userId 기준 통합 세션으로 정의: fullSession:{userId}
-    const key = `fullSession:${user.userId}`;
     try {
-      // 전체 세션을 JSON 문자열로 Redis에 저장하고 만료시간(예: 1시간)을 설정
-      await redisClient.set(key, JSON.stringify(fullSession), 'EX', 3600);
-      console.log(chalk.green(`[Redis Log] Full session saved for userId: ${user.userId}`));
+      await redisClient.hset(key, 'sector', JSON.stringify(sectorData));
+      await redisClient.expire(key, 3600);
+      console.log(chalk.green(`[Redis Log] sectorSession이 '${key}'에 저장되었습니다`));
     } catch (error) {
-      console.error(
-        chalk.red(`[Redis Error] Saving full session for userId: ${user.userId} failed.`),
-        error,
-      );
+      console.error(chalk.red(`[Redis Error] sectorSession 저장 실패 : ${error}`));
     }
   }
 
   /**
-   * userId 기반으로 저장된 통합 세션을 삭제합니다.
-   * @param {string} userId - 해당 사용자의 고유 ID
+   * 전체 세션(user, player, party, sector)을 한 번에 저장하는 편의 메서드
+   * @param {Object} socket - 현재 클라이언트 소켓
    */
-  async removeSession(userId) {
-    try {
-      const key = `fullSession:${userId}`;
-      await redisClient.del(key);
-      console.log(chalk.green(`[Redis Log] Full session removed for userId: ${userId}`));
-    } catch (error) {
-      console.error(
-        chalk.red(`[Redis Error] Removing full session for userId: ${userId} failed.`),
-        error,
-      );
-    }
+  async saveFullSession(socket) {
+    await this.saveToRedisUserSession(socket);
+    await this.saveToRedisPlayerSession(socket);
+    await this.saveToRedisPartySession(socket);
+    await this.saveToRedisSectorSession(socket);
+  }
+
+  /**
+   * userId 기반 통합 세션(fullSession:{userId})을 삭제합니다.
+   * @param {string} userId - 사용자의 고유 ID
+   */
+  async removeFullSession(userId) {
+    const key = `fullSession:${userId}`;
+    await redisClient.del(key);
+    console.log(chalk.green(`[Redis Log] 모든 세션이 삭제되었습니다. : ${userId}`));
   }
 }
 

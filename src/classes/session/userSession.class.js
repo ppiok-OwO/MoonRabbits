@@ -39,16 +39,16 @@ class UserSession {
     await redisClient.del(tempKey);
 
     // userId 기반 Redis 세션 생성 (Hash 자료구조)
-    const key = `userSession:${user.userId}`;
-    await redisClient.hset(key, {
-      userId: user.userId,
-      nickname: user.nickname,
-      loginTime: user.loginTime,
-      currentSector: user.currentSector || 'None', // 예: "Town" 등
-      status: user.status,
-    });
-    // 세션 만료시간 설정
-    await redisClient.expire(key, 3600);
+    // const key = `userSession:${user.userId}`;
+    // await redisClient.hset(key, {
+    //   userId: user.userId,
+    //   nickname: user.nickname,
+    //   loginTime: user.loginTime,
+    //   currentSector: user.currentSector || 'None', // 예: "Town" 등
+    //   status: user.status,
+    // });
+    // // 세션 만료시간 설정
+    // await redisClient.expire(key, 3600);
 
     return user;
   }
