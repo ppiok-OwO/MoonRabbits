@@ -23,8 +23,8 @@ enum MsgId {
   C2S_CHAT=20;
   S2C_CHAT=21;
 
-  S2C_PLAYER_SPAWN=22;
-  S2C_PLAYER_DESPAWN=23;
+  S2C_SPAWN=22;
+  S2C_DESPAWN=23;
 
   C2S_PLAYER_MOVE=30;
   S2C_PLAYER_MOVE=31;
@@ -36,16 +36,14 @@ enum MsgId {
   C2S_RANKING_LIST=50;
   S2C_UPDATE_RANKING=51;
 
-  C2S_PLAYER_COLLISION=60;
-  S2C_PLAYER_COLLISION=61;
-  C2S_MONSTER_COLLISION=62;
-  S2C_MONSTER_COLLISION=63;
+  C2S_COLLISION=60;
+  S2C_COLLISION=61;
 
-  C2S_SELECT_STORE=70;
-  S2C_SELECT_STORE=71;
-  C2S_BUY_ITEM=72;
-  S2C_BUY_ITEM=73;
-  C2S_SELL_ITEM=74;
+  C2S_ITEM_OBTAINED = 80;
+  C2S_ITEM_DISASSEMBLY = 81;
+  C2S_ITEM_DESTROY = 82;
+  C2S_INVENTORY_SORT = 83;
+  S2C_INVENTORY_UPDATE = 84;
 
   C2S_CREATE_PARTY=100;
   S2C_CREATE_PARTY=101;
@@ -73,7 +71,7 @@ enum MsgId {
   C2S_MISSING_PLAYER=124;
   S2C_MISSING_PLAYER=125;
 
-  S2C_RESOURCE_LIST=141;
+  S2C_RESOURCES_LIST=141;
   S2C_UPDATE_DURABILITY=142;
   C2S_GATHERING_START=143;
   S2C_GATHERING_START=144;
@@ -147,8 +145,7 @@ message C2SChat{
   int32 playerId = 1;
   string senderName = 2;
   string chatMsg = 3;
-  int32 currentScene = 4;
-  string chatType = 5;
+  string chatType = 4;
 }
 
 message S2CChat{
@@ -157,10 +154,10 @@ message S2CChat{
   string chatType = 3;
 }
 
-message S2CPlayerSpawn{
+message S2CSpawn{
   repeated PlayerInfo players = 1;
 }
-message S2CPlayerDespawn{
+message S2CDespawn{
   repeated int32 playerIds = 1;
   int32 currentScene = 2;
 }
@@ -188,52 +185,37 @@ message C2SPlayerRunning{}
 message S2CPlayerRunning{} 
 
 message C2SRankingList{
-  PlayerRank rankingList = 1;
-  string timeStamp = 2;
+  string type = 1;
 }
 message S2CUpdateRanking{
   string status = 1;
   RankingList data = 2;
 }
 
-message C2SPlayerCollision{
-  int32 playerId = 1;
+message C2SCollision{
   CollisionInfo collisionInfo = 2;
 }
-message S2CPlayerCollision{
-  int32 playerId = 1;
+message S2CCollision{
   CollisionPushInfo collisionPushInfo = 2;
 }
-message C2SMonsterCollision{
-  int32 monsterId = 1;
-  CollisionInfo collisionInfo = 2;
+message C2SItemObtained {
+  int32 slotIdx = 1;
+  int32 itemId = 2;
 }
-message S2CMonsterCollision{
-  int32 monsterId = 1;
-  CollisionPushInfo collisionPushInfo = 2;
+message C2SItemDisassembly {
+  int32 slotIdx = 1;
+  int32 itemId = 2;
 }
-
-message C2SSelectStore{
-  int32 storeId = 1;
+message C2SItemDestroy {
+  int32 slotIdx = 1;
+  int32 itemId = 2;
 }
-message S2CSelectStore{
-  StoreInfo storeInfo = 1;
-  repeated ItemInfo itemInfo = 2;
+message C2SInventorySort {
+  repeated InventorySlot slots = 1;
 }
-message C2SBuyItem{
-  int32 storeId = 1;
-  repeated int32 itemIds = 2;
+message S2CInventoryUpdate {
+  repeated InventorySlot slots = 1;
 }
-message S2CBuyItem{
-  string success = 1;
-  InventoryInfo inventoryInfo = 2;
-  int32 gold = 3;
-}
-message C2SSellItem{
-  int32 storeId = 1;
-  repeated int32 itemIds = 2;
-}
-
 message C2SCreateParty{}
 message S2CCreateParty{
   string partyId = 1;
@@ -334,7 +316,7 @@ message S2CMissingPlayer{
   int32 playerId = 2;
 }
 
-message S2CResourceList{
+message S2CResourcesList{
   repeated Resource resources = 1;
 }
 message S2CUpdateDurability{
@@ -420,7 +402,10 @@ message PlayerRank {
   int32 exp = 4;
 }
 
-message RankingList {} 
+message RankingList {
+  repeated PlayerRank rankingList = 1;
+  string timestamp = 2;
+} 
 
 message TransformInfo {
   float posX = 1;
@@ -442,9 +427,6 @@ message PlayerStatus {
   int32 playerMoveSpeed = 5;
   int32 abilityPoint = 6;
 }
-
-message StoreInfo {} 
-
 message ItemInfo {
   int32 itemId = 1;
   int32 stack = 2;
@@ -465,18 +447,28 @@ message OwnedCharacter {
 }
 
 message CollisionInfo {
-  Vec3 position1 = 1;
-  Vec3 position2 = 2;
-  float radius1 = 3;
-  float radius2 = 4;
-  float height1 = 5;
-  float height2 = 6;
+  int32 sectorCode = 1;
+  int32 myType = 2;
+  int32 myId = 3;
+  Vec3 myPosition = 4;
+  float myRadius = 5;
+  float myHeight = 6;
+  int32 targetType = 7;
+  int32 targetId = 8;
+  Vec3 targetPosition = 9;
+  float targetRadius = 10;
+  float targetHeight = 11;
 }
 
 message CollisionPushInfo {
   bool hasCollision = 1;
-  Vec3 pushDirection = 2;
-  float pushDistance = 3;
+  int32 sectorCode = 2;
+  int32 myType = 3;
+  int32 myId = 4;
+  int32 targetType = 5;
+  int32 targetId = 6;
+  Vec3 pushDirection = 7;
+  float pushDistance = 8;
 }
 
 message Vec3 {
@@ -504,9 +496,13 @@ message MonsterStatus {
   string monsterName = 3;
   float monsterMoveSpeed = 4; 
 }
-
 message PartyInfo {
   string partyId = 1;
   int32 leaderId = 2;
   int32 memberCount = 3;
+}
+message InventorySlot {
+  int32 slotIdx = 1;
+  int32 itemId = 2;
+  int32 stack = 3;
 }
