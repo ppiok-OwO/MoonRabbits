@@ -36,10 +36,9 @@ enum MsgId {
   C2S_RANKING_LIST=50;
   S2C_UPDATE_RANKING=51;
 
-  C2S_PLAYER_COLLISION=60;
-  S2C_PLAYER_COLLISION=61;
-  C2S_MONSTER_COLLISION=62;
-  S2C_MONSTER_COLLISION=63;
+  C2S_COLLISION=60;
+  S2C_COLLISION=61;
+
 
   C2S_SELECT_STORE=70;
   S2C_SELECT_STORE=71;
@@ -196,20 +195,11 @@ message S2CUpdateRanking{
   RankingList data = 2;
 }
 
-message C2SPlayerCollision{
-  int32 playerId = 1;
+
+message C2SCollision{
   CollisionInfo collisionInfo = 2;
 }
-message S2CPlayerCollision{
-  int32 playerId = 1;
-  CollisionPushInfo collisionPushInfo = 2;
-}
-message C2SMonsterCollision{
-  int32 monsterId = 1;
-  CollisionInfo collisionInfo = 2;
-}
-message S2CMonsterCollision{
-  int32 monsterId = 1;
+message S2CCollision{
   CollisionPushInfo collisionPushInfo = 2;
 }
 
@@ -465,18 +455,28 @@ message OwnedCharacter {
 }
 
 message CollisionInfo {
-  Vec3 position1 = 1;
-  Vec3 position2 = 2;
-  float radius1 = 3;
-  float radius2 = 4;
-  float height1 = 5;
-  float height2 = 6;
+  int sectorCode = 1;
+  int myType = 2;
+  int myId = 3;
+  Vec3 myPosition = 4;
+  float myRadius = 5;
+  float myHeight = 6;
+  int targetType = 7;
+  int targetId = 8;
+  Vec3 targetPosition = 9;
+  float targetRadius = 10;
+  float targetHeight = 11;
 }
 
 message CollisionPushInfo {
   bool hasCollision = 1;
-  Vec3 pushDirection = 2;
-  float pushDistance = 3;
+  int sectorCode = 2;
+  int myType = 3;
+  int myId = 4;
+  int targetType = 5;
+  int targetId = 6;
+  Vec3 pushDirection = 7;
+  float pushDistance = 8;
 }
 
 message Vec3 {
