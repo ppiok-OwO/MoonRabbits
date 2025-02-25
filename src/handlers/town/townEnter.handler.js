@@ -46,7 +46,6 @@ const townEnterHandler = async (socket, packetData) => {
 
     const playerInfo = newPlayer.getPlayerInfo();
     const packet = Packet.S2CEnter(playerInfo);
-    console.log('ㄹㄹㄹ', playerInfo);
 
     socket.write(packet);
 
