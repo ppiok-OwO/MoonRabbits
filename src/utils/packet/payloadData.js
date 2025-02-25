@@ -26,6 +26,12 @@ const PAYLOAD_DATA = {
       exp: exp_int32,
     };
   },
+  RankingList: (rankingList_PlayerRank_repeated, timestamp_string) => {
+    return {
+      rankingList: rankingList_PlayerRank_repeated,
+      timestamp: timestamp_string,
+    };
+  },
   TransformInfo: (posX_float, posY_float, posZ_float, rot_float) => {
     return {
       posX: posX_float,
@@ -72,29 +78,49 @@ const PAYLOAD_DATA = {
     return { nickname: nickname_string, classCode: classCode_int32 };
   },
   CollisionInfo: (
-    position1_Vec3,
-    position2_Vec3,
-    radius1_float,
-    radius2_float,
-    height1_float,
-    height2_float,
+    sectorCode_int32,
+    myType_int32,
+    myId_int32,
+    myPosition_Vec3,
+    myRadius_float,
+    myHeight_float,
+    targetType_int32,
+    targetId_int32,
+    targetPosition_Vec3,
+    targetRadius_float,
+    targetHeight_float,
   ) => {
     return {
-      position1: position1_Vec3,
-      position2: position2_Vec3,
-      radius1: radius1_float,
-      radius2: radius2_float,
-      height1: height1_float,
-      height2: height2_float,
+      sectorCode: sectorCode_int32,
+      myType: myType_int32,
+      myId: myId_int32,
+      myPosition: myPosition_Vec3,
+      myRadius: myRadius_float,
+      myHeight: myHeight_float,
+      targetType: targetType_int32,
+      targetId: targetId_int32,
+      targetPosition: targetPosition_Vec3,
+      targetRadius: targetRadius_float,
+      targetHeight: targetHeight_float,
     };
   },
   CollisionPushInfo: (
     hasCollision_bool,
+    sectorCode_int32,
+    myType_int32,
+    myId_int32,
+    targetType_int32,
+    targetId_int32,
     pushDirection_Vec3,
     pushDistance_float,
   ) => {
     return {
       hasCollision: hasCollision_bool,
+      sectorCode: sectorCode_int32,
+      myType: myType_int32,
+      myId: myId_int32,
+      targetType: targetType_int32,
+      targetId: targetId_int32,
       pushDirection: pushDirection_Vec3,
       pushDistance: pushDistance_float,
     };
@@ -104,9 +130,6 @@ const PAYLOAD_DATA = {
   },
   Resource: (resourceIdx_int32, resourceId_int32) => {
     return { resourceIdx: resourceIdx_int32, resourceId: resourceId_int32 };
-  },
-  InvestPoint: (statCode_int32, point_int32) => {
-    return { statCode: statCode_int32, point: point_int32 };
   },
   StatInfo: (
     level_int32,
@@ -136,12 +159,15 @@ const PAYLOAD_DATA = {
       monsterMoveSpeed: monsterMoveSpeed_float,
     };
   },
-  PartyInfo: (partyId_string, leaderId_int, memeberCount_int) => {
+  PartyInfo: (partyId_string, leaderId_int32, memberCount_int32) => {
     return {
       partyId: partyId_string,
-      leaderId: leaderId_int,
-      memeberCount: memeberCount_int,
+      leaderId: leaderId_int32,
+      memberCount: memberCount_int32,
     };
+  },
+  InventorySlot: (slotIdx_int32, itemId_int32, stack_int32) => {
+    return { slotIdx: slotIdx_int32, itemId: itemId_int32, stack: stack_int32 };
   },
 };
 
