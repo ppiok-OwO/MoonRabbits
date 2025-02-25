@@ -137,6 +137,9 @@ const PAYLOAD_DATA = {
     pickSpeed_int32,
     moveSpeed_int32,
     abilityPoint_int32,
+    curStamina_int32,
+    exp_int32,
+    targetExp_int32,
   ) => {
     return {
       level: level_int32,
@@ -144,6 +147,9 @@ const PAYLOAD_DATA = {
       pickSpeed: pickSpeed_int32,
       moveSpeed: moveSpeed_int32,
       abilityPoint: abilityPoint_int32,
+      curStamina: curStamina_int32,
+      exp: exp_int32,
+      targetExp: targetExp_int32,
     };
   },
   MonsterStatus: (
