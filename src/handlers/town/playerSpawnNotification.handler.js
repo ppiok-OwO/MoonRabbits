@@ -1,8 +1,5 @@
 import { config } from '../../config/config.js';
-import {
-  getSectorSessions,
-  getPlayerSession,
-} from '../../session/sessions.js';
+import { getSectorSessions, getPlayerSession } from '../../session/sessions.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import payload from '../../utils/packet/payload.js';
 
@@ -18,9 +15,9 @@ const playerSpawnNotificationHandler = (socket, packetData) => {
     return player.getPlayerInfo();
   });
 
-  const spawn = payload.S2CPlayerSpawn(playerInfoArray);
-  const packet = makePacket(config.packetId.S2CPlayerSpawn, spawn);
-  
+  const spawn = payload.S2CSpawn(playerInfoArray);
+  const packet = makePacket(config.packetId.S2CSpawn, spawn);
+
   const sectorId = playerSession.getPlayer(socket).getSectorId();
 
   if (sectorId) {
