@@ -26,7 +26,13 @@ export const addExpHandler = async (socket, packetData) => {
 
     // 세션 내 모든 클라이언트에게 반영
     playerSession.notify(
-      Packet.S2CLevelUp(player.id, newLevel, newTargetExp, updatedExp, abilityPoint),
+      Packet.S2CLevelUp(
+        player.id,
+        newLevel,
+        newTargetExp,
+        updatedExp,
+        abilityPoint,
+      ),
     );
   }
   // 경험치만 오른 경우
