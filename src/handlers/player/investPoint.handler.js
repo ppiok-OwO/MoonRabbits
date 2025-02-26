@@ -13,7 +13,7 @@ export const investPointHandler = async (socket, packetData) => {
 
   const validAP = player.addStat(statCode);
 
-  // 버튼 사라지기 전에 AP보다 더 많이 누른 경우
+  // 버튼 사라지기 전에 AP보다 더 많이 누른 경우, addStat에서도 바로 리턴됨
   if(!validAP) {
     return;
   }
@@ -21,7 +21,7 @@ export const investPointHandler = async (socket, packetData) => {
   const statInfo = player.getStatInfo();
 
   // DB 반영
-  //await updatePlayerStat(statInfo.stamina, statInfo.pickSpeed, statInfo.moveSpeed, statInfo.abilityPoint, player.id);
+  await updatePlayerStat(statInfo.stamina, statInfo.pickSpeed, statInfo.moveSpeed, statInfo.abilityPoint, socket.player.playerId);
 
   // 클라이언트 반영
   try {
