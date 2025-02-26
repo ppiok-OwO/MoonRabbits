@@ -5,8 +5,6 @@ import Packet from '../../utils/packet/packet.js';
 export const addExpHandler = async (socket, packetData) => {
   const { count } = packetData; // 채집 개수
 
-  console.log('addExpHandler에서 socket 확인 : ', socket.player.playerId);
-
   const playerSession = getPlayerSession();
   const player = playerSession.getPlayer(socket);
 
