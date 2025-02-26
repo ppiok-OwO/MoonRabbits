@@ -4,10 +4,12 @@ import {
   getPartySessions,
 } from '../../session/sessions.js';
 import Packet from '../../utils/packet/packet.js';
-import playerSpawnNotificationHandler from '../town/playerSpawnNotification.handler.js';
+import playerSpawnNotificationHandler from './playerSpawnNotification.handler.js';
 
-const leaveHandler = (socket, packetData) => {
+const moveSectorHandler = (socket, packetData) => {
   const { targetScene } = packetData;
+
+  const targetSectorCode = targetScene || 2;
 
   const player = getPlayerSession().getPlayer(socket);
   const sector = getSectorSessions().getSector(player.getSectorId());
@@ -37,11 +39,12 @@ const leaveHandler = (socket, packetData) => {
       player.getSectorId(),
     ),
   );
+  // 현재는 섹터가 한개씩 존재함으로 섹터 코드로 탐색
+  const newSector = getSectorSessions().getSectorBySectorCode(targetSectorCode);
 
-  const newSector = getSectorSessions().getSector(targetScene || 2);
   console.log(newSector.players.size);
   partyMembers.forEach((member) => {
-    member.setSectorId(targetScene || 2);
+    member.setSectorId(newSector.getSectorId());
     newSector.setPlayer(socket, member);
     const memberSocket = member.user.getSocket();
     memberSocket.write(Packet.S2CEnter(member.getPlayerInfo()));
@@ -50,4 +53,4 @@ const leaveHandler = (socket, packetData) => {
   console.log(newSector.players.size);
 };
 
-export default leaveHandler;
+export default moveSectorHandler;
