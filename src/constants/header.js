@@ -10,7 +10,7 @@ export const PACKET_ID = {
   S2CCreateCharacter: 5,
   C2SEnter: 10,
   S2CEnter: 11,
-  C2SLeave: 12,
+  C2SMoveSector: 12,
   S2CLeave: 13,
   C2SAnimation: 14,
   S2CAnimation: 15,

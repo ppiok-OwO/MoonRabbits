@@ -17,8 +17,14 @@ export const gatheringSkillCheckHandler = (socket, packetData) => {
       const durability = sector.resources[placedId].subDurability();
 
       socket.write(Packet.S2CGatheringSkillCheck(placedId, durability));
+
+      
       const dropItem = sector.resources[placedId].dropItem();
       socket.write(Packet.S2CGatheringDone(placedId, dropItem.item, 1));
+      
+      // 나중에 아이템 받아오는 내역 필요함
+
+      //
 
       addExpHandler(socket, {
         count: sector.resources[placedId].getDifficulty(),

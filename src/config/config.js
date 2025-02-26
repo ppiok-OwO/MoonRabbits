@@ -54,7 +54,7 @@ export const config = {
     S2CCreateCharacter: PACKET_ID.S2CCreateCharacter,
     C2SEnter: PACKET_ID.C2SEnter,
     S2CEnter: PACKET_ID.S2CEnter,
-    C2SLeave: PACKET_ID.C2SLeave,
+    C2SMoveSector: PACKET_ID.C2SMoveSector,
     S2CLeave: PACKET_ID.S2CLeave,
     C2SAnimation: PACKET_ID.C2SAnimation,
     S2CAnimation: PACKET_ID.S2CAnimation,
