@@ -6,7 +6,7 @@ const PAYLOAD_DATA = {
     classCode_int32,
     transform_TransformInfo,
     statInfo_StatInfo,
-    currentScene_int32,
+    currentSector_int32,
   ) => {
     return {
       playerId: playerId_int32,
@@ -15,7 +15,7 @@ const PAYLOAD_DATA = {
       classCode: classCode_int32,
       transform: transform_TransformInfo,
       statInfo: statInfo_StatInfo,
-      currentScene: currentScene_int32,
+      currentSector: currentSector_int32,
     };
   },
   PlayerRank: (rank_int32, playerId_string, nickname_string, exp_int32) => {

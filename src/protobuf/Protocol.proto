@@ -123,13 +123,13 @@ message S2CCreateCharacter{
 message C2SEnter{
   string nickname = 1;
   int32 classCode = 2;
-  int32 targetScene = 3;
+  int32 targetSector = 3;
 }
 message S2CEnter{
   PlayerInfo player = 1;
 }
 message C2SMoveSector{
-  optional int32  targetScene = 1;
+  optional int32 targetSector = 1;
 }
 message S2CMoveSector{}
 
@@ -159,7 +159,7 @@ message S2CSpawn{
 }
 message S2CDespawn{
   repeated int32 playerIds = 1;
-  int32 currentScene = 2;
+  int32 currentSector = 2;
 }
 
 message C2SPlayerMove{
@@ -178,7 +178,7 @@ message S2CPlayerLocation{
   int32 playerId = 1;
   TransformInfo transform = 2;
   bool isValidTransform = 3;
-  int32 currentScene = 4;
+  int32 currentSector = 4;
 
 }
 message C2SPlayerRunning{} 
@@ -392,7 +392,7 @@ message PlayerInfo {
   int32 classCode = 4; 
   TransformInfo transform = 5;
   StatInfo statInfo = 6;
-  int32 currentScene = 7;
+  int32 currentSector = 7;
 }
 
 message PlayerRank {

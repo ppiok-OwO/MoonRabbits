@@ -18,7 +18,6 @@ import {
 import { BASE_STAT_DATA } from '../constants/PlayerBaseStat.js';
 import { BATTLE_LOG_ID } from '../constants/BattleLog.js';
 import { UPDATE_LOCATION } from '../constants/UpdateLocation.js';
-import SCENE_CODE from '../constants/scene.js';
 
 export const config = {
   server: {
@@ -55,7 +54,7 @@ export const config = {
     C2SEnter: PACKET_ID.C2SEnter,
     S2CEnter: PACKET_ID.S2CEnter,
     C2SMoveSector: PACKET_ID.C2SMoveSector,
-    S2CLeave: PACKET_ID.S2CLeave,
+    S2CMoveSector: PACKET_ID.S2CMoveSector,
     C2SAnimation: PACKET_ID.C2SAnimation,
     S2CAnimation: PACKET_ID.S2CAnimation,
     C2SChat: PACKET_ID.C2SChat,
@@ -72,8 +71,6 @@ export const config = {
     S2CUpdateRanking: PACKET_ID.S2CUpdateRanking,
     C2SCollision: PACKET_ID.C2SCollision,
     S2CCollision: PACKET_ID.S2CCollision,
-    C2SMonsterCollision: PACKET_ID.C2SMonsterCollision,
-    S2CMonsterCollision: PACKET_ID.S2CMonsterCollision,
     C2SSelectStore: PACKET_ID.C2SSelectStore,
     S2CSelectStore: PACKET_ID.S2CSelectStore,
     C2SBuyItem: PACKET_ID.C2SBuyItem,
@@ -132,18 +129,14 @@ export const config = {
   updateLocation: {
     tolerance: UPDATE_LOCATION.tolerance,
   },
-  sceneCode: {
-    town: SCENE_CODE.TOWN,
-    aSector: SCENE_CODE.A_SECTOR,
-  },
   party: {
     MaxMember: 5,
   },
   sector: {
-    town: 1,
+    town: 100,
     testfield: 2,
-    S1 : 101,
-    S2 : 102,
+    S1: 101,
+    S2: 102,
   },
 };
 

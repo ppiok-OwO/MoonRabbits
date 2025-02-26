@@ -1,11 +1,9 @@
-import {
-  getSectorSessions,
-  getPlayerSession,
-} from '../../session/sessions.js';
+import { getSectorSessions, getPlayerSession } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import handleError from '../../utils/error/errorHandler.js';
 import Packet from '../../utils/packet/packet.js';
+import { CODE_TO_ID } from '../../utils/tempConverter.js';
 
 // !!! 패킷 변경에 따라 S_Animation -> S2CAnimation, S_Chat -> S2CChat으로 일괄 수정해씀다
 export const animationHandler = (socket, packetData) => {
@@ -61,11 +59,25 @@ export const animationHandler = (socket, packetData) => {
         break;
     }
 
-    const sectorId = player.getSectorId();
-    if (sectorId) {
+    // const sectorId = player.getSectorId();
+    // if (sectorId) {
+    //   // 만약 던전이면
+    //   const sectorSessions = getSectorSessions();
+    //   const sector = sectorSessions.getSector(sectorId);
+    //   sector.notify(packet);
+    //   sector.notify(chatPacket);
+    // } else {
+    //   // 던전이 아니면
+    //   playerSession.notify(packet);
+    //   playerSession.notify(chatPacket);
+    // }
+
+    // @@@ getSectorId 메서드가 사실 sectorCode를 가져옴... @@@
+    const sectorCode = player.getSectorId();
+    if (sectorCode) {
       // 만약 던전이면
       const sectorSessions = getSectorSessions();
-      const sector = sectorSessions.getSector(sectorId);
+      const sector = sectorSessions.getSector(CODE_TO_ID[sectorCode]);
       sector.notify(packet);
       sector.notify(chatPacket);
     } else {

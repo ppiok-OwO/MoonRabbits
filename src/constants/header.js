@@ -11,7 +11,7 @@ export const PACKET_ID = {
   C2SEnter: 10,
   S2CEnter: 11,
   C2SMoveSector: 12,
-  S2CLeave: 13,
+  S2CMoveSector: 13,
   C2SAnimation: 14,
   S2CAnimation: 15,
   C2SChat: 20,

@@ -5,14 +5,17 @@ import {
 } from '../../session/sessions.js';
 import Packet from '../../utils/packet/packet.js';
 import playerSpawnNotificationHandler from './playerSpawnNotification.handler.js';
+import { CODE_TO_ID, ID_TO_CODE } from '../../utils/tempConverter.js';
 
 const moveSectorHandler = (socket, packetData) => {
-  const { targetScene } = packetData;
+  const { targetSector } = packetData;
 
-  const targetSectorCode = targetScene || 2;
+  const targetSectorCode = targetSector || 2;
 
   const player = getPlayerSession().getPlayer(socket);
-  const sector = getSectorSessions().getSector(player.getSectorId());
+  const sector = getSectorSessions().getSector(
+    CODE_TO_ID[player.getSectorId()],
+  );
   const partySession = getPartySessions();
 
   const partyMembers = [player]; // 본인만 혹은 파티원 배열에 넣을 것
@@ -32,7 +35,7 @@ const moveSectorHandler = (socket, packetData) => {
 
   // 디스폰
   sector.notify(
-    Packet.S2CPlayerDespawn(
+    Packet.S2CDespawn(
       partyMembers.map((partyMember) => {
         return partyMember.id;
       }),
@@ -43,8 +46,17 @@ const moveSectorHandler = (socket, packetData) => {
   const newSector = getSectorSessions().getSectorBySectorCode(targetSectorCode);
 
   console.log(newSector.players.size);
+  // partyMembers.forEach((member) => {
+  //   member.setSectorId(newSector.getSectorId());
+  //   newSector.setPlayer(socket, member);
+  //   const memberSocket = member.user.getSocket();
+  //   memberSocket.write(Packet.S2CEnter(member.getPlayerInfo()));
+  //   playerSpawnNotificationHandler(memberSocket, {});
+  // });
+
+  // @@@ setSectorId가 Player의 currentSector를 갱신하는디, 여기엔 코드가 들어가야해서 @@@
   partyMembers.forEach((member) => {
-    member.setSectorId(newSector.getSectorId());
+    member.setSectorId(ID_TO_CODE[newSector.getSectorId()]);
     newSector.setPlayer(socket, member);
     const memberSocket = member.user.getSocket();
     memberSocket.write(Packet.S2CEnter(member.getPlayerInfo()));

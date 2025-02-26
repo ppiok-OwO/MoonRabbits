@@ -32,9 +32,6 @@ const PACKET = {
   S2CEnter: (player_PlayerInfo) => {
     return makePacket(PACKET_ID.S2CEnter, PAYLOAD.S2CEnter(player_PlayerInfo));
   },
-  S2CLeave: () => {
-    return makePacket(PACKET_ID.S2CLeave);
-  },
   S2CAnimation: (playerId_int32, animCode_int32) => {
     return makePacket(
       PACKET_ID.S2CAnimation,
@@ -53,17 +50,17 @@ const PACKET = {
       PAYLOAD.S2CSpawn(players_PlayerInfo_repeated),
     );
   },
-  S2CDespawn: (playerIds_int32_repeated, currentScene_int32) => {
+  S2CDespawn: (playerIds_int32_repeated, currentSector_int32) => {
     return makePacket(
       PACKET_ID.S2CDespawn,
-      PAYLOAD.S2CDespawn(playerIds_int32_repeated, currentScene_int32),
+      PAYLOAD.S2CDespawn(playerIds_int32_repeated, currentSector_int32),
     );
   },
   S2CPlayerLocation: (
     playerId_int32,
     transform_TransformInfo,
     isValidTransform_bool,
-    currentScene_int32,
+    currentSector_int32,
   ) => {
     return makePacket(
       PACKET_ID.S2CPlayerLocation,
@@ -71,7 +68,7 @@ const PACKET = {
         playerId_int32,
         transform_TransformInfo,
         isValidTransform_bool,
-        currentScene_int32,
+        currentSector_int32,
       ),
     );
   },

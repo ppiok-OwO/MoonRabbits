@@ -32,26 +32,23 @@ const PAYLOAD = {
   S2CSpawn: (players_PlayerInfo_repeated) => {
     return { players: players_PlayerInfo_repeated };
   },
-  S2CDespawn: (playerIds_int32_repeated, currentScene_int32) => {
+  S2CDespawn: (playerIds_int32_repeated, currentSector_int32) => {
     return {
       playerIds: playerIds_int32_repeated,
-      currentScene: currentScene_int32,
+      currentSector: currentSector_int32,
     };
-  },
-  S2CLeave: () => {
-    return {};
   },
   S2CPlayerLocation: (
     playerId_int32,
     transform_TransformInfo,
     isValidTransform_bool,
-    currentScene_int32,
+    currentSector_int32,
   ) => {
     return {
       playerId: playerId_int32,
       transform: transform_TransformInfo,
       isValidTransform: isValidTransform_bool,
-      currentScene: currentScene_int32,
+      currentSector: currentSector_int32,
     };
   },
   S2CUpdateRanking: (status_string, data_RankingList) => {

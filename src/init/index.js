@@ -11,10 +11,10 @@ const initServer = async () => {
     await loadGameAssets();
     await loadProtos();
     const sectorSessions = getSectorSessions();
-    sectorSessions.setSector(config.sector.town, 1);// 마을
-    sectorSessions.setSector(config.sector.testfield, 2);// 채집공간
-    sectorSessions.setSector(config.sector.S1, "sector1"); 
-    sectorSessions.setSector(config.sector.S2, "sector2");
+    sectorSessions.setSector(config.sector.town, 'town'); // 마을
+    sectorSessions.setSector(config.sector.testfield, 2); // 채집공간
+    sectorSessions.setSector(config.sector.S1, 'sector1');
+    sectorSessions.setSector(config.sector.S2, 'sector2');
     // await testAllConnections(pools);
     // 다음 작업
   } catch (err) {

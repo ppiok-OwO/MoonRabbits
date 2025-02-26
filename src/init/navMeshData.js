@@ -9,12 +9,14 @@ export const Sector2NavMesh = await loadNavMesh('Sector2 Exported NavMesh.obj');
 
 export const getNaveMesh = (sectorCode) => {
   switch (sectorCode) {
-    case 1:
+    case 100:
       return townNavMesh;
-
     case 2:
       return aSectorNavMesh;
-
+    case 101:
+      return Sector1NavMesh;
+    case 102:
+      return Sector2NavMesh;
     default:
       console.error('잘못된 sector Code :', sectorCode);
       return null;
