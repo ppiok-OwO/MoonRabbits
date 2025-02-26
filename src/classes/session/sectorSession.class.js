@@ -37,7 +37,7 @@ class SectorSession {
       if (sector.getSectorCode() == sectorCode) return sector;
     }
   }
-
+ 
   getAllPlayer(sectorId) {
     const sector = this.getSector(sectorId);
 
