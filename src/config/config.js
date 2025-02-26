@@ -142,6 +142,8 @@ export const config = {
   sector: {
     town: 1,
     testfield: 2,
+    S1 : 101,
+    S2 : 102,
   },
 };
 
