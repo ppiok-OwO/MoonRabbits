@@ -185,5 +185,5 @@ export const updatePlayerLevel = async (level, exp, abilityPoint, playerId) => {
 
 // AP 선택 시 능력치 업데이트
 export const updatePlayerStat = async (stamina, pickSpeed, moveSpeed, abilityPoint, playerId) => {
-  await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_STAT_STAMINA, [stamina, pickSpeed, moveSpeed, abilityPoint, playerId]);
+  await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_STAT, [stamina, pickSpeed, moveSpeed, abilityPoint, playerId]);
 }
