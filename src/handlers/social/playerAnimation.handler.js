@@ -27,7 +27,6 @@ export const animationHandler = (socket, packetData) => {
 
     // 패킷 직렬화
     // const packet = Packet.S_Animation(player.getId(), animCode);
-    const packet = Packet.S2CAnimation(player.id, animCode);
 
     // 채팅창 알림 패킷 생성
     let chatPacket;
@@ -75,6 +74,9 @@ export const animationHandler = (socket, packetData) => {
 
     // @@@ getSectorId 메서드가 사실 sectorCode를 가져옴... @@@
     const sectorCode = player.getSectorId();
+
+    const packet = Packet.S2CAnimation(player.id, animCode,sectorCode);
+
     if (sectorCode) {
       // 만약 던전이면
       const sectorSessions = getSectorSessions();

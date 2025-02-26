@@ -32,10 +32,10 @@ const PACKET = {
   S2CEnter: (player_PlayerInfo) => {
     return makePacket(PACKET_ID.S2CEnter, PAYLOAD.S2CEnter(player_PlayerInfo));
   },
-  S2CAnimation: (playerId_int32, animCode_int32) => {
+  S2CAnimation: (playerId_int32, animCode_int32,currentSector_int32) => {
     return makePacket(
       PACKET_ID.S2CAnimation,
-      PAYLOAD.S2CAnimation(playerId_int32, animCode_int32),
+      PAYLOAD.S2CAnimation(playerId_int32, animCode_int32,currentSector_int32),
     );
   },
   S2CChat: (playerId_int32, chatMsg_string, chatType_string) => {

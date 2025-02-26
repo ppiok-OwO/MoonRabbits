@@ -139,6 +139,7 @@ message C2SAnimation{
 message S2CAnimation{
   int32 playerId = 1;
   int32 animCode = 2;
+  int32 currentSector = 3;
 }
 
 message C2SChat{
