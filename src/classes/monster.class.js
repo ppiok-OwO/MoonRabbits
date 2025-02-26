@@ -42,7 +42,7 @@ class Monster {
   }
 
   async calculatePath(targetPosition) {
-    console.log('타겟 경로:', targetPosition);
+    //console.log('타겟 경로:', targetPosition);
     try {
       // 홈 포지션 근처로 제한하여 이동
       const maxDistance = this.roamingRange;
