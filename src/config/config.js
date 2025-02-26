@@ -138,6 +138,11 @@ export const config = {
     S1: 101,
     S2: 102,
   },
+  animCode: {
+    happy : 111,
+    sad : 222,
+    greeting : 333,
+  }
 };
 
 export const packetIdEntries = Object.entries(config.packetId);
