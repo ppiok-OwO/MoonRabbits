@@ -153,6 +153,7 @@ message S2CChat{
   int32 playerId = 1;
   string chatMsg = 2;
   string chatType = 3;
+  int32 currentSector = 4;
 }
 
 message S2CSpawn{

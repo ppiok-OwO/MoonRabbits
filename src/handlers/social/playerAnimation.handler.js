@@ -25,41 +25,9 @@ export const animationHandler = (socket, packetData) => {
       );
     }
 
-    // 패킷 직렬화
     // const packet = Packet.S_Animation(player.getId(), animCode);
 
-    // 채팅창 알림 패킷 생성
-    let chatPacket;
-    switch (animCode) {
-      case config.animCode.happy:
-        chatPacket = Packet.S2CChat(
-          0,
-          `${player.nickname}님이 행복한 표정을 짓습니다.`,
-          'System',
-        );
-        break;
-
-      case config.animCode.sad:
-        chatPacket = Packet.S2CChat(
-          0,
-          `${player.nickname}님이 무척 슬퍼합니다.`,
-          'System',
-        );
-        break;
-
-      case config.animCode.greeting:
-        chatPacket = Packet.S2CChat(
-          0,
-          `${player.nickname}님이 반갑게 인사합니다.`,
-          'System',
-        );
-        break;
-
-      default:
-        break;
-    }
-
-    // const sectorId = player.getSectorId();
+        // const sectorId = player.getSectorId();
     // if (sectorId) {
     //   // 만약 던전이면
     //   const sectorSessions = getSectorSessions();
@@ -74,8 +42,43 @@ export const animationHandler = (socket, packetData) => {
 
     // @@@ getSectorId 메서드가 사실 sectorCode를 가져옴... @@@
     const sectorCode = player.getSectorId();
+    
+    // 패킷 직렬화
+    const packet = Packet.S2CAnimation(player.id, animCode, sectorCode);
 
-    const packet = Packet.S2CAnimation(player.id, animCode,sectorCode);
+    // 채팅창 알림 패킷 생성
+    let chatPacket;
+    switch (animCode) {
+      case config.animCode.happy:
+        chatPacket = Packet.S2CChat(
+          0,
+          `${player.nickname}님이 행복한 표정을 짓습니다.`,
+          'System',
+          sectorCode,
+        );
+        break;
+
+      case config.animCode.sad:
+        chatPacket = Packet.S2CChat(
+          0,
+          `${player.nickname}님이 무척 슬퍼합니다.`,
+          'System',
+          sectorCode,
+        );
+        break;
+
+      case config.animCode.greeting:
+        chatPacket = Packet.S2CChat(
+          0,
+          `${player.nickname}님이 반갑게 인사합니다.`,
+          'System',
+          sectorCode,
+        );
+        break;
+
+      default:
+        break;
+    }
 
     if (sectorCode) {
       // 만약 던전이면
