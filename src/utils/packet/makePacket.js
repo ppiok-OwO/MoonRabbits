@@ -1,4 +1,6 @@
 import { packetIdEntries } from '../../config/config.js';
+import { PACKET_ID } from '../../constants/header.js';
+import { config } from '../../config/config.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
 import printPacket from '../log/printPacket.js';
 
@@ -26,8 +28,8 @@ function makePacket(packetId, packetData = {}) {
   packetIdBuffer.writeUInt8(packetId, 0);
 
   // 디버그용 콘솔 출력, packetId 필터링해서 사용
-  if (packetId >= 0) {
-    //printPacket(packetSize, packetId, packetData, 'out');
+  if (packetId !== config.packetId.S2CPlayerLocation) {
+    printPacket(packetSize, packetId, packetData, 'out');
   }
 
   // 패킷 만들기

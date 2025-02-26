@@ -29,58 +29,36 @@ const PAYLOAD = {
       chatType: chatType_string,
     };
   },
-  S2CPlayerSpawn: (players_PlayerInfo_repeated) => {
+  S2CSpawn: (players_PlayerInfo_repeated) => {
     return { players: players_PlayerInfo_repeated };
   },
-  S2CPlayerDespawn: (playerIds_int32_repeated, currentScene_int32) => {
+  S2CDespawn: (playerIds_int32_repeated, currentSector_int32) => {
     return {
       playerIds: playerIds_int32_repeated,
-      currentScene: currentScene_int32,
+      currentSector: currentSector_int32,
     };
   },
   S2CPlayerLocation: (
     playerId_int32,
     transform_TransformInfo,
     isValidTransform_bool,
-    currentScene_int32,
+    currentSector_int32,
   ) => {
     return {
       playerId: playerId_int32,
       transform: transform_TransformInfo,
       isValidTransform: isValidTransform_bool,
-      currentScene: currentScene_int32,
+      currentSector: currentSector_int32,
     };
   },
   S2CUpdateRanking: (status_string, data_RankingList) => {
     return { status: status_string, data: data_RankingList };
   },
-  S2CPlayerCollision: (playerId_int32, collisionPushInfo_CollisionPushInfo) => {
-    return {
-      playerId: playerId_int32,
-      collisionPushInfo: collisionPushInfo_CollisionPushInfo,
-    };
+  S2CCollision: (collisionPushInfo_CollisionPushInfo) => {
+    return { collisionPushInfo: collisionPushInfo_CollisionPushInfo };
   },
-  S2CMonsterCollision: (
-    monsterId_int32,
-    collisionPushInfo_CollisionPushInfo,
-  ) => {
-    return {
-      monsterId: monsterId_int32,
-      collisionPushInfo: collisionPushInfo_CollisionPushInfo,
-    };
-  },
-  S2CSelectStore: (storeInfo_StoreInfo, itemInfo_ItemInfo_repeated) => {
-    return {
-      storeInfo: storeInfo_StoreInfo,
-      itemInfo: itemInfo_ItemInfo_repeated,
-    };
-  },
-  S2CBuyItem: (success_string, inventoryInfo_InventoryInfo, gold_int32) => {
-    return {
-      success: success_string,
-      inventoryInfo: inventoryInfo_InventoryInfo,
-      gold: gold_int32,
-    };
+  S2CInventoryUpdate: (slots_InventorySlot_repeated) => {
+    return { slots: slots_InventorySlot_repeated };
   },
   S2CCreateParty: (
     partyId_string,
@@ -128,17 +106,10 @@ const PAYLOAD = {
       members: members_MemberCardInfo_repeated,
     };
   },
-  S2CSetPartyLeader: (
-    partyId_string,
-    leaderId_int32,
-    memberCount_int32,
-    members_MemberCardInfo_repeated,
-  ) => {
+  S2CCheckPartyList: (partyInfos_PartyInfo_repeated, memberId_int32) => {
     return {
-      partyId: partyId_string,
-      leaderId: leaderId_int32,
-      memberCount: memberCount_int32,
-      members: members_MemberCardInfo_repeated,
+      partyInfos: partyInfos_PartyInfo_repeated,
+      memberId: memberId_int32,
     };
   },
   S2CKickOutMember: (
@@ -170,13 +141,9 @@ const PAYLOAD = {
       members: members_MemberCardInfo_repeated,
     };
   },
-  S2CCheckPartyList: (partyInfos_PartyInfo_repeated, memberId_int) => {
-    return {
-      partyInfos: partyInfos_PartyInfo_repeated,
-      memberId: memberId_int,
-    };
+  S2CRejectInvite: () => {
+    return {};
   },
-  S2CRejectInvite: () => {},
   S2CMonsterLocation: (monsterId_int32, transformInfo_TransformInfo) => {
     return {
       monsterId: monsterId_int32,
@@ -189,7 +156,7 @@ const PAYLOAD = {
   S2CMissingPlayer: (monsterId_int32, playerId_int32) => {
     return { monsterId: monsterId_int32, playerId: playerId_int32 };
   },
-  S2CResourceList: (resources_Resource_repeated) => {
+  S2CResourcesList: (resources_Resource_repeated) => {
     return { resources: resources_Resource_repeated };
   },
   S2CUpdateDurability: (placedId_int32, durability_int32) => {
@@ -233,7 +200,7 @@ const PAYLOAD = {
       abilityPoint: abilityPoint_int32,
     };
   },
-  S2CSelectAp: (statInfo_StatInfo) => {
+  S2CInvestPoint: (statInfo_StatInfo) => {
     return { statInfo: statInfo_StatInfo };
   },
 };

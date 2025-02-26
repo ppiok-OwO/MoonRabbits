@@ -30,6 +30,7 @@ class SectorSession {
   getSector(sectorId) {
     return this.sectors.get(sectorId);
   }
+
   // !임시! 코드를 기반으로 탐색
   getSectorBySectorCode(sectorCode) {
     for (const sector of this.sectors.values()) {

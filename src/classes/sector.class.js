@@ -66,7 +66,7 @@ class Sector {
         PAYLOAD_DATA.Resource(index, value.getResourceId());
       });
 
-      player.sendPacket(Packet.S2CResourceList(resourceData));
+      player.sendPacket(Packet.S2CResourcesList(resourceData));
     }
     return this.players.set(socket, player);
   }

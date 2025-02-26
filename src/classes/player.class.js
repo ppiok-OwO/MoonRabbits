@@ -4,7 +4,7 @@ import { config } from '../config/config.js';
 import { getGameAssets } from '../init/assets.js';
 
 class Player {
-  constructor(user, playerId, nickname, classCode, statData, sectorId = 1) {
+  constructor(user, playerId, nickname, classCode, statData, sectorId = 100) {
     const baseStat = statData;
     this.classCode = classCode;
     this.nickname = nickname;
@@ -56,6 +56,9 @@ class Player {
       this.pickSpeed,
       this.moveSpeed,
       this.abilityPoint,
+      this.stamina,
+      this.exp,
+      this.targetExp,
     );
   }
   getPlayerInfo() {
@@ -186,7 +189,20 @@ class Player {
       this.pickSpeed,
       this.moveSpeed,
       this.abilityPoint,
+      this.stamina,
+      this.exp,
+      this.targetExp,
     );
+  }
+
+  setStatInfo(statInfo) {
+    this.level = statInfo.level;
+    this.exp = statInfo.exp;
+    this.stamina = statInfo.stamina;
+    this.pickSpeed = statInfo.pickSpeed;
+    this.moveSpeed = statInfo.moveSpeed;
+    this.abilityPoint = statInfo.abilityPoint;
+    this.targetExp = statInfo.targetExp;
   }
 }
 
