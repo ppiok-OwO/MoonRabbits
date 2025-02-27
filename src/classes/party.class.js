@@ -74,6 +74,7 @@ class Party {
       const memberInfo = {
         id: member.id,
         nickname: member.nickname,
+        currentSector: member.getSectorId(),
         isPartyLeader: member === this.partyLeader,
         isMine: member.id === playerId,
       };

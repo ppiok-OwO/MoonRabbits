@@ -4,7 +4,7 @@ import { config } from '../config/config.js';
 import { getGameAssets } from '../init/assets.js';
 
 class Player {
-  constructor(user, playerId, nickname, classCode, statData, sectorId = 1) {
+  constructor(user, playerId, nickname, classCode, statData, sectorId = 100) {
     const baseStat = statData;
     this.classCode = classCode;
     this.nickname = nickname;

@@ -19,39 +19,46 @@ const PAYLOAD = {
   S2CEnter: (player_PlayerInfo) => {
     return { player: player_PlayerInfo };
   },
-  S2CAnimation: (playerId_int32, animCode_int32) => {
-    return { playerId: playerId_int32, animCode: animCode_int32 };
+  S2CAnimation: (playerId_int32, animCode_int32, currentSector_int) => {
+    return {
+      playerId: playerId_int32,
+      animCode: animCode_int32,
+      currentSector: currentSector_int,
+    };
   },
-  S2CChat: (playerId_int32, chatMsg_string, chatType_string) => {
+  S2CChat: (
+    playerId_int32,
+    chatMsg_string,
+    chatType_string,
+    currentSector_int32,
+  ) => {
     return {
       playerId: playerId_int32,
       chatMsg: chatMsg_string,
       chatType: chatType_string,
+      currentSector: currentSector_int32,
     };
   },
   S2CSpawn: (players_PlayerInfo_repeated) => {
     return { players: players_PlayerInfo_repeated };
   },
-  S2CDespawn: (playerIds_int32_repeated, currentScene_int32) => {
+  S2CDespawn: (playerIds_int32_repeated, currentSector_int32) => {
     return {
       playerIds: playerIds_int32_repeated,
-      currentScene: currentScene_int32,
+      currentSector: currentSector_int32,
     };
-  },
-  S2CLeave: () => {
-    return {};
   },
   S2CPlayerLocation: (
     playerId_int32,
     transform_TransformInfo,
     isValidTransform_bool,
-    currentScene_int32,
+    currentSector_int32,
   ) => {
     return {
       playerId: playerId_int32,
       transform: transform_TransformInfo,
       isValidTransform: isValidTransform_bool,
-      currentScene: currentScene_int32,
+      currentSector: currentSector_int32,
     };
   },
   S2CUpdateRanking: (status_string, data_RankingList) => {
@@ -180,6 +187,26 @@ const PAYLOAD = {
       placedId: placedId_int32,
       itemId: itemId_int32,
       quantity: quantity_int32,
+    };
+  },
+  S2CRecall: (playerId_int32, currentSector_int32, recallTimer_int32) => {
+    return {
+      playerId: playerId_int32,
+      currentSector: currentSector_int32,
+      recallTimer: recallTimer_int32,
+    };
+  },
+  S2CThrowGrenade: (
+    playerId_int32,
+    currentSector_int32,
+    velocity_Vec3,
+    coolTime_int32,
+  ) => {
+    return {
+      playerId: playerId_int32,
+      currentSector: currentSector_int32,
+      velocity: velocity_Vec3,
+      coolTime: coolTime_int32,
     };
   },
   S2CSectorEnter: (sectorInfo_SectorInfo, player_PlayerStatus) => {
