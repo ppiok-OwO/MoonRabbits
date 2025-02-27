@@ -34,7 +34,7 @@ const moveSectorHandler = (socket, packetData) => {
   }
 
   // 디스폰
-  prevSector.notify(
+  sector.notify(
     Packet.S2CDespawn(
       partyMembers.map((partyMember) => {
         return partyMember.id;

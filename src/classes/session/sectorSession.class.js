@@ -21,6 +21,10 @@ class SectorSession {
           ErrorCodes.INVALID_INPUT,
           '플레이어가 존재하는 섹터를 삭제하려 시도함.',
         ),
+        new CustomError(
+          ErrorCodes.INVALID_INPUT,
+          '플레이어가 존재하는 섹터를 삭제하려 시도함.',
+        ),
       );
       return false;
     }
@@ -31,13 +35,13 @@ class SectorSession {
     return this.sectors.get(sectorId);
   }
 
-  // !임시! 코드를 기반으로 탐색
-  getSectorBySectorCode(sectorCode) {
-    for (const sector of this.sectors.values()) {
-      if (sector.getSectorCode() == sectorCode) return sector;
-    }
+  getSectorByCode(code) {
+    const sector = Array.from(this.sectors.values()).find(
+      (sector) => sector.sectorCode === code,
+    );
+    return sector || null; // 섹터가 존재하지 않으면 null 반환
   }
- 
+
   getAllPlayer(sectorId) {
     const sector = this.getSector(sectorId);
 

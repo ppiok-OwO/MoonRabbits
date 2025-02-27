@@ -26,6 +26,7 @@ import { gatheringSkillCheckHandler } from './gathering/GatheringSkillCheck.hand
 import { StartGatheringHandler } from './gathering/StartGathering.handler.js';
 import { rejectInviteHandler } from './social/party/rejectInvite.handler.js';
 import { chceckPartyListHandler } from './social/party/checkPartyList.handler.js';
+import { collisionHandler } from './collision/collision.handler.js';
 import tryRecallHandler from './skill/tryRecall.hander.js';
 import cancelRecallHandler from './skill/cancelRecall.handler.js';
 import throwGrenadeHandler from './skill/throwGrenade.handler.js';
@@ -47,6 +48,9 @@ const handlers = {
   [config.packetId.C2SCreateCharacter]: createCharacterHandler,
   [config.packetId.C2SAddExp]: addExpHandler,
   [config.packetId.C2SInvestPoint]: investPointHandler,
+
+  //충돌
+  [config.packetId.C2SCollision]: collisionHandler,
 
   // 파티 관련
   [config.packetId.C2SCreateParty]: createPartyHandler,
