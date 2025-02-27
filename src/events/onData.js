@@ -50,9 +50,9 @@ export const onData = (socket) => async (data) => {
       const packetData = decodedPacket(packetType, packetDataBuffer);
 
       // 디버그용 콘솔 출력, packetId 필터링해서 사용
-      if (packetId !== config.packetId.C2SPlayerLocation) {
-        printPacket(packetSize, packetId, packetData, 'in');
-      }else console.log('C2SPlayerLocation 패킷 수신');
+      // if (packetId !== config.packetId.C2SPlayerLocation) {
+      //   //printPacket(packetSize, packetId, packetData, 'in');
+      // } else console.log('C2SPlayerLocation 패킷 수신');
 
       // 패킷타입별 핸들러 실행
       try {

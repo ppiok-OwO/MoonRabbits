@@ -38,6 +38,14 @@ class SectorSession {
     return sector || null; // 섹터가 존재하지 않으면 null 반환
   }
 
+  getAllPlayerByCode(code) {
+    const sector = this.getSectorByCode(code);
+    if (!sector) return [];
+
+    const playersMap = sector.getAllPlayer();
+    return Array.from(playersMap.values()); // Map.values() 메서드 호출 후 배열로 변환
+  }
+
   getAllPlayer(sectorId) {
     const sector = this.getSector(sectorId);
 

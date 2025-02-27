@@ -1,8 +1,5 @@
 import { config } from '../../config/config.js';
-import {
-  getSectorSessions,
-  getPlayerSession,
-} from '../../session/sessions.js';
+import { getSectorSessions, getPlayerSession } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import makePacket from '../../utils/packet/makePacket.js';
@@ -52,9 +49,10 @@ const playerLocationUpdateHandler = (socket, packetData) => {
           closestPoint = { PosX: point.x, PosY: point.y, PosZ: point.z }; // transform과 가장 가까운 경로상의 좌표
         }
       });
-      console.log('closestPoint : ', closestPoint);
-      console.log('transform :', transform);
-      console.log('minDistance :', minDistance);
+      // console.log('closestPoint : ', closestPoint);
+      // console.log('transform :', transform);
+      // console.log('minDistance :', minDistance);
+      player.setPosition(transform);
 
       if (minDistance > 1.4) {
         // 오차범위를 벗어나면 플레이어의 위치를 closestPoint로 재조정한다.
@@ -64,12 +62,13 @@ const playerLocationUpdateHandler = (socket, packetData) => {
           posZ: closestPoint.PosZ,
           rot: transform.rot,
         };
+        player.setPosition(newTransform);
 
         const packet = Packet.S2CPlayerLocation(
           player.id,
           newTransform,
           false,
-          player.getCurrentScene(),
+          player.getSectorId(),
         );
 
         // 위치동기화 브로드 캐스트
