@@ -6,16 +6,10 @@ import { config } from '../../config/config.js';
 
 class PlayerSession {
   players = new Map();
-  playerId = 1;
+  playerIdx = 1;
 
   async addPlayer(socket, user, nickname, classCode, statData) {
-    const newPlayer = new Player(
-      user,
-      this.playerId++,
-      nickname,
-      classCode,
-      statData,
-    );
+    const newPlayer = new Player(user, this.playerIdx++, nickname, classCode, statData);
     this.players.set(socket, newPlayer);
 
     // getSectorSessions()
@@ -29,16 +23,7 @@ class PlayerSession {
   }
 
   removePlayer(socket) {
-    const player = this.players.get(socket);
-    console.log(
-      'removePlayer 할 때 players.get(socket) 뭐 나오나 : ',
-      player.id,
-    );
-    if (player) {
-      const key = `playerSession:${player.id}`;
-      redisClient.del(key);
-      this.players.delete(socket);
-    }
+    this.players.delete(socket);
   }
 
   getPlayer(socket) {
@@ -67,9 +52,6 @@ class PlayerSession {
   }
 
   clearSession() {
-    this.players.forEach((player) => {
-      redisClient.del(`playerSession:${player.id}`);
-    });
     this.players.clear();
   }
 
@@ -83,7 +65,7 @@ class PlayerSession {
   async saveToRedis(key, player) {
     try {
       await redisClient.hset(key, {
-        id: player.id,
+        playerIdx: player.id,
         userId: player.user.userId,
         nickname: player.nickname,
         classCode: player.classCode,
@@ -92,14 +74,9 @@ class PlayerSession {
         loginTime: new Date().toISOString(),
       });
       await redisClient.expire(key, 3600); // 만료 시간 설정
-      console.log(
-        `${chalk.green('[Redis Log]')} Player 데이터 저장 완료: ${key}`,
-      );
+      console.log(`${chalk.green('[Redis Log]')} Player 데이터 저장 완료: ${key}`);
     } catch (error) {
-      console.error(
-        `${chalk.green('[Redis Error]')} Player 데이터 저장 실패: ${key}`,
-        error,
-      );
+      console.error(`${chalk.green('[Redis Error]')} Player 데이터 저장 실패: ${key}`, error);
     }
   }
 }

@@ -74,6 +74,13 @@ class Player {
       this.currentSector,
     );
   }
+  getPosition() {
+    return {
+      x: this.position.posX,
+      y: this.position.posY,
+      z: this.position.posZ,
+    };
+  }
 
   setSectorId(sectorId) {
     return (this.currentSector = sectorId);
@@ -106,6 +113,9 @@ class Player {
 
   getPlayerId() {
     return this.id;
+  }
+  setPosition(info) {
+    this.position = info;
   }
 
   setPath(path) {

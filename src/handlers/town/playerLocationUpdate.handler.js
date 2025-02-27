@@ -49,10 +49,11 @@ const playerLocationUpdateHandler = (socket, packetData) => {
           closestPoint = { PosX: point.x, PosY: point.y, PosZ: point.z }; // transform과 가장 가까운 경로상의 좌표
         }
       });
-      // @@@ 잠시 주석 처리!!! @@@
+
       // console.log('closestPoint : ', closestPoint);
       // console.log('transform :', transform);
       // console.log('minDistance :', minDistance);
+      player.setPosition(transform);
 
       if (minDistance > 1.4) {
         // 오차범위를 벗어나면 플레이어의 위치를 closestPoint로 재조정한다.
@@ -62,6 +63,7 @@ const playerLocationUpdateHandler = (socket, packetData) => {
           posZ: closestPoint.PosZ,
           rot: transform.rot,
         };
+        player.setPosition(newTransform);
 
         const packet = Packet.S2CPlayerLocation(
           player.id,

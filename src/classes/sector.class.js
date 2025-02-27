@@ -2,7 +2,7 @@ import PAYLOAD_DATA from '../utils/packet/payloadData.js';
 import Resource from './resource.class.js';
 import { getGameAssets } from '../init/assets.js';
 import Packet from '../utils/packet/packet.js';
-import { Monster } from './monster.class.js';
+import Monster from './monster.class.js';
 import { getNaveMesh } from '../init/navMeshData.js';
 
 class Sector {

@@ -183,6 +183,24 @@ export function checkCapsuleCollision(data) {
         pushDirection = new Vec3(1, 0, 0);
       }
 
+      if (
+        (myType === 1 && targetType === 2) ||
+        (myType === 2 && targetType === 1)
+      ) {
+        const playerId = myType === 1 ? myId : targetId;
+        const monsterId = myType === 1 ? targetId : myId;
+
+        // 몬스터 객체 가져오기
+        const monster = getSwitching(currentSector, 2, monsterId);
+
+        if (monster && typeof monster.handleCollisionPacket === 'function') {
+          // 몬스터의 handleCollisionPacket 함수 호출
+          monster.handleCollisionPacket({
+            playerId: playerId,
+          });
+        }
+      }
+
       // 6. 밀어내기 거리 계산 (충돌 해결을 위해 얼마나 이동해야 하는지)
       const pushDistance = minDistance - distance;
 
