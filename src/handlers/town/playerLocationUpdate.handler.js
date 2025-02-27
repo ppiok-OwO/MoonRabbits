@@ -88,29 +88,17 @@ const playerLocationUpdateHandler = (socket, packetData) => {
           true,
           player.getSectorId(),
         );
-
-    // const sectorId = player.getSectorId();
-    // if (sectorId) {
-    //   // 만약 던전이면
-    //   const sectorSessions = getSectorSessions();
-
-    //   const sector = sectorSessions.getSector(sectorId);
-    //   sector.notify(packet);
-    // } else {
-    //   // 던전이 아니면
-    //   playerSession.notify(packet);
-    // }
-
-    // @@@ getSectorId 메서드가 사실 sectorCode를 가져옴... @@@
-    const sectorCode = player.getSectorId();
-    if (sectorCode) {
-      // 만약 던전이면
-      const sectorSessions = getSectorSessions();
-      const sector = sectorSessions.getSector(sectorCode); // 강제로 변환
-      sector.notify(packet);
-    } else {
-      // 던전이 아니면
-      playerSession.notify(packet);
+        const sectorCode = player.getSectorId();
+        if (sectorCode) {
+          // 만약 던전이면
+          const sectorSessions = getSectorSessions();
+          const sector = sectorSessions.getSector(sectorCode); // 강제로 변환
+          sector.notify(packet);
+        } else {
+          // 던전이 아니면
+          playerSession.notify(packet);
+        }
+      }
     }
   } catch (error) {
     console.error(error);
