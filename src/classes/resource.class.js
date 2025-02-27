@@ -24,7 +24,7 @@ class Resource {
   getDifficulty() {
     return this.difficulty;
   }
-  getRespawnTime(){
+  getRespawnTime() {
     return this.resourceData.resource_respawn * 1000;
   }
   getAngle() {
@@ -38,8 +38,8 @@ class Resource {
   }
 
   CheckValidateTiming(angle, startTime, deltatime) {
-    const validTime = (5000 / 36 ) * angle;
-    const validTimeRange = (5000 / 36 ) * 60/ this.difficulty;
+    const validTime = (5000 / 36) * angle;
+    const validTimeRange = ((5000 / 36) * 60) / this.difficulty;
 
     if (
       Math.abs(deltatime - validTime) < validTimeRange &&

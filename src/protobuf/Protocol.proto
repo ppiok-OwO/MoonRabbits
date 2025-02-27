@@ -14,8 +14,8 @@ enum MsgId {
 
   C2S_ENTER=10;
   S2C_ENTER=11;
-  C2S_LEAVE=12;
-  S2C_LEAVE=13;
+  C2S_MOVE_SECTOR=12;
+  S2C_MOVE_SECTOR=13;
 
   C2S_ANIMATION=14;
   S2C_ANIMATION=15;
@@ -79,6 +79,11 @@ enum MsgId {
   S2C_GATHERING_SKILL_CHECK=146;
   S2C_GATHERING_DONE=147;
 
+  C2S_RECALL = 160;
+  S2C_RECALL = 161;
+  C2S_THROW_GRENADE = 162;
+  S2C_THROW_GRENADE = 163;
+
   C2S_SECTOR_ENTER=170;
   S2C_SECTOR_ENTER=171;
   C2S_SECTOR_LEAVE=172;
@@ -123,15 +128,15 @@ message S2CCreateCharacter{
 message C2SEnter{
   string nickname = 1;
   int32 classCode = 2;
-  int32 targetScene = 3;
+  int32 targetSector = 3;
 }
 message S2CEnter{
   PlayerInfo player = 1;
 }
-message C2SLeave{
-  optional int32  targetScene = 1;
+message C2SMoveSector{
+  optional int32 targetSector = 1;
 }
-message S2CLeave{}
+message S2CMoveSector{}
 
 message C2SAnimation{
   int32 animCode = 1;
@@ -161,7 +166,7 @@ message S2CSpawn{
 }
 message S2CDespawn{
   repeated int32 playerIds = 1;
-  int32 currentScene = 2;
+  int32 currentSector = 2;
 }
 
 message C2SPlayerMove{
@@ -180,7 +185,7 @@ message S2CPlayerLocation{
   int32 playerId = 1;
   TransformInfo transform = 2;
   bool isValidTransform = 3;
-  int32 currentScene = 4;
+  int32 currentSector = 4;
 
 }
 message C2SPlayerRunning{} 
@@ -347,6 +352,23 @@ message S2CGatheringDone{
   int32 quantity = 3;
 }
 
+message C2SRecall {}
+message S2CRecall {
+  int32 playerId = 1;
+  int32 currentSector = 2;
+  int32 recallTimer = 3;
+}
+message C2SThrowGrenade {
+  Vec3 startPos = 1;
+  Vec3 targetPos = 2;
+}
+message S2CThrowGrenade {
+  int32 playerId = 1;
+  int32 currentSector = 2;
+  Vec3 velocity = 3;
+  int32 coolTime = 4;
+}
+
 message C2SSectorEnter{
   int32 sectorId = 1;
   optional string partyId = 2;
@@ -394,7 +416,7 @@ message PlayerInfo {
   int32 classCode = 4; 
   TransformInfo transform = 5;
   StatInfo statInfo = 6;
-  int32 currentScene = 7;
+  int32 currentSector = 7;
 }
 
 message PlayerRank {

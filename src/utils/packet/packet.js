@@ -53,17 +53,17 @@ const PACKET = {
       PAYLOAD.S2CSpawn(players_PlayerInfo_repeated),
     );
   },
-  S2CDespawn: (playerIds_int32_repeated, currentScene_int32) => {
+  S2CDespawn: (playerIds_int32_repeated, currentSector_int32) => {
     return makePacket(
       PACKET_ID.S2CDespawn,
-      PAYLOAD.S2CDespawn(playerIds_int32_repeated, currentScene_int32),
+      PAYLOAD.S2CDespawn(playerIds_int32_repeated, currentSector_int32),
     );
   },
   S2CPlayerLocation: (
     playerId_int32,
     transform_TransformInfo,
     isValidTransform_bool,
-    currentScene_int32,
+    currentSector_int32,
   ) => {
     return makePacket(
       PACKET_ID.S2CPlayerLocation,
@@ -71,7 +71,7 @@ const PACKET = {
         playerId_int32,
         transform_TransformInfo,
         isValidTransform_bool,
-        currentScene_int32,
+        currentSector_int32,
       ),
     );
   },
@@ -244,6 +244,28 @@ const PACKET = {
     return makePacket(
       PACKET_ID.S2CGatheringDone,
       PAYLOAD.S2CGatheringDone(placedId_int32, itemId_int32, quantity_int32),
+    );
+  },
+  S2CRecall: (playerId_int32, currentSector_int32, recallTimer_int32) => {
+    return makePacket(
+      PACKET_ID.S2CRecall,
+      PAYLOAD.S2CRecall(playerId_int32, currentSector_int32, recallTimer_int32),
+    );
+  },
+  S2CThrowGrenade: (
+    playerId_int32,
+    currentSector_int32,
+    velocity_Vec3,
+    coolTime_int32,
+  ) => {
+    return makePacket(
+      PACKET_ID.S2CThrowGrenade,
+      PAYLOAD.S2CThrowGrenade(
+        playerId_int32,
+        currentSector_int32,
+        velocity_Vec3,
+        coolTime_int32,
+      ),
     );
   },
   S2CSectorEnter: (sectorInfo_SectorInfo, player_PlayerStatus) => {

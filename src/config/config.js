@@ -18,7 +18,6 @@ import {
 import { BASE_STAT_DATA } from '../constants/PlayerBaseStat.js';
 import { BATTLE_LOG_ID } from '../constants/BattleLog.js';
 import { UPDATE_LOCATION } from '../constants/UpdateLocation.js';
-import SCENE_CODE from '../constants/scene.js';
 
 export const config = {
   server: {
@@ -54,8 +53,8 @@ export const config = {
     S2CCreateCharacter: PACKET_ID.S2CCreateCharacter,
     C2SEnter: PACKET_ID.C2SEnter,
     S2CEnter: PACKET_ID.S2CEnter,
-    C2SLeave: PACKET_ID.C2SLeave,
-    S2CLeave: PACKET_ID.S2CLeave,
+    C2SMoveSector: PACKET_ID.C2SMoveSector,
+    S2CMoveSector: PACKET_ID.S2CMoveSector,
     C2SAnimation: PACKET_ID.C2SAnimation,
     S2CAnimation: PACKET_ID.S2CAnimation,
     C2SChat: PACKET_ID.C2SChat,
@@ -72,8 +71,6 @@ export const config = {
     S2CUpdateRanking: PACKET_ID.S2CUpdateRanking,
     C2SCollision: PACKET_ID.C2SCollision,
     S2CCollision: PACKET_ID.S2CCollision,
-    C2SMonsterCollision: PACKET_ID.C2SMonsterCollision,
-    S2CMonsterCollision: PACKET_ID.S2CMonsterCollision,
     C2SSelectStore: PACKET_ID.C2SSelectStore,
     S2CSelectStore: PACKET_ID.S2CSelectStore,
     C2SBuyItem: PACKET_ID.C2SBuyItem,
@@ -110,6 +107,10 @@ export const config = {
     C2SGatheringSkillCheck: PACKET_ID.C2SGatheringSkillCheck,
     S2CGatheringSkillCheck: PACKET_ID.S2CGatheringSkillCheck,
     S2CGatheringDone: PACKET_ID.S2CGatheringDone,
+    C2SRecall: PACKET_ID.C2SRecall,
+    S2CRecall: PACKET_ID.S2CRecall,
+    C2SThrowGrenade: PACKET_ID.C2SThrowGrenade,
+    S2CThrowGrenade: PACKET_ID.S2CThrowGrenade,
     C2SSectorEnter: PACKET_ID.C2SSectorEnter,
     S2CSectorEnter: PACKET_ID.S2CSectorEnter,
     C2SSectorLeave: PACKET_ID.C2SSectorLeave,
@@ -132,16 +133,19 @@ export const config = {
   updateLocation: {
     tolerance: UPDATE_LOCATION.tolerance,
   },
-  sceneCode: {
-    town: SCENE_CODE.TOWN,
-    aSector: SCENE_CODE.A_SECTOR,
-  },
   party: {
     MaxMember: 5,
   },
   sector: {
-    town: 1,
+    town: 100,
     testfield: 2,
+    S1: 101,
+    S2: 102,
+  },
+  animCode: {
+    happy: 111,
+    sad: 222,
+    greeting: 333,
   },
 };
 
