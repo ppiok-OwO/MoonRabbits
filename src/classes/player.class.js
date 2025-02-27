@@ -62,6 +62,7 @@ class Player {
     );
   }
   getPlayerInfo() {
+    
     return PAYLOAD_DATA.PlayerInfo(
       this.id,
       this.nickname,

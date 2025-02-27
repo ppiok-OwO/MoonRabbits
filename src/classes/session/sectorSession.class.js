@@ -2,12 +2,25 @@ import { v4 as uuidV4 } from 'uuid';
 import Sector from '../sector.class.js';
 import handleError from '../../utils/error/errorHandler.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
+import { getGameAssets } from '../../init/assets.js';
+import Resource from '../resource.class.js';
 
 class SectorSession {
   sectors = new Map();
 
-  setSector(sectorCode, sectorId = uuidV4()) {
-    const newSector = new Sector(sectorId, sectorCode);
+  setSector(sectorCode, sectorId = sectorCode) {
+    const resources = [];
+    const gameAssets = getGameAssets();
+    const sectorResources = gameAssets.sectors.data.find((value) => {
+      return value.sector_code === sectorCode;
+    }).resources;
+
+    if (sectorResources && sectorResources.length > 0) {
+      const resourceIdx = resources.length + 1;
+      resources.push(new Resource(resourceIdx, sectorResources[resourceIdx]));
+    }
+
+    const newSector = new Sector(sectorId , sectorCode, resources);
     this.sectors.set(sectorId, newSector);
     return newSector;
   }
@@ -37,7 +50,7 @@ class SectorSession {
       if (sector.getSectorCode() == sectorCode) return sector;
     }
   }
- 
+
   getAllPlayer(sectorId) {
     const sector = this.getSector(sectorId);
 

@@ -6,13 +6,15 @@
       "sector_code": 0,
       "sector_name": "지역명",
       "areas": "각 분할된 구역 위치",
-      "monsters": ["몬스터코드, 이동정보  하나씩 할것"]
+      "monsters": ["몬스터코드, 이동정보  하나씩 할것"],
+      "resources": ["자원 코드"]
     },
     {
-      "sector_code": 1,
+      "sector_code": 100,
       "sector_name": "마을",
       "areas": [],
-      "monsters": []
+      "monsters": [],
+      "resources": [1, 1, 51, 51]
     },
     {
       "sector_code": 2,
@@ -74,7 +76,22 @@
           "monster_id": 11001,
           "areaIdx": 5
         }
-      ]
+      ],
+      "resources": [1, 1, 51, 51]
+    },
+    {
+      "sector_code": 101,
+      "sector_name": "누논덴",
+      "areas": [],
+      "monsters": [],
+      "resources": [1, 1, 51, 51]
+    },
+    {
+      "sector_code": 102,
+      "sector_name": "아누논덴",
+      "areas": [],
+      "monsters": [],
+      "resources": [1, 1, 51, 51]
     }
   ]
 }

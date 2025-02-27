@@ -2,10 +2,13 @@ import { getGameAssets } from '../init/assets.js';
 import { createRandNum } from '../utils/math/createRandNum.js';
 
 class Resource {
-  constructor(resourceIdx, resourceId, resourceData) {
+  constructor(resourceIdx, resourceId) {
     this.resourceIdx = resourceIdx;
     this.resourceId = resourceId;
-    this.resourceData = resourceData;
+    
+    this.resourceData = getGameAssets().resources.data.find((value) => {
+      return value.resource_id === resourceId;
+    });
     this.durability = this.resourceData.resource_durability;
     this.difficulty = this.resourceData.resource_difficulty;
   }

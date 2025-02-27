@@ -6,20 +6,17 @@ import { Monster } from './monster.class.js';
 import { getNaveMesh } from '../init/navMeshData.js';
 
 class Sector {
-  constructor(sectorId, sectorCode, resourcesId = []) {
+  constructor(sectorId, sectorCode, resources = []) {
     this.sectorId = sectorId;
     this.sectorCode = sectorCode;
     this.monsters = new Map();
     this.mapAreas = [];
     this.navMeshes = new Map(); // 맵별 NavMesh 저장
     this.players = new Map();
-    this.resources = [];
+    this.resources = resources;
     this.lastUpdateTime = Date.now();
     this.isUpdating = false;
     //this.battleStatus = null;
-    resourcesId.forEach((value) => {
-      this.setResource(value);
-    });
 
     this.initArea(); // 클래스 내부 자동 호출
   }
@@ -35,7 +32,12 @@ class Sector {
     }
     return -1;
   }
-  getSectorId(){
+  getResources() {
+    return resources.map((value, index) => {
+      PAYLOAD_DATA.Resource(index, value.getResourceId());
+    });
+  }
+  getSectorId() {
     return this.sectorId;
   }
 
@@ -61,13 +63,6 @@ class Sector {
   }
 
   setPlayer(socket, player) {
-    if (this.resources.size > 0) {
-      const resourceData = resources.map((value, index) => {
-        PAYLOAD_DATA.Resource(index, value.getResourceId());
-      });
-
-      player.sendPacket(Packet.S2CResourcesList(resourceData));
-    }
     return this.players.set(socket, player);
   }
 
@@ -171,7 +166,7 @@ class Sector {
   }
 
   async initArea() {
-    const sectorJsonData = getGameAssets().sector.data.find((value) => {
+    const sectorJsonData = getGameAssets().sectors.data.find((value) => {
       return Number(value.sector_code) === Number(this.sectorCode);
     });
 
