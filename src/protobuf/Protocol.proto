@@ -78,18 +78,16 @@ enum MsgId {
   C2S_GATHERING_SKILL_CHECK=145;
   S2C_GATHERING_SKILL_CHECK=146;
   S2C_GATHERING_DONE=147;
+  C2S_RESOURCES_LIST=148;
 
   C2S_RECALL = 160;
   S2C_RECALL = 161;
   C2S_THROW_GRENADE = 162;
   S2C_THROW_GRENADE = 163;
-
-  C2S_SECTOR_ENTER=170;
-  S2C_SECTOR_ENTER=171;
-  C2S_SECTOR_LEAVE=172;
-  S2C_SECTOR_LEAVE=173;
-  C2S_IN_PORTAL=174;
-  S2C_IN_PORTAL=175;
+  C2S_STUN = 166;
+  S2C_STUN = 167;
+  C2S_EQUIP_CHANGE = 168;
+  S2C_EQUIP_CHANGE = 169;
 
   C2S_ADD_EXP=200;
   S2C_ADD_EXP=201;
@@ -351,6 +349,8 @@ message S2CGatheringDone{
   int32 itemId = 2;
   int32 quantity = 3;
 }
+message C2SResourcesList{
+}
 
 message C2SRecall {}
 message S2CRecall {
@@ -368,25 +368,25 @@ message S2CThrowGrenade {
   Vec3 velocity = 3;
   int32 coolTime = 4;
 }
-
-message C2SSectorEnter{
-  int32 sectorId = 1;
-  optional string partyId = 2;
+message C2SStun {
+  int32 skillType = 1;
+  repeated int32 playerIds = 2;
+  repeated int32 monsterIds = 3;
 }
-message S2CSectorEnter{
-  SectorInfo sectorInfo = 1;
-  PlayerStatus player = 2;
+message S2CStun {
+  int32 currentSector = 1;
+  int32 stunTimer = 2;
+  repeated int32 playerIds = 3;
+  repeated int32 monsterIds = 4;
 }
-message C2SSectorLeave{
-  int32 sectorId = 1;
-  optional string partyId = 2;
+message C2SEquipChange {
+  int32 nextEquip = 1;
 }
-message S2CSectorLeave{}
-message C2SInPortal{
-  int32 sectorId = 1;
-  int32 portalId = 2;
+message S2CEquipChange {
+  int32 playerId = 1;
+  int32 currentSector = 2;
+  int32 nextEquip = 3;
 }
-message S2CInPortal{}
 
 message C2SAddExp {
   int32 count = 1;

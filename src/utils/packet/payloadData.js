@@ -69,14 +69,14 @@ const PAYLOAD_DATA = {
   MemberCardInfo: (
     id_int32,
     nickname_string,
-    currentSector_int,
+    currentSector_int32,
     isLeader_bool,
     isMine_bool,
   ) => {
     return {
       id: id_int32,
       nickname: nickname_string,
-      currentSector: currentSector_int,
+      currentSector: currentSector_int32,
       isLeader: isLeader_bool,
       isMine: isMine_bool,
     };
@@ -183,5 +183,4 @@ const PAYLOAD_DATA = {
     return { slotIdx: slotIdx_int32, itemId: itemId_int32, stack: stack_int32 };
   },
 };
-
 export default PAYLOAD_DATA;

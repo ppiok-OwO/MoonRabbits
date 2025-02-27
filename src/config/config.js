@@ -10,7 +10,11 @@ import {
   REDIS_HOST,
   REDIS_PORT,
 } from '../constants/env.js';
-import { PACKET_ID, PACKET_ID_LENGTH, PACKET_SIZE } from '../constants/header.js';
+import {
+  PACKET_ID,
+  PACKET_ID_LENGTH,
+  PACKET_SIZE,
+} from '../constants/header.js';
 import { BASE_STAT_DATA } from '../constants/PlayerBaseStat.js';
 import { BATTLE_LOG_ID } from '../constants/BattleLog.js';
 import { UPDATE_LOCATION } from '../constants/UpdateLocation.js';
@@ -103,16 +107,15 @@ export const config = {
     C2SGatheringSkillCheck: PACKET_ID.C2SGatheringSkillCheck,
     S2CGatheringSkillCheck: PACKET_ID.S2CGatheringSkillCheck,
     S2CGatheringDone: PACKET_ID.S2CGatheringDone,
+    C2SResourcesList: PACKET_ID.C2SResourcesList,
     C2SRecall: PACKET_ID.C2SRecall,
     S2CRecall: PACKET_ID.S2CRecall,
     C2SThrowGrenade: PACKET_ID.C2SThrowGrenade,
     S2CThrowGrenade: PACKET_ID.S2CThrowGrenade,
-    C2SSectorEnter: PACKET_ID.C2SSectorEnter,
-    S2CSectorEnter: PACKET_ID.S2CSectorEnter,
-    C2SSectorLeave: PACKET_ID.C2SSectorLeave,
-    S2CSectorLeave: PACKET_ID.S2CSectorLeave,
-    C2SInPortal: PACKET_ID.C2SInPortal,
-    S2CInPortal: PACKET_ID.S2CInPortal,
+    C2SStun: PACKET_ID.C2SStun,
+    S2CStun: PACKET_ID.S2CStun,
+    C2SEquipChange: PACKET_ID.C2SEquipChange,
+    S2CEquipChange: PACKET_ID.S2CEquipChange,
     C2SAddExp: PACKET_ID.C2SAddExp,
     S2CAddExp: PACKET_ID.S2CAddExp,
     S2CLevelUp: PACKET_ID.S2CLevelUp,
