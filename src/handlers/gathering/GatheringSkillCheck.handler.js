@@ -1,8 +1,5 @@
 import Packet from '../../utils/packet/packet.js';
-import {
-  getPlayerSession,
-  getSectorSessions,
-} from '../../session/sessions.js';
+import { getPlayerSession, getSectorSessions } from '../../session/sessions.js';
 import handleError from '../../utils/error/errorHandler.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
@@ -13,12 +10,23 @@ export const gatheringSkillCheckHandler = (socket, packetData) => {
   const player = getPlayerSession().getPlayer(socket);
   const sector = getSectorSessions().getSector(player.setSectorId());
   if (placedId >= 0 && placedId < sector.resources.length) {
-    if (sector.resources[placedId].CheckValidateTiming(player.gatheringAngle, player.gatheringStartTime, deltatime)) {
+    if (
+      sector.resources[placedId].CheckValidateTiming(
+        player.gatheringAngle,
+        player.gatheringStartTime,
+        deltatime,
+      )
+    ) {
       const durability = sector.resources[placedId].subDurability();
 
       socket.write(Packet.S2CGatheringSkillCheck(placedId, durability));
+
       const dropItem = sector.resources[placedId].dropItem();
       socket.write(Packet.S2CGatheringDone(placedId, dropItem.item, 1));
+
+      // 나중에 아이템 받아오는 내역 필요함
+
+      //
 
       addExpHandler(socket, {
         count: sector.resources[placedId].getDifficulty(),
