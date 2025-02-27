@@ -5,7 +5,6 @@ import {
 } from '../../session/sessions.js';
 import Packet from '../../utils/packet/packet.js';
 import playerSpawnNotificationHandler from './playerSpawnNotification.handler.js';
-import { CODE_TO_ID, ID_TO_CODE } from '../../utils/tempConverter.js';
 import { getGameAssets } from '../../init/assets.js';
 
 const moveSectorHandler = (socket, packetData) => {
@@ -35,20 +34,23 @@ const moveSectorHandler = (socket, packetData) => {
     return socket.write(packet);
   }
   try {
+    // 현재는 섹터가 한개씩 존재함으로 섹터 코드로 탐색
+    const newSector =
+      getSectorSessions().getSectorByCode(targetSectorCode);
+      if(!newSector){
+        const packet = Packet.S2CChat(0, '섹터가 존재하지 않습니다..', 'System');
+        return socket.write(packet);
+      }
     // 디스폰
     prevSector.notify(
       Packet.S2CDespawn(
         partyMembers.map((partyMember) => {
           return partyMember.id;
         }),
-        targetSectorCode,
+        player.getSectorId(),
       ),
     );
-    // 현재는 섹터가 한개씩 존재함으로 섹터 코드로 탐색
-    const newSector =
-      getSectorSessions().getSectorBySectorCode(targetSectorCode);
 
-    console.log(newSector.players.size);
     // partyMembers.forEach((member) => {
     //   member.setSectorId(newSector.getSectorId());
     //   newSector.setPlayer(socket, member);
@@ -58,20 +60,13 @@ const moveSectorHandler = (socket, packetData) => {
     // });
 
     // @@@ setSectorId가 Player의 currentSector를 갱신하는디, 여기엔 코드가 들어가야해서 @@@
-
     partyMembers.forEach((member) => {
       member.setSectorId(newSector.getSectorId());
       newSector.setPlayer(socket, member);
-
-      if (newSector.resources.size > 0) {
-        player.sendPacket(Packet.S2CResourcesList(getResources()));
-      }
-
       const memberSocket = member.user.getSocket();
       memberSocket.write(Packet.S2CEnter(member.getPlayerInfo(),));
       playerSpawnNotificationHandler(memberSocket, {});
     });
-    console.log(newSector.players.size);
   } catch (err) {
     console.error(err);
   }

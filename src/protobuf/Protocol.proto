@@ -78,6 +78,7 @@ enum MsgId {
   C2S_GATHERING_SKILL_CHECK=145;
   S2C_GATHERING_SKILL_CHECK=146;
   S2C_GATHERING_DONE=147;
+  C2S_RESOURCES_LIST=148;
 
   C2S_RECALL = 160;
   S2C_RECALL = 161;
@@ -350,6 +351,8 @@ message S2CGatheringDone{
   int32 placedId = 1;
   int32 itemId = 2;
   int32 quantity = 3;
+}
+message C2SResourcesList{
 }
 
 message C2SRecall {}

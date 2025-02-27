@@ -14,7 +14,7 @@
       "sector_name": "마을",
       "areas": [],
       "monsters": [],
-      "resources": [1, 1, 51, 51]
+      "resources": []
     },
     {
       "sector_code": 2,
@@ -77,21 +77,21 @@
           "areaIdx": 5
         }
       ],
-      "resources": [1, 1, 51, 51]
+      "resources": []
     },
     {
       "sector_code": 101,
       "sector_name": "누논덴",
       "areas": [],
       "monsters": [],
-      "resources": [1, 1, 51, 51]
+      "resources": [1, 1, 1, 1, 1, 1, 51, 51, 51, 51, 51, 51]
     },
     {
       "sector_code": 102,
       "sector_name": "아누논덴",
       "areas": [],
       "monsters": [],
-      "resources": [1, 1, 51, 51]
+      "resources": [1, 1, 1, 1, 51, 51, 51, 51, 51, 51, 51]
     }
   ]
 }

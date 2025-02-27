@@ -30,6 +30,7 @@ import { collisionHandler } from './collision/collision.handler.js';
 import tryRecallHandler from './skill/tryRecall.hander.js';
 import cancelRecallHandler from './skill/cancelRecall.handler.js';
 import throwGrenadeHandler from './skill/throwGrenade.handler.js';
+import { resourceListHandler } from './gathering/ResourceList.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
@@ -64,7 +65,8 @@ const handlers = {
   [config.packetId.C2SCheckPartyList]: chceckPartyListHandler,
 
   [config.packetId.C2SGatheringSkillCheck]: gatheringSkillCheckHandler,
-  [config.packetId.C2SStartGathering]: StartGatheringHandler,
+  [config.packetId.C2SGatheringStart]: StartGatheringHandler,
+  [config.packetId.C2SResourcesList]: resourceListHandler,
 
   [config.packetId.C2SRecall]: tryRecallHandler,
   [config.packetId.S2CThrowGrenade]: throwGrenadeHandler,

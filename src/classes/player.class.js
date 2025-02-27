@@ -22,6 +22,7 @@ class Player {
     this.isPartyLeader = false;
     this.partyId = null;
     this.isInvited = false;
+    this.gatheringIdx = 0;
     this.gatheringAngle = 180;
     this.gatheringStartTime = 0;
     this.stamina = baseStat.stamina;
@@ -80,6 +81,12 @@ class Player {
   setAngle(angle) {
     this.gatheringStartTime = Date.now();
     return (this.gatheringAngle = angle);
+  }
+  setGatheringIdx(idx){
+    return this.gatheringIdx = idx;
+  }
+  getGatheringIdx(){
+    return this.gatheringIdx;
   }
   setPartyId(partyId) {
     this.partyId = partyId;

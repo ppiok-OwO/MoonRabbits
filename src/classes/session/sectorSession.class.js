@@ -15,10 +15,20 @@ class SectorSession {
       return value.sector_code === sectorCode;
     }).resources;
 
+    console.log(sectorCode);
+    console.log(sectorResources);
+
     if (sectorResources && sectorResources.length > 0) {
-      const resourceIdx = resources.length + 1;
-      resources.push(new Resource(resourceIdx, sectorResources[resourceIdx]));
+      for(let i = 0; i< sectorResources.length+1; i++){
+        if(i === 0){
+          resources.push(new Resource(i, sectorResources[0]));
+          continue;
+        }
+        resources.push(new Resource(i, sectorResources[i-1]));
+      }
     }
+    console.log(resources.length);
+    console.log(resources);
 
     const newSector = new Sector(sectorId , sectorCode, resources);
     this.sectors.set(sectorId, newSector);

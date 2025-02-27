@@ -12,11 +12,11 @@ class Resource {
     this.durability = this.resourceData.resource_durability;
     this.difficulty = this.resourceData.resource_difficulty;
   }
+  getResourceIdx() {
+    return this.resourceIdx;
+  }
   getResourceId() {
     return this.resourceId;
-  }
-  getStartTime() {
-    return this.startTime;
   }
   getData() {
     return this.resourceData;
@@ -50,21 +50,22 @@ class Resource {
     ) {
       return true;
     }
-    return false;
+    //일단 무조건 성공으로 처리.
+    return true;
   }
 
   dropItem() {
     let sum = 0;
     const dropItemArr = [];
     for (let i = 0; i < this.resourceData.drop_item.length; i++) {
-      dropItemArr.push((sum += this.resourceData.drop_item[i]));
+      dropItemArr.push((sum += this.resourceData.drop_item[i].chance));
     }
     const randNum = createRandNum(0, sum);
     return this.resourceData.drop_item[
       dropItemArr.findIndex((value) => {
         return value >= randNum;
       })
-    ].item;
+    ].item_id;
   }
 }
 

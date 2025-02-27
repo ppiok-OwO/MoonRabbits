@@ -107,6 +107,7 @@ export const config = {
     C2SGatheringSkillCheck: PACKET_ID.C2SGatheringSkillCheck,
     S2CGatheringSkillCheck: PACKET_ID.S2CGatheringSkillCheck,
     S2CGatheringDone: PACKET_ID.S2CGatheringDone,
+    C2SResourcesList:PACKET_ID.C2SResourcesList,
     C2SRecall: PACKET_ID.C2SRecall,
     S2CRecall: PACKET_ID.S2CRecall,
     C2SThrowGrenade: PACKET_ID.C2SThrowGrenade,

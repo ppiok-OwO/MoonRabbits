@@ -26,16 +26,18 @@ class Sector {
       return value.resource_id === resourceId;
     });
     if (resource) {
-      const resourceIdx = this.resources.length + 1;
+      const resourceIdx = this.resources.length;
       this.resources.push(new Resource(resourceIdx, id, resource));
       return resourceIdx;
     }
     return -1;
   }
   getResources() {
-    return resources.map((value, index) => {
-      PAYLOAD_DATA.Resource(index, value.getResourceId());
-    });
+    const resourcesPayloadData = [];
+    for(let i = 1; i<this.resources.length; i++){
+      resourcesPayloadData.push(PAYLOAD_DATA.Resource(this.resources[i].getResourceIdx(), this.resources[i].getResourceId()));
+    }
+    return resourcesPayloadData;
   }
   getSectorId() {
     return this.sectorId;
