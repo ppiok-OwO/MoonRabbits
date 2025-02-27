@@ -2,7 +2,6 @@ import { getSectorSessions, getPlayerSession } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import PACKET from '../../utils/packet/packet.js';
-import { CODE_TO_ID } from '../../utils/tempConverter.js';
 
 // !!! 패킷 변경에 따라 S_Chat -> S2CChat, S_Location -> S2CPlayerLocation으로 일괄 수정해씀다
 

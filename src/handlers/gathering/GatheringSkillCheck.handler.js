@@ -19,8 +19,8 @@ export const gatheringSkillCheckHandler = (socket, packetData) => {
       )
     ) {
       const durability = sector.resources[placedId].subDurability();
-      if(durability < 0){
-        const packet = Packet.S2CChat(0, '이미 소모된 자원입니다.', 'System');
+      if (durability < 0) {
+        const packet = PACKET.S2CChat(0, '이미 소모된 자원입니다.', 'System');
         return socket.write(packet);
       }
 
@@ -39,7 +39,7 @@ export const gatheringSkillCheckHandler = (socket, packetData) => {
 
       if (durability <= 0) {
         setTimeout(
-          () => sector.resetDurability(placedId ),
+          () => sector.resetDurability(placedId),
           sector.resources[placedId].getRespawnTime(),
         );
       }
