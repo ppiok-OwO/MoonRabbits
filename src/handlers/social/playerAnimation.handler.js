@@ -1,7 +1,4 @@
-import {
-  getSectorSessions,
-  getPlayerSession,
-} from '../../session/sessions.js';
+import { getSectorSessions, getPlayerSession } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import handleError from '../../utils/error/errorHandler.js';
@@ -26,9 +23,11 @@ export const animationHandler = (socket, packetData) => {
       );
     }
 
+    const sectorId = player.getSectorId();
+
     // 패킷 직렬화
     // const packet = Packet.S_Animation(player.getId(), animCode);
-    const packet = Packet.S2CAnimation(player.id, animCode);
+    const packet = Packet.S2CAnimation(player.id, animCode, sectorId);
 
     // 채팅창 알림 패킷 생성
     let chatPacket;
@@ -61,7 +60,6 @@ export const animationHandler = (socket, packetData) => {
         break;
     }
 
-    const sectorId = player.getSectorId();
     if (sectorId) {
       // 만약 던전이면
       const sectorSessions = getSectorSessions();

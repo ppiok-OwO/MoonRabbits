@@ -139,6 +139,7 @@ message C2SAnimation{
 message S2CAnimation{
   int32 playerId = 1;
   int32 animCode = 2;
+  int32 currentSector = 3;
 }
 
 message C2SChat{
@@ -152,6 +153,7 @@ message S2CChat{
   int32 playerId = 1;
   string chatMsg = 2;
   string chatType = 3;
+  int32 currentSector = 4;
 }
 
 message S2CSpawn{
@@ -437,8 +439,9 @@ message InventoryInfo {}
 message MemberCardInfo {
   int32 id = 1;
   string nickname = 2;
-  bool isLeader = 3;
-  bool isMine = 4;
+  int32 currentSector = 3;
+  bool isLeader = 4;
+  bool isMine = 5;
 }
 
 message OwnedCharacter {

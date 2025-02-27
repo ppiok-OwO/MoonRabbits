@@ -66,10 +66,17 @@ const PAYLOAD_DATA = {
   ItemInfo: (itemId_int32, stack_int32) => {
     return { itemId: itemId_int32, stack: stack_int32 };
   },
-  MemberCardInfo: (id_int32, nickname_string, isLeader_bool, isMine_bool) => {
+  MemberCardInfo: (
+    id_int32,
+    nickname_string,
+    currentSector_int,
+    isLeader_bool,
+    isMine_bool,
+  ) => {
     return {
       id: id_int32,
       nickname: nickname_string,
+      currentSector: currentSector_int,
       isLeader: isLeader_bool,
       isMine: isMine_bool,
     };

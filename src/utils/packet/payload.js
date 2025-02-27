@@ -19,14 +19,24 @@ const PAYLOAD = {
   S2CEnter: (player_PlayerInfo) => {
     return { player: player_PlayerInfo };
   },
-  S2CAnimation: (playerId_int32, animCode_int32) => {
-    return { playerId: playerId_int32, animCode: animCode_int32 };
+  S2CAnimation: (playerId_int32, animCode_int32, currentSector_int) => {
+    return {
+      playerId: playerId_int32,
+      animCode: animCode_int32,
+      currentSector: currentSector_int,
+    };
   },
-  S2CChat: (playerId_int32, chatMsg_string, chatType_string) => {
+  S2CChat: (
+    playerId_int32,
+    chatMsg_string,
+    chatType_string,
+    currentSector_int32,
+  ) => {
     return {
       playerId: playerId_int32,
       chatMsg: chatMsg_string,
       chatType: chatType_string,
+      currentSector: currentSector_int32,
     };
   },
   S2CSpawn: (players_PlayerInfo_repeated) => {
