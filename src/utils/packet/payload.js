@@ -209,6 +209,19 @@ const PAYLOAD = {
       coolTime: coolTime_int32,
     };
   },
+  S2CStun: (
+    currentSector_int32,
+    stunTimer_int32,
+    playerIds_int32_repeated,
+    monsterIds_int32_repeated,
+  ) => {
+    return {
+      currentSector: currentSector_int32,
+      stunTimer: stunTimer_int32,
+      playerIds: playerIds_int32_repeated,
+      monsterIds: monsterIds_int32_repeated,
+    };
+  },
   S2CSectorEnter: (sectorInfo_SectorInfo, player_PlayerStatus) => {
     return { sectorInfo: sectorInfo_SectorInfo, player: player_PlayerStatus };
   },

@@ -275,6 +275,22 @@ const PACKET = {
       ),
     );
   },
+  S2CStun: (
+    currentSector_int32,
+    stunTimer_int32,
+    playerIds_int32_repeated,
+    monsterIds_int32_repeated,
+  ) => {
+    return makePacket(
+      PACKET_ID.S2CStun,
+      PAYLOAD.S2CStun(
+        currentSector_int32,
+        stunTimer_int32,
+        playerIds_int32_repeated,
+        monsterIds_int32_repeated,
+      ),
+    );
+  },
   S2CSectorEnter: (sectorInfo_SectorInfo, player_PlayerStatus) => {
     return makePacket(
       PACKET_ID.S2CSectorEnter,

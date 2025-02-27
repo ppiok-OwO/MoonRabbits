@@ -83,6 +83,8 @@ enum MsgId {
   S2C_RECALL = 161;
   C2S_THROW_GRENADE = 162;
   S2C_THROW_GRENADE = 163;
+  C2S_STUN = 166;
+  S2C_STUN = 167;
 
   C2S_SECTOR_ENTER=170;
   S2C_SECTOR_ENTER=171;
@@ -367,6 +369,17 @@ message S2CThrowGrenade {
   int32 currentSector = 2;
   Vec3 velocity = 3;
   int32 coolTime = 4;
+}
+message C2SStun {
+  int32 skillType = 1;
+  repeated int32 playerIds = 2;
+  repeated int32 monsterIds = 3;
+}
+message S2CStun {
+  int32 currentSector = 1;
+  int32 stunTimer = 2;
+  repeated int32 playerIds = 3;
+  repeated int32 monsterIds = 4;
 }
 
 message C2SSectorEnter{

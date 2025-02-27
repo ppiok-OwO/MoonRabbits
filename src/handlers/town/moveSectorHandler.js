@@ -62,8 +62,9 @@ const moveSectorHandler = (socket, packetData) => {
     newSector.setPlayer(socket, member);
     const memberSocket = member.user.getSocket();
     memberSocket.write(Packet.S2CEnter(member.getPlayerInfo()));
-    playerSpawnNotificationHandler(memberSocket, {});
   });
+  
+  playerSpawnNotificationHandler(socket, {});
   console.log(newSector.players.size);
 };
 

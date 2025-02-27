@@ -12,15 +12,10 @@ const tryRecallHandler = (socket, packetData) => {
   const sectorCode = player.getSectorId();
   const packet = PACKET.S2CRecall(player.id, sectorCode, RECALL_TIMER);
 
-  if (sectorCode) {
-    // 만약 던전이면
-    const sectorSessions = getSectorSessions();
-    const sector = sectorSessions.getSector(CODE_TO_ID[sectorCode]);
-    sector.notify(packet);
-  } else {
-    // 던전이 아니면
-    playerSession.notify(packet);
-  }
+  // 만약 던전이면
+  const sectorSessions = getSectorSessions();
+  const sector = sectorSessions.getSector(CODE_TO_ID[sectorCode]);
+  sector.notify(packet);
 };
 
 export default tryRecallHandler;

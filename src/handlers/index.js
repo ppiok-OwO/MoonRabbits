@@ -29,6 +29,7 @@ import { chceckPartyListHandler } from './social/party/checkPartyList.handler.js
 import tryRecallHandler from './skill/tryRecall.hander.js';
 import cancelRecallHandler from './skill/cancelRecall.handler.js';
 import throwGrenadeHandler from './skill/throwGrenade.handler.js';
+import stunHandler from './skill/stun.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
@@ -63,7 +64,8 @@ const handlers = {
   [config.packetId.C2SStartGathering]: StartGatheringHandler,
 
   [config.packetId.C2SRecall]: tryRecallHandler,
-  [config.packetId.S2CThrowGrenade]: throwGrenadeHandler,
+  [config.packetId.C2SThrowGrenade]: throwGrenadeHandler,
+  [config.packetId.C2SStun]: stunHandler,
 };
 
 export const getHandlerByPacketId = (packetId) => {
