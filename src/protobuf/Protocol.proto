@@ -79,6 +79,11 @@ enum MsgId {
   S2C_GATHERING_SKILL_CHECK=146;
   S2C_GATHERING_DONE=147;
 
+  C2S_RECALL = 160;
+  S2C_RECALL = 161;
+  C2S_THROW_GRENADE = 162;
+  S2C_THROW_GRENADE = 163;
+
   C2S_SECTOR_ENTER=170;
   S2C_SECTOR_ENTER=171;
   C2S_SECTOR_LEAVE=172;
@@ -345,6 +350,23 @@ message S2CGatheringDone{
   int32 placedId = 1;
   int32 itemId = 2;
   int32 quantity = 3;
+}
+
+message C2SRecall {}
+message S2CRecall {
+  int32 playerId = 1;
+  int32 currentSector = 2;
+  int32 recallTimer = 3;
+}
+message C2SThrowGrenade {
+  Vec3 startPos = 1;
+  Vec3 targetPos = 2;
+}
+message S2CThrowGrenade {
+  int32 playerId = 1;
+  int32 currentSector = 2;
+  Vec3 velocity = 3;
+  int32 coolTime = 4;
 }
 
 message C2SSectorEnter{

@@ -32,16 +32,26 @@ const PACKET = {
   S2CEnter: (player_PlayerInfo) => {
     return makePacket(PACKET_ID.S2CEnter, PAYLOAD.S2CEnter(player_PlayerInfo));
   },
-  S2CAnimation: (playerId_int32, animCode_int32,currentSector_int32) => {
+  S2CAnimation: (playerId_int32, animCode_int32, currentSector_int32) => {
     return makePacket(
       PACKET_ID.S2CAnimation,
-      PAYLOAD.S2CAnimation(playerId_int32, animCode_int32,currentSector_int32),
+      PAYLOAD.S2CAnimation(playerId_int32, animCode_int32, currentSector_int32),
     );
   },
-  S2CChat: (playerId_int32, chatMsg_string, chatType_string,currentSector_int32) => {
+  S2CChat: (
+    playerId_int32,
+    chatMsg_string,
+    chatType_string,
+    currentSector_int32,
+  ) => {
     return makePacket(
       PACKET_ID.S2CChat,
-      PAYLOAD.S2CChat(playerId_int32, chatMsg_string, chatType_string,currentSector_int32),
+      PAYLOAD.S2CChat(
+        playerId_int32,
+        chatMsg_string,
+        chatType_string,
+        currentSector_int32,
+      ),
     );
   },
   S2CSpawn: (players_PlayerInfo_repeated) => {
@@ -241,6 +251,28 @@ const PACKET = {
     return makePacket(
       PACKET_ID.S2CGatheringDone,
       PAYLOAD.S2CGatheringDone(placedId_int32, itemId_int32, quantity_int32),
+    );
+  },
+  S2CRecall: (playerId_int32, currentSector_int32, recallTimer_int32) => {
+    return makePacket(
+      PACKET_ID.S2CRecall,
+      PAYLOAD.S2CRecall(playerId_int32, currentSector_int32, recallTimer_int32),
+    );
+  },
+  S2CThrowGrenade: (
+    playerId_int32,
+    currentSector_int32,
+    velocity_Vec3,
+    coolTime_int32,
+  ) => {
+    return makePacket(
+      PACKET_ID.S2CThrowGrenade,
+      PAYLOAD.S2CThrowGrenade(
+        playerId_int32,
+        currentSector_int32,
+        velocity_Vec3,
+        coolTime_int32,
+      ),
     );
   },
   S2CSectorEnter: (sectorInfo_SectorInfo, player_PlayerStatus) => {

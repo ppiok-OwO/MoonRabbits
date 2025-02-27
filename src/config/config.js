@@ -107,6 +107,10 @@ export const config = {
     C2SGatheringSkillCheck: PACKET_ID.C2SGatheringSkillCheck,
     S2CGatheringSkillCheck: PACKET_ID.S2CGatheringSkillCheck,
     S2CGatheringDone: PACKET_ID.S2CGatheringDone,
+    C2SRecall: PACKET_ID.C2SRecall,
+    S2CRecall: PACKET_ID.S2CRecall,
+    C2SThrowGrenade: PACKET_ID.C2SThrowGrenade,
+    S2CThrowGrenade: PACKET_ID.S2CThrowGrenade,
     C2SSectorEnter: PACKET_ID.C2SSectorEnter,
     S2CSectorEnter: PACKET_ID.S2CSectorEnter,
     C2SSectorLeave: PACKET_ID.C2SSectorLeave,
@@ -139,10 +143,10 @@ export const config = {
     S2: 102,
   },
   animCode: {
-    happy : 111,
-    sad : 222,
-    greeting : 333,
-  }
+    happy: 111,
+    sad: 222,
+    greeting: 333,
+  },
 };
 
 export const packetIdEntries = Object.entries(config.packetId);

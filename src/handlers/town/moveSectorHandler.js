@@ -13,7 +13,7 @@ const moveSectorHandler = (socket, packetData) => {
   const targetSectorCode = targetSector || 2;
 
   const player = getPlayerSession().getPlayer(socket);
-  const sector = getSectorSessions().getSector(
+  const prevSector = getSectorSessions().getSector(
     CODE_TO_ID[player.getSectorId()],
   );
   const partySession = getPartySessions();
@@ -34,7 +34,7 @@ const moveSectorHandler = (socket, packetData) => {
   }
 
   // 디스폰
-  sector.notify(
+  prevSector.notify(
     Packet.S2CDespawn(
       partyMembers.map((partyMember) => {
         return partyMember.id;
@@ -55,8 +55,10 @@ const moveSectorHandler = (socket, packetData) => {
   // });
 
   // @@@ setSectorId가 Player의 currentSector를 갱신하는디, 여기엔 코드가 들어가야해서 @@@
+  // @@@ 기존 섹터에서 지워줘야함 @@@
   partyMembers.forEach((member) => {
     member.setSectorId(ID_TO_CODE[newSector.getSectorId()]);
+    prevSector.deletePlayer(member.user.socket);
     newSector.setPlayer(socket, member);
     const memberSocket = member.user.getSocket();
     memberSocket.write(Packet.S2CEnter(member.getPlayerInfo()));

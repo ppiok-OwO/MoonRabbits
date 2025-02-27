@@ -20,9 +20,18 @@ const PAYLOAD = {
     return { player: player_PlayerInfo };
   },
   S2CAnimation: (playerId_int32, animCode_int32, currentSector_int32) => {
-    return { playerId: playerId_int32, animCode: animCode_int32, currentSector: currentSector_int32 };
+    return {
+      playerId: playerId_int32,
+      animCode: animCode_int32,
+      currentSector: currentSector_int32,
+    };
   },
-  S2CChat: (playerId_int32, chatMsg_string, chatType_string, currentSector_int32) => {
+  S2CChat: (
+    playerId_int32,
+    chatMsg_string,
+    chatType_string,
+    currentSector_int32,
+  ) => {
     return {
       playerId: playerId_int32,
       chatMsg: chatMsg_string,
@@ -178,6 +187,26 @@ const PAYLOAD = {
       placedId: placedId_int32,
       itemId: itemId_int32,
       quantity: quantity_int32,
+    };
+  },
+  S2CRecall: (playerId_int32, currentSector_int32, recallTimer_int32) => {
+    return {
+      playerId: playerId_int32,
+      currentSector: currentSector_int32,
+      recallTimer: recallTimer_int32,
+    };
+  },
+  S2CThrowGrenade: (
+    playerId_int32,
+    currentSector_int32,
+    velocity_Vec3,
+    coolTime_int32,
+  ) => {
+    return {
+      playerId: playerId_int32,
+      currentSector: currentSector_int32,
+      velocity: velocity_Vec3,
+      coolTime: coolTime_int32,
     };
   },
   S2CSectorEnter: (sectorInfo_SectorInfo, player_PlayerStatus) => {
