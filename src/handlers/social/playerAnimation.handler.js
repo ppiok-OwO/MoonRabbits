@@ -1,5 +1,4 @@
 import { getSectorSessions, getPlayerSession } from '../../session/sessions.js';
-import { getSectorSessions, getPlayerSession } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import handleError from '../../utils/error/errorHandler.js';
