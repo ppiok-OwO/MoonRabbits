@@ -26,6 +26,10 @@ import { gatheringSkillCheckHandler } from './gathering/GatheringSkillCheck.hand
 import { StartGatheringHandler } from './gathering/StartGathering.handler.js';
 import { rejectInviteHandler } from './social/party/rejectInvite.handler.js';
 import { chceckPartyListHandler } from './social/party/checkPartyList.handler.js';
+import { collisionHandler } from './collision/collision.handler.js';
+import tryRecallHandler from './skill/tryRecall.hander.js';
+import cancelRecallHandler from './skill/cancelRecall.handler.js';
+import throwGrenadeHandler from './skill/throwGrenade.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
@@ -45,6 +49,9 @@ const handlers = {
   [config.packetId.C2SAddExp]: addExpHandler,
   [config.packetId.C2SInvestPoint]: investPointHandler,
 
+  //충돌
+  [config.packetId.C2SCollision]: collisionHandler,
+
   // 파티 관련
   [config.packetId.C2SCreateParty]: createPartyHandler,
   [config.packetId.C2SInviteParty]: invitePartyHandler,
@@ -58,6 +65,9 @@ const handlers = {
 
   [config.packetId.C2SGatheringSkillCheck]: gatheringSkillCheckHandler,
   [config.packetId.C2SStartGathering]: StartGatheringHandler,
+
+  [config.packetId.C2SRecall]: tryRecallHandler,
+  [config.packetId.S2CThrowGrenade]: throwGrenadeHandler,
 };
 
 export const getHandlerByPacketId = (packetId) => {

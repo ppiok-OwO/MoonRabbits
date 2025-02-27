@@ -79,6 +79,11 @@ enum MsgId {
   S2C_GATHERING_SKILL_CHECK=146;
   S2C_GATHERING_DONE=147;
 
+  C2S_RECALL = 160;
+  S2C_RECALL = 161;
+  C2S_THROW_GRENADE = 162;
+  S2C_THROW_GRENADE = 163;
+
   C2S_SECTOR_ENTER=170;
   S2C_SECTOR_ENTER=171;
   C2S_SECTOR_LEAVE=172;
@@ -139,6 +144,7 @@ message C2SAnimation{
 message S2CAnimation{
   int32 playerId = 1;
   int32 animCode = 2;
+  int32 currentSector = 3;
 }
 
 message C2SChat{
@@ -152,6 +158,7 @@ message S2CChat{
   int32 playerId = 1;
   string chatMsg = 2;
   string chatType = 3;
+  int32 currentSector = 4;
 }
 
 message S2CSpawn{
@@ -345,6 +352,23 @@ message S2CGatheringDone{
   int32 quantity = 3;
 }
 
+message C2SRecall {}
+message S2CRecall {
+  int32 playerId = 1;
+  int32 currentSector = 2;
+  int32 recallTimer = 3;
+}
+message C2SThrowGrenade {
+  Vec3 startPos = 1;
+  Vec3 targetPos = 2;
+}
+message S2CThrowGrenade {
+  int32 playerId = 1;
+  int32 currentSector = 2;
+  Vec3 velocity = 3;
+  int32 coolTime = 4;
+}
+
 message C2SSectorEnter{
   int32 sectorId = 1;
   optional string partyId = 2;
@@ -437,8 +461,9 @@ message InventoryInfo {}
 message MemberCardInfo {
   int32 id = 1;
   string nickname = 2;
-  bool isLeader = 3;
-  bool isMine = 4;
+  int32 currentSector = 3;
+  bool isLeader = 4;
+  bool isMine = 5;
 }
 
 message OwnedCharacter {

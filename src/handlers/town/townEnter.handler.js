@@ -49,10 +49,14 @@ const townEnterHandler = async (socket, packetData) => {
 
     socket.write(packet);
 
+    // @@@ 챗 패킷에 섹터 코드 필요!! @@@
+    const sectorCode = newPlayer.getSectorId();
+
     const chatPacket = Packet.S2CChat(
       0,
       `${newPlayer.nickname}님이 입장하였습니다.`,
       'System',
+      sectorCode
     );
     getPlayerSession().notify(chatPacket);
 

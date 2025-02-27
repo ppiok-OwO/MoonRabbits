@@ -15,7 +15,7 @@ const moveSectorHandler = (socket, packetData) => {
   const targetSectorCode = targetSector || 2;
 
   const player = getPlayerSession().getPlayer(socket);
-  const sector = getSectorSessions().getSector(
+  const prevSector = getSectorSessions().getSector(
     player.getSectorId(),
   );
   const partySession = getPartySessions();
@@ -36,7 +36,7 @@ const moveSectorHandler = (socket, packetData) => {
   }
   try {
     // 디스폰
-    sector.notify(
+    prevSector.notify(
       Packet.S2CDespawn(
         partyMembers.map((partyMember) => {
           return partyMember.id;
