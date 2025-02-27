@@ -33,7 +33,7 @@ export const loadGameAssets = async () => {
         readFileAsync('sector.json'),
         readFileAsync('collision.json'),
       ]);
-    gameAssets = { monsters, targetExps, resources, item, item_disassembly, sector: sectors, collision };
+    gameAssets = { monsters, targetExps, resources, item, item_disassembly, sectors: sectors, collision };
     return gameAssets;
   } catch (error) {
     throw new Error('Failed to load game assets: ' + error.message);
