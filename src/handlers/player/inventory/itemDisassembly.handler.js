@@ -27,7 +27,7 @@ export const itemDisassemblyHandler = async (socket, packetData) => {
     const redisKey = `inventory:${userId}`;
 
     // 원본 아이템 제거: 해당 슬롯에서 삭제
-    await redisClient.hDel(redisKey, slotIdx.toString());
+    await redisClient.hdel(redisKey, slotIdx.toString());
     console.log(`${slotIdx}에서 분해한 아이템이 삭제됩니다.`);
 
     // 레시피에 정의된 분해 결과 아이템들을 순차적으로 저장
@@ -36,7 +36,7 @@ export const itemDisassemblyHandler = async (socket, packetData) => {
       // 인벤토리의 다음 사용 가능한 슬롯 번호를 구하는 헬퍼 함수 호출
       const freeSlot = await getFreeSlotIndex(redisKey);
       // Redis 해시에 새 아이템 정보 저장 (문자열 직렬화)
-      await redisClient.hSet(
+      await redisClient.hset(
         redisKey,
         freeSlot.toString(),
         JSON.stringify({
@@ -56,7 +56,7 @@ export const itemDisassemblyHandler = async (socket, packetData) => {
 
 // 인벤토리 Redis 해시에서 사용 가능한 (비어 있는) 슬롯 번호를 찾는 헬퍼 함수
 async function getFreeSlotIndex(redisKey) {
-  const keys = await redisClient.hKeys(redisKey);
+  const keys = await redisClient.hkeys(redisKey);
   // 기존 슬롯 번호들을 숫자로 변환 후 오름차순 정렬
   const indices = keys.map((key) => parseInt(key, 10)).sort((a, b) => a - b);
   let freeIndex = 0;

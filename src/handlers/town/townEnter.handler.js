@@ -5,10 +5,10 @@ import Packet from '../../utils/packet/packet.js';
 import { getUserSessions } from '../../session/sessions.js';
 
 import playerSpawnNotificationHandler from './playerSpawnNotification.handler.js';
-import { config } from '../../config/config.js';
 import chalk from 'chalk';
-import { loadStat } from '../../db/user/user.db.js';
+import { loadStat, updateInventory } from '../../db/user/user.db.js';
 import RedisSession from '../../classes/session/redisSession.class.js';
+import { inventoryUpdateHandler } from '../player/inventory/inventoryUpdate.handler.js';
 
 const townEnterHandler = async (socket, packetData) => {
   try {
@@ -22,6 +22,9 @@ const townEnterHandler = async (socket, packetData) => {
     // DB에서 스탯 정보 로드 (playerId를 키로 사용)
     const statData = await loadStat(playerId);
 
+    // 인벤토리 업데이트: 인벤토리 DB 데이터를 Redis에 동기화
+    await updateInventory();
+
     // PlayerSession에 추가 및 Redis 저장
     const playerSessionManager = getPlayerSession();
     const newPlayer = await playerSessionManager.addPlayer(
@@ -34,8 +37,7 @@ const townEnterHandler = async (socket, packetData) => {
     // console.log('newPlayer : ', newPlayer);
 
     // Redis에 playerSession 저장
-    await redisSession.saveToRedisSectorSession(socket);
-    await redisSession.saveToRedisPlayerSession(socket);
+    await redisSession.saveFullSession(socket);
 
     console.log('----- Player Session 업데이트 및 Redis 저장 완료 -----\n', newPlayer);
 
@@ -47,6 +49,10 @@ const townEnterHandler = async (socket, packetData) => {
     getPlayerSession().notify(chatPacket);
 
     playerSpawnNotificationHandler(socket, packetData);
+
+    // 인벤토리 업데이트 핸들러를 호출하여 MySQL에 저장된 인벤토리 정보를 Redis에 저장하고,
+    // 재구성한 후 클라이언트에 인벤토리 패킷을 전송함
+    await inventoryUpdateHandler(socket);
   } catch (error) {
     console.error(`${chalk.red('[townEnterHanlder Error]')}\n${error}`);
     socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'townEnterHanlder 에러'));

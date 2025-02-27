@@ -13,14 +13,14 @@ export const inventorySortHandler = async (socket, packetData) => {
     // Redis 인벤토리 키 설정
     const redisKey = `inventory:${player_id}`;
 
-    // 현재 저장되어 있는 인벤토리 데이터를 초기화합니다.
+    // 현재 저장되어 있는 인벤토리 데이터를 초기화
     await redisClient.del(redisKey);
 
-    // 새로운 인벤토리 배열 데이터를 반복문을 통해 Redis에 저장합니다.
+    // 새로운 인벤토리 배열 데이터를 반복문을 통해 Redis에 저장
     for (const slot of slots) {
       const { slotIdx, itemId, stack } = slot;
-      // 각 슬롯 데이터는 JSON 문자열로 변환하여 저장합니다.
-      await redisClient.hSet(redisKey, slotIdx.toString(), JSON.stringify({ itemId, stack }));
+      // 각 슬롯 데이터는 JSON 문자열로 변환하여 저장
+      await redisClient.hset(redisKey, slotIdx.toString(), JSON.stringify({ itemId, stack }));
     }
 
     console.log(`User ${player_id}의 인벤토리가 정렬되어 Redis에 업데이트되었습니다.`);

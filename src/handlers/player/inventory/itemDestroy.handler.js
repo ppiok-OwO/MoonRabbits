@@ -15,7 +15,7 @@ export const itemDestroyHandler = async (socket, packetdata) => {
 
     // Redis에 저장된 인벤토리에서 해당 슬롯의 아이템 삭제
     const redisKey = `inventory:${player_id}`;
-    await redisClient.hDel(redisKey, slotIdx.toString());
+    await redisClient.hdel(redisKey, slotIdx.toString());
     console.log(`아이템 파괴 완료: 슬롯 ${slotIdx}의 itemId ${itemId} 삭제됨`);
 
     // 아이템 파괴 후, 필요하다면 인벤토리 업데이트 패킷(S2CInventoryUpdate)을 전송

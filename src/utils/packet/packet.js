@@ -4,23 +4,12 @@ import PAYLOAD from './payload.js';
 
 const PACKET = {
   S2CRegister: (isSuccess_bool, msg_string) => {
-    return makePacket(
-      PACKET_ID.S2CRegister,
-      PAYLOAD.S2CRegister(isSuccess_bool, msg_string),
-    );
+    return makePacket(PACKET_ID.S2CRegister, PAYLOAD.S2CRegister(isSuccess_bool, msg_string));
   },
-  S2CLogin: (
-    isSuccess_bool,
-    msg_string,
-    ownedCharacters_OwnedCharacter_repeated,
-  ) => {
+  S2CLogin: (isSuccess_bool, msg_string, ownedCharacters_OwnedCharacter_repeated) => {
     return makePacket(
       PACKET_ID.S2CLogin,
-      PAYLOAD.S2CLogin(
-        isSuccess_bool,
-        msg_string,
-        ownedCharacters_OwnedCharacter_repeated,
-      ),
+      PAYLOAD.S2CLogin(isSuccess_bool, msg_string, ownedCharacters_OwnedCharacter_repeated),
     );
   },
   S2CCreateCharacter: (isSuccess_bool, msg_string) => {
@@ -36,10 +25,7 @@ const PACKET = {
     return makePacket(PACKET_ID.S2CLeave);
   },
   S2CAnimation: (playerId_int32, animCode_int32) => {
-    return makePacket(
-      PACKET_ID.S2CAnimation,
-      PAYLOAD.S2CAnimation(playerId_int32, animCode_int32),
-    );
+    return makePacket(PACKET_ID.S2CAnimation, PAYLOAD.S2CAnimation(playerId_int32, animCode_int32));
   },
   S2CChat: (playerId_int32, chatMsg_string, chatType_string) => {
     return makePacket(
@@ -48,10 +34,7 @@ const PACKET = {
     );
   },
   S2CSpawn: (players_PlayerInfo_repeated) => {
-    return makePacket(
-      PACKET_ID.S2CSpawn,
-      PAYLOAD.S2CSpawn(players_PlayerInfo_repeated),
-    );
+    return makePacket(PACKET_ID.S2CSpawn, PAYLOAD.S2CSpawn(players_PlayerInfo_repeated));
   },
   S2CDespawn: (playerIds_int32_repeated, currentScene_int32) => {
     return makePacket(
@@ -112,11 +95,7 @@ const PACKET = {
   S2CInviteParty: (leaderNickname_string, partyId_string, memberId_int32) => {
     return makePacket(
       PACKET_ID.S2CInviteParty,
-      PAYLOAD.S2CInviteParty(
-        leaderNickname_string,
-        partyId_string,
-        memberId_int32,
-      ),
+      PAYLOAD.S2CInviteParty(leaderNickname_string, partyId_string, memberId_int32),
     );
   },
   S2CJoinParty: (
@@ -174,10 +153,7 @@ const PACKET = {
     );
   },
   S2CDisbandParty: (msg_string) => {
-    return makePacket(
-      PACKET_ID.S2CDisbandParty,
-      PAYLOAD.S2CDisbandParty(msg_string),
-    );
+    return makePacket(PACKET_ID.S2CDisbandParty, PAYLOAD.S2CDisbandParty(msg_string));
   },
   S2CAllowInvite: (
     partyId_string,
@@ -274,10 +250,7 @@ const PACKET = {
     );
   },
   S2CInvestPoint: (statInfo_StatInfo) => {
-    return makePacket(
-      PACKET_ID.S2CInvestPoint,
-      PAYLOAD.S2CInvestPoint(statInfo_StatInfo),
-    );
+    return makePacket(PACKET_ID.S2CInvestPoint, PAYLOAD.S2CInvestPoint(statInfo_StatInfo));
   },
 };
 

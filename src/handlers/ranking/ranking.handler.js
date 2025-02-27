@@ -9,17 +9,22 @@ let rankingCache = null;
 // Redis에서 전체 랭킹 리스트를 업데이트하는 함수
 async function updateRankingList() {
   try {
-    const results = await redisClient.zRangeWithScores('ranking', 0, -1, { REV: true });
+    // ioredis v5에서는 zRangeWithScore 대신 zrevrange와 WITHSCORES 옵션을 사용합니다.
+    const results = await redisClient.zrevrange('ranking', 0, -1, 'WITHSCORES');
     const rankingList = [];
     let rank = 1;
-    for (const entry of results) {
-      const playerId = entry.value;
-      const playerData = await redisClient.hGetAll(`player:${playerId}`);
+
+    // results 배열은 [playerId, score, playerId, score, ...] 형태입니다.
+    for (let i = 0; i < results.length; i += 2) {
+      const playerId = results[i];
+      const score = results[i + 1];
+      // hgetall은 소문자형태로 제공됩니다.
+      const playerData = await redisClient.hgetall(`player:${playerId}`);
       rankingList.push({
         rank: rank,
         player_id: playerId,
         nickname: playerData.nickname || '',
-        exp: Math.floor(entry.score),
+        exp: Math.floor(Number(score)),
       });
       rank++;
     }

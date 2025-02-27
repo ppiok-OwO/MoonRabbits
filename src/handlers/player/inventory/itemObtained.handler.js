@@ -10,7 +10,7 @@ export const itemObtainedHandler = async (socket, packetData) => {
     const player_id = socket.player.playerId;
 
     const redisKey = `inventory:${player_id}`;
-    await redisClient.hSet(redisKey, slotIdx.toString(), JSON.stringify({ itemId }));
+    await redisClient.hset(redisKey, slotIdx.toString(), JSON.stringify({ itemId }));
 
     console.log(`PlayerID ${player_id} 인벤토리 슬롯 ${slotIdx} 업데이트 : itemId ${itemId}`);
   } catch (error) {

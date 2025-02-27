@@ -16,13 +16,7 @@ class PlayerSession {
   }
 
   removePlayer(socket) {
-    const player = this.players.get(socket);
-    console.log('removePlayer 할 때 players.get(socket) 뭐 나오나 : ', player.id);
-    if (player) {
-      const key = `playerSession:${player.id}`;
-      redisClient.del(key);
-      this.players.delete(socket);
-    }
+    this.players.delete(socket);
   }
 
   getPlayer(socket) {
@@ -51,9 +45,6 @@ class PlayerSession {
   }
 
   clearSession() {
-    this.players.forEach((player) => {
-      redisClient.del(`playerSession:${player.id}`);
-    });
     this.players.clear();
   }
 

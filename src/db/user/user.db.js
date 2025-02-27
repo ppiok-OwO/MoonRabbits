@@ -138,7 +138,7 @@ export const updateInventory = async (playerId) => {
 
     // Redis에서 인벤토리 데이터 전체를 읽어옴 (해시 형식으로 저장됨)
     const redisKey = `inventory:${playerId}`;
-    const inventoryData = await redisClient.hGetAll(redisKey);
+    const inventoryData = await redisClient.hgetall(redisKey);
     if (!inventoryData || Object.keys(inventoryData).length === 0) {
       console.log(
         `${chalk.green('[DB Log]')} 플레이어 ${playerId}의 Redis 인벤토리가 비어 있습니다.`,
@@ -197,7 +197,7 @@ export const syncInventoryToRedisAndSend = async (playerId) => {
     // MySQL에서 가져온 각 슬롯 데이터를 Redis 해시에 저장
     for (const row of rows) {
       // row: { inventory_id, player_id, item_id, slot_idx, stack, created_at, ... }
-      await redisClient.hSet(
+      await redisClient.hset(
         redisKey,
         row.slot_idx.toString(),
         JSON.stringify({
