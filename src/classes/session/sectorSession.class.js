@@ -21,6 +21,10 @@ class SectorSession {
           ErrorCodes.INVALID_INPUT,
           '플레이어가 존재하는 섹터를 삭제하려 시도함.',
         ),
+        new CustomError(
+          ErrorCodes.INVALID_INPUT,
+          '플레이어가 존재하는 섹터를 삭제하려 시도함.',
+        ),
       );
       return false;
     }

@@ -2,6 +2,8 @@ import chalk from 'chalk';
 import redisClient from '../../utils/redis/redis.config.js';
 import Player from '../player.class.js';
 import { getSectorSessions } from '../../session/sessions.js';
+import { config } from '../../config/config.js';
+
 class PlayerSession {
   players = new Map();
   playerId = 1;
@@ -16,7 +18,12 @@ class PlayerSession {
     );
     this.players.set(socket, newPlayer);
 
-    getSectorSessions().getSector(1).setPlayer(socket, newPlayer);
+    // getSectorSessions()
+    //   .getSector(config.sector.town)
+    //   .setPlayer(socket, newPlayer);
+
+    // @@@ getSector가 sectorId로 탐색해서 수정 @@@
+    getSectorSessions().getSector('town').setPlayer(socket, newPlayer);
 
     return newPlayer;
   }

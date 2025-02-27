@@ -4,13 +4,18 @@ import {
   getPartySessions,
 } from '../../session/sessions.js';
 import Packet from '../../utils/packet/packet.js';
-import playerSpawnNotificationHandler from '../town/playerSpawnNotification.handler.js';
+import playerSpawnNotificationHandler from './playerSpawnNotification.handler.js';
+import { CODE_TO_ID, ID_TO_CODE } from '../../utils/tempConverter.js';
 
-const leaveHandler = (socket, packetData) => {
-  const { targetScene } = packetData;
+const moveSectorHandler = (socket, packetData) => {
+  const { targetSector } = packetData;
+
+  const targetSectorCode = targetSector || 2;
 
   const player = getPlayerSession().getPlayer(socket);
-  const sector = getSectorSessions().getSector(player.getSectorId());
+  const prevSector = getSectorSessions().getSector(
+    CODE_TO_ID[player.getSectorId()],
+  );
   const partySession = getPartySessions();
 
   const partyMembers = [player]; // 본인만 혹은 파티원 배열에 넣을 것
@@ -37,11 +42,23 @@ const leaveHandler = (socket, packetData) => {
       player.getSectorId(),
     ),
   );
+  // 현재는 섹터가 한개씩 존재함으로 섹터 코드로 탐색
+  const newSector = getSectorSessions().getSectorBySectorCode(targetSectorCode);
 
-  const newSector = getSectorSessions().getSector(targetScene || 2);
   console.log(newSector.players.size);
+  // partyMembers.forEach((member) => {
+  //   member.setSectorId(newSector.getSectorId());
+  //   newSector.setPlayer(socket, member);
+  //   const memberSocket = member.user.getSocket();
+  //   memberSocket.write(Packet.S2CEnter(member.getPlayerInfo()));
+  //   playerSpawnNotificationHandler(memberSocket, {});
+  // });
+
+  // @@@ setSectorId가 Player의 currentSector를 갱신하는디, 여기엔 코드가 들어가야해서 @@@
+  // @@@ 기존 섹터에서 지워줘야함 @@@
   partyMembers.forEach((member) => {
-    member.setSectorId(targetScene || 2);
+    member.setSectorId(ID_TO_CODE[newSector.getSectorId()]);
+    prevSector.deletePlayer(member.user.socket);
     newSector.setPlayer(socket, member);
     const memberSocket = member.user.getSocket();
     memberSocket.write(Packet.S2CEnter(member.getPlayerInfo()));
@@ -50,4 +67,4 @@ const leaveHandler = (socket, packetData) => {
   console.log(newSector.players.size);
 };
 
-export default leaveHandler;
+export default moveSectorHandler;

@@ -35,6 +35,14 @@ class Sector {
     }
     return -1;
   }
+  getSectorId(){
+    return this.sectorId;
+  }
+
+  getSectorCode() {
+    return this.sectorCode;
+  }
+
   subDurability(resourceIdx, sub = 1) {
     if (resourceIdx >= 0 && resourceIdx < this.resources.length) {
       const durability = this.resources[resourceIdx].subDurability(sub);

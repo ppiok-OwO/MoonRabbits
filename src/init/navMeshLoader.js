@@ -5,7 +5,6 @@ import { NavMeshQuery } from 'recast-navigation';
 import { generateSoloNavMesh } from 'recast-navigation/generators';
 import { init } from 'recast-navigation';
 
-// 이유는 모르겠는데 찾아보니까 wasm 파일은 비동기로 초기화를 해줘야 한다.
 await init();
 
 // obj 파일의 절대 경로

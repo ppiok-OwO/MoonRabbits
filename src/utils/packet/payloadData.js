@@ -6,7 +6,7 @@ const PAYLOAD_DATA = {
     classCode_int32,
     transform_TransformInfo,
     statInfo_StatInfo,
-    currentScene_int32,
+    currentSector_int32,
   ) => {
     return {
       playerId: playerId_int32,
@@ -15,7 +15,7 @@ const PAYLOAD_DATA = {
       classCode: classCode_int32,
       transform: transform_TransformInfo,
       statInfo: statInfo_StatInfo,
-      currentScene: currentScene_int32,
+      currentSector: currentSector_int32,
     };
   },
   PlayerRank: (rank_int32, playerId_string, nickname_string, exp_int32) => {
@@ -66,10 +66,17 @@ const PAYLOAD_DATA = {
   ItemInfo: (itemId_int32, stack_int32) => {
     return { itemId: itemId_int32, stack: stack_int32 };
   },
-  MemberCardInfo: (id_int32, nickname_string, isLeader_bool, isMine_bool) => {
+  MemberCardInfo: (
+    id_int32,
+    nickname_string,
+    currentSector_int,
+    isLeader_bool,
+    isMine_bool,
+  ) => {
     return {
       id: id_int32,
       nickname: nickname_string,
+      currentSector: currentSector_int,
       isLeader: isLeader_bool,
       isMine: isMine_bool,
     };
