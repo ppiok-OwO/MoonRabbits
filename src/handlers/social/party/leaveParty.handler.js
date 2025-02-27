@@ -5,7 +5,7 @@ import {
 import CustomError from '../../../utils/error/customError.js';
 import { ErrorCodes } from '../../../utils/error/errorCodes.js';
 import handleError from '../../../utils/error/errorHandler.js';
-import Packet from '../../../utils/packet/packet.js';
+import PACKET from '../../../utils/packet/packet.js';
 
 export const leavePartyHandler = (socket, packetData) => {
   try {
@@ -70,7 +70,7 @@ export const leavePartyHandler = (socket, packetData) => {
         const newLeaderSocket = party.getSocketById(newLeaderId);
         if (newLeaderSocket === -1) {
           // 파티 해체
-          const packet = Packet.S2CDisbandParty(
+          const packet = PACKET.S2CDisbandParty(
             '파티 기능에 오류가 발생하여, 파티가 해체되었습니다.',
           );
 
@@ -86,7 +86,7 @@ export const leavePartyHandler = (socket, packetData) => {
         const members = party.getAllMemberEntries();
 
         members.forEach(([key, value]) => {
-          const packet = Packet.S2CLeaveParty(
+          const packet = PACKET.S2CLeaveParty(
             party.getId(),
             party.getPartyLeaderId(),
             party.getMemberCount(),
@@ -94,7 +94,7 @@ export const leavePartyHandler = (socket, packetData) => {
           );
           key.write(packet);
         });
-        const msgToParty = Packet.S2CChat(
+        const msgToParty = PACKET.S2CChat(
           0,
           `${member[1].nickname}님이 파티를 떠나셨습니다.`,
           'System',
@@ -102,7 +102,7 @@ export const leavePartyHandler = (socket, packetData) => {
         party.notify(msgToParty);
 
         // 떠난 멤버에게 메시지 전송
-        const msgToKickedMember = Packet.S2CDisbandParty('파티를 떠났습니다.'); // 참고 : 멤버 카드 삭제를 위해 S2CDisbandParty패킷으로 전송
+        const msgToKickedMember = PACKET.S2CDisbandParty('파티를 떠났습니다.'); // 참고 : 멤버 카드 삭제를 위해 S2CDisbandParty패킷으로 전송
         member[0].write(msgToKickedMember);
       }
     }
@@ -111,7 +111,7 @@ export const leavePartyHandler = (socket, packetData) => {
 
     // 각 멤버에 대하여 맞춤형 패킷 생성
     members.forEach(([key, value]) => {
-      const packet = Packet.S2CLeaveParty(
+      const packet = PACKET.S2CLeaveParty(
         party.getId(),
         party.getPartyLeaderId(),
         party.getMemberCount(),
@@ -119,7 +119,7 @@ export const leavePartyHandler = (socket, packetData) => {
       );
       key.write(packet);
     });
-    const msgToParty = Packet.S2CChat(
+    const msgToParty = PACKET.S2CChat(
       0,
       `${member[1].nickname}님이 파티를 떠나셨습니다.`,
       'System',
@@ -127,7 +127,7 @@ export const leavePartyHandler = (socket, packetData) => {
     party.notify(msgToParty);
 
     // 떠난 멤버에게 메시지 전송
-    const msgToKickedMember = Packet.S2CDisbandParty('파티를 떠났습니다.');
+    const msgToKickedMember = PACKET.S2CDisbandParty('파티를 떠났습니다.');
     member[0].write(msgToKickedMember);
   } catch (error) {
     handleError(error);

@@ -6,7 +6,7 @@ import {
 import CustomError from '../../../utils/error/customError.js';
 import { ErrorCodes } from '../../../utils/error/errorCodes.js';
 import handleError from '../../../utils/error/errorHandler.js';
-import Packet from '../../../utils/packet/packet.js';
+import PACKET from '../../../utils/packet/packet.js';
 
 export const allowInviteHandler = (socket, packetData) => {
   try {
@@ -52,7 +52,7 @@ export const allowInviteHandler = (socket, packetData) => {
       const members = party.getAllMemberEntries();
 
       members.forEach(([key, value]) => {
-        const packet = Packet.S2CAllowInvite(
+        const packet = PACKET.S2CAllowInvite(
           party.getId(),
           party.getPartyLeaderId(),
           party.getMemberCount(),
@@ -61,7 +61,7 @@ export const allowInviteHandler = (socket, packetData) => {
         key.write(packet);
       });
     } else {
-      const packet = Packet.S2CChat(
+      const packet = PACKET.S2CChat(
         0,
         '해당 파티는 정원이 모두 찼으므로 참가할 수 없습니다.',
         "System"

@@ -4,7 +4,7 @@ import {
 } from '../../../session/sessions.js';
 import CustomError from '../../../utils/error/customError.js';
 import { ErrorCodes } from '../../../utils/error/errorCodes.js';
-import Packet from '../../../utils/packet/packet.js';
+import PACKET from '../../../utils/packet/packet.js';
 
 export const disbandPartyHandler = (socket, packetData) => {
   try {
@@ -37,14 +37,14 @@ export const disbandPartyHandler = (socket, packetData) => {
     }
     const partyLeader = party.getPartyLeader();
     if (player !== partyLeader) {
-      const packet = Packet.S2CChat(0, '파티 해체 권한이 없습니다.', 'System');
+      const packet = PACKET.S2CChat(0, '파티 해체 권한이 없습니다.', 'System');
       return socket.write(packet);
     }
 
     const allMembers = party.getAllMemberEntries();
 
     // 파티 해체
-    const packet = Packet.S2CDisbandParty('파티가 해체되었습니다.');
+    const packet = PACKET.S2CDisbandParty('파티가 해체되었습니다.');
 
     allMembers.forEach(([key, value]) => {
       value.isInParty = false;

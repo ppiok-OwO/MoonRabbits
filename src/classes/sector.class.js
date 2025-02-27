@@ -1,7 +1,7 @@
 import PAYLOAD_DATA from '../utils/packet/payloadData.js';
 import Resource from './resource.class.js';
 import { getGameAssets } from '../init/assets.js';
-import Packet from '../utils/packet/packet.js';
+import PACKET from '../utils/packet/packet.js';
 import Monster from './monster.class.js';
 import { getNaveMesh } from '../init/navMeshData.js';
 
@@ -50,7 +50,7 @@ class Sector {
   subDurability(resourceIdx, sub = 1) {
     if (resourceIdx >= 0 && resourceIdx < this.resources.length) {
       const durability = this.resources[resourceIdx].subDurability(sub);
-      this.notify(Packet.S2CUpdateDurability(resourceIdx, durability));
+      this.notify(PACKET.S2CUpdateDurability(resourceIdx, durability));
       return durability;
     }
     return -1;
@@ -58,7 +58,7 @@ class Sector {
   resetDurability(resourceIdx) {
     if (resourceIdx >= 0 && resourceIdx < this.resources.length) {
       const durability = this.resources[resourceIdx].resetDurability();
-      this.notify(Packet.S2CUpdateDurability(resourceIdx, durability));
+      this.notify(PACKET.S2CUpdateDurability(resourceIdx, durability));
       return durability;
     }
     return -1;
