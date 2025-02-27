@@ -52,7 +52,7 @@ const moveSectorHandler = (socket, packetData) => {
     );
 
   partyMembers.forEach((member) => {
-    member.setSectorId(ID_TO_CODE[newSector.getSectorId()]);
+    member.setSectorId(newSector.getSectorId());
     prevSector.deletePlayer(member.user.socket);
     newSector.setPlayer(socket, member);
     const memberSocket = member.user.getSocket();

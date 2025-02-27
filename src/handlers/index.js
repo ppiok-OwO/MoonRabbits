@@ -33,7 +33,6 @@ import equipChangeHandler from './playerAction/equipChange.handler.js';
 import { collisionHandler } from './collision/collision.handler.js';
 import { resourceListHandler } from './gathering/ResourceList.handler.js';
 
-
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
 // 패킷 ID별로 핸들러 맵핑

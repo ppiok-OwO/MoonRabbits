@@ -24,11 +24,11 @@ export const animationHandler = (socket, packetData) => {
       );
     }
 
-    const sectorCode = player.getSectorId();
+    const sectorId = player.getSectorId();
 
     // 패킷 직렬화
     // const packet = Packet.S_Animation(player.getId(), animCode);
-    const packet = Packet.S2CAnimation(player.id, animCode, sectorCode);
+    const packet = Packet.S2CAnimation(player.id, animCode, sectorId);
 
     // 채팅창 알림 패킷 생성
     let chatPacket;
@@ -64,7 +64,7 @@ export const animationHandler = (socket, packetData) => {
         break;
     }
 
-    if (sectorCode) {
+    if (sectorId) {
       // 만약 던전이면
       const sectorSessions = getSectorSessions();
       const sector = sectorSessions.getSector(sectorId);

@@ -52,7 +52,6 @@ export const onData = (socket) => async (data) => {
       // 디버그용 콘솔 출력, packetId 필터링해서 사용
       if (packetId !== config.packetId.C2SPlayerLocation) {
         printPacket(packetSize, packetId, packetData, 'in');
-        console.log("20250227 socket: " + socket);
       }
       // } else console.log('C2SPlayerLocation 패킷 수신');
 

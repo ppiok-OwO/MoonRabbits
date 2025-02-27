@@ -1,6 +1,5 @@
 import PACKET from '../../utils/packet/packet.js';
 import { getPlayerSession, getSectorSessions } from '../../session/sessions.js';
-import { CODE_TO_ID } from '../../utils/tempConverter.js';
 
 const STUN_TIMER = [3, 5];
 
@@ -20,7 +19,7 @@ const stunHandler = (socket, packetData) => {
   );
 
   const sectorSession = getSectorSessions();
-  const sector = sectorSession.getSector(CODE_TO_ID[sectorCode]);
+  const sector = sectorSession.getSector(sectorCode);
   sector.notify(packet);
 };
 

@@ -1,6 +1,5 @@
 import { getPlayerSession, getSectorSessions } from '../../session/sessions.js';
 import PACKET from '../../utils/packet/packet.js';
-import { CODE_TO_ID } from '../../utils/tempConverter.js';
 
 const GRAVITY = 9.81;
 const THROW_POWER = 4;
@@ -21,7 +20,7 @@ const throwGrenadeHandler = (socket, packetData) => {
   );
 
   const sectorSession = getSectorSessions();
-  const sector = sectorSession.getSector(CODE_TO_ID[sectorCode]);
+  const sector = sectorSession.getSector(sectorCode);
   sector.notify(packet);
 };
 

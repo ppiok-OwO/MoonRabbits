@@ -89,13 +89,6 @@ enum MsgId {
   C2S_EQUIP_CHANGE = 168;
   S2C_EQUIP_CHANGE = 169;
 
-  C2S_SECTOR_ENTER=170;
-  S2C_SECTOR_ENTER=171;
-  C2S_SECTOR_LEAVE=172;
-  S2C_SECTOR_LEAVE=173;
-  C2S_IN_PORTAL=174;
-  S2C_IN_PORTAL=175;
-
   C2S_ADD_EXP=200;
   S2C_ADD_EXP=201;
   S2C_LEVEL_UP=202;
@@ -394,26 +387,6 @@ message S2CEquipChange {
   int32 currentSector = 2;
   int32 nextEquip = 3;
 }
-
-
-message C2SSectorEnter{
-  int32 sectorId = 1;
-  optional string partyId = 2;
-}
-message S2CSectorEnter{
-  SectorInfo sectorInfo = 1;
-  PlayerStatus player = 2;
-}
-message C2SSectorLeave{
-  int32 sectorId = 1;
-  optional string partyId = 2;
-}
-message S2CSectorLeave{}
-message C2SInPortal{
-  int32 sectorId = 1;
-  int32 portalId = 2;
-}
-message S2CInPortal{}
 
 message C2SAddExp {
   int32 count = 1;
