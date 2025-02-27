@@ -485,8 +485,9 @@ message InventoryInfo {}
 message MemberCardInfo {
   int32 id = 1;
   string nickname = 2;
-  bool isLeader = 3;
-  bool isMine = 4;
+  int32 currentSector = 3;
+  bool isLeader = 4;
+  bool isMine = 5;
 }
 
 message OwnedCharacter {

@@ -43,7 +43,7 @@ const moveSectorHandler = (socket, packetData) => {
     ),
   );
   // 현재는 섹터가 한개씩 존재함으로 섹터 코드로 탐색
-  const newSector = getSectorSessions().getSectorBySectorCode(targetSectorCode);
+  const newSector = getSectorSessions().getSectorByCode(targetSectorCode);
 
   console.log(newSector.players.size);
   // partyMembers.forEach((member) => {

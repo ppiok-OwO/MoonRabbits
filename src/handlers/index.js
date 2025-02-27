@@ -30,6 +30,8 @@ import tryRecallHandler from './playerAction/tryRecall.hander.js';
 import throwGrenadeHandler from './playerAction/throwGrenade.handler.js';
 import stunHandler from './playerAction/stun.handler.js';
 import equipChangeHandler from './playerAction/equipChange.handler.js';
+import { collisionHandler } from './collision/collision.handler.js';
+
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
@@ -48,6 +50,9 @@ const handlers = {
   [config.packetId.C2SCreateCharacter]: createCharacterHandler,
   [config.packetId.C2SAddExp]: addExpHandler,
   [config.packetId.C2SInvestPoint]: investPointHandler,
+
+  //충돌
+  [config.packetId.C2SCollision]: collisionHandler,
 
   // 파티 관련
   [config.packetId.C2SCreateParty]: createPartyHandler,

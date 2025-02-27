@@ -2,6 +2,7 @@ import { v4 as uuidV4 } from 'uuid';
 import Sector from '../sector.class.js';
 import handleError from '../../utils/error/errorHandler.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
+import CustomError from '../../utils/error/customError.js';
 
 class SectorSession {
   sectors = new Map();
@@ -21,6 +22,10 @@ class SectorSession {
           ErrorCodes.INVALID_INPUT,
           '플레이어가 존재하는 섹터를 삭제하려 시도함.',
         ),
+        new CustomError(
+          ErrorCodes.INVALID_INPUT,
+          '플레이어가 존재하는 섹터를 삭제하려 시도함.',
+        ),
       );
       return false;
     }
@@ -31,13 +36,21 @@ class SectorSession {
     return this.sectors.get(sectorId);
   }
 
-  // !임시! 코드를 기반으로 탐색
-  getSectorBySectorCode(sectorCode) {
-    for (const sector of this.sectors.values()) {
-      if (sector.getSectorCode() == sectorCode) return sector;
-    }
+  getSectorByCode(code) {
+    const sector = Array.from(this.sectors.values()).find(
+      (sector) => sector.sectorCode === code,
+    );
+    return sector || null; // 섹터가 존재하지 않으면 null 반환
   }
- 
+
+  getAllPlayerByCode(code) {
+    const sector = this.getSectorByCode(code);
+    if (!sector) return [];
+
+    const playersMap = sector.getAllPlayer();
+    return Array.from(playersMap.values()); // Map.values() 메서드 호출 후 배열로 변환
+  }
+
   getAllPlayer(sectorId) {
     const sector = this.getSector(sectorId);
 

@@ -2,7 +2,7 @@ import PAYLOAD_DATA from '../utils/packet/payloadData.js';
 import Resource from './resource.class.js';
 import { getGameAssets } from '../init/assets.js';
 import Packet from '../utils/packet/packet.js';
-import { Monster } from './monster.class.js';
+import Monster from './monster.class.js';
 import { getNaveMesh } from '../init/navMeshData.js';
 
 class Sector {
@@ -80,6 +80,12 @@ class Sector {
   }
   getAllPlayer() {
     return this.players;
+  }
+  getMonster(id) {
+    const monster = Array.from(this.monsters.values()).find(
+      (monster) => monster.monsterIdx === id,
+    );
+    return monster || null; // 몬스터가 존재하지 않으면 null 반환
   }
 
   // monsters는 monster 인스턴스들이 담긴 일반 배열

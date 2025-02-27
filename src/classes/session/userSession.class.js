@@ -38,28 +38,11 @@ class UserSession {
     const tempKey = `userSession:temp:${socket.id}`;
     await redisClient.del(tempKey);
 
-    // userId 기반 Redis 세션 생성 (Hash 자료구조)
-    const key = `userSession:${user.userId}`;
-    await redisClient.hset(key, {
-      userId: user.userId,
-      nickname: user.nickname,
-      loginTime: user.loginTime,
-      currentSector: user.currentSector || 'None', // 예: "Town" 등
-      status: user.status,
-    });
-    // 세션 만료시간 설정
-    await redisClient.expire(key, 3600);
-
     return user;
   }
 
   removeUser(socket) {
-    const user = this.users.get(socket);
-    if (user) {
-      const key = `userSession:${user.userId}`;
-      redisClient.del(key); // Redis에서 세션 삭제
-      this.users.delete(socket);
-    }
+    this.users.delete(socket);
   }
 
   getUser(socket) {
@@ -71,11 +54,6 @@ class UserSession {
   }
 
   clearSession() {
-    this.users.forEach((user) => {
-      if (user.userId) {
-        redisClient.del(`userSession:${user.userId}`);
-      }
-    });
     this.users.clear();
   }
 }
