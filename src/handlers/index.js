@@ -26,10 +26,11 @@ import { gatheringSkillCheckHandler } from './gathering/GatheringSkillCheck.hand
 import { StartGatheringHandler } from './gathering/StartGathering.handler.js';
 import { rejectInviteHandler } from './social/party/rejectInvite.handler.js';
 import { chceckPartyListHandler } from './social/party/checkPartyList.handler.js';
+import tryRecallHandler from './playerAction/tryRecall.hander.js';
+import throwGrenadeHandler from './playerAction/throwGrenade.handler.js';
+import stunHandler from './playerAction/stun.handler.js';
+import equipChangeHandler from './playerAction/equipChange.handler.js';
 import { collisionHandler } from './collision/collision.handler.js';
-import tryRecallHandler from './skill/tryRecall.hander.js';
-import cancelRecallHandler from './skill/cancelRecall.handler.js';
-import throwGrenadeHandler from './skill/throwGrenade.handler.js';
 import { resourceListHandler } from './gathering/ResourceList.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
@@ -69,7 +70,9 @@ const handlers = {
   [config.packetId.C2SResourcesList]: resourceListHandler,
 
   [config.packetId.C2SRecall]: tryRecallHandler,
-  [config.packetId.S2CThrowGrenade]: throwGrenadeHandler,
+  [config.packetId.C2SThrowGrenade]: throwGrenadeHandler,
+  [config.packetId.C2SStun]: stunHandler,
+  [config.packetId.C2SEquipChange]: equipChangeHandler,
 };
 
 export const getHandlerByPacketId = (packetId) => {

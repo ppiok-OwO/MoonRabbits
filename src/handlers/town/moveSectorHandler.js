@@ -51,25 +51,18 @@ const moveSectorHandler = (socket, packetData) => {
       ),
     );
 
-    // partyMembers.forEach((member) => {
-    //   member.setSectorId(newSector.getSectorId());
-    //   newSector.setPlayer(socket, member);
-    //   const memberSocket = member.user.getSocket();
-    //   memberSocket.write(Packet.S2CEnter(member.getPlayerInfo()));
-    //   playerSpawnNotificationHandler(memberSocket, {});
-    // });
-
-    // @@@ setSectorId가 Player의 currentSector를 갱신하는디, 여기엔 코드가 들어가야해서 @@@
-    partyMembers.forEach((member) => {
-      member.setSectorId(newSector.getSectorId());
-      newSector.setPlayer(socket, member);
-      const memberSocket = member.user.getSocket();
-      memberSocket.write(Packet.S2CEnter(member.getPlayerInfo(),));
-      playerSpawnNotificationHandler(memberSocket, {});
-    });
-  } catch (err) {
-    console.error(err);
-  }
+  partyMembers.forEach((member) => {
+    member.setSectorId(newSector.getSectorId());
+    prevSector.deletePlayer(member.user.socket);
+    newSector.setPlayer(socket, member);
+    const memberSocket = member.user.getSocket();
+    memberSocket.write(Packet.S2CEnter(member.getPlayerInfo()));
+  });
+  
+  playerSpawnNotificationHandler(socket, {});
+} catch (err) {
+  console.error(err);
+}
 };
 
 export default moveSectorHandler;

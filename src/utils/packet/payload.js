@@ -19,11 +19,11 @@ const PAYLOAD = {
   S2CEnter: (player_PlayerInfo) => {
     return { player: player_PlayerInfo };
   },
-  S2CAnimation: (playerId_int32, animCode_int32, currentSector_int) => {
+  S2CAnimation: (playerId_int32, animCode_int32, currentSector_int32) => {
     return {
       playerId: playerId_int32,
       animCode: animCode_int32,
-      currentSector: currentSector_int,
+      currentSector: currentSector_int32,
     };
   },
   S2CChat: (
@@ -209,8 +209,25 @@ const PAYLOAD = {
       coolTime: coolTime_int32,
     };
   },
-  S2CSectorEnter: (sectorInfo_SectorInfo, player_PlayerStatus) => {
-    return { sectorInfo: sectorInfo_SectorInfo, player: player_PlayerStatus };
+  S2CStun: (
+    currentSector_int32,
+    stunTimer_int32,
+    playerIds_int32_repeated,
+    monsterIds_int32_repeated,
+  ) => {
+    return {
+      currentSector: currentSector_int32,
+      stunTimer: stunTimer_int32,
+      playerIds: playerIds_int32_repeated,
+      monsterIds: monsterIds_int32_repeated,
+    };
+  },
+  S2CEquipChange: (playerId_int32, currentSector_int32, nextEquip_int32) => {
+    return {
+      playerId: playerId_int32,
+      currentSector: currentSector_int32,
+      nextEquip: nextEquip_int32,
+    };
   },
   S2CAddExp: (updatedExp_int32) => {
     return { updatedExp: updatedExp_int32 };
