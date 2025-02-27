@@ -6,7 +6,6 @@ import makePacket from '../../utils/packet/makePacket.js';
 import Packet from '../../utils/packet/packet.js';
 import payload from '../../utils/packet/payload.js';
 import PAYLOAD_DATA from '../../utils/packet/payloadData.js';
-import { CODE_TO_ID } from '../../utils/tempConverter.js';
 
 // !!! 패킷 변경에 따라 S_Chat -> S2CChat, S_Location -> S2CPlayerLocation으로 일괄 수정해씀다
 
@@ -91,7 +90,7 @@ const playerLocationUpdateHandler = (socket, packetData) => {
         if (sectorCode) {
           // 만약 던전이면
           const sectorSessions = getSectorSessions();
-          const sector = sectorSessions.getSector(CODE_TO_ID[sectorCode]);
+          const sector = sectorSessions.getSector(sectorCode);
           sector.notify(packet);
           // dungeon.notify(syncLocationPacket);
         } else {
@@ -126,7 +125,7 @@ const playerLocationUpdateHandler = (socket, packetData) => {
     if (sectorCode) {
       // 만약 던전이면
       const sectorSessions = getSectorSessions();
-      const sector = sectorSessions.getSector(CODE_TO_ID[sectorCode]); // 강제로 변환
+      const sector = sectorSessions.getSector(sectorCode); // 강제로 변환
       sector.notify(packet);
     } else {
       // 던전이 아니면

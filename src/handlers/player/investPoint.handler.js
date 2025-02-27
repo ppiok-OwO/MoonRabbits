@@ -21,8 +21,11 @@ export const investPointHandler = async (socket, packetData) => {
   const statInfo = player.getStatInfo();
 
   // DB 반영
-  await updatePlayerStat(statInfo.stamina, statInfo.pickSpeed, statInfo.moveSpeed, statInfo.abilityPoint, socket.player.playerId);
-
+  try {
+    await updatePlayerStat(statInfo.stamina, statInfo.pickSpeed, statInfo.moveSpeed, statInfo.abilityPoint, socket.player.playerId);  
+  } catch (error) {
+    throw new Error(`updatePlayerStat DB 오류`);
+  }
   // 클라이언트 반영
   try {
     socket.write(Packet.S2CInvestPoint(statInfo));
