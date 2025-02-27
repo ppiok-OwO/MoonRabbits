@@ -1,0 +1,66 @@
+{
+  "name": "itemDisassembly",
+  "version": "1.0.0",
+  "data": [
+    {
+      "item_id": 20002,
+      "item_name": "평범한 나무 판자",
+      "disassembly_table": [20001]
+    },
+    {
+      "item_id": 20003,
+      "item_name": "단단한 나무 판자",
+      "disassembly_table": [20002]
+    },
+    {
+      "item_id": 20004,
+      "item_name": "철로 강화된 나무 판자",
+      "disassembly_table": [20003]
+    },
+    {
+      "item_id": 20005,
+      "item_name": "단열재가 들어간 판자",
+      "disassembly_table": [20004]
+    },
+    {
+      "item_id": 21001,
+      "item_name": "구리 광석",
+      "disassembly_table": [22001]
+    },
+    {
+      "item_id": 21002,
+      "item_name": "철 광석",
+      "disassembly_table": [21001]
+    },
+    {
+      "item_id": 21003,
+      "item_name": "금 광석",
+      "disassembly_table": [21002]
+    },
+    {
+      "item_id": 21004,
+      "item_name": "다이아몬드 광석",
+      "disassembly_table": [21003]
+    },
+    {
+      "item_id": 22002,
+      "item_name": "대리석",
+      "disassembly_table": [22001]
+    },
+    {
+      "item_id": 22003,
+      "item_name": "회반죽",
+      "disassembly_table": [22002]
+    },
+    {
+      "item_id": 22004,
+      "item_name": "질 좋은 진흙",
+      "disassembly_table": [22003]
+    },
+    {
+      "item_id": 22005,
+      "item_name": "석영",
+      "disassembly_table": [22004]
+    }
+  ]
+}

@@ -2,6 +2,7 @@ import { v4 as uuidV4 } from 'uuid';
 import Sector from '../sector.class.js';
 import handleError from '../../utils/error/errorHandler.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
+import CustomError from '../../utils/error/customError.js';
 
 class SectorSession {
   sectors = new Map();
