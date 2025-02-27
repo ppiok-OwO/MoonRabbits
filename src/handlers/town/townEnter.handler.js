@@ -1,7 +1,7 @@
 import { getPlayerSession } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
-import Packet from '../../utils/packet/packet.js';
+import PACKET from '../../utils/packet/packet.js';
 import { getUserSessions } from '../../session/sessions.js';
 
 import playerSpawnNotificationHandler from './playerSpawnNotification.handler.js';
@@ -42,13 +42,13 @@ const townEnterHandler = async (socket, packetData) => {
     console.log('----- Player Session 업데이트 및 Redis 저장 완료 -----\n', newPlayer);
 
     const playerInfo = newPlayer.getPlayerInfo();
-    const packet = Packet.S2CEnter(playerInfo);
+    const packet = PACKET.S2CEnter(playerInfo);
     socket.write(packet);
 
     // @@@ 챗 패킷에 섹터 코드 필요!! @@@
     const sectorCode = newPlayer.getSectorId();
 
-    const chatPacket = Packet.S2CChat(
+    const chatPacket = PACKET.S2CChat(
       0,
       `${newPlayer.nickname}님이 입장하였습니다.`,
       'System',

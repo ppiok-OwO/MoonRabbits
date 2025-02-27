@@ -1,11 +1,7 @@
-import { config } from '../../config/config.js';
 import { getSectorSessions, getPlayerSession } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
-import makePacket from '../../utils/packet/makePacket.js';
-import Packet from '../../utils/packet/packet.js';
-import payload from '../../utils/packet/payload.js';
-import PAYLOAD_DATA from '../../utils/packet/payloadData.js';
+import PACKET from '../../utils/packet/packet.js';
 import { CODE_TO_ID } from '../../utils/tempConverter.js';
 
 // !!! 패킷 변경에 따라 S_Chat -> S2CChat, S_Location -> S2CPlayerLocation으로 일괄 수정해씀다
@@ -64,7 +60,7 @@ const playerLocationUpdateHandler = (socket, packetData) => {
           rot: transform.rot,
         };
 
-        const packet = Packet.S2CPlayerLocation(
+        const packet = PACKET.S2CPlayerLocation(
           player.id,
           newTransform,
           false,
@@ -100,7 +96,7 @@ const playerLocationUpdateHandler = (socket, packetData) => {
       }
     }
 
-    const packet = Packet.S2CPlayerLocation(
+    const packet = PACKET.S2CPlayerLocation(
       player.id,
       transform,
       true,

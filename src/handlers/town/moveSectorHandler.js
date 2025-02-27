@@ -3,7 +3,7 @@ import {
   getSectorSessions,
   getPartySessions,
 } from '../../session/sessions.js';
-import Packet from '../../utils/packet/packet.js';
+import PACKET from '../../utils/packet/packet.js';
 import playerSpawnNotificationHandler from './playerSpawnNotification.handler.js';
 import { CODE_TO_ID, ID_TO_CODE } from '../../utils/tempConverter.js';
 
@@ -29,13 +29,13 @@ const moveSectorHandler = (socket, packetData) => {
       partyMembers.push(member);
     }
   } else if (player.isInParty) {
-    const packet = Packet.S2CChat(0, '당신은 파티장이 아닙니다.', 'System');
+    const packet = PACKET.S2CChat(0, '당신은 파티장이 아닙니다.', 'System');
     return socket.write(packet);
   }
 
   // 디스폰
   prevSector.notify(
-    Packet.S2CDespawn(
+    PACKET.S2CDespawn(
       partyMembers.map((partyMember) => {
         return partyMember.id;
       }),
@@ -61,7 +61,7 @@ const moveSectorHandler = (socket, packetData) => {
     prevSector.deletePlayer(member.user.socket);
     newSector.setPlayer(socket, member);
     const memberSocket = member.user.getSocket();
-    memberSocket.write(Packet.S2CEnter(member.getPlayerInfo()));
+    memberSocket.write(PACKET.S2CEnter(member.getPlayerInfo()));
     playerSpawnNotificationHandler(memberSocket, {});
   });
   console.log(newSector.players.size);
