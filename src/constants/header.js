@@ -70,6 +70,8 @@ export const PACKET_ID = {
   S2CThrowGrenade: 163,
   C2SStun: 166,
   S2CStun: 167,
+  C2SEquipChange: 168,
+  S2CEquipChange: 169,
   C2SSectorEnter: 170,
   S2CSectorEnter: 171,
   C2SSectorLeave: 172,

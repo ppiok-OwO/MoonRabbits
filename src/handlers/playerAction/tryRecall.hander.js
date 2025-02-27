@@ -1,13 +1,11 @@
-import { getPlayerSession } from '../../session/sessions.js';
-import { getSectorSessions } from '../../session/sessions.js';
+import { getPlayerSession, getSectorSessions } from '../../session/sessions.js';
 import PACKET from '../../utils/packet/packet.js';
 import { CODE_TO_ID } from '../../utils/tempConverter.js';
 
 const RECALL_TIMER = 5;
 
 const tryRecallHandler = (socket, packetData) => {
-  const playerSession = getPlayerSession();
-  const player = playerSession.getPlayer(socket);
+  const player = getPlayerSession().getPlayer(socket);
 
   const sectorCode = player.getSectorId();
   const packet = PACKET.S2CRecall(player.id, sectorCode, RECALL_TIMER);

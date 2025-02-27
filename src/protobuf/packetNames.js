@@ -67,6 +67,8 @@ export const packetNames = [
   'S2CThrowGrenade',
   'C2SStun',
   'S2CStun',
+  'C2SEquipChange',
+  'S2CEquipChange',
   'C2SSectorEnter',
   'S2CSectorEnter',
   'C2SSectorLeave',

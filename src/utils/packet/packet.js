@@ -291,6 +291,16 @@ const PACKET = {
       ),
     );
   },
+  S2CEquipChange: (playerId_int32, currentSector_int32, nextEquip_int32) => {
+    return makePacket(
+      PACKET_ID.S2CEquipChange,
+      PAYLOAD.S2CEquipChange(
+        playerId_int32,
+        currentSector_int32,
+        nextEquip_int32,
+      ),
+    );
+  },
   S2CSectorEnter: (sectorInfo_SectorInfo, player_PlayerStatus) => {
     return makePacket(
       PACKET_ID.S2CSectorEnter,

@@ -113,6 +113,8 @@ export const config = {
     S2CThrowGrenade: PACKET_ID.S2CThrowGrenade,
     C2SStun: PACKET_ID.C2SStun,
     S2CStun: PACKET_ID.S2CStun,
+    C2SEquipChange: PACKET_ID.C2SEquipChange,
+    S2CEquipChange: PACKET_ID.S2CEquipChange,
     C2SSectorEnter: PACKET_ID.C2SSectorEnter,
     S2CSectorEnter: PACKET_ID.S2CSectorEnter,
     C2SSectorLeave: PACKET_ID.C2SSectorLeave,

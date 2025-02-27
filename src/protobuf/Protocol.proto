@@ -85,6 +85,8 @@ enum MsgId {
   S2C_THROW_GRENADE = 163;
   C2S_STUN = 166;
   S2C_STUN = 167;
+  C2S_EQUIP_CHANGE = 168;
+  S2C_EQUIP_CHANGE = 169;
 
   C2S_SECTOR_ENTER=170;
   S2C_SECTOR_ENTER=171;
@@ -381,6 +383,15 @@ message S2CStun {
   repeated int32 playerIds = 3;
   repeated int32 monsterIds = 4;
 }
+message C2SEquipChange {
+  int32 nextEquip = 1;
+}
+message S2CEquipChange {
+  int32 playerId = 1;
+  int32 currentSector = 2;
+  int32 nextEquip = 3;
+}
+
 
 message C2SSectorEnter{
   int32 sectorId = 1;
