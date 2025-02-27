@@ -64,6 +64,7 @@ export const PACKET_ID = {
   C2SGatheringSkillCheck: 145,
   S2CGatheringSkillCheck: 146,
   S2CGatheringDone: 147,
+  C2SResourcesList: 148,
   C2SRecall:160,
   S2CRecall:161,
   C2SThrowGrenade:162,

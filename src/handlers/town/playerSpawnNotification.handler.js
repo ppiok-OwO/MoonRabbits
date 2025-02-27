@@ -3,7 +3,6 @@ import { getSectorSessions, getPlayerSession } from '../../session/sessions.js';
 import makePacket from '../../utils/packet/makePacket.js';
 import PACKET from '../../utils/packet/packet.js';
 import payload from '../../utils/packet/payload.js';
-import { CODE_TO_ID } from '../../utils/tempConverter.js';
 
 // !!! 패킷 정의 변경에 따라 S_Spawn -> S2CPlayerSpawn으로 일괄 수정해씀다
 
@@ -11,7 +10,7 @@ const playerSpawnNotificationHandler = (socket, packetData) => {
   const playerSession = getPlayerSession();
   const player = playerSession.getPlayer(socket);
   const sectorCode = player.getSectorId();
-  const targetSector = getSectorSessions().getSector(CODE_TO_ID[sectorCode]);
+  const targetSector = getSectorSessions().getSector(sectorCode);
 
   const playerInfos = Array.from(targetSector.getAllPlayer().values()).map(
     (player) => {

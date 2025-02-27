@@ -6,9 +6,10 @@ import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { addExpHandler } from '../player/addExp.handler.js';
 
 export const gatheringSkillCheckHandler = (socket, packetData) => {
-  const { placedId, deltatime } = packetData;
+  const { deltatime } = packetData;
   const player = getPlayerSession().getPlayer(socket);
-  const sector = getSectorSessions().getSector(player.setSectorId());
+  const sector = getSectorSessions().getSector(player.getSectorId());
+  const placedId = player.getGatheringIdx();
   if (placedId >= 0 && placedId < sector.resources.length) {
     if (
       sector.resources[placedId].CheckValidateTiming(
@@ -18,23 +19,27 @@ export const gatheringSkillCheckHandler = (socket, packetData) => {
       )
     ) {
       const durability = sector.resources[placedId].subDurability();
+      if(durability < 0){
+        const packet = Packet.S2CChat(0, '이미 소모된 자원입니다.', 'System');
+        return socket.write(packet);
+      }
 
-      socket.write(Packet.S2CGatheringSkillCheck(placedId, durability));
+      socket.write(Packet.S2CGatheringSkillCheck(placedId , durability));
 
       const dropItem = sector.resources[placedId].dropItem();
-      socket.write(Packet.S2CGatheringDone(placedId, dropItem.item, 1));
+      socket.write(Packet.S2CGatheringDone(placedId , dropItem, 1));
 
       // 나중에 아이템 받아오는 내역 필요함
 
       //
 
-      addExpHandler(socket, {
-        count: sector.resources[placedId].getDifficulty(),
-      });
+      // addExpHandler(socket, {
+      //   count: sector.resources[placedId].getDifficulty(),
+      // });
 
-      if (durability === 0) {
+      if (durability <= 0) {
         setTimeout(
-          sector.resetDurability(placedId),
+          () => sector.resetDurability(placedId ),
           sector.resources[placedId].getRespawnTime(),
         );
       }

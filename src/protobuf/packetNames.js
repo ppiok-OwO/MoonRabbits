@@ -61,6 +61,7 @@ export const packetNames = [
   'C2SGatheringSkillCheck',
   'S2CGatheringSkillCheck',
   'S2CGatheringDone',
+  'C2SResourcesList',
   'C2SRecall',
   'S2CRecall',
   'C2SThrowGrenade',
