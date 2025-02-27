@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import Packet from '../../utils/packet/packet.js';
+import PACKET from '../../utils/packet/packet.js';
 import PAYLOAD_DATA from '../../utils/packet/payloadData.js';
 import {
   createInventory,
@@ -23,7 +23,7 @@ const createCharacterHandler = async (socket, packetData) => {
     if (duplicateNickname) {
       const isSuccess = false;
       const msg = '이미 존재하는 닉네임입니다.';
-      const failResponse = Packet.S2CCreateCharacter(isSuccess, msg, []);
+      const failResponse = PACKET.S2CCreateCharacter(isSuccess, msg, []);
       return socket.write(failResponse);
     }
 
@@ -32,7 +32,7 @@ const createCharacterHandler = async (socket, packetData) => {
     if (!userData || !userData.userId) {
       const isSuccess = false;
       const msg = '로그인 된 사용자 정보가 없습니다.';
-      return socket.write(Packet.S2CCreateCharacter(isSuccess, msg, []));
+      return socket.write(PACKET.S2CCreateCharacter(isSuccess, msg, []));
     }
 
     // 플레이어(캐릭터) 테이블에서 해당 사용자의 userId 검색
@@ -48,7 +48,7 @@ const createCharacterHandler = async (socket, packetData) => {
     else {
       const isSuccess = false;
       const msg = '이미 캐릭터 정보가 존재합니다.';
-      return socket.write(Packet.S2CCreateCharacter(isSuccess, msg, []));
+      return socket.write(PACKET.S2CCreateCharacter(isSuccess, msg, []));
     }
 
     // 캐릭터 생성 성공 여부
@@ -88,7 +88,7 @@ const createCharacterHandler = async (socket, packetData) => {
       PAYLOAD_DATA.OwnedCharacter(findPlayer.nickname, findPlayer.classCode),
     ];
 
-    const packet = Packet.S2CLogin(isSuccess, msg, ownedCharacters);
+    const packet = PACKET.S2CLogin(isSuccess, msg, ownedCharacters);
     socket.write(packet);
   } catch (error) {
     console.error(

@@ -1,4 +1,4 @@
-import Packet from '../../utils/packet/packet.js';
+import PACKET from '../../utils/packet/packet.js';
 import handleError from '../../utils/error/errorHandler.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
@@ -10,16 +10,16 @@ export const StartGatheringHandler = (socket, packetData) => {
   const player = getPlayerSession().getPlayer(socket);
   const sector = getSectorSessions().getSector(player.getSectorId());
   const resource = sector.resources[placedId];
-
+  player.setGatheringIdx(placedId);
   if (resource.getDurability() > 0) {
-    socket.write(
-      Packet.S2CStartGathering(
+    return socket.write(
+      PACKET.S2CGatheringStart(
         placedId,
         player.setAngle(resource.getAngle()),
         resource.getDifficulty(),
       ),
     );
   } else {
-    handleError(new CustomError(ErrorCodes.INVALID_INPUT, '잘못된 durability'));
+    return false;
   }
 };

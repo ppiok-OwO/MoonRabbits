@@ -17,7 +17,7 @@ class PlayerSession {
     //   .setPlayer(socket, newPlayer);
 
     // @@@ getSector가 sectorId로 탐색해서 수정 @@@
-    getSectorSessions().getSector('town').setPlayer(socket, newPlayer);
+    getSectorSessions().getSector(100).setPlayer(socket, newPlayer);
 
     return newPlayer;
   }

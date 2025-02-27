@@ -7,7 +7,6 @@ import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import handleError from '../../utils/error/errorHandler.js';
 import PACKET from '../../utils/packet/packet.js';
-import Packet from '../../utils/packet/packet.js';
 
 export const chatHandler = (socket, packetData) => {
   try {
@@ -29,7 +28,7 @@ export const chatHandler = (socket, packetData) => {
 
     // 패킷 직렬화
     const sectorId = player.getSectorId();
-    const packet = Packet.S2CChat(playerId, chatMsg, chatType, sectorId);
+    const packet = PACKET.S2CChat(playerId, chatMsg, chatType, sectorId);
 
     const partyId = player.getPartyId();
     if (partyId && chatType === '파티') {

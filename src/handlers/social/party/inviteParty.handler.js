@@ -5,7 +5,7 @@ import {
 } from '../../../session/sessions.js';
 import CustomError from '../../../utils/error/customError.js';
 import { ErrorCodes } from '../../../utils/error/errorCodes.js';
-import Packet from '../../../utils/packet/packet.js';
+import PACKET from '../../../utils/packet/packet.js';
 
 // 클라이언트
 export const invitePartyHandler = (socket, packetData) => {
@@ -62,7 +62,7 @@ export const invitePartyHandler = (socket, packetData) => {
 
     // 해당 플레이어가 파티 중이면 return
     if (newMember.getPartyId()) {
-      const packet = Packet.S2CChat(
+      const packet = PACKET.S2CChat(
         0,
         '이미 파티에 소속된 플레이어입니다.',
         'System',
@@ -72,7 +72,7 @@ export const invitePartyHandler = (socket, packetData) => {
 
     // 상대방이 이미 초대를 받은 상태여도 return
     if (newMember.isInvited) {
-      const packet = Packet.S2CChat(
+      const packet = PACKET.S2CChat(
         0,
         '지금은 초대장을 보낼 수 없습니다.',
         'System',
@@ -82,7 +82,7 @@ export const invitePartyHandler = (socket, packetData) => {
 
     // 해당 멤버에게 초대장 보내기
     if (party.getMemberCount() < config.party.MaxMember) {
-      const packet = Packet.S2CInviteParty(
+      const packet = PACKET.S2CInviteParty(
         party.getPartyLeader().nickname,
         party.getId(),
         newMember.id,
@@ -92,7 +92,7 @@ export const invitePartyHandler = (socket, packetData) => {
 
       return newMember.user.getSocket().write(packet);
     } else {
-      const packet = Packet.S2CChat(
+      const packet = PACKET.S2CChat(
         0,
         '해당 파티는 정원이 모두 찼으므로 초대할 수 없습니다.',
         'System',

@@ -1,25 +1,22 @@
 import PAYLOAD_DATA from '../utils/packet/payloadData.js';
 import Resource from './resource.class.js';
 import { getGameAssets } from '../init/assets.js';
-import Packet from '../utils/packet/packet.js';
-import { Monster } from './monster.class.js';
+import PACKET from '../utils/packet/packet.js';
+import Monster from './monster.class.js';
 import { getNaveMesh } from '../init/navMeshData.js';
 
 class Sector {
-  constructor(sectorId, sectorCode, resourcesId = []) {
+  constructor(sectorId, sectorCode, resources = []) {
     this.sectorId = sectorId;
     this.sectorCode = sectorCode;
     this.monsters = new Map();
     this.mapAreas = [];
     this.navMeshes = new Map(); // 맵별 NavMesh 저장
     this.players = new Map();
-    this.resources = [];
+    this.resources = resources;
     this.lastUpdateTime = Date.now();
     this.isUpdating = false;
     //this.battleStatus = null;
-    resourcesId.forEach((value) => {
-      this.setResource(value);
-    });
 
     this.initArea(); // 클래스 내부 자동 호출
   }
@@ -29,13 +26,20 @@ class Sector {
       return value.resource_id === resourceId;
     });
     if (resource) {
-      const resourceIdx = this.resources.length + 1;
+      const resourceIdx = this.resources.length;
       this.resources.push(new Resource(resourceIdx, id, resource));
       return resourceIdx;
     }
     return -1;
   }
-  getSectorId(){
+  getResources() {
+    const resourcesPayloadData = [];
+    for(let i = 1; i<this.resources.length; i++){
+      resourcesPayloadData.push(PAYLOAD_DATA.Resource(this.resources[i].getResourceIdx(), this.resources[i].getResourceId()));
+    }
+    return resourcesPayloadData;
+  }
+  getSectorId() {
     return this.sectorId;
   }
 
@@ -46,7 +50,7 @@ class Sector {
   subDurability(resourceIdx, sub = 1) {
     if (resourceIdx >= 0 && resourceIdx < this.resources.length) {
       const durability = this.resources[resourceIdx].subDurability(sub);
-      this.notify(Packet.S2CUpdateDurability(resourceIdx, durability));
+      this.notify(PACKET.S2CUpdateDurability(resourceIdx, durability));
       return durability;
     }
     return -1;
@@ -54,20 +58,13 @@ class Sector {
   resetDurability(resourceIdx) {
     if (resourceIdx >= 0 && resourceIdx < this.resources.length) {
       const durability = this.resources[resourceIdx].resetDurability();
-      this.notify(Packet.S2CUpdateDurability(resourceIdx, durability));
+      this.notify(PACKET.S2CUpdateDurability(resourceIdx, durability));
       return durability;
     }
     return -1;
   }
 
   setPlayer(socket, player) {
-    if (this.resources.size > 0) {
-      const resourceData = resources.map((value, index) => {
-        PAYLOAD_DATA.Resource(index, value.getResourceId());
-      });
-
-      player.sendPacket(Packet.S2CResourcesList(resourceData));
-    }
     return this.players.set(socket, player);
   }
 
@@ -177,7 +174,7 @@ class Sector {
   }
 
   async initArea() {
-    const sectorJsonData = getGameAssets().sector.data.find((value) => {
+    const sectorJsonData = getGameAssets().sectors.data.find((value) => {
       return Number(value.sector_code) === Number(this.sectorCode);
     });
 
