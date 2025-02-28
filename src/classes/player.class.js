@@ -18,7 +18,6 @@ class Player {
     this.exp = (statData && statData.exp) || 0;
     this.targetExp = this._getTargetExpByLevel(this.level);
     this.abilityPoint = baseStat.ability_point;
-    this.isPartyLeader = false;
     this.partyId = null;
     this.isInvited = false;
     this.gatheringIdx = 0;

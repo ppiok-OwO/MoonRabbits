@@ -57,8 +57,8 @@ const moveSectorHandler = (socket, packetData) => {
     });
 
     // 파티원 currentSector가 변경되었으므로 패킷으로 브로드캐스트
-    const members = party.getAllMemberEntries();
-    members.forEach(([key, value]) => {
+    const members = party.getAllMembers();
+    members.forEach((key, value) => {
       const packet = PACKET.S2CJoinParty(
         party.getId(),
         party.getPartyLeaderId(),
