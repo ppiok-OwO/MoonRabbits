@@ -18,7 +18,6 @@ class Player {
     this.exp = (statData && statData.exp) || 0;
     this.targetExp = this._getTargetExpByLevel(this.level);
     this.abilityPoint = baseStat.ability_point;
-    this.isInParty = false;
     this.isPartyLeader = false;
     this.partyId = null;
     this.isInvited = false;
@@ -63,7 +62,6 @@ class Player {
     );
   }
   getPlayerInfo() {
-    
     return PAYLOAD_DATA.PlayerInfo(
       this.id,
       this.nickname,
@@ -89,10 +87,10 @@ class Player {
     this.gatheringStartTime = Date.now();
     return (this.gatheringAngle = angle);
   }
-  setGatheringIdx(idx){
-    return this.gatheringIdx = idx;
+  setGatheringIdx(idx) {
+    return (this.gatheringIdx = idx);
   }
-  getGatheringIdx(){
+  getGatheringIdx() {
     return this.gatheringIdx;
   }
   setPartyId(partyId) {

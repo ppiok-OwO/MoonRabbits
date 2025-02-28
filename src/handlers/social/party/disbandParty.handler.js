@@ -47,7 +47,7 @@ export const disbandPartyHandler = (socket, packetData) => {
     const packet = PACKET.S2CDisbandParty('파티가 해체되었습니다.');
 
     allMembers.forEach((value, key) => {
-      value.isInParty = false;
+      value.partyId = null;
       key.write(packet);
     });
 
