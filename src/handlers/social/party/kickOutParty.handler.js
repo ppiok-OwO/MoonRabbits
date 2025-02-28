@@ -68,9 +68,9 @@ export const kickOutPartyHandler = (socket, packetData) => {
     party.removeMember(memberId);
 
     // 각 멤버에 대하여 맞춤형 패킷 생성
-    const members = party.getAllMemberEntries();
+    const members = party.getAllMembers();
 
-    members.forEach(([key, value]) => {
+    members.forEach((value, key) => {
       const packet = PACKET.S2CKickOutMember(
         party.getId(),
         party.getPartyLeaderId(),
