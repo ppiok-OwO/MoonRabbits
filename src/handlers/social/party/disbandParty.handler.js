@@ -41,12 +41,12 @@ export const disbandPartyHandler = (socket, packetData) => {
       return socket.write(packet);
     }
 
-    const allMembers = party.getAllMemberEntries();
+    const allMembers = party.getAllMembers();
 
     // 파티 해체
     const packet = PACKET.S2CDisbandParty('파티가 해체되었습니다.');
 
-    allMembers.forEach(([key, value]) => {
+    allMembers.forEach((value, key) => {
       value.isInParty = false;
       key.write(packet);
     });

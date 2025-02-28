@@ -83,9 +83,9 @@ export const leavePartyHandler = (socket, packetData) => {
         const newLeader = party.getMember(newLeaderSocket);
         party.setPartyLeader(newLeader);
 
-        const members = party.getAllMemberEntries();
+        const members = party.getAllMembers();
 
-        members.forEach(([key, value]) => {
+        members.forEach((value, key) => {
           const packet = PACKET.S2CLeaveParty(
             party.getId(),
             party.getPartyLeaderId(),
@@ -107,10 +107,10 @@ export const leavePartyHandler = (socket, packetData) => {
       }
     }
 
-    const members = party.getAllMemberEntries();
+    const members = party.getAllMembers();
 
     // 각 멤버에 대하여 맞춤형 패킷 생성
-    members.forEach(([key, value]) => {
+    members.forEach((value, key) => {
       const packet = PACKET.S2CLeaveParty(
         party.getId(),
         party.getPartyLeaderId(),
