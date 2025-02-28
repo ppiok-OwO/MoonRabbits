@@ -9,7 +9,7 @@ export const rejectInviteHandler = (socket, packetData) => {
     const playerSession = getPlayerSession();
     const member = playerSession.getPlayer(socket);
     if (!member) {
-      const packet = PACKET.S2CChat(0, '올바르지 않은 접근입니다.');
+      const packet = PACKET.S2CChat(0, '올바르지 않은 접근입니다.', 'System');
       return socket.write(packet);
     }
 

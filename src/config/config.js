@@ -18,7 +18,6 @@ import {
 import { BASE_STAT_DATA } from '../constants/PlayerBaseStat.js';
 import { BATTLE_LOG_ID } from '../constants/BattleLog.js';
 import { UPDATE_LOCATION } from '../constants/UpdateLocation.js';
-import SCENE_CODE from '../constants/scene.js';
 
 export const config = {
   server: {
@@ -54,14 +53,14 @@ export const config = {
     S2CCreateCharacter: PACKET_ID.S2CCreateCharacter,
     C2SEnter: PACKET_ID.C2SEnter,
     S2CEnter: PACKET_ID.S2CEnter,
-    C2SLeave: PACKET_ID.C2SLeave,
-    S2CLeave: PACKET_ID.S2CLeave,
+    C2SMoveSector: PACKET_ID.C2SMoveSector,
+    S2CMoveSector: PACKET_ID.S2CMoveSector,
     C2SAnimation: PACKET_ID.C2SAnimation,
     S2CAnimation: PACKET_ID.S2CAnimation,
     C2SChat: PACKET_ID.C2SChat,
     S2CChat: PACKET_ID.S2CChat,
-    S2CPlayerSpawn: PACKET_ID.S2CPlayerSpawn,
-    S2CPlayerDespawn: PACKET_ID.S2CPlayerDespawn,
+    S2CSpawn: PACKET_ID.S2CSpawn,
+    S2CDespawn: PACKET_ID.S2CDespawn,
     C2SPlayerMove: PACKET_ID.C2SPlayerMove,
     S2CPlayerMove: PACKET_ID.S2CPlayerMove,
     C2SPlayerLocation: PACKET_ID.C2SPlayerLocation,
@@ -70,10 +69,8 @@ export const config = {
     S2CPlayerRunning: PACKET_ID.S2CPlayerRunning,
     C2SRankingList: PACKET_ID.C2SRankingList,
     S2CUpdateRanking: PACKET_ID.S2CUpdateRanking,
-    C2SPlayerCollision: PACKET_ID.C2SPlayerCollision,
-    S2CPlayerCollision: PACKET_ID.S2CPlayerCollision,
-    C2SMonsterCollision: PACKET_ID.C2SMonsterCollision,
-    S2CMonsterCollision: PACKET_ID.S2CMonsterCollision,
+    C2SCollision: PACKET_ID.C2SCollision,
+    S2CCollision: PACKET_ID.S2CCollision,
     C2SSelectStore: PACKET_ID.C2SSelectStore,
     S2CSelectStore: PACKET_ID.S2CSelectStore,
     C2SBuyItem: PACKET_ID.C2SBuyItem,
@@ -103,24 +100,28 @@ export const config = {
     S2CDetectedPlayer: PACKET_ID.S2CDetectedPlayer,
     C2SMissingPlayer: PACKET_ID.C2SMissingPlayer,
     S2CMissingPlayer: PACKET_ID.S2CMissingPlayer,
-    S2CResourceList: PACKET_ID.S2CResourceList,
+    S2CResourcesList: PACKET_ID.S2CResourcesList,
     S2CUpdateDurability: PACKET_ID.S2CUpdateDurability,
     C2SGatheringStart: PACKET_ID.C2SGatheringStart,
     S2CGatheringStart: PACKET_ID.S2CGatheringStart,
     C2SGatheringSkillCheck: PACKET_ID.C2SGatheringSkillCheck,
     S2CGatheringSkillCheck: PACKET_ID.S2CGatheringSkillCheck,
     S2CGatheringDone: PACKET_ID.S2CGatheringDone,
-    C2SSectorEnter: PACKET_ID.C2SSectorEnter,
-    S2CSectorEnter: PACKET_ID.S2CSectorEnter,
-    C2SSectorLeave: PACKET_ID.C2SSectorLeave,
-    S2CSectorLeave: PACKET_ID.S2CSectorLeave,
-    C2SInPortal: PACKET_ID.C2SInPortal,
-    S2CInPortal: PACKET_ID.S2CInPortal,
+    C2SResourcesList: PACKET_ID.C2SResourcesList,
+    C2SRecall: PACKET_ID.C2SRecall,
+    S2CRecall: PACKET_ID.S2CRecall,
+    C2SThrowGrenade: PACKET_ID.C2SThrowGrenade,
+    S2CThrowGrenade: PACKET_ID.S2CThrowGrenade,
+    C2SStun: PACKET_ID.C2SStun,
+    S2CStun: PACKET_ID.S2CStun,
+    C2SEquipChange: PACKET_ID.C2SEquipChange,
+    S2CEquipChange: PACKET_ID.S2CEquipChange,
     C2SAddExp: PACKET_ID.C2SAddExp,
     S2CAddExp: PACKET_ID.S2CAddExp,
     S2CLevelUp: PACKET_ID.S2CLevelUp,
     C2SInvestPoint: PACKET_ID.C2SInvestPoint,
     S2CInvestPoint: PACKET_ID.S2CInvestPoint,
+    S2CInventoryUpdate: PACKET_ID.S2CInventoryUpdate,
   },
   newPlayerStatData: {
     BASE_STAT_DATA,
@@ -132,12 +133,19 @@ export const config = {
   updateLocation: {
     tolerance: UPDATE_LOCATION.tolerance,
   },
-  sceneCode: {
-    town: SCENE_CODE.TOWN,
-    aSector: SCENE_CODE.A_SECTOR,
-  },
   party: {
     MaxMember: 5,
+  },
+  sector: {
+    town: 100,
+    testfield: 2,
+    S1: 101,
+    S2: 102,
+  },
+  animCode: {
+    happy: 111,
+    sad: 222,
+    greeting: 333,
   },
 };
 

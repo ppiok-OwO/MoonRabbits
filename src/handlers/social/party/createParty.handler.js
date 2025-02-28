@@ -5,7 +5,7 @@ import {
 import CustomError from '../../../utils/error/customError.js';
 import { ErrorCodes } from '../../../utils/error/errorCodes.js';
 import handleError from '../../../utils/error/errorHandler.js';
-import Packet from '../../../utils/packet/packet.js';
+import PACKET from '../../../utils/packet/packet.js';
 
 export const createPartyHandler = (socket, packetData) => {
   try {
@@ -26,11 +26,9 @@ export const createPartyHandler = (socket, packetData) => {
     const partySession = getPartySessions();
     const party = partySession.addParty(socket, player);
     const partyId = party.getId();
-    party.setPartyLeader(player);
     player.setPartyId(partyId);
-    player.isInParty = true;
 
-    const packet = Packet.S2CCreateParty(
+    const packet = PACKET.S2CCreateParty(
       party.getId(),
       party.getPartyLeaderId(),
       party.getMemberCount(),

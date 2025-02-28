@@ -32,38 +32,45 @@ const PACKET = {
   S2CEnter: (player_PlayerInfo) => {
     return makePacket(PACKET_ID.S2CEnter, PAYLOAD.S2CEnter(player_PlayerInfo));
   },
-  S2CLeave: () => {
-    return makePacket(PACKET_ID.S2CLeave);
-  },
-  S2CAnimation: (playerId_int32, animCode_int32) => {
+  S2CAnimation: (playerId_int32, animCode_int32, currentSector_int32) => {
     return makePacket(
       PACKET_ID.S2CAnimation,
-      PAYLOAD.S2CAnimation(playerId_int32, animCode_int32),
+      PAYLOAD.S2CAnimation(playerId_int32, animCode_int32, currentSector_int32),
     );
   },
-  S2CChat: (playerId_int32, chatMsg_string) => {
+  S2CChat: (
+    playerId_int32,
+    chatMsg_string,
+    chatType_string,
+    currentSector_int32,
+  ) => {
     return makePacket(
       PACKET_ID.S2CChat,
-      PAYLOAD.S2CChat(playerId_int32, chatMsg_string),
+      PAYLOAD.S2CChat(
+        playerId_int32,
+        chatMsg_string,
+        chatType_string,
+        currentSector_int32,
+      ),
     );
   },
-  S2CPlayerSpawn: (players_PlayerInfo_repeated) => {
+  S2CSpawn: (players_PlayerInfo_repeated) => {
     return makePacket(
-      PACKET_ID.S2CPlayerSpawn,
-      PAYLOAD.S2CPlayerSpawn(players_PlayerInfo_repeated),
+      PACKET_ID.S2CSpawn,
+      PAYLOAD.S2CSpawn(players_PlayerInfo_repeated),
     );
   },
-  S2CPlayerDespawn: (playerIds_int32_repeated, currentScene_int32) => {
+  S2CDespawn: (playerIds_int32_repeated, currentSector_int32) => {
     return makePacket(
-      PACKET_ID.S2CPlayerDespawn,
-      PAYLOAD.S2CPlayerDespawn(playerIds_int32_repeated, currentScene_int32),
+      PACKET_ID.S2CDespawn,
+      PAYLOAD.S2CDespawn(playerIds_int32_repeated, currentSector_int32),
     );
   },
   S2CPlayerLocation: (
     playerId_int32,
     transform_TransformInfo,
     isValidTransform_bool,
-    currentScene_int32,
+    currentSector_int32,
   ) => {
     return makePacket(
       PACKET_ID.S2CPlayerLocation,
@@ -71,7 +78,7 @@ const PACKET = {
         playerId_int32,
         transform_TransformInfo,
         isValidTransform_bool,
-        currentScene_int32,
+        currentSector_int32,
       ),
     );
   },
@@ -81,41 +88,16 @@ const PACKET = {
       PAYLOAD.S2CUpdateRanking(status_string, data_RankingList),
     );
   },
-  S2CPlayerCollision: (playerId_int32, collisionPushInfo_CollisionPushInfo) => {
+  S2CCollision: (collisionPushInfo_CollisionPushInfo) => {
     return makePacket(
-      PACKET_ID.S2CPlayerCollision,
-      PAYLOAD.S2CPlayerCollision(
-        playerId_int32,
-        collisionPushInfo_CollisionPushInfo,
-      ),
+      PACKET_ID.S2CCollision,
+      PAYLOAD.S2CCollision(collisionPushInfo_CollisionPushInfo),
     );
   },
-  S2CMonsterCollision: (
-    monsterId_int32,
-    collisionPushInfo_CollisionPushInfo,
-  ) => {
+  S2CInventoryUpdate: (slots_InventorySlot_repeated) => {
     return makePacket(
-      PACKET_ID.S2CMonsterCollision,
-      PAYLOAD.S2CMonsterCollision(
-        monsterId_int32,
-        collisionPushInfo_CollisionPushInfo,
-      ),
-    );
-  },
-  S2CSelectStore: (storeInfo_StoreInfo, itemInfo_ItemInfo_repeated) => {
-    return makePacket(
-      PACKET_ID.S2CSelectStore,
-      PAYLOAD.S2CSelectStore(storeInfo_StoreInfo, itemInfo_ItemInfo_repeated),
-    );
-  },
-  S2CBuyItem: (success_string, inventoryInfo_InventoryInfo, gold_int32) => {
-    return makePacket(
-      PACKET_ID.S2CBuyItem,
-      PAYLOAD.S2CBuyItem(
-        success_string,
-        inventoryInfo_InventoryInfo,
-        gold_int32,
-      ),
+      PACKET_ID.S2CInventoryUpdate,
+      PAYLOAD.S2CInventoryUpdate(slots_InventorySlot_repeated),
     );
   },
   S2CCreateParty: (
@@ -176,20 +158,10 @@ const PACKET = {
       ),
     );
   },
-  S2CSetPartyLeader: (
-    partyId_string,
-    leaderId_int32,
-    memberCount_int32,
-    members_MemberCardInfo_repeated,
-  ) => {
+  S2CCheckPartyList: (partyInfos_PartyInfo_repeated, memberId_int32) => {
     return makePacket(
-      PACKET_ID.S2CSetPartyLeader,
-      PAYLOAD.S2CSetPartyLeader(
-        partyId_string,
-        leaderId_int32,
-        memberCount_int32,
-        members_MemberCardInfo_repeated,
-      ),
+      PACKET_ID.S2CCheckPartyList,
+      PAYLOAD.S2CCheckPartyList(partyInfos_PartyInfo_repeated, memberId_int32),
     );
   },
   S2CKickOutMember: (
@@ -230,12 +202,6 @@ const PACKET = {
       ),
     );
   },
-  S2CCheckPartyList: (partyInfos_PartyInfo_repeated, memberId_int) => {
-    return makePacket(
-      PACKET_ID.S2CCheckPartyList,
-      PAYLOAD.S2CCheckPartyList(partyInfos_PartyInfo_repeated, memberId_int),
-    );
-  },
   S2CRejectInvite: () => {
     return makePacket(PACKET_ID.S2CRejectInvite, PAYLOAD.S2CRejectInvite());
   },
@@ -257,10 +223,10 @@ const PACKET = {
       PAYLOAD.S2CMissingPlayer(monsterId_int32, playerId_int32),
     );
   },
-  S2CResourceList: (resources_Resource_repeated) => {
+  S2CResourcesList: (resources_Resource_repeated) => {
     return makePacket(
-      PACKET_ID.S2CResourceList,
-      PAYLOAD.S2CResourceList(resources_Resource_repeated),
+      PACKET_ID.S2CResourcesList,
+      PAYLOAD.S2CResourcesList(resources_Resource_repeated),
     );
   },
   S2CUpdateDurability: (placedId_int32, durability_int32) => {
@@ -287,42 +253,80 @@ const PACKET = {
       PAYLOAD.S2CGatheringDone(placedId_int32, itemId_int32, quantity_int32),
     );
   },
-  S2CSectorEnter: (sectorInfo_SectorInfo, player_PlayerStatus) => {
+  S2CRecall: (playerId_int32, currentSector_int32, recallTimer_int32) => {
     return makePacket(
-      PACKET_ID.S2CSectorEnter,
-      PAYLOAD.S2CSectorEnter(sectorInfo_SectorInfo, player_PlayerStatus),
+      PACKET_ID.S2CRecall,
+      PAYLOAD.S2CRecall(playerId_int32, currentSector_int32, recallTimer_int32),
     );
   },
-  C2SAddExp: (count_int) => {
-    return makePacket(PACKET_ID.C2SAddExp, { count: count_int });
+  S2CThrowGrenade: (
+    playerId_int32,
+    currentSector_int32,
+    velocity_Vec3,
+    coolTime_int32,
+  ) => {
+    return makePacket(
+      PACKET_ID.S2CThrowGrenade,
+      PAYLOAD.S2CThrowGrenade(
+        playerId_int32,
+        currentSector_int32,
+        velocity_Vec3,
+        coolTime_int32,
+      ),
+    );
   },
-  S2CAddExp: (updatedExp_int) => {
-    return makePacket(PACKET_ID.S2CAddExp, { updatedExp: updatedExp_int });
+  S2CStun: (
+    currentSector_int32,
+    stunTimer_int32,
+    playerIds_int32_repeated,
+    monsterIds_int32_repeated,
+  ) => {
+    return makePacket(
+      PACKET_ID.S2CStun,
+      PAYLOAD.S2CStun(
+        currentSector_int32,
+        stunTimer_int32,
+        playerIds_int32_repeated,
+        monsterIds_int32_repeated,
+      ),
+    );
+  },
+  S2CEquipChange: (playerId_int32, currentSector_int32, nextEquip_int32) => {
+    return makePacket(
+      PACKET_ID.S2CEquipChange,
+      PAYLOAD.S2CEquipChange(
+        playerId_int32,
+        currentSector_int32,
+        nextEquip_int32,
+      ),
+    );
+  },
+  S2CAddExp: (updatedExp_int32) => {
+    return makePacket(PACKET_ID.S2CAddExp, PAYLOAD.S2CAddExp(updatedExp_int32));
   },
   S2CLevelUp: (
-    playerId_int,
-    updatedLevel_int,
-    newTargetExp_int,
-    updatedExp_int,
-    abilityPoint_int,
+    playerId_int32,
+    updatedLevel_int32,
+    newTargetExp_int32,
+    updatedExp_int32,
+    abilityPoint_int32,
   ) => {
-    return makePacket(PACKET_ID.S2CLevelUp, {
-      playerId: playerId_int,
-      updatedLevel: updatedLevel_int,
-      newTargetExp: newTargetExp_int,
-      updatedExp: updatedExp_int,
-      abilityPoint: abilityPoint_int,
-    });
-  },
-  C2SInvestPoint: (statCode_int) => {
-    return makePacket(PACKET_ID.C2SInvestPoint, {
-      statCode: statCode_int,
-    });
+    return makePacket(
+      PACKET_ID.S2CLevelUp,
+      PAYLOAD.S2CLevelUp(
+        playerId_int32,
+        updatedLevel_int32,
+        newTargetExp_int32,
+        updatedExp_int32,
+        abilityPoint_int32,
+      ),
+    );
   },
   S2CInvestPoint: (statInfo_StatInfo) => {
-    return makePacket(PACKET_ID.S2CInvestPoint, {
-      statInfo: statInfo_StatInfo,
-    });
+    return makePacket(
+      PACKET_ID.S2CInvestPoint,
+      PAYLOAD.S2CInvestPoint(statInfo_StatInfo),
+    );
   },
 };
 

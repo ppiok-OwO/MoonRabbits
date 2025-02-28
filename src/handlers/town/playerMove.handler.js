@@ -1,14 +1,11 @@
 import { config } from '../../config/config.js';
 import { getGameAssets } from '../../init/assets.js';
-import { findPath, loadNavMesh } from '../../init/navMeshLoader.js';
-import {
-  getDungeonSessions,
-  getPlayerSession,
-} from '../../session/sessions.js';
+import { getNaveMesh } from '../../init/navMeshData.js';
+import { findPath } from '../../init/navMeshLoader.js';
+import { getSectorSessions, getPlayerSession } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import handleError from '../../utils/error/errorHandler.js';
-import Packet from '../../utils/packet/packet.js';
 
 // 클라이언트상에서 어떤 지점을 클릭했을 때 실행
 export async function playerMoveHandler(socket, packetData) {
@@ -35,21 +32,10 @@ export async function playerMoveHandler(socket, packetData) {
       );
     }
 
-    let objFileName = '';
-    switch (player.getCurrentScene()) {
-      case config.sceneCode.town:
-        objFileName = 'Town Exported NavMesh.obj';
-        break;
-      case config.sceneCode.aSector:
-        objFileName = 'Test Exported NavMesh.obj';
-    }
-
-    console.log(`현재 씬? : ${player.getCurrentScene()}`);
-    console.log(`obj 파일명? : ${objFileName}`);
+    let navMesh = getNaveMesh(player.getSectorId());
 
     const targetPos = { x: targetPosX, y: targetPosY, z: targetPosZ };
     const currentPos = { x: startPosX, y: startPosY, z: startPosZ };
-    const navMesh = await loadNavMesh(objFileName);
 
     // NavMesh 기반 경로 탐색
     const path = await findPath(navMesh, currentPos, targetPos);

@@ -3,7 +3,7 @@ import { findPlayerByUserId, findUserByEmail } from '../../db/user/user.db.js';
 import { getPlayerSession, getUserSessions } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
-import Packet from '../../utils/packet/packet.js';
+import PACKET from '../../utils/packet/packet.js';
 import PAYLOAD_DATA from '../../utils/packet/payloadData.js';
 import bcrypt from 'bcrypt';
 import chalk from 'chalk';
@@ -21,7 +21,7 @@ const loginHandler = async (socket, packetData) => {
       const isSuccess = false;
       const msg = '이메일을 찾을 수 없습니다.';
 
-      const failResponse = Packet.S2CLogin(isSuccess, msg, []);
+      const failResponse = PACKET.S2CLogin(isSuccess, msg, []);
       return socket.write(failResponse);
     }
     // 비밀번호 일치 여부 확인
@@ -31,7 +31,7 @@ const loginHandler = async (socket, packetData) => {
       const isSuccess = false;
       const msg = '비밀번호가 일치하지 않습니다.';
 
-      const failResponse = Packet.S2CLogin(isSuccess, msg, []);
+      const failResponse = PACKET.S2CLogin(isSuccess, msg, []);
       return socket.write(failResponse);
     }
 
@@ -61,7 +61,7 @@ const loginHandler = async (socket, packetData) => {
         nickname: findPlayer && findPlayer.nickname ? findPlayer.nickname : '',
         classCode: findPlayer && findPlayer.classCode ? findPlayer.classCode : '',
       });
-      console.log('----- 업데이트된 userSession ----- \n', user);
+      //console.log('----- 업데이트된 userSession ----- \n', user);
     }
 
     // 캐릭터가 존재한다면 playerSession 업데이트를 같이 진행
@@ -69,13 +69,13 @@ const loginHandler = async (socket, packetData) => {
       const ownedCharacters = [
         PAYLOAD_DATA.OwnedCharacter(findPlayer.nickname, findPlayer.classCode),
       ];
-      const packet = Packet.S2CLogin(isSuccess, msg, ownedCharacters);
+      const packet = PACKET.S2CLogin(isSuccess, msg, ownedCharacters);
       return socket.write(packet);
     }
 
     // 캐릭터가 없는 경우에는 캐릭터 생성 창으로 이동하도록 처리
     const ownedCharacters = [];
-    const packet = Packet.S2CLogin(isSuccess, msg, ownedCharacters);
+    const packet = PACKET.S2CLogin(isSuccess, msg, ownedCharacters);
     return socket.write(packet);
   } catch (error) {
     console.error(

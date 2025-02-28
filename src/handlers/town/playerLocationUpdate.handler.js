@@ -1,15 +1,7 @@
-import { config } from '../../config/config.js';
-import {
-  getDungeonSessions,
-  getPlayerSession,
-} from '../../session/sessions.js';
+import { getSectorSessions, getPlayerSession } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
-import makePacket from '../../utils/packet/makePacket.js';
-import Packet from '../../utils/packet/packet.js';
-import payload from '../../utils/packet/payload.js';
-import PAYLOAD_DATA from '../../utils/packet/payloadData.js';
-import PathValidator from '../../utils/validate/PathValidator.js';
+import PACKET from '../../utils/packet/packet.js';
 
 // !!! 패킷 변경에 따라 S_Chat -> S2CChat, S_Location -> S2CPlayerLocation으로 일괄 수정해씀다
 
@@ -42,49 +34,69 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
     if (path === null) {
       console.log('생성된 경로가 없음!!');
     } else {
-      const validationResult = await PathValidator.validatePosition(
-        path,
-        transform,
-      );
+      // transform의 좌표로부터 가장 가까운 path상의 좌표 구하기
+      // 두 좌표 사이의 거리가 루트2(대락 1.4)보다 작아야 한다.
+      let minDistance = Infinity;
+      let closestPoint = null;
+      path.forEach((point) => {
+        const distance = calculateDistance(point, transform);
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestPoint = { PosX: point.x, PosY: point.y, PosZ: point.z }; // transform과 가장 가까운 경로상의 좌표
+        }
+      });
 
-      if (validationResult && validationResult.distance > 1.4) {
-        console.log('플레이어의 위치를 재조정합니다.');
-        const newTransform = { ...validationResult.point, rot: transform.rot };
-        const packet = Packet.S2CPlayerLocation(
+      // console.log('closestPoint : ', closestPoint);
+      // console.log('transform :', transform);
+      // console.log('minDistance :', minDistance);
+      player.setPosition(transform);
+
+      if (minDistance > 1.4) {
+        // 오차범위를 벗어나면 플레이어의 위치를 closestPoint로 재조정한다.
+        const newTransform = {
+          posX: closestPoint.PosX,
+          posY: closestPoint.PosY,
+          posZ: closestPoint.PosZ,
+          rot: transform.rot,
+        };
+        player.setPosition(newTransform);
+
+        const packet = PACKET.S2CPlayerLocation(
           player.id,
           newTransform,
           false,
-          player.getCurrentScene(),
+          player.getSectorId(),
         );
 
-        const dungeonId = player.getDungeonId();
-        if (dungeonId) {
-          const dungeonSessions = getDungeonSessions();
-          const dungeon = dungeonSessions.getDungeon(dungeonId);
-          dungeon.notify(packet);
+        const sectorCode = player.getSectorId();
+        if (sectorCode) {
+          // 만약 던전이면
+          const sectorSessions = getSectorSessions();
+          const sector = sectorSessions.getSector(sectorCode);
+          sector.notify(packet);
+          // dungeon.notify(syncLocationPacket);
         } else {
           playerSession.notify(packet);
         }
         return;
+      } else {
+        const packet = PACKET.S2CPlayerLocation(
+          player.id,
+          transform,
+          true,
+          player.getSectorId(),
+        );
+        const sectorCode = player.getSectorId();
+        if (sectorCode) {
+          // 만약 던전이면
+          const sectorSessions = getSectorSessions();
+          const sector = sectorSessions.getSector(sectorCode); // 강제로 변환
+          sector.notify(packet);
+        } else {
+          // 던전이 아니면
+          playerSession.notify(packet);
+        }
       }
-    }
-
-    const packet = Packet.S2CPlayerLocation(
-      player.id,
-      transform,
-      true,
-      player.getCurrentScene(),
-    );
-
-    const dungeonId = player.getDungeonId();
-    if (dungeonId) {
-      // 만약 던전이면
-      const dungeonSessions = getDungeonSessions();
-      const dungeon = dungeonSessions.getDungeon(dungeonId);
-      dungeon.notify(packet);
-    } else {
-      // 던전이 아니면
-      playerSession.notify(packet);
     }
   } catch (error) {
     console.error(error);

@@ -1,0 +1,9 @@
+{
+  "name": "item",
+  "version": "1.0.0",
+  "data": [
+    { "collisionType": 0, "description": "이것은 설명입니다." },
+    { "collisionType": 1, "description": "Player" },
+    { "collisionType": 2, "description": "Monster" }
+  ]
+}

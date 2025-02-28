@@ -1,33 +1,46 @@
-import Packet from '../../utils/packet/packet.js';
-import {
-  getPlayerSession,
-  getDungeonSessions,
-} from '../../session/sessions.js';
+import PACKET from '../../utils/packet/packet.js';
+import { getPlayerSession, getSectorSessions } from '../../session/sessions.js';
 import handleError from '../../utils/error/errorHandler.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { addExpHandler } from '../player/addExp.handler.js';
 
 export const gatheringSkillCheckHandler = (socket, packetData) => {
-  const { placedId, deltatime } = packetData;
+  const { deltatime } = packetData;
   const player = getPlayerSession().getPlayer(socket);
-  const dungeon = getDungeonSessions().getDungeon(player.getDungeonId());
-  if (placedId >= 0 && placedId < dungeon.resources.length) {
-    if (dungeon.resources[placedId].CheckValidateTiming(deltatime)) {
-      const durability = dungeon.resources[placedId].subDurability();
+  const sector = getSectorSessions().getSector(player.getSectorId());
+  const placedId = player.getGatheringIdx();
+  if (placedId >= 0 && placedId < sector.resources.length) {
+    if (
+      sector.resources[placedId].CheckValidateTiming(
+        player.gatheringAngle,
+        player.gatheringStartTime,
+        deltatime,
+      )
+    ) {
+      const durability = sector.resources[placedId].subDurability();
+      if (durability < 0) {
+        const packet = PACKET.S2CChat(0, '이미 소모된 자원입니다.', 'System');
+        return socket.write(packet);
+      }
 
-      socket.write(Packet.S2CGatheringSkillCheck(placedId, durability));
-      const dropItem = dungeon.resources[placedId].dropItem();
-      socket.write(Packet.S2CGatheringDone(placedId, dropItem.item, 1));
+      socket.write(PACKET.S2CGatheringSkillCheck(placedId, durability));
 
-      addExpHandler(socket, {
-        count: dungeon.resources[placedId].getDifficulty(),
-      });
+      const dropItem = sector.resources[placedId].dropItem();
+      socket.write(PACKET.S2CGatheringDone(placedId, dropItem.item, 1));
 
-      if (durability === 0) {
+      // 나중에 아이템 받아오는 내역 필요함
+
+      //
+
+      // addExpHandler(socket, {
+      //   count: sector.resources[placedId].getDifficulty(),
+      // });
+
+      if (durability <= 0) {
         setTimeout(
-          dungeon.resetDurability(placedId),
-          dungeon.resources[placedId].getRespawnTime(),
+          () => sector.resetDurability(placedId),
+          sector.resources[placedId].getRespawnTime(),
         );
       }
     } else {
