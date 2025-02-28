@@ -52,6 +52,16 @@ export const kickOutPartyHandler = (socket, packetData) => {
     const members = party.getAllMembers();
     let member;
 
+    if (!member) {
+      return socket.emit(
+        'error',
+        new CustomError(
+          ErrorCodes.HANDLER_ERROR,
+          '파티에 소속되지 않은 플레이어입니다.',
+        ),
+      );
+    }
+
     for (const [key, value] of members) {
       if (value.id === memberId) {
         member = [key, value];
