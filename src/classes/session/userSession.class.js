@@ -1,6 +1,7 @@
 import { v4 as uuidV4 } from 'uuid';
 import User from '../user.class.js';
 import redisClient from '../../utils/redis/redis.config.js';
+import { getPlayerSession } from '../../session/sessions.js';
 
 class UserSession {
   users = new Map();
@@ -42,7 +43,8 @@ class UserSession {
   }
 
   removeUser(socket) {
-    this.users.delete(socket);
+    getPlayerSession().removePlayer(socket);
+    return this.users.delete(socket);
   }
 
   getUser(socket) {

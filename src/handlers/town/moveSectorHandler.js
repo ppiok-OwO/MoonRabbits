@@ -31,7 +31,7 @@ const moveSectorHandler = (socket, packetData) => {
         partyMembers.push(member);
       }
     } else {
-      const packet = PACKET.S2CChat(0, '당신은 파티장이 아닙니다.', 'System');
+      const packet = PACKET.S2CChat(0, '당신은 파티장이 아닙니다.', 'System', player.getSectorId());
       return socket.write(packet);
     }
   }
@@ -40,7 +40,7 @@ const moveSectorHandler = (socket, packetData) => {
     // 현재는 섹터가 한개씩 존재함으로 섹터 코드로 탐색
     const newSector = getSectorSessions().getSectorByCode(targetSectorCode);
     if (!newSector) {
-      const packet = PACKET.S2CChat(0, '섹터가 존재하지 않습니다..', 'System');
+      const packet = PACKET.S2CChat(0, '섹터가 존재하지 않습니다..', 'System', player.getSectorId());
       return socket.write(packet);
     }
     // 디스폰
