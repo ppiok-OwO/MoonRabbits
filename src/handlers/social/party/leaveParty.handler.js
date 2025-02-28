@@ -22,12 +22,22 @@ export const leavePartyHandler = (socket, packetData) => {
         ),
       );
     }
+    const members = party.getAllMembers();
 
     // 해당 파티에 소속 중인지 확인
     // member = ['Socket', { Player 인스턴스 }]
-    const member = party
-      .getAllMemberEntries()
-      .find(([key, value]) => value.id === leftPlayerId);
+    
+
+      
+    let member;
+
+    for (const [key, value] of members) {
+      if (value.id === leftPlayerId) {
+        member = [key, value];
+      }
+    }
+
+
     if (!member) {
       return socket.emit(
         'error',
@@ -107,7 +117,6 @@ export const leavePartyHandler = (socket, packetData) => {
       }
     }
 
-    const members = party.getAllMembers();
 
     // 각 멤버에 대하여 맞춤형 패킷 생성
     members.forEach((value, key) => {
@@ -130,6 +139,6 @@ export const leavePartyHandler = (socket, packetData) => {
     const msgToKickedMember = PACKET.S2CDisbandParty('파티를 떠났습니다.');
     member[0].write(msgToKickedMember);
   } catch (error) {
-    handleError(error);
+    handleError(socket, error);
   }
 };
