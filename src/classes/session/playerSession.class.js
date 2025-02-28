@@ -9,7 +9,13 @@ class PlayerSession {
   playerIdx = 1;
 
   async addPlayer(socket, user, nickname, classCode, statData) {
-    const newPlayer = new Player(user, this.playerIdx++, nickname, classCode, statData);
+    const newPlayer = new Player(
+      user,
+      this.playerIdx++,
+      nickname,
+      classCode,
+      statData,
+    );
     this.players.set(socket, newPlayer);
 
     // getSectorSessions()
@@ -74,9 +80,14 @@ class PlayerSession {
         loginTime: new Date().toISOString(),
       });
       await redisClient.expire(key, 3600); // 만료 시간 설정
-      console.log(`${chalk.green('[Redis Log]')} Player 데이터 저장 완료: ${key}`);
+      console.log(
+        `${chalk.green('[Redis Log]')} Player 데이터 저장 완료: ${key}`,
+      );
     } catch (error) {
-      console.error(`${chalk.green('[Redis Error]')} Player 데이터 저장 실패: ${key}`, error);
+      console.error(
+        `${chalk.green('[Redis Error]')} Player 데이터 저장 실패: ${key}`,
+        error,
+      );
     }
   }
 }

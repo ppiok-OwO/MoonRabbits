@@ -20,9 +20,9 @@ const moveSectorHandler = (socket, packetData) => {
   const partyMembers = [player]; // 본인만 혹은 파티원 배열에 넣을 것
 
   // 파티가 있는지 체크
+  const party = partySession.getParty(player.partyId);
   if (player.isInParty && player.isPartyLeader) {
     // 파티 인스턴스
-    const party = partySession.getParty(player.partyId);
     const allMembers = party.getAllMembers();
     for (const member of allMembers) {
       partyMembers.push(member);
@@ -54,6 +54,18 @@ const moveSectorHandler = (socket, packetData) => {
       newSector.setPlayer(socket, member);
       const memberSocket = member.user.getSocket();
       memberSocket.write(PACKET.S2CEnter(member.getPlayerInfo()));
+    });
+
+    // 파티원 currentSector가 변경되었으므로 패킷으로 브로드캐스트
+    const members = party.getAllMemberEntries();
+    members.forEach(([key, value]) => {
+      const packet = PACKET.S2CJoinParty(
+        party.getId(),
+        party.getPartyLeaderId(),
+        party.getMemberCount(),
+        party.getAllMemberCardInfo(value.id),
+      );
+      key.write(packet);
     });
 
     playerSpawnNotificationHandler(socket, {});
