@@ -1,4 +1,3 @@
-import { Worker } from 'worker_threads';
 
 class PathValidator {
   static async validatePosition(path, transform) {
