@@ -6,7 +6,7 @@ class PathValidator {
     // path를 청크로 나누기
     const chunks = this.dividePathIntoChunks(path);
 
-    // 각 청크를 병렬로 처리
+
     const results = await Promise.all(
       chunks.map((chunk) => this.processChunk(chunk, transform)),
     );
