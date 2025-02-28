@@ -49,10 +49,10 @@ export const allowInviteHandler = (socket, packetData) => {
       newMember.isInvited = false;
 
       // 각 멤버에 대하여 맞춤형 패킷 생성
-      const members = party.getAllMemberEntries();
+      const members = party.getAllMembers();
 
-      members.forEach(([key, value]) => {
-        const packet = PACKET.S2CAllowInvite(
+      members.forEach((value, key) => {
+        const packet = PACKET.S2CJoinParty(
           party.getId(),
           party.getPartyLeaderId(),
           party.getMemberCount(),
@@ -64,7 +64,7 @@ export const allowInviteHandler = (socket, packetData) => {
       const packet = PACKET.S2CChat(
         0,
         '해당 파티는 정원이 모두 찼으므로 참가할 수 없습니다.',
-        "System"
+        'System',
       );
 
       return newMember.user.getSocket().write(packet);
