@@ -1,14 +1,9 @@
-import { config } from '../../config/config.js';
-import {
-  getDungeonSessions,
-  getPlayerSession,
-} from '../../session/sessions.js';
+import { getSectorSessions, getPlayerSession } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
-import makePacket from '../../utils/packet/makePacket.js';
-import Packet from '../../utils/packet/packet.js';
-import payload from '../../utils/packet/payload.js';
-import payloadData from '../../utils/packet/payloadData.js';
+import PACKET from '../../utils/packet/packet.js';
+
+// !!! 패킷 변경에 따라 S_Chat -> S2CChat, S_Location -> S2CPlayerLocation으로 일괄 수정해씀다
 
 // 경로 탐색 성공: [
 //   { x: 0, y: 0, z: 0 },
@@ -26,7 +21,7 @@ const playerLocationUpdateHandler = (socket, packetData) => {
     const playerSession = getPlayerSession();
     const player = playerSession.getPlayer(socket);
     if (!player) {
-      socket.emit(
+      return socket.emit(
         'error',
         new CustomError(
           ErrorCodes.USER_NOT_FOUND,
@@ -50,49 +45,59 @@ const playerLocationUpdateHandler = (socket, packetData) => {
           closestPoint = { PosX: point.x, PosY: point.y, PosZ: point.z }; // transform과 가장 가까운 경로상의 좌표
         }
       });
-      console.log('closestPoint : ', closestPoint);
-      console.log('transform :', transform);
-      console.log('minDistance :', minDistance);
+
+      // console.log('closestPoint : ', closestPoint);
+      // console.log('transform :', transform);
+      // console.log('minDistance :', minDistance);
+      player.setPosition(transform);
 
       if (minDistance > 1.4) {
         // 오차범위를 벗어나면 플레이어의 위치를 closestPoint로 재조정한다.
-        const syncLocationPacket = Packet.S_Chat(
-          0,
-          '플레이어의 위치를 재조정합니다.',
+        const newTransform = {
+          posX: closestPoint.PosX,
+          posY: closestPoint.PosY,
+          posZ: closestPoint.PosZ,
+          rot: transform.rot,
+        };
+        player.setPosition(newTransform);
+
+        const packet = PACKET.S2CPlayerLocation(
+          player.id,
+          newTransform,
+          false,
+          player.getSectorId(),
         );
 
-        const newTransform = { ...closestPoint, rot: transform.rot };
-        const packet = Packet.S_Location(player.id, newTransform, false);
-
-        // 위치동기화 브로드 캐스트
-        const dungeonId = player.getDungeonId();
-        if (dungeonId) {
+        const sectorCode = player.getSectorId();
+        if (sectorCode) {
           // 만약 던전이면
-          const dungeonSessions = getDungeonSessions();
-          const dungeon = dungeonSessions.getDungeon(dungeonId);
-          dungeon.notify(packet);
-          dungeon.notify(syncLocationPacket);
+          const sectorSessions = getSectorSessions();
+          const sector = sectorSessions.getSector(sectorCode);
+          sector.notify(packet);
+          // dungeon.notify(syncLocationPacket);
         } else {
           // 던전이 아니면
           playerSession.notify(packet);
-          playerSession.notify(syncLocationPacket);
         }
-
         return;
+      } else {
+        const packet = PACKET.S2CPlayerLocation(
+          player.id,
+          transform,
+          true,
+          player.getSectorId(),
+        );
+        const sectorCode = player.getSectorId();
+        if (sectorCode) {
+          // 만약 던전이면
+          const sectorSessions = getSectorSessions();
+          const sector = sectorSessions.getSector(sectorCode); // 강제로 변환
+          sector.notify(packet);
+        } else {
+          // 던전이 아니면
+          playerSession.notify(packet);
+        }
       }
-    }
-
-    const packet = Packet.S_Location(player.id, transform, true);
-
-    const dungeonId = player.getDungeonId();
-    if (dungeonId) {
-      // 만약 던전이면
-      const dungeonSessions = getDungeonSessions();
-      const dungeon = dungeonSessions.getDungeon(dungeonId);
-      dungeon.notify(packet);
-    } else {
-      // 던전이 아니면
-      playerSession.notify(packet);
     }
   } catch (error) {
     console.error(error);

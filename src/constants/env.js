@@ -14,5 +14,10 @@ export const DB1_PASSWORD = process.env.DB1_PASSWORD || 'password1';
 export const DB1_HOST = process.env.DB1_HOST || 'localhost';
 export const DB1_PORT = process.env.DB1_PORT || 3306;
 
+// Redis
+export const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
+export const REDIS_PORT = process.env.REDIS_PORT || 6379;
+export const REDIS_PASSWORD = process.env.REDIS_PASSWORD;
+
 // JWT
 export const TOKEN_SECRET_KEY = process.env.TOKEN_SECRET_KEY || 'custom_secret_key';

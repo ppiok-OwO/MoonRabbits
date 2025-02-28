@@ -5,7 +5,6 @@ import { NavMeshQuery } from 'recast-navigation';
 import { generateSoloNavMesh } from 'recast-navigation/generators';
 import { init } from 'recast-navigation';
 
-// 이유는 모르겠는데 찾아보니까 wasm 파일은 비동기로 초기화를 해줘야 한다.
 await init();
 
 // obj 파일의 절대 경로
@@ -30,9 +29,9 @@ export async function loadNavMesh(objFile) {
       }
     });
 
-    if (vertices.length === 0) throw new Error('정점 데이터가 없습니다.');
+    if (vertices.length === 0) console.log('정점 데이터가 없습니다.');
     if (indices.length === 0 || indices.length % 3 !== 0)
-      throw new Error('인덱스 데이터가 잘못되었습니다.');
+      console.log('인덱스 데이터가 잘못되었습니다.');
 
     const navMeshConfig = {
       cs: 0.1,
@@ -80,7 +79,7 @@ export async function findPath(navMesh, startPos, endPos, stepSize = 0.25) {
     const { success: endSuccess, polyRef: endRef } =
       navMeshQuery.findClosestPoint(end);
     if (!startSuccess || !endSuccess) {
-      throw new Error('탐색 가능한 네비게이션 폴리곤을 찾을 수 없습니다.');
+      console.log('탐색 가능한 네비게이션 폴리곤을 찾을 수 없습니다.');
     }
 
     // 폴리곤 기반 경로 탐색
@@ -94,7 +93,7 @@ export async function findPath(navMesh, startPos, endPos, stepSize = 0.25) {
       },
     );
     if (!success) {
-      throw new Error('경로를 찾을 수 없습니다.');
+      console.log('경로를 찾을 수 없습니다.');
     }
 
     // 경로를 실제 좌표로 변환

@@ -1,90 +1,118 @@
 import TransformInfo from './transformInfo.class.js';
-import User from './user.class.js';
-import payloadData from '../utils/packet/payloadData.js';
+import PAYLOAD_DATA from '../utils/packet/payloadData.js';
 import { config } from '../config/config.js';
-import Entity from './stat.class.js';
-class Player extends Entity {
-  constructor(user, playerId, nickname, classCode) {
-    const newplayerstat = config.newPlayerStatData.BASE_STAT_DATA[classCode];
-    try {
-      super(
-        payloadData.StatInfo(
-          newplayerstat.level,
-          newplayerstat.hp,
-          newplayerstat.maxHp,
-          newplayerstat.mp,
-          newplayerstat.maxMp,
-          newplayerstat.atk,
-          newplayerstat.def,
-          newplayerstat.magic,
-          newplayerstat.speed,
-        ),
-      );
-    } catch (error) {}
-    this.class = classCode;
+import { getGameAssets } from '../init/assets.js';
+
+class Player {
+  constructor(user, playerId, nickname, classCode, statData, sectorId = 100) {
+    const baseStat = statData;
+    this.classCode = classCode;
     this.nickname = nickname;
     this.user = user;
     this.id = playerId;
+    this.level = baseStat.level;
     this.position = new TransformInfo();
-    this.dungeonId = null;
+    this.currentSector = sectorId;
     this.lastBattleLog = 0;
     this.path = null;
+    this.exp = (statData && statData.exp) || 0;
+    this.targetExp = this._getTargetExpByLevel(this.level);
+    this.abilityPoint = baseStat.ability_point;
+    this.partyId = null;
+    this.isInvited = false;
+    this.gatheringIdx = 0;
+    this.gatheringAngle = 180;
+    this.gatheringStartTime = 0;
+    this.stamina = baseStat.stamina;
+    this.pickSpeed = baseStat.pick_speed;
+    this.moveSpeed = baseStat.move_speed;
   }
+
   sendPacket(packet) {
     try {
-      this.socket.write(packet);
+      const socket = this.user.getSocket();
+      return socket.write(packet);
     } catch (error) {
       console.error(error);
     }
   }
 
   getPlayerStatus() {
-    return payloadData.PlayerStatus(
-      this.class,
+    return PAYLOAD_DATA.PlayerStatus(
       this.getLevel(),
       this.nickname,
-      this.getMaxHp(),
-      this.getMaxMp(),
-      this.getHp(),
-      this.getMp(),
+      this.getStamina(),
+      this.getPickSpeed(),
+      this.getMoveSpeed(),
+      this.getAbilityPoint(),
     );
   }
+
   getPlayerStats() {
-    return payloadData.StatInfo(
+    return PAYLOAD_DATA.StatInfo(
       this.level,
-      this.hp,
-      this.maxHp,
-      this.mp,
-      this.maxMp,
-      this.atk,
-      this.def,
-      this.magic,
-      this.speed,
+      this.stamina,
+      this.pickSpeed,
+      this.moveSpeed,
+      this.abilityPoint,
+      this.stamina,
+      this.exp,
+      this.targetExp,
     );
   }
   getPlayerInfo() {
-    return payloadData.PlayerInfo(
+    return PAYLOAD_DATA.PlayerInfo(
       this.id,
       this.nickname,
-      this.class,
+      this.level,
+      this.classCode,
       this.position,
       this.getPlayerStats(),
+      this.currentSector,
     );
   }
-
-  setDungeonId(dungeonId) {
-    this.dungeonId = dungeonId;
+  getPosition() {
+    return {
+      x: this.position.posX,
+      y: this.position.posY,
+      z: this.position.posZ,
+    };
   }
 
-  getDungeonId() {
-    return this.dungeonId;
+  setSectorId(sectorId) {
+    return (this.currentSector = sectorId);
   }
+  setAngle(angle) {
+    this.gatheringStartTime = Date.now();
+    return (this.gatheringAngle = angle);
+  }
+  setGatheringIdx(idx) {
+    return (this.gatheringIdx = idx);
+  }
+  getGatheringIdx() {
+    return this.gatheringIdx;
+  }
+  setPartyId(partyId) {
+    this.partyId = partyId;
+  }
+
+  getPartyId() {
+    return this.partyId;
+  }
+
+  getSectorId() {
+    return this.currentSector;
+  }
+
   getPlayerStat() {
     return this.stat;
   }
 
-  resetDungeonId() {
-    this.dungeonId = null;
+  getPlayerId() {
+    return this.id;
+  }
+  setPosition(info) {
+    this.position = info;
   }
 
   setPath(path) {
@@ -93,6 +121,103 @@ class Player extends Entity {
 
   getPath() {
     return this.path;
+  }
+
+  getExp() {
+    return this.exp;
+  }
+
+  setExp(exp) {
+    this.exp = exp;
+    return this.exp;
+  }
+
+  getLevel() {
+    return this.level;
+  }
+
+  getPickSpeed() {
+    return this.pickSpeed;
+  }
+
+  getMoveSpeed() {
+    return this.moveSpeed;
+  }
+
+  getAbilityPoint() {
+    return this.abilityPoint;
+  }
+
+  levelUp() {
+    // 레벨 변경
+    const newLevel = this.level + 1;
+    this.level = newLevel;
+
+    // 요구 경험치 변경
+    const newTargetExp = this._getTargetExpByLevel(newLevel);
+    this.targetExp = newTargetExp;
+
+    // 레벨업하면 올릴 수 있는 능력치 개수
+    this.abilityPoint += 3;
+
+    return { newLevel, newTargetExp, abilityPoint: this.abilityPoint };
+  }
+
+  getTargetExp() {
+    return this.targetExp;
+  }
+
+  _getTargetExpByLevel(level) {
+    try {
+      return getGameAssets().targetExps.data.find(
+        (targetExp) => targetExp.level === level,
+      ).target_exp;
+    } catch (error) {
+      throw new Error(`${level}lv 요구경험치 조회 오류`);
+    }
+  }
+
+  addStat(statCode) {
+    if (this.abilityPoint <= 0) return false;
+
+    this.abilityPoint--;
+    switch (statCode) {
+      case 1:
+        this.stamina++;
+        break;
+      case 2:
+        this.pickSpeed++;
+        break;
+      case 3:
+        this.moveSpeed++;
+        break;
+      default:
+        throw new Error('유효하지 않은 능력치 투자 정보');
+    }
+    return true;
+  }
+
+  getStatInfo() {
+    return PAYLOAD_DATA.StatInfo(
+      this.level,
+      this.stamina,
+      this.pickSpeed,
+      this.moveSpeed,
+      this.abilityPoint,
+      this.stamina,
+      this.exp,
+      this.targetExp,
+    );
+  }
+
+  setStatInfo(statInfo) {
+    this.level = statInfo.level;
+    this.exp = statInfo.exp;
+    this.stamina = statInfo.stamina;
+    this.pickSpeed = statInfo.pickSpeed;
+    this.moveSpeed = statInfo.moveSpeed;
+    this.abilityPoint = statInfo.abilityPoint;
+    this.targetExp = statInfo.targetExp;
   }
 }
 

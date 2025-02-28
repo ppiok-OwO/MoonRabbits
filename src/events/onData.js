@@ -50,22 +50,24 @@ export const onData = (socket) => async (data) => {
       const packetData = decodedPacket(packetType, packetDataBuffer);
 
       // 디버그용 콘솔 출력, packetId 필터링해서 사용
-      if (packetId >= 0) {
+      if (packetId !== config.packetId.C2SPlayerLocation) {
         printPacket(packetSize, packetId, packetData, 'in');
       }
+      // } else console.log('C2SPlayerLocation 패킷 수신');
 
       // 패킷타입별 핸들러 실행
       try {
         const handler = getHandlerByPacketId(packetId);
         handler(socket, packetData);
       } catch (error) {
-        socket.emit(
-          'error',
-          new CustomError(
-            error.code ? error.code : ErrorCodes.HANDLER_ERROR,
-            error,
-          ),
-        );
+        // socket.emit(
+        //   'error',
+        //   new CustomError(
+        //     error.code ? error.code : ErrorCodes.HANDLER_ERROR,
+        //     error,
+        //   ),
+        // );
+        console.log(error);
       }
     }
   }

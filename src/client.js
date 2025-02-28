@@ -1,7 +1,7 @@
 import net from 'net';
 import { getProtoMessages, loadProtos } from './init/loadProtos.js';
 import { config, packetIdEntries } from './config/config.js';
-import Packet from './utils/packet/packet.js';
+import PACKET from './utils/packet/packet.js';
 import CustomError from './utils/error/customError.js';
 import { ErrorCodes } from './utils/error/errorCodes.js';
 import printPacket from './utils/log/printPacket.js';
@@ -18,12 +18,12 @@ client.connect(PORT, HOST, async () => {
   console.log('Connected to server');
   await loadProtos();
 
-  const enterPacket = Packet.C_Enter('테스트클라', '1001');
+  const enterPacket = PACKET.C_Enter('테스트클라', '1001');
   client.write(enterPacket);
 
   await delay(500);
 
-  const movePacket = Packet.C_Move(
+  const movePacket = PACKET.C_Move(
     -4.5963,
     0.6657553,
     136.5156,

@@ -1,32 +1,21 @@
-import { config } from '../../config/config.js';
-import {
-  getDungeonSessions,
-  getPlayerSession,
-} from '../../session/sessions.js';
-import makePacket from '../../utils/packet/makePacket.js';
-import payload from '../../utils/packet/payload.js';
+import { getSectorSessions, getPlayerSession } from '../../session/sessions.js';
+import PACKET from '../../utils/packet/packet.js';
 
 const playerSpawnNotificationHandler = (socket, packetData) => {
   const playerSession = getPlayerSession();
-  const currentPlayer = playerSession.getPlayer(socket);
-  const players = playerSession.getAllPlayers();
+  const player = playerSession.getPlayer(socket);
+  const sectorCode = player.getSectorId();
+  const targetSector = getSectorSessions().getSector(sectorCode);
 
-  //클라이언트에서 자신을 제외처리해야함
-  const playerInfoArray = Array.from(players.values()).map((player) => {
-    return player.getPlayerInfo();
-  });
+  const playerInfos = Array.from(targetSector.getAllPlayer().values()).map(
+    (player) => {
+      return player.getPlayerInfo();
+    },
+  );
 
-  const spawn = payload.S_Spawn(playerInfoArray);
-  const packet = makePacket(config.packetId.S_Spawn, spawn);
-  const dungeonId = playerSession.getPlayer(socket).getDungeonId();
+  const packet = PACKET.S2CSpawn(playerInfos);
 
-  if (dungeonId) {
-    const dungeonSessions = getDungeonSessions();
-    const dungeon = dungeonSessions.getDungeon(dungeonId);
-    dungeon?.notify(packet);
-  } else {
-    playerSession.notify(packet);
-  }
+  targetSector.notify(packet);
 };
 
 export default playerSpawnNotificationHandler;
