@@ -23,6 +23,7 @@ export const kickOutPartyHandler = (socket, packetData) => {
         ),
       );
     }
+    const members = party.getAllMembers();
 
     const playerSession = getPlayerSession();
 
@@ -49,11 +50,14 @@ export const kickOutPartyHandler = (socket, packetData) => {
     }
 
     // 퇴출시키려는 멤버가 파티에 존재하는가?
-    const member = party
-      .getAllMemberEntries()
-      .find(([key, value]) => value.id === memberId);
     // member = ['Socket', { Player 인스턴스 }]
+    let member;
 
+    for (const [key, value] of members) {
+      if (value.id === memberId) {
+        member = [key, value];
+      }
+    }
     if (!member) {
       return socket.emit(
         'error',
@@ -68,7 +72,6 @@ export const kickOutPartyHandler = (socket, packetData) => {
     party.removeMember(memberId);
 
     // 각 멤버에 대하여 맞춤형 패킷 생성
-    const members = party.getAllMembers();
 
     members.forEach((value, key) => {
       const packet = PACKET.S2CKickOutMember(
