@@ -141,6 +141,7 @@ export const config = {
     testfield: 2,
     S1: 101,
     S2: 102,
+    S3: 103,
   },
   animCode: {
     happy: 111,
