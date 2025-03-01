@@ -6,7 +6,7 @@ import {
 import CustomError from '../../../utils/error/customError.js';
 import { ErrorCodes } from '../../../utils/error/errorCodes.js';
 import handleError from '../../../utils/error/errorHandler.js';
-import Packet from '../../../utils/packet/packet.js';
+import PACKET from '../../../utils/packet/packet.js';
 
 export const joinPartyHandler = (socket, packetData) => {
   try {
@@ -43,7 +43,7 @@ export const joinPartyHandler = (socket, packetData) => {
       const partyId = party.getId();
       player.setPartyId(partyId);
     } else {
-      const packet = Packet.S2CChat(
+      const packet = PACKET.S2CChat(
         0,
         '해당 파티는 정원이 모두 찼으므로 참가할 수 없습니다.',
         'System',
@@ -53,10 +53,10 @@ export const joinPartyHandler = (socket, packetData) => {
     }
 
     // 각 멤버에 대하여 맞춤형 패킷 생성
-    const members = party.getAllMemberEntries();
+    const members = party.getAllMembers();
 
-    members.forEach(([key, value]) => {
-      const packet = Packet.S2CJoinParty(
+    members.forEach((value, key) => {
+      const packet = PACKET.S2CJoinParty(
         party.getId(),
         party.getPartyLeaderId(),
         party.getMemberCount(),

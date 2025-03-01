@@ -2,7 +2,7 @@ import { getSectorSessions, getPlayerSession } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import handleError from '../../utils/error/errorHandler.js';
-import Packet from '../../utils/packet/packet.js';
+import PACKET from '../../utils/packet/packet.js';
 import { config } from '../../config/config.js';
 
 // !!! 패킷 변경에 따라 S_Animation -> S2CAnimation, S_Chat -> S2CChat으로 일괄 수정해씀다
@@ -24,17 +24,17 @@ export const animationHandler = (socket, packetData) => {
       );
     }
 
-    const sectorId = player.getSectorId();
+    const sectorCode = player.getSectorId();
 
     // 패킷 직렬화
     // const packet = Packet.S_Animation(player.getId(), animCode);
-    const packet = Packet.S2CAnimation(player.id, animCode, sectorId);
+    const packet = PACKET.S2CAnimation(player.id, animCode, sectorCode);
 
     // 채팅창 알림 패킷 생성
     let chatPacket;
     switch (animCode) {
       case config.animCode.happy:
-        chatPacket = Packet.S2CChat(
+        chatPacket = PACKET.S2CChat(
           0,
           `${player.nickname}님이 행복한 표정을 짓습니다.`,
           'System',
@@ -43,7 +43,7 @@ export const animationHandler = (socket, packetData) => {
         break;
 
       case config.animCode.sad:
-        chatPacket = Packet.S2CChat(
+        chatPacket = PACKET.S2CChat(
           0,
           `${player.nickname}님이 무척 슬퍼합니다.`,
           'System',
@@ -52,7 +52,7 @@ export const animationHandler = (socket, packetData) => {
         break;
 
       case config.animCode.greeting:
-        chatPacket = Packet.S2CChat(
+        chatPacket = PACKET.S2CChat(
           0,
           `${player.nickname}님이 반갑게 인사합니다.`,
           'System',
@@ -64,7 +64,7 @@ export const animationHandler = (socket, packetData) => {
         break;
     }
 
-    if (sectorId) {
+    if (sectorCode) {
       // 만약 던전이면
       const sectorSessions = getSectorSessions();
       const sector = sectorSessions.getSector(sectorId);

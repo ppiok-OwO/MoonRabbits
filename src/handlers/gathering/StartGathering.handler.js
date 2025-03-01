@@ -1,4 +1,4 @@
-import Packet from '../../utils/packet/packet.js';
+import PACKET from '../../utils/packet/packet.js';
 import handleError from '../../utils/error/errorHandler.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
@@ -13,7 +13,7 @@ export const StartGatheringHandler = (socket, packetData) => {
   player.setGatheringIdx(placedId);
   if (resource.getDurability() > 0) {
     return socket.write(
-      Packet.S2CGatheringStart(
+      PACKET.S2CGatheringStart(
         placedId,
         player.setAngle(resource.getAngle()),
         resource.getDifficulty(),

@@ -5,7 +5,7 @@ import {
 import CustomError from '../../../utils/error/customError.js';
 import { ErrorCodes } from '../../../utils/error/errorCodes.js';
 import handleError from '../../../utils/error/errorHandler.js';
-import Packet from '../../../utils/packet/packet.js';
+import PACKET from '../../../utils/packet/packet.js';
 
 export const kickOutPartyHandler = (socket, packetData) => {
   try {
@@ -23,6 +23,7 @@ export const kickOutPartyHandler = (socket, packetData) => {
         ),
       );
     }
+    const members = party.getAllMembers();
 
     const playerSession = getPlayerSession();
 
@@ -49,11 +50,14 @@ export const kickOutPartyHandler = (socket, packetData) => {
     }
 
     // 퇴출시키려는 멤버가 파티에 존재하는가?
-    const member = party
-      .getAllMemberEntries()
-      .find(([key, value]) => value.id === memberId);
     // member = ['Socket', { Player 인스턴스 }]
+    let member;
 
+    for (const [key, value] of members) {
+      if (value.id === memberId) {
+        member = [key, value];
+      }
+    }
     if (!member) {
       return socket.emit(
         'error',
@@ -68,10 +72,9 @@ export const kickOutPartyHandler = (socket, packetData) => {
     party.removeMember(memberId);
 
     // 각 멤버에 대하여 맞춤형 패킷 생성
-    const members = party.getAllMemberEntries();
 
-    members.forEach(([key, value]) => {
-      const packet = Packet.S2CKickOutMember(
+    members.forEach((value, key) => {
+      const packet = PACKET.S2CKickOutMember(
         party.getId(),
         party.getPartyLeaderId(),
         party.getMemberCount(),
@@ -79,7 +82,7 @@ export const kickOutPartyHandler = (socket, packetData) => {
       );
       key.write(packet);
     });
-    const msgToParty = Packet.S2CChat(
+    const msgToParty = PACKET.S2CChat(
       0,
       `${member[1].nickname}님이 파티에서 추방되었습니다.`,
       'System',
@@ -88,7 +91,7 @@ export const kickOutPartyHandler = (socket, packetData) => {
 
     // 퇴출된 멤버에게 메시지 전송
     const msgToKickedMember =
-      Packet.S2CDisbandParty('파티에서 추방되었습니다.');
+      PACKET.S2CDisbandParty('파티에서 추방되었습니다.');
     member[0].write(msgToKickedMember);
   } catch (error) {
     handleError(socket, error);

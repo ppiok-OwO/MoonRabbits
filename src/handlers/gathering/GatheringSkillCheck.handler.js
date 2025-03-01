@@ -1,4 +1,4 @@
-import Packet from '../../utils/packet/packet.js';
+import PACKET from '../../utils/packet/packet.js';
 import { getPlayerSession, getSectorSessions } from '../../session/sessions.js';
 import handleError from '../../utils/error/errorHandler.js';
 import CustomError from '../../utils/error/customError.js';
@@ -19,15 +19,15 @@ export const gatheringSkillCheckHandler = (socket, packetData) => {
       )
     ) {
       const durability = sector.resources[placedId].subDurability();
-      if(durability < 0){
-        const packet = Packet.S2CChat(0, '이미 소모된 자원입니다.', 'System');
+      if (durability < 0) {
+        const packet = PACKET.S2CChat(0, '이미 소모된 자원입니다.', 'System');
         return socket.write(packet);
       }
 
-      socket.write(Packet.S2CGatheringSkillCheck(placedId , durability));
+      socket.write(PACKET.S2CGatheringSkillCheck(placedId, durability));
 
       const dropItem = sector.resources[placedId].dropItem();
-      socket.write(Packet.S2CGatheringDone(placedId , dropItem, 1));
+      socket.write(PACKET.S2CGatheringDone(placedId, dropItem.item, 1));
 
       // 나중에 아이템 받아오는 내역 필요함
 
@@ -39,7 +39,7 @@ export const gatheringSkillCheckHandler = (socket, packetData) => {
 
       if (durability <= 0) {
         setTimeout(
-          () => sector.resetDurability(placedId ),
+          () => sector.resetDurability(placedId),
           sector.resources[placedId].getRespawnTime(),
         );
       }
