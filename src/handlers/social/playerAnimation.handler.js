@@ -38,7 +38,7 @@ export const animationHandler = (socket, packetData) => {
           0,
           `${player.nickname}님이 행복한 표정을 짓습니다.`,
           'System',
-          sectorId,
+          sectorCode,
         );
         break;
 
@@ -47,7 +47,7 @@ export const animationHandler = (socket, packetData) => {
           0,
           `${player.nickname}님이 무척 슬퍼합니다.`,
           'System',
-          sectorId,
+          sectorCode,
         );
         break;
 
@@ -56,7 +56,7 @@ export const animationHandler = (socket, packetData) => {
           0,
           `${player.nickname}님이 반갑게 인사합니다.`,
           'System',
-          sectorId,
+          sectorCode,
         );
         break;
 
@@ -67,7 +67,7 @@ export const animationHandler = (socket, packetData) => {
     if (sectorCode) {
       // 만약 던전이면
       const sectorSessions = getSectorSessions();
-      const sector = sectorSessions.getSector(sectorId);
+      const sector = sectorSessions.getSector(sectorCode);
       sector.notify(packet);
       sector.notify(chatPacket);
     } else {
