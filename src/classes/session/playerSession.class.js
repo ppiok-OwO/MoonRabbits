@@ -4,7 +4,6 @@ import Player from '../player.class.js';
 import { getSectorSessions, getPartySessions } from '../../session/sessions.js';
 import { leavePartyHandler } from '../../handlers/social/party/leaveParty.handler.js';
 import PACKET from '../../utils/packet/packet.js';
-import IntervalManager from '../manager/interval.manager.js';
 
 class PlayerSession {
   players = new Map();
@@ -37,9 +36,9 @@ class PlayerSession {
       const sector = SectorSessionManager.getSector(playerSectorId);
       sector.deletePlayer(player.user.socket);
       const partyId = player.getPartyId();
-      if(partyId){
+      if (partyId) {
         const party = partySessionManager.getParty(partyId);
-        leavePartyHandler(socket, {partyId, leftPlayerId: player.id});
+        leavePartyHandler(socket, { partyId, leftPlayerId: player.id });
       }
       // 디스폰
       sector.notify(PACKET.S2CDespawn([player.id], playerSectorId));

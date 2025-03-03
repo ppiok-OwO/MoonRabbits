@@ -14,7 +14,7 @@ import PathValidator from '../../utils/validate/pathValidator.js';
 // ]
 
 // 이동중이라면 10프레임마다 location 패킷 전송
-const playerLocationUpdateHandler = (socket, packetData) => {
+const playerLocationUpdateHandler = async (socket, packetData) => {
   try {
     const { transform } = packetData;
     // 플레이어 세션을 통해 플레이어 인스턴스를 불러온다.
@@ -98,14 +98,6 @@ const playerLocationUpdateHandler = (socket, packetData) => {
     console.error(error);
   }
 };
-
-// calculateDistance 함수는 이제 PathValidator에서 처리하므로 제거 가능
-// function calculateDistance(point1, transform) {
-//   const dx = point1.x - transform.posX;
-//   const dy = point1.y - transform.posY;
-//   const dz = point1.z - transform.posZ;
-//   return Math.sqrt(dx * dx + dy * dy + dz * dz);
-// }
 
 function predictPosition(socket, player, transform, latency) {
   // 직전 좌표와 transform의 좌표를 빼서 방향벡터를 구하고 노말라이즈
