@@ -16,50 +16,38 @@ const PAYLOAD = {
   S2CCreateCharacter: (isSuccess_bool, msg_string) => {
     return { isSuccess: isSuccess_bool, msg: msg_string };
   },
-  S2CEnter: (player_PlayerInfo) => {
-    return { player: player_PlayerInfo };
+  S2CEnter: (targetSector_int32, player_PlayerInfo) => {
+    return { targetSector: targetSector_int32, player: player_PlayerInfo };
   },
-  S2CAnimation: (playerId_int32, animCode_int32, currentSector_int32) => {
-    return {
-      playerId: playerId_int32,
-      animCode: animCode_int32,
-      currentSector: currentSector_int32,
-    };
+  S2CEmote: (playerId_int32, animCode_int32) => {
+    return { playerId: playerId_int32, animCode: animCode_int32 };
   },
-  S2CChat: (
-    playerId_int32,
-    chatMsg_string,
-    chatType_string,
-    currentSector_int32,
-  ) => {
+  S2CChat: (playerId_int32, chatMsg_string, chatType_string) => {
     return {
       playerId: playerId_int32,
       chatMsg: chatMsg_string,
       chatType: chatType_string,
-      currentSector: currentSector_int32,
     };
   },
   S2CSpawn: (players_PlayerInfo_repeated) => {
     return { players: players_PlayerInfo_repeated };
   },
-  S2CDespawn: (playerIds_int32_repeated, currentSector_int32) => {
-    return {
-      playerIds: playerIds_int32_repeated,
-      currentSector: currentSector_int32,
-    };
+  S2CDespawn: (playerIds_int32_repeated) => {
+    return { playerIds: playerIds_int32_repeated };
   },
   S2CPlayerLocation: (
     playerId_int32,
     transform_TransformInfo,
     isValidTransform_bool,
-    currentSector_int32,
   ) => {
     return {
       playerId: playerId_int32,
       transform: transform_TransformInfo,
       isValidTransform: isValidTransform_bool,
-      currentSector: currentSector_int32,
     };
+  },
+  S2CPortal: (outPortalLocation_Vec3) => {
+    return { outPortalLocation: outPortalLocation_Vec3 };
   },
   S2CUpdateRanking: (status_string, data_RankingList) => {
     return { status: status_string, data: data_RankingList };
@@ -189,45 +177,38 @@ const PAYLOAD = {
       quantity: quantity_int32,
     };
   },
-  S2CRecall: (playerId_int32, currentSector_int32, recallTimer_int32) => {
-    return {
-      playerId: playerId_int32,
-      currentSector: currentSector_int32,
-      recallTimer: recallTimer_int32,
-    };
+  S2CRecall: (playerId_int32, recallTimer_int32) => {
+    return { playerId: playerId_int32, recallTimer: recallTimer_int32 };
   },
-  S2CThrowGrenade: (
-    playerId_int32,
-    currentSector_int32,
-    velocity_Vec3,
-    coolTime_int32,
-  ) => {
+  S2CThrowGrenade: (playerId_int32, velocity_Vec3, coolTime_int32) => {
     return {
       playerId: playerId_int32,
-      currentSector: currentSector_int32,
       velocity: velocity_Vec3,
       coolTime: coolTime_int32,
     };
   },
+  S2CTraps: (traps_TrapInfo_repeated) => {
+    return { traps: traps_TrapInfo_repeated };
+  },
+  S2CSetTrap: (trapInfo_TrapInfo, coolTime_int32) => {
+    return { trapInfo: trapInfo_TrapInfo, coolTime: coolTime_int32 };
+  },
+  S2CRemoveTrap: (trapInfos_TrapInfo_repeated) => {
+    return { trapInfos: trapInfos_TrapInfo_repeated };
+  },
   S2CStun: (
-    currentSector_int32,
     stunTimer_int32,
     playerIds_int32_repeated,
     monsterIds_int32_repeated,
   ) => {
     return {
-      currentSector: currentSector_int32,
       stunTimer: stunTimer_int32,
       playerIds: playerIds_int32_repeated,
       monsterIds: monsterIds_int32_repeated,
     };
   },
-  S2CEquipChange: (playerId_int32, currentSector_int32, nextEquip_int32) => {
-    return {
-      playerId: playerId_int32,
-      currentSector: currentSector_int32,
-      nextEquip: nextEquip_int32,
-    };
+  S2CEquipChange: (playerId_int32, nextEquip_int32) => {
+    return { playerId: playerId_int32, nextEquip: nextEquip_int32 };
   },
   S2CAddExp: (updatedExp_int32) => {
     return { updatedExp: updatedExp_int32 };
@@ -249,6 +230,16 @@ const PAYLOAD = {
   },
   S2CInvestPoint: (statInfo_StatInfo) => {
     return { statInfo: statInfo_StatInfo };
+  },
+  S2CCraft: (craftedItemId_int32, count_int32, slot_int32) => {
+    return {
+      craftedItemId: craftedItemId_int32,
+      count: count_int32,
+      slot: slot_int32,
+    };
+  },
+  S2CPing: (timestamp_int64) => {
+    return { timestamp: timestamp_int64 };
   },
 };
 
