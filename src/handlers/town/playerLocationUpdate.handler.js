@@ -2,6 +2,7 @@ import { getSectorSessions, getPlayerSession } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import PACKET from '../../utils/packet/packet.js';
+import PathValidator from '../../utils/validate/pathValidator.js';
 
 // !!! 패킷 변경에 따라 S_Chat -> S2CChat, S_Location -> S2CPlayerLocation으로 일괄 수정해씀다
 
@@ -16,7 +17,6 @@ import PACKET from '../../utils/packet/packet.js';
 const playerLocationUpdateHandler = (socket, packetData) => {
   try {
     const { transform } = packetData;
-
     // 플레이어 세션을 통해 플레이어 인스턴스를 불러온다.
     const playerSession = getPlayerSession();
     const player = playerSession.getPlayer(socket);
@@ -35,17 +35,11 @@ const playerLocationUpdateHandler = (socket, packetData) => {
       console.log('생성된 경로가 없음!!');
       player.setPosition(transform);
     } else {
-      // transform의 좌표로부터 가장 가까운 path상의 좌표 구하기
-      // 두 좌표 사이의 거리가 루트2(대락 1.4)보다 작아야 한다.
-      let minDistance = Infinity;
-      let closestPoint = null;
-      path.forEach((point) => {
-        const distance = calculateDistance(point, transform);
-        if (distance < minDistance) {
-          minDistance = distance;
-          closestPoint = { PosX: point.x, PosY: point.y, PosZ: point.z }; // transform과 가장 가까운 경로상의 좌표
-        }
-      });
+      // PathValidator 사용하여 가장 가까운 경로 포인트 찾기
+      const validationResult = await PathValidator.validatePosition(
+        path,
+        transform,
+      );
 
       const latency = player.user.getLatency() / 1000;
       const predictedPos = predictPosition(socket, player, transform, latency);
@@ -53,16 +47,16 @@ const playerLocationUpdateHandler = (socket, packetData) => {
       // 추측항법이 끝난 뒤에 플레이어 포지션 업데이트
       player.setPosition(transform);
 
-      if (minDistance > 1.4) {
-        // 플레이어의 위치가 오차범위를 벗어났다면 closestPoint로 재조정한다.
+      if (validationResult && validationResult.distance > 1.4) {
+        // 오차범위를 벗어나면 플레이어의 위치를 가장 가까운 포인트로 재조정
         const newTransform = {
-          posX: closestPoint.PosX,
-          posY: closestPoint.PosY,
-          posZ: closestPoint.PosZ,
+          posX: validationResult.point.PosX,
+          posY: validationResult.point.PosY,
+          posZ: validationResult.point.PosZ,
           rot: transform.rot,
         };
-        player.setPosition(newTransform);
 
+        player.setPosition(newTransform);
         const packet = PACKET.S2CPlayerLocation(
           player.id,
           newTransform,
@@ -77,7 +71,6 @@ const playerLocationUpdateHandler = (socket, packetData) => {
           const sector = sectorSessions.getSector(sectorCode);
           sector.notify(packet);
         } else {
-          // 던전이 아니면
           playerSession.notify(packet);
         }
         return;
@@ -89,12 +82,11 @@ const playerLocationUpdateHandler = (socket, packetData) => {
           true,
           player.getSectorId(),
         );
-
         const sectorCode = player.getSectorId();
         if (sectorCode) {
           // 만약 던전이면
           const sectorSessions = getSectorSessions();
-          const sector = sectorSessions.getSector(sectorCode); // 강제로 변환
+          const sector = sectorSessions.getSector(sectorCode);
           sector.notify(packet);
         } else {
           // 던전이 아니면
@@ -107,12 +99,13 @@ const playerLocationUpdateHandler = (socket, packetData) => {
   }
 };
 
-function calculateDistance(point1, transform) {
-  const dx = point1.x - transform.posX;
-  const dy = point1.y - transform.posY;
-  const dz = point1.z - transform.posZ;
-  return Math.sqrt(dx * dx + dy * dy + dz * dz);
-}
+// calculateDistance 함수는 이제 PathValidator에서 처리하므로 제거 가능
+// function calculateDistance(point1, transform) {
+//   const dx = point1.x - transform.posX;
+//   const dy = point1.y - transform.posY;
+//   const dz = point1.z - transform.posZ;
+//   return Math.sqrt(dx * dx + dy * dy + dz * dz);
+// }
 
 function predictPosition(socket, player, transform, latency) {
   // 직전 좌표와 transform의 좌표를 빼서 방향벡터를 구하고 노말라이즈
