@@ -51,7 +51,7 @@ class Party {
   }
 
   getAllMembers() {
-    return this.members.values();
+    return this.members;
   }
 
   getAllMemberEntries() {
@@ -94,8 +94,8 @@ class Party {
   }
 
   disbandParty() {
-    const members = this.getAllMemberEntries();
-    members.forEach(([key, value]) => {
+    const members = this.getAllMembers();
+    members.forEach((value, key) => {
       value.partyId = null;
     });
     this.members.clear();
