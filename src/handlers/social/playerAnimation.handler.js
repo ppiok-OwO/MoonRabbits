@@ -28,7 +28,7 @@ export const animationHandler = (socket, packetData) => {
 
     // 패킷 직렬화
     // const packet = Packet.S_Animation(player.getId(), animCode);
-    const packet = PACKET.S2CAnimation(player.id, animCode, sectorCode);
+    const packet = PACKET.S2CEmote(player.id, animCode);
 
     // 채팅창 알림 패킷 생성
     let chatPacket;
@@ -38,7 +38,6 @@ export const animationHandler = (socket, packetData) => {
           0,
           `${player.nickname}님이 행복한 표정을 짓습니다.`,
           'System',
-          sectorCode,
         );
         break;
 
@@ -47,7 +46,6 @@ export const animationHandler = (socket, packetData) => {
           0,
           `${player.nickname}님이 무척 슬퍼합니다.`,
           'System',
-          sectorCode,
         );
         break;
 
@@ -56,7 +54,6 @@ export const animationHandler = (socket, packetData) => {
           0,
           `${player.nickname}님이 반갑게 인사합니다.`,
           'System',
-          sectorCode,
         );
         break;
 

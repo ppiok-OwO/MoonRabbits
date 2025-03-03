@@ -17,8 +17,8 @@ enum MsgId {
   C2S_MOVE_SECTOR=12;
   S2C_MOVE_SECTOR=13;
 
-  C2S_ANIMATION=14;
-  S2C_ANIMATION=15;
+  C2S_EMOTE=14;
+  S2C_EMOTE=15;
 
   C2S_CHAT=20;
   S2C_CHAT=21;
@@ -84,10 +84,15 @@ enum MsgId {
   S2C_RECALL = 161;
   C2S_THROW_GRENADE = 162;
   S2C_THROW_GRENADE = 163;
-  C2S_STUN = 166;
-  S2C_STUN = 167;
-  C2S_EQUIP_CHANGE = 168;
-  S2C_EQUIP_CHANGE = 169;
+  S2C_TRAPS = 164;
+  C2S_SET_TRAP = 165;
+  S2C_SET_TRAP = 166;
+  C2S_REMOVE_TRAP = 167;
+  S2C_REMOVE_TRAP = 168;
+  C2S_STUN = 169;
+  S2C_STUN = 170;
+  C2S_EQUIP_CHANGE = 171;
+  S2C_EQUIP_CHANGE = 172;
 
   C2S_ADD_EXP=200;
   S2C_ADD_EXP=201;
@@ -129,20 +134,20 @@ message C2SEnter{
   int32 targetSector = 3;
 }
 message S2CEnter{
-  PlayerInfo player = 1;
+  int32 targetSector = 1;
+  PlayerInfo player = 2;
 }
 message C2SMoveSector{
   optional int32 targetSector = 1;
 }
 message S2CMoveSector{}
 
-message C2SAnimation{
+message C2SEmote{
   int32 animCode = 1;
 }
-message S2CAnimation{
+message S2CEmote{
   int32 playerId = 1;
   int32 animCode = 2;
-  int32 currentSector = 3;
 }
 
 message C2SChat{
@@ -156,7 +161,6 @@ message S2CChat{
   int32 playerId = 1;
   string chatMsg = 2;
   string chatType = 3;
-  int32 currentSector = 4;
 }
 
 message S2CSpawn{
@@ -164,7 +168,6 @@ message S2CSpawn{
 }
 message S2CDespawn{
   repeated int32 playerIds = 1;
-  int32 currentSector = 2;
 }
 
 message C2SPlayerMove{
@@ -183,8 +186,6 @@ message S2CPlayerLocation{
   int32 playerId = 1;
   TransformInfo transform = 2;
   bool isValidTransform = 3;
-  int32 currentSector = 4;
-
 }
 message C2SPlayerRunning{} 
 message S2CPlayerRunning{} 
@@ -355,8 +356,7 @@ message C2SResourcesList{
 message C2SRecall {}
 message S2CRecall {
   int32 playerId = 1;
-  int32 currentSector = 2;
-  int32 recallTimer = 3;
+  int32 recallTimer = 2;
 }
 message C2SThrowGrenade {
   Vec3 startPos = 1;
@@ -364,9 +364,24 @@ message C2SThrowGrenade {
 }
 message S2CThrowGrenade {
   int32 playerId = 1;
-  int32 currentSector = 2;
-  Vec3 velocity = 3;
-  int32 coolTime = 4;
+  Vec3 velocity = 2;
+  int32 coolTime = 3;
+}
+message S2CTraps {
+  repeated TrapInfo traps = 1;
+}
+message C2SSetTrap {
+  Vec3 trapPos = 1;
+}
+message S2CSetTrap {
+  TrapInfo trapInfo = 1;
+  int32 coolTime = 2;
+}
+message C2SRemoveTrap {
+  TrapInfo trapInfo = 1;
+}
+message S2CRemoveTrap {
+  repeated TrapInfo trapInfos = 1;
 }
 message C2SStun {
   int32 skillType = 1;
@@ -374,18 +389,16 @@ message C2SStun {
   repeated int32 monsterIds = 3;
 }
 message S2CStun {
-  int32 currentSector = 1;
-  int32 stunTimer = 2;
-  repeated int32 playerIds = 3;
-  repeated int32 monsterIds = 4;
+  int32 stunTimer = 1;
+  repeated int32 playerIds = 2;
+  repeated int32 monsterIds = 3;
 }
 message C2SEquipChange {
   int32 nextEquip = 1;
 }
 message S2CEquipChange {
   int32 playerId = 1;
-  int32 currentSector = 2;
-  int32 nextEquip = 3;
+  int32 nextEquip = 2;
 }
 
 message C2SAddExp {
@@ -416,7 +429,6 @@ message PlayerInfo {
   int32 classCode = 4; 
   TransformInfo transform = 5;
   StatInfo statInfo = 6;
-  int32 currentSector = 7;
 }
 
 message PlayerRank {
@@ -533,4 +545,9 @@ message InventorySlot {
   int32 slotIdx = 1;
   int32 itemId = 2;
   int32 stack = 3;
+}
+
+message TrapInfo {
+  int32 casterId = 1;
+  Vec3 pos = 2;
 }

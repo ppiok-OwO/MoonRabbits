@@ -3,13 +3,12 @@ import PACKET from '../../utils/packet/packet.js';
 
 const equipChangeHandler = (socket, packetData) => {
   const { nextEquip } = packetData;
+
   const player = getPlayerSession().getPlayer(socket);
 
-  const sectorCode = player.getSectorId();
-  const packet = PACKET.S2CEquipChange(player.id, sectorCode, nextEquip);
-
-  const sectorSessions = getSectorSessions();
-  const sector = sectorSessions.getSector(sectorCode);
+  const packet = PACKET.S2CEquipChange(player.id, nextEquip);
+  
+  const sector =  getSectorSessions().getSector(player.getSectorId());
   sector.notify(packet);
 };
 
