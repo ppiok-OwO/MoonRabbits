@@ -3,6 +3,7 @@ import redisClient from '../../utils/redis/redis.config.js';
 import Player from '../player.class.js';
 import { getSectorSessions } from '../../session/sessions.js';
 import { config } from '../../config/config.js';
+import IntervalManager from '../manager/interval.manager.js';
 
 class PlayerSession {
   players = new Map();
@@ -17,10 +18,6 @@ class PlayerSession {
       statData,
     );
     this.players.set(socket, newPlayer);
-
-    // getSectorSessions()
-    //   .getSector(config.sector.town)
-    //   .setPlayer(socket, newPlayer);
 
     // @@@ getSector가 sectorId로 탐색해서 수정 @@@
     getSectorSessions().getSector(100).setPlayer(socket, newPlayer);

@@ -122,6 +122,8 @@ export const config = {
     C2SInvestPoint: PACKET_ID.C2SInvestPoint,
     S2CInvestPoint: PACKET_ID.S2CInvestPoint,
     S2CInventoryUpdate: PACKET_ID.S2CInventoryUpdate,
+    S2CPing: PACKET_ID.S2CPing,
+    C2SPong: PACKET_ID.C2SPong,
   },
   newPlayerStatData: {
     BASE_STAT_DATA,

@@ -78,4 +78,6 @@ export const PACKET_ID = {
   S2CLevelUp: 202,
   C2SInvestPoint: 203,
   S2CInvestPoint: 204,
+  S2CPing: 254,
+  C2SPong: 255,
 };

@@ -32,6 +32,8 @@ enum MsgId {
   S2C_PLAYER_LOCATION=33;
   C2S_PLAYER_RUNNING=34;
   S2C_PLAYER_RUNNING=35;
+  C2S_PORTAL=36;
+  S2C_PORTAL=37;
 
   C2S_RANKING_LIST=50;
   S2C_UPDATE_RANKING=51;
@@ -94,6 +96,9 @@ enum MsgId {
   S2C_LEVEL_UP=202;
   C2S_INVEST_POINT=203;
   S2C_INVEST_POINT=204;
+
+  S2C_PING=254;
+  C2S_PONG=255;
 }
 
 message C2SRegister{
@@ -406,6 +411,19 @@ message C2SInvestPoint {
 }
 message S2CInvestPoint {
   StatInfo statInfo = 1;
+}
+message C2SPortal {
+  int32 inPortalId = 1;
+  int32 outPortalId = 2;
+}
+message S2CPortal {
+  Vec3 outPortalLocation = 1;
+}
+message S2CPing {
+  int64 timestamp = 1;
+}
+message C2SPong {
+  int64 timestamp = 1;
 }
 
 /* 구조체 */

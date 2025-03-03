@@ -32,6 +32,7 @@ import stunHandler from './playerAction/stun.handler.js';
 import equipChangeHandler from './playerAction/equipChange.handler.js';
 import { collisionHandler } from './collision/collision.handler.js';
 import { resourceListHandler } from './gathering/ResourceList.handler.js';
+import { pongHandler } from './pong.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
@@ -73,6 +74,8 @@ const handlers = {
   [config.packetId.C2SThrowGrenade]: throwGrenadeHandler,
   [config.packetId.C2SStun]: stunHandler,
   [config.packetId.C2SEquipChange]: equipChangeHandler,
+
+  [config.packetId.C2SPong]: pongHandler,
 };
 
 export const getHandlerByPacketId = (packetId) => {

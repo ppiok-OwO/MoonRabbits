@@ -75,4 +75,6 @@ export const packetNames = [
   'S2CLevelUp',
   'C2SInvestPoint',
   'S2CInvestPoint',
+  'S2CPing',
+  'C2SPong',
 ];
