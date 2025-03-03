@@ -45,7 +45,7 @@ class PlayerSession {
         leavePartyHandler(socket, {partyId, leftPlayerId: player.id});
       }
       // 디스폰
-      sector.notify(PACKET.S2CDespawn([player.id], playerSectorId));
+      sector.notify(PACKET.S2CDespawn([player.id]));
 
       this.players.delete(socket);
 
