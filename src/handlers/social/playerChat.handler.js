@@ -41,7 +41,6 @@ export const chatHandler = (socket, packetData) => {
         0,
         '채팅 전송에 실패하였습니다.',
         'System',
-        sectorId,
       );
       socket.write(warningPacket);
     }

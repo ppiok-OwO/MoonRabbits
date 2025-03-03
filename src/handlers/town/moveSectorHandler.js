@@ -31,21 +31,21 @@ const moveSectorHandler = (socket, packetData) => {
       return socket.write(packet);
     }
 
-  try {
-    // 현재는 섹터가 한개씩 존재함으로 섹터 코드로 탐색
-    const newSector = getSectorSessions().getSectorByCode(targetSector);
-    if (!newSector) {
-      const packet = PACKET.S2CChat(0, '섹터가 존재하지 않습니다.', 'System');
-      return socket.write(packet);
-    }
-    // 디스폰
-    prevSector.notify(
-      PACKET.S2CDespawn(
-        partyMembers.map((partyMember) => {
-          return partyMember.id;
-        }),
-      ),
-    );
+    try {
+      // 현재는 섹터가 한개씩 존재함으로 섹터 코드로 탐색
+      const newSector = getSectorSessions().getSectorByCode(targetSector);
+      if (!newSector) {
+        const packet = PACKET.S2CChat(0, '섹터가 존재하지 않습니다.', 'System');
+        return socket.write(packet);
+      }
+      // 디스폰
+      prevSector.notify(
+        PACKET.S2CDespawn(
+          partyMembers.map((partyMember) => {
+            return partyMember.id;
+          }),
+        ),
+      );
 
       partyMembers.forEach((member) => {
         member.setSectorId(newSector.getSectorId());
@@ -53,16 +53,16 @@ const moveSectorHandler = (socket, packetData) => {
         newSector.setPlayer(member.user.socket, member);
         const memberSocket = member.user.getSocket();
         memberSocket.write(
-        PACKET.S2CEnter(newSector.getSectorId(), member.getPlayerInfo()),
-      );
+          PACKET.S2CEnter(newSector.getSectorId(), member.getPlayerInfo()),
+        );
 
-      if (prevSector.sectorCode != 100) {
-        const oldTraps = prevSector.removeTraps(member.getPlayerId());
-        prevSector.notify(PACKET.S2CRemoveTrap(oldTraps)); // 이전 섹터에 남은 덫 제거
-      }
-      if (targetSector.sectorCode != 100) {
-        memberSocket.write(PACKET.S2CTraps(newSector.getAllTraps())); // 새 섹터의 덫 현황
-      }
+        if (prevSector.sectorCode != 100) {
+          const oldTraps = prevSector.removeTraps(member.getPlayerId());
+          prevSector.notify(PACKET.S2CRemoveTrap(oldTraps)); // 이전 섹터에 남은 덫 제거
+        }
+        if (targetSector.sectorCode != 100) {
+          memberSocket.write(PACKET.S2CTraps(newSector.getAllTraps())); // 새 섹터의 덫 현황
+        }
 
         playerSpawnNotificationHandler(member.user.socket, {});
       });
