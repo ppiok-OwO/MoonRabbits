@@ -32,6 +32,8 @@ import stunHandler from './playerAction/stun.handler.js';
 import equipChangeHandler from './playerAction/equipChange.handler.js';
 import { collisionHandler } from './collision/collision.handler.js';
 import { resourceListHandler } from './gathering/ResourceList.handler.js';
+import setTrapHandler from './playerAction/setTrap.handler.js';
+import removeTrapHandler from './playerAction/removeTrap.handler.js';
 import { pongHandler } from './pong.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
@@ -43,7 +45,7 @@ const handlers = {
   [config.packetId.S2CPlayerSpawn]: playerSpawnNotificationHandler,
   [config.packetId.C2SPlayerLocation]: playerLocationUpdateHandler,
   [config.packetId.C2SPlayerMove]: playerMoveHandler,
-  [config.packetId.C2SAnimation]: animationHandler,
+  [config.packetId.C2SEmote]: animationHandler,
   [config.packetId.C2SChat]: chatHandler,
   // !!! 제거된 패킷임다 [config.packetId.C_PlayerResponse]: playerResponseHandler,
   [config.packetId.C2SRegister]: registerHandler,
@@ -72,6 +74,8 @@ const handlers = {
 
   [config.packetId.C2SRecall]: tryRecallHandler,
   [config.packetId.C2SThrowGrenade]: throwGrenadeHandler,
+  [config.packetId.C2SSetTrap]: setTrapHandler,
+  [config.packetId.C2SRemoveTrap]: removeTrapHandler,
   [config.packetId.C2SStun]: stunHandler,
   [config.packetId.C2SEquipChange]: equipChangeHandler,
 

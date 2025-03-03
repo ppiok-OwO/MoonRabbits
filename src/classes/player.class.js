@@ -68,7 +68,6 @@ class Player {
       this.classCode,
       this.position,
       this.getPlayerStats(),
-      this.currentSector,
     );
   }
   getPosition() {

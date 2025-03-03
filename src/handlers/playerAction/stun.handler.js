@@ -6,20 +6,13 @@ const STUN_TIMER = [3, 5];
 const stunHandler = (socket, packetData) => {
   const { skillType, playerIds, monsterIds } = packetData;
 
-  const playerSession = getPlayerSession();
-  const player = playerSession.getPlayer(socket);
+  const player = getPlayerSession().getPlayer(socket);
 
-  const sectorCode = player.getSectorId();
+  // 몬스터 관련 로직도 해야함
 
-  const packet = PACKET.S2CStun(
-    sectorCode,
-    STUN_TIMER[skillType],
-    playerIds,
-    monsterIds,
-  );
+  const packet = PACKET.S2CStun(STUN_TIMER[skillType], playerIds, monsterIds);
 
-  const sectorSession = getSectorSessions();
-  const sector = sectorSession.getSector(sectorCode);
+  const sector = getSectorSessions().getSector(player.getSectorId());
   sector.notify(packet);
 };
 

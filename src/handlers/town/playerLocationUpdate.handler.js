@@ -61,7 +61,6 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
           player.id,
           newTransform,
           false,
-          player.getSectorId(),
         );
 
         const sectorCode = player.getSectorId();
@@ -80,7 +79,6 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
           player.id,
           predictedPos,
           true,
-          player.getSectorId(),
         );
         const sectorCode = player.getSectorId();
         if (sectorCode) {

@@ -14,6 +14,7 @@ class Sector {
     this.navMeshes = new Map(); // 맵별 NavMesh 저장
     this.players = new Map();
     this.resources = resources;
+    this.traps = new Map();
     this.lastUpdateTime = Date.now();
     this.isUpdating = false;
     //this.battleStatus = null;
@@ -34,8 +35,13 @@ class Sector {
   }
   getResources() {
     const resourcesPayloadData = [];
-    for(let i = 1; i<this.resources.length; i++){
-      resourcesPayloadData.push(PAYLOAD_DATA.Resource(this.resources[i].getResourceIdx(), this.resources[i].getResourceId()));
+    for (let i = 1; i < this.resources.length; i++) {
+      resourcesPayloadData.push(
+        PAYLOAD_DATA.Resource(
+          this.resources[i].getResourceIdx(),
+          this.resources[i].getResourceId(),
+        ),
+      );
     }
     return resourcesPayloadData;
   }
@@ -105,6 +111,68 @@ class Sector {
   getMapAreas() {
     return this.mapAreas;
   }
+
+  /* 섹터에 신규 덫 정보 추가 */
+  setTrap(casterId, pos) {
+    // [1] 설치한 덫이 없으면 Map 인스턴스 할당
+    if (!this.traps.has(casterId)) this.traps.set(casterId, new Map());
+    // [2] 플레이어별 덫 Map에 설치할 덫 위치정보 삽입
+    const trapKey = `${pos.x}${pos.z}`;
+    this.traps.get(casterId).set(trapKey, pos);
+    // [3] 설치한 덫 정보 반환
+    return PAYLOAD_DATA.TrapInfo(casterId, pos);
+  }
+  /* 특정 덫 제거 */
+  deleteTrap(casterId, pos, socket) {
+    // [1] 플레이의 덫 Map 가져옴
+    const currentTraps = this.traps.get(casterId);
+    console.log("!!! 지우기 전 : ",currentTraps)
+    console.log("!!! 지울 넘 : ",pos)
+    // [2] 클라의 위치정보와 일치하는 덫이 없다면 리턴
+    const trapKey = `${pos.x}${pos.z}`;
+    if (!currentTraps.has(trapKey)) {
+      socket.write(PACKET.S2CChat(0, '제거할 덫 정보가 없습니다', 'System'));
+      return;
+    }
+    // [3] 해당 덫 Map에서 제거
+    if (currentTraps.delete(trapKey)) {
+      console.log("!!! 지운 후 : ",currentTraps)
+      // [4] 제거 성공 시 제거한 덫 정보 반환
+      return PAYLOAD_DATA.TrapInfo(casterId, pos);
+    }
+  }
+  /* 특정 플레이어의 모든 덫 제거 */
+  removeTraps(casterId) {
+    // [1] 제거할 플레이어의 덫들 보관할 배열 선언
+    const traps = [];
+    // [2] 플레이어의 덫 정보가 있으면 Map 순회하며 덫들 배열에 삽입
+    if(this.traps.has(casterId)){
+      this.traps.get(casterId).forEach((trapPos) => {
+        traps.push(PAYLOAD_DATA.TrapInfo(casterId, trapPos));
+      });
+      // [3] 섹터의 전체 덫 Map에서 해당 플레이어 관련 정보 제거
+      if (this.traps.delete(casterId)) {
+        // [4] 제거 성공 시 제거할 덫들 반환
+        return traps;
+      }
+
+    }
+  }
+  /* 섹터의 모든 덫 정보 조회 */
+  getAllTraps() {
+    // [1] 덫들 보관할 배열 선언
+    const traps = [];
+    // [2] 플레이어별로 순회하며 보유 덫들 배열에 삽입
+    this.traps.forEach((currentTraps, playerId) => {
+      // 보유 최대 덫이 2개라 복잡도 높지 않음
+      for (const trapPos of currentTraps) {
+        traps.push(PAYLOAD_DATA.TrapInfo(playerId, trapPos));
+      }
+    });
+    // [3] 섹터 덫 현황 담긴 배열 반환
+    return traps;
+  }
+
   // 몬스터 생성
   spawnMonster(monster, mapcode) {
     const namesh = this.navMeshes.get(mapcode);

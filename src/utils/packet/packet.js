@@ -29,29 +29,22 @@ const PACKET = {
       PAYLOAD.S2CCreateCharacter(isSuccess_bool, msg_string),
     );
   },
-  S2CEnter: (player_PlayerInfo) => {
-    return makePacket(PACKET_ID.S2CEnter, PAYLOAD.S2CEnter(player_PlayerInfo));
-  },
-  S2CAnimation: (playerId_int32, animCode_int32, currentSector_int32) => {
+  S2CEnter: (targetSector_int32, player_PlayerInfo) => {
     return makePacket(
-      PACKET_ID.S2CAnimation,
-      PAYLOAD.S2CAnimation(playerId_int32, animCode_int32, currentSector_int32),
+      PACKET_ID.S2CEnter,
+      PAYLOAD.S2CEnter(targetSector_int32, player_PlayerInfo),
     );
   },
-  S2CChat: (
-    playerId_int32,
-    chatMsg_string,
-    chatType_string,
-    currentSector_int32,
-  ) => {
+  S2CEmote: (playerId_int32, animCode_int32) => {
+    return makePacket(
+      PACKET_ID.S2CEmote,
+      PAYLOAD.S2CEmote(playerId_int32, animCode_int32),
+    );
+  },
+  S2CChat: (playerId_int32, chatMsg_string, chatType_string) => {
     return makePacket(
       PACKET_ID.S2CChat,
-      PAYLOAD.S2CChat(
-        playerId_int32,
-        chatMsg_string,
-        chatType_string,
-        currentSector_int32,
-      ),
+      PAYLOAD.S2CChat(playerId_int32, chatMsg_string, chatType_string),
     );
   },
   S2CSpawn: (players_PlayerInfo_repeated) => {
@@ -60,17 +53,16 @@ const PACKET = {
       PAYLOAD.S2CSpawn(players_PlayerInfo_repeated),
     );
   },
-  S2CDespawn: (playerIds_int32_repeated, currentSector_int32) => {
+  S2CDespawn: (playerIds_int32_repeated) => {
     return makePacket(
       PACKET_ID.S2CDespawn,
-      PAYLOAD.S2CDespawn(playerIds_int32_repeated, currentSector_int32),
+      PAYLOAD.S2CDespawn(playerIds_int32_repeated),
     );
   },
   S2CPlayerLocation: (
     playerId_int32,
     transform_TransformInfo,
     isValidTransform_bool,
-    currentSector_int32,
   ) => {
     return makePacket(
       PACKET_ID.S2CPlayerLocation,
@@ -78,8 +70,13 @@ const PACKET = {
         playerId_int32,
         transform_TransformInfo,
         isValidTransform_bool,
-        currentSector_int32,
       ),
+    );
+  },
+  S2CPortal: (outPortalLocation_Vec3) => {
+    return makePacket(
+      PACKET_ID.S2CPortal,
+      PAYLOAD.S2CPortal(outPortalLocation_Vec3),
     );
   },
   S2CUpdateRanking: (status_string, data_RankingList) => {
@@ -253,30 +250,37 @@ const PACKET = {
       PAYLOAD.S2CGatheringDone(placedId_int32, itemId_int32, quantity_int32),
     );
   },
-  S2CRecall: (playerId_int32, currentSector_int32, recallTimer_int32) => {
+  S2CRecall: (playerId_int32, recallTimer_int32) => {
     return makePacket(
       PACKET_ID.S2CRecall,
-      PAYLOAD.S2CRecall(playerId_int32, currentSector_int32, recallTimer_int32),
+      PAYLOAD.S2CRecall(playerId_int32, recallTimer_int32),
     );
   },
-  S2CThrowGrenade: (
-    playerId_int32,
-    currentSector_int32,
-    velocity_Vec3,
-    coolTime_int32,
-  ) => {
+  S2CThrowGrenade: (playerId_int32, velocity_Vec3, coolTime_int32) => {
     return makePacket(
       PACKET_ID.S2CThrowGrenade,
-      PAYLOAD.S2CThrowGrenade(
-        playerId_int32,
-        currentSector_int32,
-        velocity_Vec3,
-        coolTime_int32,
-      ),
+      PAYLOAD.S2CThrowGrenade(playerId_int32, velocity_Vec3, coolTime_int32),
+    );
+  },
+  S2CTraps: (traps_TrapInfo_repeated) => {
+    return makePacket(
+      PACKET_ID.S2CTraps,
+      PAYLOAD.S2CTraps(traps_TrapInfo_repeated),
+    );
+  },
+  S2CSetTrap: (trapInfo_TrapInfo, coolTime_int32) => {
+    return makePacket(
+      PACKET_ID.S2CSetTrap,
+      PAYLOAD.S2CSetTrap(trapInfo_TrapInfo, coolTime_int32),
+    );
+  },
+  S2CRemoveTrap: (trapInfos_TrapInfo_repeated) => {
+    return makePacket(
+      PACKET_ID.S2CRemoveTrap,
+      PAYLOAD.S2CRemoveTrap(trapInfos_TrapInfo_repeated),
     );
   },
   S2CStun: (
-    currentSector_int32,
     stunTimer_int32,
     playerIds_int32_repeated,
     monsterIds_int32_repeated,
@@ -284,21 +288,16 @@ const PACKET = {
     return makePacket(
       PACKET_ID.S2CStun,
       PAYLOAD.S2CStun(
-        currentSector_int32,
         stunTimer_int32,
         playerIds_int32_repeated,
         monsterIds_int32_repeated,
       ),
     );
   },
-  S2CEquipChange: (playerId_int32, currentSector_int32, nextEquip_int32) => {
+  S2CEquipChange: (playerId_int32, nextEquip_int32) => {
     return makePacket(
       PACKET_ID.S2CEquipChange,
-      PAYLOAD.S2CEquipChange(
-        playerId_int32,
-        currentSector_int32,
-        nextEquip_int32,
-      ),
+      PAYLOAD.S2CEquipChange(playerId_int32, nextEquip_int32),
     );
   },
   S2CAddExp: (updatedExp_int32) => {
@@ -328,6 +327,14 @@ const PACKET = {
       PAYLOAD.S2CInvestPoint(statInfo_StatInfo),
     );
   },
+  S2CCraft: (craftedItemId_int32, count_int32, slot_int32) => {
+    return makePacket(
+      PACKET_ID.S2CCraft,
+      PAYLOAD.S2CCraft(craftedItemId_int32, count_int32, slot_int32),
+    );
+  },
+  S2CPing: (timestamp_int64) => {
+    return makePacket(PACKET_ID.S2CPing, PAYLOAD.S2CPing(timestamp_int64));
+  },
 };
-
 export default PACKET;
