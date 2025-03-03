@@ -70,4 +70,4 @@ async function getFreeSlotIndex(redisKey) {
   return freeIndex;
 }
 
-export default itemObtainedHandler;
+export default itemDisassemblyHandler;

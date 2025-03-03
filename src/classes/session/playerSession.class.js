@@ -10,13 +10,7 @@ class PlayerSession {
   playerIdx = 1;
 
   async addPlayer(socket, user, nickname, classCode, statData) {
-    const newPlayer = new Player(
-      user,
-      this.playerIdx++,
-      nickname,
-      classCode,
-      statData,
-    );
+    const newPlayer = new Player(user, this.playerIdx++, nickname, classCode, statData);
     this.players.set(socket, newPlayer);
 
     // getSectorSessions()
@@ -40,23 +34,19 @@ class PlayerSession {
       const sector = SectorSessionManager.getSector(playerSectorId);
       sector.deletePlayer(player.user.socket);
       const partyId = player.getPartyId();
-      if(partyId){
+      if (partyId) {
         const party = partySessionManager.getParty(partyId);
-        leavePartyHandler(socket, {partyId, leftPlayerId: player.id});
+        leavePartyHandler(socket, { partyId, leftPlayerId: player.id });
       }
       // 디스폰
       sector.notify(PACKET.S2CDespawn([player.id], playerSectorId));
 
       this.players.delete(socket);
 
-      console.log(
-        chalk.green(`[onEnd] playerSession에서 삭제된 socket ID: ${socket.id}`),
-      );
+      console.log(chalk.green(`[onEnd] playerSession에서 삭제된 socket ID: ${socket.id}`));
     } else {
       console.log(
-        chalk.yellow(
-          `[onEnd] playerSession에서 찾을 수 없습니다. socket ID : ${socket.id}`,
-        ),
+        chalk.yellow(`[onEnd] playerSession에서 찾을 수 없습니다. socket ID : ${socket.id}`),
       );
     }
   }
@@ -93,30 +83,6 @@ class PlayerSession {
   notify(packet) {
     for (const player of this.players.keys()) {
       player.write(packet);
-    }
-  }
-
-  // Redis에 Player 데이터를 저장하는 메서드
-  async saveToRedis(key, player) {
-    try {
-      await redisClient.hset(key, {
-        playerIdx: player.id,
-        userId: player.user.userId,
-        nickname: player.nickname,
-        classCode: player.classCode,
-        status: 'active',
-        currentSector: 'Town', // 기본적으로 Town으로 설정
-        loginTime: new Date().toISOString(),
-      });
-      await redisClient.expire(key, 3600); // 만료 시간 설정
-      console.log(
-        `${chalk.green('[Redis Log]')} Player 데이터 저장 완료: ${key}`,
-      );
-    } catch (error) {
-      console.error(
-        `${chalk.green('[Redis Error]')} Player 데이터 저장 실패: ${key}`,
-        error,
-      );
     }
   }
 }

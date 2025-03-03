@@ -10,11 +10,7 @@ import {
   REDIS_HOST,
   REDIS_PORT,
 } from '../constants/env.js';
-import {
-  PACKET_ID,
-  PACKET_ID_LENGTH,
-  PACKET_SIZE,
-} from '../constants/header.js';
+import { PACKET_ID, PACKET_ID_LENGTH, PACKET_SIZE } from '../constants/header.js';
 import { BASE_STAT_DATA } from '../constants/PlayerBaseStat.js';
 import { BATTLE_LOG_ID } from '../constants/BattleLog.js';
 import { UPDATE_LOCATION } from '../constants/UpdateLocation.js';
@@ -121,6 +117,11 @@ export const config = {
     S2CLevelUp: PACKET_ID.S2CLevelUp,
     C2SInvestPoint: PACKET_ID.C2SInvestPoint,
     S2CInvestPoint: PACKET_ID.S2CInvestPoint,
+    C2SItemObtained: PACKET_ID.C2SItemObtained,
+    C2SItemDisassembly: PACKET_ID.C2SItemDisassembly,
+    C2SItemDestroy: PACKET_ID.C2SItemDestroy,
+    C2SInventorySort: PACKET_ID.C2SInventorySort,
+    C2SItemMove: PACKET_ID.C2SItemMove,
     S2CInventoryUpdate: PACKET_ID.S2CInventoryUpdate,
   },
   newPlayerStatData: {

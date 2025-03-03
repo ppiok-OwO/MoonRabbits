@@ -5,32 +5,46 @@ import { syncInventoryToRedisAndSend } from '../../../db/user/user.db.js';
 import PACKET from '../../../utils/packet/packet.js';
 import redisClient from '../../../utils/redis/redis.config.js';
 
-export const inventoryUpdateHandler = async (socket) => {
+export const inventoryUpdateHandler = async (socket, packetData) => {
   try {
-    // socket에 저장된 playerId 사용
+    // socket에서 플레이어 ID 가져오기
     const player_id = socket.player.playerId;
-
-    // MySQL에서 Redis로 인벤토리 데이터를 동기화
-    await syncInventoryToRedisAndSend(player_id);
-
-    // Redis에서 인벤토리 데이터를 읽어오기 (값이 없으면 빈 객체로 초기화)
     const redisKey = `inventory:${player_id}`;
-    const redisData = (await redisClient.hgetall(redisKey)) || {};
-    const slots = [];
 
-    // Redis 데이터가 비어있으면 경고 로그 추가
-    if (Object.keys(redisData).length === 0) {
-      console.warn(
-        `[InventoryHandler Log] Redis에 플레이어 ${player_id} 데이터가 존재하지 않습니다.`,
+    // Protobuf 메시지에 슬롯 업데이트 데이터가 포함되어 있는 경우
+    if (packetData && packetData.slots && packetData.slots.length > 0) {
+      // 클라이언트가 전달한 슬롯 이동 데이터를 기준으로 Redis 업데이트 수행
+      for (const update of packetData.slots) {
+        const { slotIdx, itemId, stack } = update;
+        await redisClient.hset(redisKey, slotIdx, JSON.stringify({ itemId, stack }));
+      }
+      console.log(
+        `${chalk.green('[InventoryHandler Log]')} 플레이어 ${player_id}의 슬롯 이동 업데이트 적용됨.`,
+      );
+    } else {
+      // 슬롯 업데이트 정보가 없으면 Sector 이동에 의한 호출로 간주하여 MySQL과의 동기화를 실행
+      await syncInventoryToRedisAndSend(player_id);
+      console.log(
+        `${chalk.green('[InventoryHandler Log]')} 플레이어 ${player_id}의 Sector 이동에 따른 동기화 수행됨.`,
       );
     }
 
-    // 슬롯 번호(키)를 숫자로 변환한 후 오름차순 정렬
+    // Redis에 저장된 최신 인벤토리 데이터를 읽어오기
+    const redisData = (await redisClient.hgetall(redisKey)) || {};
+    const slots = [];
+
+    if (Object.keys(redisData).length === 0) {
+      console.warn(
+        `[InventoryHandler Log] Redis에 플레이어 ${player_id}의 데이터가 존재하지 않습니다.`,
+      );
+    }
+
+    // 슬롯 키를 숫자로 변환 후 오름차순 정렬
     const keys = Object.keys(redisData)
       .map(Number)
       .sort((a, b) => a - b);
 
-    // 각 슬롯 데이터를 검증 및 파싱 후 배열에 추가
+    // 각 슬롯 데이터를 파싱하여 슬롯 배열에 추가
     for (const key of keys) {
       const slotData = redisData[key.toString()];
       if (!slotData) {
@@ -51,17 +65,16 @@ export const inventoryUpdateHandler = async (socket) => {
       });
     }
 
-    // Redis에서 가져온 슬롯 데이터를 payload에 담기
-    const payload = slots;
     console.log(
-      `${chalk.green('[InventoryHandler Log]')} 플레이어 ${player_id}의 인벤토리 Update!`,
+      `${chalk.green('[InventoryHandler Log]')} 플레이어 ${player_id}의 인벤토리 Update 완료.`,
     );
-
-    // 패킷 생성 및 전송
-    const packet = PACKET.S2CInventoryUpdate(payload);
+    // 패킷 생성 후 클라이언트에 전송
+    const packet = PACKET.S2CInventoryUpdate(slots);
     return socket.write(packet);
   } catch (error) {
     console.error(chalk.red('[inventoryUpdate Error]\n', error));
     socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'inventoryUpdate 에러'));
   }
 };
+
+export default inventoryUpdateHandler;

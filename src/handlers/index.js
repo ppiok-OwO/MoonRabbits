@@ -32,6 +32,11 @@ import stunHandler from './playerAction/stun.handler.js';
 import equipChangeHandler from './playerAction/equipChange.handler.js';
 import { collisionHandler } from './collision/collision.handler.js';
 import { resourceListHandler } from './gathering/ResourceList.handler.js';
+import itemObtainedHandler from './player/inventory/itemObtained.handler.js';
+import itemDestroyHandler from './player/inventory/itemDestroy.handler.js';
+import { itemDisassemblyHandler } from './player/inventory/itemDisassembly.handler.js';
+import { inventoryUpdateHandler } from './player/inventory/inventoryUpdate.handler.js';
+import inventorySortHandler from './player/inventory/inventorySort.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
@@ -73,6 +78,13 @@ const handlers = {
   [config.packetId.C2SThrowGrenade]: throwGrenadeHandler,
   [config.packetId.C2SStun]: stunHandler,
   [config.packetId.C2SEquipChange]: equipChangeHandler,
+
+  // 인벤토리 관련 핸들러
+  [config.packetId.C2SItemObtained]: itemObtainedHandler,
+  [config.packetId.C2SItemDisassembly]: itemDisassemblyHandler,
+  [config.packetId.C2SItemDestroy]: itemDestroyHandler,
+  [config.packetId.C2SInventorySort]: inventorySortHandler,
+  [config.packetId.C2SItemMove]: inventoryUpdateHandler,
 };
 
 export const getHandlerByPacketId = (packetId) => {
