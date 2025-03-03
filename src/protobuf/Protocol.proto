@@ -32,6 +32,8 @@ enum MsgId {
   S2C_PLAYER_LOCATION=33;
   C2S_PLAYER_RUNNING=34;
   S2C_PLAYER_RUNNING=35;
+  C2S_PORTAL=36;
+  S2C_PORTAL=37;
 
   C2S_RANKING_LIST=50;
   S2C_UPDATE_RANKING=51;
@@ -43,7 +45,8 @@ enum MsgId {
   C2S_ITEM_DISASSEMBLY = 81;
   C2S_ITEM_DESTROY = 82;
   C2S_INVENTORY_SORT = 83;
-  S2C_INVENTORY_UPDATE = 84;
+  C2S_ITEM_MOVE	= 84;
+  S2C_INVENTORY_UPDATE = 85;
 
   C2S_CREATE_PARTY=100;
   S2C_CREATE_PARTY=101;
@@ -71,14 +74,15 @@ enum MsgId {
   C2S_MISSING_PLAYER=124;
   S2C_MISSING_PLAYER=125;
 
-  S2C_RESOURCES_LIST=141;
-  S2C_UPDATE_DURABILITY=142;
-  C2S_GATHERING_START=143;
-  S2C_GATHERING_START=144;
-  C2S_GATHERING_SKILL_CHECK=145;
-  S2C_GATHERING_SKILL_CHECK=146;
-  S2C_GATHERING_DONE=147;
-  C2S_RESOURCES_LIST=148;
+  C2S_RESOURCES_LIST=141;
+  S2C_RESOURCES_LIST=142;
+  S2C_UPDATE_DURABILITY=143;
+  C2S_GATHERING_START=144;
+  S2C_GATHERING_START=145;
+  C2S_GATHERING_SKILL_CHECK=146;
+  S2C_GATHERING_SKILL_CHECK=147;
+  C2S_GATHERING_DONE=148;
+  S2C_GATHERING_DONE=149;
 
   C2S_RECALL = 160;
   S2C_RECALL = 161;
@@ -99,6 +103,12 @@ enum MsgId {
   S2C_LEVEL_UP=202;
   C2S_INVEST_POINT=203;
   S2C_INVEST_POINT=204;
+
+  C2S_CRAFT = 211;
+  S2C_CRAFT = 212;
+
+  S2C_PING=254;
+  C2S_PONG=255;
 }
 
 message C2SRegister{
@@ -189,6 +199,13 @@ message S2CPlayerLocation{
 }
 message C2SPlayerRunning{} 
 message S2CPlayerRunning{} 
+message C2SPortal {
+  int32 inPortalId = 1;
+  int32 outPortalId = 2;
+}
+message S2CPortal {
+  Vec3 outPortalLocation = 1;
+}
 
 message C2SRankingList{
   string type = 1;
@@ -217,6 +234,9 @@ message C2SItemDestroy {
   int32 itemId = 2;
 }
 message C2SInventorySort {
+  repeated InventorySlot slots = 1;
+}
+message C2SItemMove {
   repeated InventorySlot slots = 1;
 }
 message S2CInventoryUpdate {
@@ -322,6 +342,8 @@ message S2CMissingPlayer{
   int32 playerId = 2;
 }
 
+message C2SResourcesList{
+}
 message S2CResourcesList{
   repeated Resource resources = 1;
 }
@@ -345,13 +367,14 @@ message S2CGatheringSkillCheck{
   int32 placedId = 1;
   int32 durability = 2;
 }
+message C2SGatheringDone{
+}
 message S2CGatheringDone{
   int32 placedId = 1;
   int32 itemId = 2;
   int32 quantity = 3;
 }
-message C2SResourcesList{
-}
+
 
 message C2SRecall {}
 message S2CRecall {
@@ -419,6 +442,23 @@ message C2SInvestPoint {
 }
 message S2CInvestPoint {
   StatInfo statInfo = 1;
+}
+
+message C2SCraft{
+  int32 recipeId = 1;
+  repeated MaterialInfo materialInfos = 2;
+}
+message S2CCraft{
+  int32 craftedItemId = 1;
+  int32 count = 2;
+  int32 slot = 3;
+}
+
+message S2CPing {
+  int64 timestamp = 1;
+}
+message C2SPong {
+  int64 timestamp = 1;
 }
 
 /* 구조체 */
@@ -550,4 +590,10 @@ message InventorySlot {
 message TrapInfo {
   int32 casterId = 1;
   Vec3 pos = 2;
+}
+
+message MaterialInfo{
+  int32 materialId = 1;
+  int32 count = 2;
+  int32 slot = 3;
 }

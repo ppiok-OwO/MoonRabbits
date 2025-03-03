@@ -51,31 +51,44 @@ export const config = {
     S2CLogin: PACKET_ID.S2CLogin,
     C2SCreateCharacter: PACKET_ID.C2SCreateCharacter,
     S2CCreateCharacter: PACKET_ID.S2CCreateCharacter,
+
     C2SEnter: PACKET_ID.C2SEnter,
     S2CEnter: PACKET_ID.S2CEnter,
     C2SMoveSector: PACKET_ID.C2SMoveSector,
     S2CMoveSector: PACKET_ID.S2CMoveSector,
+
     C2SEmote: PACKET_ID.C2SEmote,
     S2CEmote: PACKET_ID.S2CEmote,
+
     C2SChat: PACKET_ID.C2SChat,
     S2CChat: PACKET_ID.S2CChat,
+
     S2CSpawn: PACKET_ID.S2CSpawn,
     S2CDespawn: PACKET_ID.S2CDespawn,
+
     C2SPlayerMove: PACKET_ID.C2SPlayerMove,
     S2CPlayerMove: PACKET_ID.S2CPlayerMove,
     C2SPlayerLocation: PACKET_ID.C2SPlayerLocation,
     S2CPlayerLocation: PACKET_ID.S2CPlayerLocation,
     C2SPlayerRunning: PACKET_ID.C2SPlayerRunning,
     S2CPlayerRunning: PACKET_ID.S2CPlayerRunning,
+
+    C2SPortal: PACKET_ID.C2SPortal,
+    S2CPortal: PACKET_ID.S2CPortal,
+
     C2SRankingList: PACKET_ID.C2SRankingList,
     S2CUpdateRanking: PACKET_ID.S2CUpdateRanking,
+
     C2SCollision: PACKET_ID.C2SCollision,
     S2CCollision: PACKET_ID.S2CCollision,
-    C2SSelectStore: PACKET_ID.C2SSelectStore,
-    S2CSelectStore: PACKET_ID.S2CSelectStore,
-    C2SBuyItem: PACKET_ID.C2SBuyItem,
-    S2CBuyItem: PACKET_ID.S2CBuyItem,
-    C2SSellItem: PACKET_ID.C2SSellItem,
+
+    C2SItemObtained: PACKET_ID.C2SItemObtained,
+    C2SItemDisassembly: PACKET_ID.C2SItemDisassembly,
+    C2SItemDestroy: PACKET_ID.C2SItemDestroy,
+    C2SInventorySort: PACKET_ID.C2SInventorySort,
+    C2SItemMove: PACKET_ID.C2SItemMove,
+    S2CInventoryUpdate: PACKET_ID.S2CInventoryUpdate,
+
     C2SCreateParty: PACKET_ID.C2SCreateParty,
     S2CCreateParty: PACKET_ID.S2CCreateParty,
     C2SInviteParty: PACKET_ID.C2SInviteParty,
@@ -94,20 +107,24 @@ export const config = {
     S2CAllowInvite: PACKET_ID.S2CAllowInvite,
     C2SRejectInvite: PACKET_ID.C2SRejectInvite,
     S2CRejectInvite: PACKET_ID.S2CRejectInvite,
+
     C2SMonsterLocation: PACKET_ID.C2SMonsterLocation,
     S2CMonsterLocation: PACKET_ID.S2CMonsterLocation,
     C2SDetectedPlayer: PACKET_ID.C2SDetectedPlayer,
     S2CDetectedPlayer: PACKET_ID.S2CDetectedPlayer,
     C2SMissingPlayer: PACKET_ID.C2SMissingPlayer,
     S2CMissingPlayer: PACKET_ID.S2CMissingPlayer,
+
+    C2SResourcesList: PACKET_ID.C2SResourcesList,
     S2CResourcesList: PACKET_ID.S2CResourcesList,
     S2CUpdateDurability: PACKET_ID.S2CUpdateDurability,
     C2SGatheringStart: PACKET_ID.C2SGatheringStart,
     S2CGatheringStart: PACKET_ID.S2CGatheringStart,
     C2SGatheringSkillCheck: PACKET_ID.C2SGatheringSkillCheck,
     S2CGatheringSkillCheck: PACKET_ID.S2CGatheringSkillCheck,
+    C2SGatheringDone: PACKET_ID.C2SGatheringDone,
     S2CGatheringDone: PACKET_ID.S2CGatheringDone,
-    C2SResourcesList: PACKET_ID.C2SResourcesList,
+
     C2SRecall: PACKET_ID.C2SRecall,
     S2CRecall: PACKET_ID.S2CRecall,
     C2SThrowGrenade: PACKET_ID.C2SThrowGrenade,
@@ -121,12 +138,17 @@ export const config = {
     S2CStun: PACKET_ID.S2CStun,
     C2SEquipChange: PACKET_ID.C2SEquipChange,
     S2CEquipChange: PACKET_ID.S2CEquipChange,
+
     C2SAddExp: PACKET_ID.C2SAddExp,
     S2CAddExp: PACKET_ID.S2CAddExp,
     S2CLevelUp: PACKET_ID.S2CLevelUp,
     C2SInvestPoint: PACKET_ID.C2SInvestPoint,
     S2CInvestPoint: PACKET_ID.S2CInvestPoint,
-    S2CInventoryUpdate: PACKET_ID.S2CInventoryUpdate,
+
+    C2SCraft: PACKET_ID.C2SCraft,
+    S2CCraft: PACKET_ID.S2CCraft,
+    S2CPing: PACKET_ID.S2CPing,
+    C2SPong: PACKET_ID.C2SPong,
   },
   newPlayerStatData: {
     BASE_STAT_DATA,

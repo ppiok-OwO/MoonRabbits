@@ -46,6 +46,9 @@ const PAYLOAD = {
       isValidTransform: isValidTransform_bool,
     };
   },
+  S2CPortal: (outPortalLocation_Vec3) => {
+    return { outPortalLocation: outPortalLocation_Vec3 };
+  },
   S2CUpdateRanking: (status_string, data_RankingList) => {
     return { status: status_string, data: data_RankingList };
   },
@@ -227,6 +230,16 @@ const PAYLOAD = {
   },
   S2CInvestPoint: (statInfo_StatInfo) => {
     return { statInfo: statInfo_StatInfo };
+  },
+  S2CCraft: (craftedItemId_int32, count_int32, slot_int32) => {
+    return {
+      craftedItemId: craftedItemId_int32,
+      count: count_int32,
+      slot: slot_int32,
+    };
+  },
+  S2CPing: (timestamp_int64) => {
+    return { timestamp: timestamp_int64 };
   },
 };
 

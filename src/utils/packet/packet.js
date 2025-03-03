@@ -73,6 +73,12 @@ const PACKET = {
       ),
     );
   },
+  S2CPortal: (outPortalLocation_Vec3) => {
+    return makePacket(
+      PACKET_ID.S2CPortal,
+      PAYLOAD.S2CPortal(outPortalLocation_Vec3),
+    );
+  },
   S2CUpdateRanking: (status_string, data_RankingList) => {
     return makePacket(
       PACKET_ID.S2CUpdateRanking,
@@ -321,6 +327,14 @@ const PACKET = {
       PAYLOAD.S2CInvestPoint(statInfo_StatInfo),
     );
   },
+  S2CCraft: (craftedItemId_int32, count_int32, slot_int32) => {
+    return makePacket(
+      PACKET_ID.S2CCraft,
+      PAYLOAD.S2CCraft(craftedItemId_int32, count_int32, slot_int32),
+    );
+  },
+  S2CPing: (timestamp_int64) => {
+    return makePacket(PACKET_ID.S2CPing, PAYLOAD.S2CPing(timestamp_int64));
+  },
 };
-
 export default PACKET;

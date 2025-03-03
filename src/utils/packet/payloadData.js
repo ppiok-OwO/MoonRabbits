@@ -183,6 +183,13 @@ const PAYLOAD_DATA = {
   TrapInfo: (casterId_int32, pos_Vec3) => {
     return { casterId: casterId_int32, pos: pos_Vec3 };
   },
+  MaterialInfo: (materialId_int32, count_int32, slot_int32) => {
+    return {
+      materialId: materialId_int32,
+      count: count_int32,
+      slot: slot_int32,
+    };
+  },
 };
 
 export default PAYLOAD_DATA;

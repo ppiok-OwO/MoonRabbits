@@ -145,14 +145,17 @@ class Sector {
   removeTraps(casterId) {
     // [1] 제거할 플레이어의 덫들 보관할 배열 선언
     const traps = [];
-    // [2] 플레이어의 덫 Map 순회하며 덫들 배열에 삽입
-    this.traps.get(casterId).forEach((trapPos) => {
-      traps.push(PAYLOAD_DATA.TrapInfo(casterId, trapPos));
-    });
-    // [3] 섹터의 전체 덫 Map에서 해당 플레이어 관련 정보 제거
-    if (this.traps.delete(casterId)) {
-      // [4] 제거 성공 시 제거할 덫들 반환
-      return traps;
+    // [2] 플레이어의 덫 정보가 있으면 Map 순회하며 덫들 배열에 삽입
+    if(this.traps.has(casterId)){
+      this.traps.get(casterId).forEach((trapPos) => {
+        traps.push(PAYLOAD_DATA.TrapInfo(casterId, trapPos));
+      });
+      // [3] 섹터의 전체 덫 Map에서 해당 플레이어 관련 정보 제거
+      if (this.traps.delete(casterId)) {
+        // [4] 제거 성공 시 제거할 덫들 반환
+        return traps;
+      }
+
     }
   }
   /* 섹터의 모든 덫 정보 조회 */
