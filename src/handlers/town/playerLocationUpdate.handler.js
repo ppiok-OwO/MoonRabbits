@@ -57,11 +57,7 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
         };
 
         player.setPosition(newTransform);
-        const packet = PACKET.S2CPlayerLocation(
-          player.id,
-          newTransform,
-          false,
-        );
+        const packet = PACKET.S2CPlayerLocation(player.id, newTransform, false);
 
         const sectorCode = player.getSectorId();
         if (sectorCode) {
@@ -75,11 +71,7 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
         return;
       } else {
         // 오차 범위를 벗어나지 않았으면 추측항법으로 예측한 위치를 전달
-        const packet = PACKET.S2CPlayerLocation(
-          player.id,
-          predictedPos,
-          true,
-        );
+        const packet = PACKET.S2CPlayerLocation(player.id, predictedPos, true);
         const sectorCode = player.getSectorId();
         if (sectorCode) {
           // 만약 던전이면
