@@ -57,7 +57,7 @@ class UserSession {
 
   removeUser(socket) {
     getPlayerSession().removePlayer(socket);
-    return this.users.delete(socket);
+    this.users.delete(socket);
     this.intervalManager.removePlayer(socket.id);
   }
 
