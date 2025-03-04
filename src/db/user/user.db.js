@@ -123,11 +123,10 @@ export const createInventory = async (playerId) => {
 
 export const updateInventory = async (playerId) => {
   try {
-    // 플레이어의 인벤토리 ID 조회 (인벤토리는 이미 생성되어 있음)
+    // 플레이어의 인벤토리 ID 조회 (인벤토리는 이미 생성되어 있다고 가정)
     const [inventoryRows] = await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.SEARCH_INVENTORY, [
       playerId,
     ]);
-    // 플레이어의 DB에 해당되는 인벤토리 row가 없을 때
     if (!inventoryRows || inventoryRows.length === 0) {
       console.error(
         `${chalk.green('[DB Log]')} 플레이어 ${playerId}의 인벤토리 정보가 존재하지 않습니다.`,
@@ -136,36 +135,54 @@ export const updateInventory = async (playerId) => {
     }
     const inventoryId = inventoryRows[0].inventory_id;
 
-    // Redis에서 인벤토리 데이터 전체를 읽어옴 (해시 형식으로 저장됨)
+    // Redis에서 인벤토리 전체 데이터를 읽어옴 (해시 형식)
     const redisKey = `inventory:${playerId}`;
     const inventoryData = await redisClient.hgetall(redisKey);
     if (!inventoryData || Object.keys(inventoryData).length === 0) {
       console.log(
         `${chalk.green('[DB Log]')} 플레이어 ${playerId}의 Redis 인벤토리가 비어 있습니다.`,
       );
+      // 빈 인벤토리 상태도 MySQL에 반영할 필요가 있다면,
+      // 전체 슬롯에 대해 기본값 업데이트를 진행할 수 있습니다.
+      // 이 예제에서는 그냥 종료합니다.
       return;
     }
 
-    // Redis에 저장된 각 슬롯 데이터를 순회하며 MySQL에 업데이트 진행
-    for (const slotKey in inventoryData) {
-      if (Object.hasOwnProperty.call(inventoryData, slotKey)) {
-        let slotData;
+    // 인벤토리 전체 슬롯 수 (예제에서는 30 슬롯)
+    const INVENTORY_SLOT_COUNT = 25;
+    const updatePromises = [];
+
+    // 0번 슬롯부터 INVENTORY_SLOT_COUNT - 1까지 순회하며 업데이트 진행
+    for (let slotIdx = 0; slotIdx < INVENTORY_SLOT_COUNT; slotIdx++) {
+      let slotData;
+      if (Object.prototype.hasOwnProperty.call(inventoryData, slotIdx)) {
         try {
-          slotData = JSON.parse(inventoryData[slotKey]);
+          slotData = JSON.parse(inventoryData[slotIdx]);
+          // 파싱 결과가 null일 경우 기본값 처리
+          if (slotData === null) {
+            slotData = { itemId: null, stack: 0 };
+          }
         } catch (parseError) {
-          console.error(`슬롯 ${slotKey} 데이터 파싱 실패: ${parseError}`);
-          continue;
+          console.error(`슬롯 ${slotIdx} 데이터 파싱 실패: ${parseError}`);
+          slotData = { itemId: null, stack: 0 };
         }
-        const { itemId, stack } = slotData;
-        // 각 슬롯에 대해 UPDATE 쿼리 실행
-        await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_INVENTORY, [
+      } else {
+        // Redis에 해당 슬롯 키가 없으면 기본값 지정
+        slotData = { itemId: null, stack: 0 };
+      }
+      const { itemId, stack } = slotData;
+      updatePromises.push(
+        pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_INVENTORY, [
           itemId,
           stack,
           inventoryId,
-          parseInt(slotKey, 10),
-        ]);
-      }
+          slotIdx,
+        ]),
+      );
     }
+
+    // 모든 슬롯에 대한 업데이트 쿼리를 병렬로 실행
+    await Promise.all(updatePromises);
 
     console.log(
       `${chalk.green('[DB Log]')} 플레이어 ${playerId}의 인벤토리가 성공적으로 업데이트되었습니다.`,
@@ -176,6 +193,7 @@ export const updateInventory = async (playerId) => {
   }
 };
 
+// Sector 이동할 때, 클라이언트 종료할 때 인벤토리 MySQL에 저장
 export const syncInventoryToRedisAndSend = async (playerId) => {
   try {
     // MySQL에서 플레이어 인벤토리 전체 데이터를 슬롯 순서대로 조회
