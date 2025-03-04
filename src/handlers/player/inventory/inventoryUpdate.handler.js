@@ -5,63 +5,94 @@ import { syncInventoryToRedisAndSend } from '../../../db/user/user.db.js';
 import PACKET from '../../../utils/packet/packet.js';
 import redisClient from '../../../utils/redis/redis.config.js';
 
-export const inventoryUpdateHandler = async (socket) => {
+export const inventoryUpdateHandler = async (socket, packetData) => {
   try {
-    // socket에 저장된 playerId 사용
+    // socket에서 플레이어 ID 가져오기
     const player_id = socket.player.playerId;
-
-    // MySQL에서 Redis로 인벤토리 데이터를 동기화
-    await syncInventoryToRedisAndSend(player_id);
-
-    // Redis에서 인벤토리 데이터를 읽어오기 (값이 없으면 빈 객체로 초기화)
     const redisKey = `inventory:${player_id}`;
-    const redisData = (await redisClient.hgetall(redisKey)) || {};
-    const slots = [];
 
-    // Redis 데이터가 비어있으면 경고 로그 추가
-    if (Object.keys(redisData).length === 0) {
-      console.warn(
-        `[InventoryHandler Log] Redis에 플레이어 ${player_id} 데이터가 존재하지 않습니다.`,
+    // 클라이언트로부터 슬롯 데이터가 전송된 경우 (즉, 인벤토리 상태 변화가 있을 경우)
+    if (packetData && Array.isArray(packetData.slots) && packetData.slots.length > 0) {
+      // 현재 Redis에 저장되어 있는 인벤토리 데이터를 불러옴 (25칸 유지)
+      const currentData = (await redisClient.hgetall(redisKey)) || {};
+      const fullInventory = [];
+
+      // 25칸 인벤토리 기본값(빈 슬롯: itemId=0, stack=0)으로 배열 생성
+      for (let i = 0; i < 25; i++) {
+        const key = i.toString();
+        if (currentData[key]) {
+          try {
+            fullInventory[i] = JSON.parse(currentData[key]);
+          } catch (err) {
+            console.error(`슬롯 ${i} 데이터 파싱 에러: ${err}`);
+            fullInventory[i] = { itemId: 0, stack: 0 };
+          }
+        } else {
+          fullInventory[i] = { itemId: 0, stack: 0 };
+        }
+      }
+
+      // 클라이언트에서 전송한 변경 슬롯을 병합 (해당 슬롯만 업데이트)
+      for (const slot of packetData.slots) {
+        const { slotIdx, itemId, stack } = slot;
+        if (slotIdx >= 0 && slotIdx < 25) {
+          fullInventory[slotIdx] = { itemId: +itemId, stack };
+        }
+      }
+
+      // Redis에 저장된 기존 인벤토리 데이터를 삭제 후, 전체 25칸 업데이트
+      await redisClient.del(redisKey);
+      for (let i = 0; i < 25; i++) {
+        await redisClient.hset(redisKey, i.toString(), JSON.stringify(fullInventory[i]));
+      }
+      console.log(
+        `${chalk.green('[InventoryHandler Log]')} 플레이어 ${player_id}의 전체 인벤토리 업데이트 완료.`,
       );
-    }
 
-    // 슬롯 번호(키)를 숫자로 변환한 후 오름차순 정렬
-    const keys = Object.keys(redisData)
-      .map(Number)
-      .sort((a, b) => a - b);
+      // 전체 25 슬롯 배열을 포함한 패킷 생성 및 전송
+      const fullInventoryPacket = fullInventory.map((data, i) => ({
+        slotIdx: i,
+        itemId: data.itemId == null ? 0 : data.itemId,
+        stack: data.stack,
+      }));
+      console.log('fullInventoryPacket Checkt : \n', fullInventoryPacket);
+      const packet = PACKET.S2CInventoryUpdate(fullInventoryPacket);
+      return socket.write(packet);
+    } else {
+      // 슬롯 업데이트 정보가 없으면 Sector 이동에 따른 MySQL 동기화 수행
+      await syncInventoryToRedisAndSend(player_id);
+      console.log(
+        `${chalk.green('[InventoryHandler Log]')} 플레이어 ${player_id}의 Sector 이동에 따른 동기화 수행됨.`,
+      );
 
-    // 각 슬롯 데이터를 검증 및 파싱 후 배열에 추가
-    for (const key of keys) {
-      const slotData = redisData[key.toString()];
-      if (!slotData) {
-        console.warn(`플레이어 ${player_id}의 슬롯 ${key} 데이터가 undefined입니다.`);
-        continue;
+      // 기존 방식대로 Redis 저장 데이터를 불러와서 클라이언트에 전송
+      const redisData = (await redisClient.hgetall(redisKey)) || {};
+      const slots = [];
+      const keys = Object.keys(redisData)
+        .map(Number)
+        .sort((a, b) => a - b);
+
+      for (const key of keys) {
+        const slotData = redisData[key.toString()];
+        if (!slotData) {
+          console.warn(`플레이어 ${player_id}의 슬롯 ${key} 데이터가 undefined입니다.`);
+          continue;
+        }
+        try {
+          const dataObj = JSON.parse(slotData);
+          slots.push({ slotIdx: key, itemId: +dataObj.itemId, stack: dataObj.stack });
+        } catch (err) {
+          console.error(`슬롯 ${key} 데이터 파싱 에러: ${err}`);
+          continue;
+        }
       }
-      let dataObj;
-      try {
-        dataObj = JSON.parse(slotData);
-      } catch (err) {
-        console.error(`슬롯 ${key} 데이터 파싱 에러: ${err}`);
-        continue;
-      }
-      slots.push({
-        slotIdx: key,
-        itemId: +dataObj.itemId,
-        stack: dataObj.stack,
-      });
+      const packet = PACKET.S2CInventoryUpdate(slots);
+      return socket.write(packet);
     }
-
-    // Redis에서 가져온 슬롯 데이터를 payload에 담기
-    const payload = slots;
-    console.log(
-      `${chalk.green('[InventoryHandler Log]')} 플레이어 ${player_id}의 인벤토리 Update!`,
-    );
-
-    // 패킷 생성 및 전송
-    const packet = PACKET.S2CInventoryUpdate(payload);
-    return socket.write(packet);
   } catch (error) {
     console.error(chalk.red('[inventoryUpdate Error]\n', error));
     socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'inventoryUpdate 에러'));
   }
 };
+
+export default inventoryUpdateHandler;
