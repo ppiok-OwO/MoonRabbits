@@ -13,10 +13,6 @@ class PlayerSession {
     const newPlayer = new Player(user, this.playerIdx++, nickname, classCode, statData);
     this.players.set(socket, newPlayer);
 
-    // getSectorSessions()
-    //   .getSector(config.sector.town)
-    //   .setPlayer(socket, newPlayer);
-
     // @@@ getSector가 sectorId로 탐색해서 수정 @@@
     getSectorSessions().getSector(100).setPlayer(socket, newPlayer);
 
