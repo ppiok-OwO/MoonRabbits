@@ -219,7 +219,7 @@ export const syncInventoryToRedisAndSend = async (playerId) => {
         redisKey,
         row.slot_idx.toString(),
         JSON.stringify({
-          itemId: row.item_id,
+          itemId: row.item_id == null ? 0 : row.item_id,
           stack: row.stack,
         }),
       );
