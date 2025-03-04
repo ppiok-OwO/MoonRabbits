@@ -48,17 +48,28 @@ export const portalHandler = (socket, packetData) => {
     };
 
     // 플레이어 위치 및 경로 초기화
-    player.position.posX = portal.portal_location_x;
-    player.position.posY = portal.portal_location_y;
-    player.position.posZ = portal.portal_location_z;
+    player.position.posX = newPlayerPos.x;
+    player.position.posY = newPlayerPos.y;
+    player.position.posZ = newPlayerPos.z;
     player.setPath(null);
 
     // 패킷 전송
     const portalPacket = PACKET.S2CPortal(newPlayerPos);
+    const locationPacket = PACKET.S2CPlayerLocation(
+      player.id,
+      {
+        posX: newPlayerPos.x,
+        posY: newPlayerPos.y,
+        posZ: newPlayerPos.z,
+        rot: 100,
+      },
+      true,
+    );
 
     const sectorSessions = getSectorSessions();
     const sector = sectorSessions.getSector(sectorCode);
-    sector.notify(portalPacket);
+    socket.write(portalPacket);
+    sector.notify(locationPacket);
   } catch (error) {
     console.error(error);
   }
