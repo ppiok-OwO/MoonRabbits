@@ -51,11 +51,7 @@ export async function loadNavMesh(objFile) {
     console.log('Vertices:', vertices.length);
     console.log('Indices:', indices.length);
 
-    const { success, navMesh } = generateSoloNavMesh(
-      vertices.flat(),
-      indices,
-      navMeshConfig,
-    );
+    const { success, navMesh } = generateSoloNavMesh(vertices.flat(), indices, navMeshConfig);
 
     if (!success) throw new Error('NavMesh 생성 실패');
 
@@ -74,26 +70,18 @@ export async function findPath(navMesh, startPos, endPos, stepSize = 0.25) {
     const end = { x: endPos.x, y: endPos.y, z: endPos.z };
 
     // 좌표에서 가장 가까운 폴리곤 ID 가져오기
-    const { success: startSuccess, polyRef: startRef } =
-      navMeshQuery.findClosestPoint(start);
-    const { success: endSuccess, polyRef: endRef } =
-      navMeshQuery.findClosestPoint(end);
+    const { success: startSuccess, polyRef: startRef } = navMeshQuery.findClosestPoint(start);
+    const { success: endSuccess, polyRef: endRef } = navMeshQuery.findClosestPoint(end);
     if (!startSuccess || !endSuccess) {
-      console.log('탐색 가능한 네비게이션 폴리곤을 찾을 수 없습니다.');
+      // console.log('탐색 가능한 네비게이션 폴리곤을 찾을 수 없습니다.');
     }
 
     // 폴리곤 기반 경로 탐색
-    const { success, polys } = navMeshQuery.findPath(
-      startRef,
-      endRef,
-      start,
-      end,
-      {
-        maxPathPolys: 256,
-      },
-    );
+    const { success, polys } = navMeshQuery.findPath(startRef, endRef, start, end, {
+      maxPathPolys: 256,
+    });
     if (!success) {
-      console.log('경로를 찾을 수 없습니다.');
+      // console.log('경로를 찾을 수 없습니다.');
     }
 
     // 경로를 실제 좌표로 변환
