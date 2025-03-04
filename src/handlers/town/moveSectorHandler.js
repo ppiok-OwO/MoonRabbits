@@ -13,15 +13,21 @@ const moveSectorHandler = (socket, packetData) => {
 
   const player = getPlayerSession().getPlayer(socket);
   const prevSector = getSectorSessions().getSector(player.getSectorId());
+  const partySession = getPartySessions();
+
   const partyMembers = [player]; // 본인만 혹은 파티원 배열에 넣을 것
 
-  // 플레이어가 파티에 소속되어 있는지 체크
-  const party = getPartySessions().getParty(player.partyId);
-  if (party) {
+  // 파티가 있는지 체크
+  if (player.partyId) {
+    const party = getPartySessions().getParty(player.partyId);
+
     if (party.getPartyLeaderId() === player.id) {
       // 파티 인스턴스
+      const party = partySession.getParty(player.partyId);
       const allMembers = party.getAllMembers().values();
       for (const member of allMembers) {
+        // 나 자신은 제외해야 함
+        if (member.id === player.id) continue;
         partyMembers.push(member);
       }
     } else {
@@ -65,7 +71,7 @@ const moveSectorHandler = (socket, packetData) => {
 
       playerSpawnNotificationHandler(member.user.socket, {});
 
-      // 경로 초기화
+      // 파티 멤버의 경로 초기화
       member.setPath(null);
     });
   } catch (err) {
