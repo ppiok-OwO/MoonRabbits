@@ -3,7 +3,7 @@ import Resource from './resource.class.js';
 import { getGameAssets } from '../init/assets.js';
 import PACKET from '../utils/packet/packet.js';
 import Monster from './monster.class.js';
-import { getNaveMesh } from '../init/navMeshData.js';
+import { getNavMesh } from '../init/navMeshData.js';
 
 class Sector {
   constructor(sectorId, sectorCode, resources = []) {
@@ -126,8 +126,8 @@ class Sector {
   deleteTrap(casterId, pos, socket) {
     // [1] 플레이의 덫 Map 가져옴
     const currentTraps = this.traps.get(casterId);
-    console.log("!!! 지우기 전 : ",currentTraps)
-    console.log("!!! 지울 넘 : ",pos)
+    console.log('!!! 지우기 전 : ', currentTraps);
+    console.log('!!! 지울 넘 : ', pos);
     // [2] 클라의 위치정보와 일치하는 덫이 없다면 리턴
     const trapKey = `${pos.x}${pos.z}`;
     if (!currentTraps.has(trapKey)) {
@@ -136,7 +136,7 @@ class Sector {
     }
     // [3] 해당 덫 Map에서 제거
     if (currentTraps.delete(trapKey)) {
-      console.log("!!! 지운 후 : ",currentTraps)
+      console.log('!!! 지운 후 : ', currentTraps);
       // [4] 제거 성공 시 제거한 덫 정보 반환
       return PAYLOAD_DATA.TrapInfo(casterId, pos);
     }
@@ -146,7 +146,7 @@ class Sector {
     // [1] 제거할 플레이어의 덫들 보관할 배열 선언
     const traps = [];
     // [2] 플레이어의 덫 정보가 있으면 Map 순회하며 덫들 배열에 삽입
-    if(this.traps.has(casterId)){
+    if (this.traps.has(casterId)) {
       this.traps.get(casterId).forEach((trapPos) => {
         traps.push(PAYLOAD_DATA.TrapInfo(casterId, trapPos));
       });
@@ -155,7 +155,6 @@ class Sector {
         // [4] 제거 성공 시 제거할 덫들 반환
         return traps;
       }
-
     }
   }
   /* 섹터의 모든 덫 정보 조회 */
@@ -259,7 +258,7 @@ class Sector {
       return;
     }
 
-    this.navMeshes.set(this.sectorCode, getNaveMesh(this.sectorCode));
+    this.navMeshes.set(this.sectorCode, getNavMesh(this.sectorCode));
 
     // 모든 area를 한번에 추가
     this.mapAreas = sectorJsonData.areas || [];

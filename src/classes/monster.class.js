@@ -4,13 +4,13 @@ import makePacket from '../utils/packet/makePacket.js';
 import PAYLOAD from '../utils/packet/payload.js';
 import PAYLOAD_DATA from '../utils/packet/payloadData.js';
 import { getSectorSessions } from '../session/sessions.js';
-import { getNaveMesh } from '../init/navMeshData.js';
+import { getNavMesh } from '../init/navMeshData.js';
 
 class Monster {
   constructor(sectorCode, monsterIdx, area) {
     this.sectorCode = sectorCode; // 맵 코드 - 어느 섹터에 있는지
     this.monsterIdx = monsterIdx; // 몬스터 ID - 어떤 몬스터인지 구분
-    this.navMesh = getNaveMesh(sectorCode);
+    this.navMesh = getNavMesh(sectorCode);
     this.moveSpeed = 7; // 이동 속도
     this.anglerSpeed = 150; // 회전 속도
     this.acc = 10; // 가속도

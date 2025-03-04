@@ -1,11 +1,25 @@
-import { config } from '../../config/config.js';
-import { getGameAssets } from '../../init/assets.js';
-import { getNaveMesh } from '../../init/navMeshData.js';
-import { findPath } from '../../init/navMeshLoader.js';
-import { getSectorSessions, getPlayerSession } from '../../session/sessions.js';
+import { getPlayerSession } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import handleError from '../../utils/error/errorHandler.js';
+import { Queue, QueueEvents } from 'bullmq';
+import IORedis from 'ioredis';
+
+// Redis 연결
+const connection = new IORedis({
+  host: process.env.REDIS_HOST,
+  port: process.env.REDIS_PORT,
+  password: process.env.REDIS_PASSWORD,
+  maxRetriesPerRequest: null,
+});
+
+// BullMQ Queue 생성
+const navigationQueue = new Queue('navigationQueue', {
+  connection,
+});
+const queueEvents = new QueueEvents('navigationQueue', {
+  connection,
+});
 
 // 클라이언트상에서 어떤 지점을 클릭했을 때 실행
 export async function playerMoveHandler(socket, packetData) {
@@ -32,27 +46,41 @@ export async function playerMoveHandler(socket, packetData) {
       );
     }
 
-    let navMesh = getNaveMesh(player.getSectorId());
-
     const targetPos = { x: targetPosX, y: targetPosY, z: targetPosZ };
     const currentPos = { x: startPosX, y: startPosY, z: startPosZ };
+    const sectorCode = player.getSectorId();
 
-    // NavMesh 기반 경로 탐색
-    const path = await findPath(navMesh, currentPos, targetPos);
+    // NavMesh 기반 경로 탐색, BullMQ Queue에 길찾기 요청 추가
+    const job = await navigationQueue.add('findPath', {
+      sectorCode: sectorCode,
+      start: currentPos,
+      end: targetPos,
+      socketId: socket.id, // 응답을 받을 클라이언트 식별자
+    });
 
-    let isValidPath;
-    if (path.length > 1) {
-      player.setPath(path);
-      isValidPath = true;
-    } else {
-      isValidPath = false;
-    }
+    console.log(`Job ${job.id} added to queue for player ${player.id}`);
 
-    return isValidPath;
+    return true;
   } catch (error) {
     console.error(error);
     handleError(socket, error);
   }
 }
+
+// BullMQ Queue에서 Job 완료 이벤트를 감지하고 클라이언트에게 응답
+queueEvents.on('completed', async ({ jobId, returnvalue }) => {
+  console.log(`Job ${jobId} completed! Sending path to client.`);
+
+  const { path, socketId } = returnvalue;
+
+  const playerSession = getPlayerSession();
+  const player = playerSession.getPlayerBySocketId(socketId);
+
+  if (player) {
+    player.setPath(path);
+  } else {
+    console.error(`Player not found for socket: ${socketId}`);
+  }
+});
 
 export default playerMoveHandler;

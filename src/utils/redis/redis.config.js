@@ -2,7 +2,7 @@ import Redis from 'ioredis';
 import chalk from 'chalk';
 import { REDIS_HOST, REDIS_PASSWORD, REDIS_PORT } from '../../constants/env.js';
 
-const redisClient = new Redis({
+export const redisClient = new Redis({
   host: REDIS_HOST,
   port: REDIS_PORT,
   password: REDIS_PASSWORD,

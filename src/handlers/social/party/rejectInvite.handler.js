@@ -15,6 +15,6 @@ export const rejectInviteHandler = (socket, packetData) => {
 
     return (member.isInvited = false);
   } catch (error) {
-    handleError(error);
+    handleError(socket, error);
   }
 };

@@ -50,6 +50,6 @@ export const chceckPartyListHandler = (socket, packetData) => {
 
     socket.write(packet);
   } catch (error) {
-    handleError(error);
+    handleError(socket, error);
   }
 };
