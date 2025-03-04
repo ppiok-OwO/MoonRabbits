@@ -19,10 +19,6 @@ class PlayerSession {
     );
     this.players.set(socket, newPlayer);
 
-    // getSectorSessions()
-    //   .getSector(config.sector.town)
-    //   .setPlayer(socket, newPlayer);
-
     // @@@ getSector가 sectorId로 탐색해서 수정 @@@
     getSectorSessions().getSector(100).setPlayer(socket, newPlayer);
 
@@ -40,9 +36,9 @@ class PlayerSession {
       const sector = SectorSessionManager.getSector(playerSectorId);
       sector.deletePlayer(player.user.socket);
       const partyId = player.getPartyId();
-      if(partyId){
+      if (partyId) {
         const party = partySessionManager.getParty(partyId);
-        leavePartyHandler(socket, {partyId, leftPlayerId: player.id});
+        leavePartyHandler(socket, { partyId, leftPlayerId: player.id });
       }
       // 디스폰
       sector.notify(PACKET.S2CDespawn([player.id]));

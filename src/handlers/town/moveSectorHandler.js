@@ -26,6 +26,8 @@ const moveSectorHandler = (socket, packetData) => {
       const party = partySession.getParty(player.partyId);
       const allMembers = party.getAllMembers().values();
       for (const member of allMembers) {
+        // 나 자신은 제외해야 함
+        if (member.id === player.id) continue;
         partyMembers.push(member);
       }
     } else {
@@ -68,10 +70,12 @@ const moveSectorHandler = (socket, packetData) => {
       }
 
       playerSpawnNotificationHandler(member.user.socket, {});
+
+      // 파티 멤버의 경로 초기화
+      member.setPath(null);
     });
   } catch (err) {
     console.error(err);
   }
 };
-
 export default moveSectorHandler;
