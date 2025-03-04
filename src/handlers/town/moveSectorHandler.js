@@ -26,6 +26,7 @@ const moveSectorHandler = (socket, packetData) => {
       const party = partySession.getParty(player.partyId);
       const allMembers = party.getAllMembers().values();
       for (const member of allMembers) {
+        if (member.id === player.id) continue;
         partyMembers.push(member);
       }
     } else {
