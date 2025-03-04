@@ -28,6 +28,7 @@ export const gatheringSkillCheckHandler = (socket, packetData) => {
 
       const dropItem = sector.resources[placedId].dropItem();
       socket.write(PACKET.S2CGatheringDone(placedId, dropItem.item, 1));
+      console.log('dropItem : \n', dropItem);
 
       // 나중에 아이템 받아오는 내역 필요함
 
@@ -44,14 +45,10 @@ export const gatheringSkillCheckHandler = (socket, packetData) => {
         );
       }
     } else {
-      handleError(
-        new CustomError(ErrorCodes.INVALID_INPUT, '이미 채집된 자원'),
-      );
+      handleError(new CustomError(ErrorCodes.INVALID_INPUT, '이미 채집된 자원'));
     }
   } else {
-    handleError(
-      new CustomError(ErrorCodes.INVALID_INPUT, '잘못된 자원 데이터'),
-    );
+    handleError(new CustomError(ErrorCodes.INVALID_INPUT, '잘못된 자원 데이터'));
   }
 };
 
