@@ -11,7 +11,7 @@ const removeTrapHandler = (socket, packetData) => {
 
   const payload = sector.deleteTrap(
     casterId, // 자연 파괴인 경우 playerId와 같지만, 발동 파괴인 경우 다름
-    PAYLOAD_DATA.Vec3(pos.x, pos.y || 0 , pos.z),
+    PAYLOAD_DATA.Vec3(pos.x, pos.y || 0, pos.z),
     socket,
   );
   if (payload) sector.notify(PACKET.S2CRemoveTrap([payload]));

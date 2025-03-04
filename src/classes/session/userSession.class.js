@@ -13,7 +13,7 @@ class UserSession {
     const newUser = new User(socket);
 
     this.users.set(socket, newUser);
-
+    console.log('newUser : ', newUser);
     // 임시 세션 키 생성 (로그인 전으로 userId가 없는 상태)
     const tempKey = `userSession:temp:${socket.id}`;
     redisClient.hset(tempKey, {
