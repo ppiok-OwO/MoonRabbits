@@ -41,20 +41,20 @@ export async function playerMoveHandler(socket, packetData) {
     // NavMesh 기반 경로 탐색
     const path = await findPath(navMesh, currentPos, targetPos);
 
-    let isValidPath;
-    if (path.length > 1) {
-      player.setPath(path);
-      isValidPath = true;
-    } else {
-      isValidPath = false;
-    }
+    // let isValidPath;
+    // if (path.length > 1) {
+    //   player.setPath(path);
+    //   isValidPath = true;
+    // } else {
+    //   isValidPath = false;
+    // }
 
     // Jmeter용 빈 응답 패킷
-    const packet = PACKET.S2CPlayerMove();
-    console.log(packet);
-    socket.write(packet);
+    // const packet = PACKET.S2CPlayerMove();
+    // console.log(packet);
+    // socket.write(packet);
 
-    return isValidPath;
+    // return isValidPath;
   } catch (error) {
     console.error(error);
     handleError(socket, error);
