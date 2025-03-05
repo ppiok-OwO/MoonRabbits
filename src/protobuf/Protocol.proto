@@ -104,6 +104,8 @@ enum MsgId {
   C2S_INVEST_POINT=203;
   S2C_INVEST_POINT=204;
 
+  C2S_GET_INVENTORY_SLOT_BY_ITEM_ID=209;
+  S2C_GET_INVENTORY_SLOT_BY_ITEM_ID=210;
   C2S_CRAFT = 211;
   S2C_CRAFT = 212;
 
@@ -446,7 +448,7 @@ message S2CInvestPoint {
 
 message C2SCraft{
   int32 recipeId = 1;
-  repeated MaterialInfo materialInfos = 2;
+  int32 count = 2;
 }
 message S2CCraft{
   int32 craftedItemId = 1;
@@ -459,6 +461,13 @@ message S2CPing {
 }
 message C2SPong {
   int64 timestamp = 1;
+}
+
+message C2SGetInventorySlotByItemId {
+  repeated int32 itemIds = 1;
+}
+message S2CGetInventorySlotByItemId {
+  repeated InventorySlot slots = 1;
 }
 
 /* 구조체 */

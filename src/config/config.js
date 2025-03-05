@@ -141,6 +141,8 @@ export const config = {
     C2SInvestPoint: PACKET_ID.C2SInvestPoint,
     S2CInvestPoint: PACKET_ID.S2CInvestPoint,
 
+    C2SGetInventorySlotByItemId: PACKET_ID.C2SGetInventorySlotByItemId,
+    S2CGetInventorySlotByItemId: PACKET_ID.S2CGetInventorySlotByItemId,
     C2SCraft: PACKET_ID.C2SCraft,
     S2CCraft: PACKET_ID.S2CCraft,
     S2CPing: PACKET_ID.S2CPing,

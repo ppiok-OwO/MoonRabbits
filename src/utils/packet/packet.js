@@ -336,5 +336,8 @@ const PACKET = {
   S2CPing: (timestamp_int64) => {
     return makePacket(PACKET_ID.S2CPing, PAYLOAD.S2CPing(timestamp_int64));
   },
+  S2CGetInventorySlotByItemId: (slots_InventorySlot_repeated) => {
+    return makePacket(PACKET_ID.S2CGetInventorySlotByItemId, {slots:slots_InventorySlot_repeated});
+  },
 };
 export default PACKET;
