@@ -16,7 +16,7 @@ class Monster {
   constructor(sectorCode, monsterIdx, area) {
     this.sectorCode = sectorCode; // 맵 코드 - 어느 섹터에 있는지
     this.monsterIdx = monsterIdx; // 몬스터 ID - 어떤 몬스터인지 구분
-    this.navMesh = getNaveMesh(sectorCode);
+    this.navMesh = getNavMesh(sectorCode);
     this.moveSpeed = 5; // 이동 속도
     this.lastUpdateTime = 0; // 마지막 업데이트 시간
     this.updateInterval = 100; // 10프레임 간격으로 위치 업데이트
