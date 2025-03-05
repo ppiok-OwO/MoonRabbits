@@ -6,6 +6,7 @@ import { getSectorSessions, getPlayerSession } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import handleError from '../../utils/error/errorHandler.js';
+import PACKET from '../../utils/packet/packet.js';
 
 // 클라이언트상에서 어떤 지점을 클릭했을 때 실행
 export async function playerMoveHandler(socket, packetData) {
@@ -47,6 +48,10 @@ export async function playerMoveHandler(socket, packetData) {
     } else {
       isValidPath = false;
     }
+
+    // Jmeter용 빈 응답 패킷
+    const packet = PACKET.S2CPlayerMove();
+    socket.write(packet);
 
     return isValidPath;
   } catch (error) {
