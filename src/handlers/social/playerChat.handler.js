@@ -10,8 +10,7 @@ import PACKET from '../../utils/packet/packet.js';
 
 export const chatHandler = (socket, packetData) => {
   try {
-    const { playerId, chatMsg, chatType } =
-      packetData;
+    const { playerId, chatMsg, chatType } = packetData;
 
     // 플레이어 세션을 통해 플레이어 인스턴스를 불러온다.
     const playerSession = getPlayerSession();

@@ -1,13 +1,16 @@
 import chalk from 'chalk';
-import { getUserSessions } from '../session/sessions.js';
+import { getPlayerSession, getUserSessions } from '../session/sessions.js';
 import { updateInventory } from '../db/user/user.db.js';
 import RedisSession from '../classes/session/redisSession.class.js';
 
 export const onEnd = (socket) => async () => {
   console.log('클라이언트 연결이 종료되었습니다. (END)');
 
-  await updateInventory();
+  const player_id = socket.player.playerId;
+
+  await updateInventory(player_id);
   console.log('인벤토리 DB 저장 완료');
+
   const userSessionManager = getUserSessions();
 
   // 1. userSession에서 해당 소켓에 대한 사용자 세션 삭제
@@ -22,5 +25,4 @@ export const onEnd = (socket) => async () => {
   } else {
     console.log(chalk.yellow(`[onEnd] userSession에서 찾을 수 없습니다. : ${socket.id}`));
   }
-
 };

@@ -1,0 +1,38 @@
+{
+  "name": "portal",
+  "version": "1.0.0",
+  "data": [
+    {
+      "portal_id": 50000,
+      "portal_name": "PortalA",
+      "sector_code": 102,
+      "portal_location_x": 13.6386642,
+      "portal_location_y": -17.0151882,
+      "portal_location_z": -0.0910692215
+    },
+    {
+      "portal_id": 50001,
+      "portal_name": "PortalB",
+      "sector_code": 102,
+      "portal_location_x": -16.6567612,
+      "portal_location_y": -16.9151897,
+      "portal_location_z": -69.381073
+    },
+    {
+      "portal_id": 50002,
+      "portal_name": "PortalA",
+      "sector_code": 103,
+      "portal_location_x": -12.5667706,
+      "portal_location_y": -17.0151882,
+      "portal_location_z": 28.4089317
+    },
+    {
+      "portal_id": 50003,
+      "portal_name": "PortalB",
+      "sector_code": 103,
+      "portal_location_x": 3.0432415,
+      "portal_location_y": -17.0151882,
+      "portal_location_z": -60.161068
+    }
+  ]
+}

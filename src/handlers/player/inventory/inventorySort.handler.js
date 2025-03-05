@@ -2,6 +2,8 @@ import chalk from 'chalk';
 import redisClient from '../../../utils/redis/redis.config.js';
 import CustomError from '../../../utils/error/customError.js';
 import { ErrorCodes } from '../../../utils/error/errorCodes.js';
+import PACKET from '../../../utils/packet/packet.js';
+import { inventoryUpdateHandler } from './inventoryUpdate.handler.js';
 
 export const inventorySortHandler = async (socket, packetData) => {
   try {
@@ -16,14 +18,15 @@ export const inventorySortHandler = async (socket, packetData) => {
     // 현재 저장되어 있는 인벤토리 데이터를 초기화
     await redisClient.del(redisKey);
 
-    // 새로운 인벤토리 배열 데이터를 반복문을 통해 Redis에 저장
-    for (const slot of slots) {
-      const { slotIdx, itemId, stack } = slot;
-      // 각 슬롯 데이터는 JSON 문자열로 변환하여 저장
-      await redisClient.hset(redisKey, slotIdx.toString(), JSON.stringify({ itemId, stack }));
+    // 정렬된 슬롯 배열의 순서대로 재인덱싱하여 저장
+    for (let i = 0; i < slots.length; i++) {
+      const { itemId, stack } = slots[i];
+      await redisClient.hset(redisKey, i.toString(), JSON.stringify({ itemId, stack }));
     }
 
-    console.log(`User ${player_id}의 인벤토리가 정렬되어 Redis에 업데이트되었습니다.`);
+    console.log(`Player ${player_id}의 인벤토리가 정렬되어 Redis에 업데이트되었습니다.`);
+
+    // await inventoryUpdateHandler(socket);
   } catch (error) {
     console.error(chalk.red('[inventorySort Error]\n', error));
     socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'inventorySort 에러'));

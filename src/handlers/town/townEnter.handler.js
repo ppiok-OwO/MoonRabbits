@@ -6,7 +6,7 @@ import { getUserSessions } from '../../session/sessions.js';
 
 import playerSpawnNotificationHandler from './playerSpawnNotification.handler.js';
 import chalk from 'chalk';
-import { loadStat, updateInventory } from '../../db/user/user.db.js';
+import { loadStat, syncInventoryToRedisAndSend, updateInventory } from '../../db/user/user.db.js';
 import RedisSession from '../../classes/session/redisSession.class.js';
 import { inventoryUpdateHandler } from '../player/inventory/inventoryUpdate.handler.js';
 
@@ -59,6 +59,7 @@ const townEnterHandler = async (socket, packetData) => {
 
     // 인벤토리 업데이트 핸들러를 호출하여 MySQL에 저장된 인벤토리 정보를 Redis에 저장하고,
     // 재구성한 후 클라이언트에 인벤토리 패킷을 전송함
+    // MySQL에서 Redis로 인벤토리 데이터를 동기화
     await inventoryUpdateHandler(socket);
   } catch (error) {
     console.error(`${chalk.red('[townEnterHanlder Error]')}\n${error}`);
