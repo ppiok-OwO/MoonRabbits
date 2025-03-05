@@ -102,6 +102,13 @@ class Sector {
     }
   }
 
+  notifyExceptMe(packet, myPlayerId) {
+    for (const player of this.players.values()) {
+      if (player.id === myPlayerId) continue;
+      player.sendPacket(packet);
+    }
+  }
+
   // 맵의 구역 정보 추가
   async addMapAreas(areas) {
     this.mapAreas.push(areas);
@@ -126,8 +133,6 @@ class Sector {
   deleteTrap(casterId, pos, socket) {
     // [1] 플레이의 덫 Map 가져옴
     const currentTraps = this.traps.get(casterId);
-    console.log('!!! 지우기 전 : ', currentTraps);
-    console.log('!!! 지울 넘 : ', pos);
     // [2] 클라의 위치정보와 일치하는 덫이 없다면 리턴
     const trapKey = `${pos.x}${pos.z}`;
     if (!currentTraps.has(trapKey)) {
@@ -136,7 +141,6 @@ class Sector {
     }
     // [3] 해당 덫 Map에서 제거
     if (currentTraps.delete(trapKey)) {
-      console.log('!!! 지운 후 : ', currentTraps);
       // [4] 제거 성공 시 제거한 덫 정보 반환
       return PAYLOAD_DATA.TrapInfo(casterId, pos);
     }
