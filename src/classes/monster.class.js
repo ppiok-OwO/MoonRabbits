@@ -47,6 +47,11 @@ class Monster {
     this.attackDuration = 1000; // 공격 지속 시간
     this.attackStartTime = 0; // 공격 시작 시간
 
+    // 스턴 관련 속성
+    this.isSturn = false; // 스턴 중인지 여부
+    this.sturnDuration = 2000; // 스턴 지속 시간
+    this.sturnStartTime = 0; // 스턴 시작 시간
+
     // 움직임 방향 저장
     this.direction = { x: 0, z: 0 };
   }
@@ -246,12 +251,28 @@ class Monster {
       this.stateChanged = true; // 상태 변경 플래그 설정
     }
   }
+  startSturn(duration) {
+    if (!this.isSturn) {
+      this.isSturn = true;
+      this.sturnDuration = duration * 1000;
+      this.sturnStartTime = Date.now();
+      this.stateChanged = true;
+    }
+  }
 
   // 공격 종료 함수
   endAttack() {
     if (this.isAttacking) {
       this.isAttacking = false;
       this.stateChanged = true; // 상태 변경 플래그 설정
+    }
+  }
+
+  // 스턴 종료 함수
+  endSturn() {
+    if (this.isSturn) {
+      this.isSturn = false;
+      this.stateChanged = true;
     }
   }
 
@@ -262,6 +283,16 @@ class Monster {
       currentTime - this.attackStartTime >= this.attackDuration
     ) {
       this.endAttack();
+    }
+  }
+
+  //스턴 상태 업데이트
+  updateSturnState(currentTime) {
+    if (
+      this.isSturn &&
+      currentTime - this.sturnStartTime >= this.sturnDuration
+    ) {
+      this.endSturn();
     }
   }
 
@@ -394,7 +425,7 @@ class Monster {
   // 경로를 따라 이동
   moveAlongPath(deltaTime) {
     // 공격 중이면 이동하지 않음
-    if (this.isAttacking) {
+    if (this.isAttacking || this.isSturn) {
       return false;
     }
 
@@ -444,7 +475,7 @@ class Monster {
   // 플레이어 추적 관련 로직 업데이트
   async updatePlayerTracking(currentTime) {
     // 공격 중이면 플레이어 추적 로직 건너뜀
-    if (this.isAttacking) {
+    if (this.isAttacking || this.isSturn) {
       return;
     }
 
@@ -574,19 +605,27 @@ class Monster {
 
     // 이전 상태 백업
     const prevIsAttacking = this.isAttacking;
+    const prevIsSturn = this.isSturn;
     const prevPosition = { ...this.position };
 
     try {
       // 공격 상태 업데이트
       this.updateAttackState(currentTime);
+      // 스턴 상태 업데이트
+      this.updateSturnState(currentTime);
 
       // 공격 상태 변경 감지
       if (prevIsAttacking !== this.isAttacking) {
         this.stateChanged = true;
       }
 
+      // 스턴 상태 변경 감지
+      if (prevIsSturn !== this.isSturn) {
+        this.stateChanged = true;
+      }
+
       // 공격 중이 아닐 때만 플레이어 추적 및 이동 로직 실행
-      if (!this.isAttacking) {
+      if (!this.isAttacking || !this.isSturn) {
         // 플레이어 추적 로직 업데이트
         await this.updatePlayerTracking(currentTime);
 

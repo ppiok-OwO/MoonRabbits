@@ -328,6 +328,11 @@ class Sector {
       await this.update();
     }, this.updateInterval);
   }
+  setSturnMonster(monsterIds, duration) {
+    for (let id of monsterIds) {
+      this.monsters.get(id).startSturn(duration);
+    }
+  }
 
   getResources() {
     const resourcesPayloadData = [];
