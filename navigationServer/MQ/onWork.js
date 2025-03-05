@@ -32,5 +32,8 @@ export const navigationWorker = new Worker(
     // Job 결과 반환
     return { path, socketId };
   },
-  { connection },
+  {
+    concurrency: 2, // 동시에 2개의 경로 탐색을 처리
+    connection,
+  },
 );
