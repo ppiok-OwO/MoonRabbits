@@ -27,6 +27,7 @@ class User {
     const now = Date.now();
     this.lastPong = now;
     this.latency = (now - milliseconds) / 2; // 왕복이니까
+    console.log('레이턴시 췤!: ', this.latency);
   }
 
   checkPong = async () => {
