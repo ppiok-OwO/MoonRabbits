@@ -4,7 +4,7 @@ import handleError from '../../utils/error/errorHandler.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { addExpHandler } from '../player/addExp.handler.js';
-import { addItemToInventory } from '../player/inventory/InventoryManager.js';
+import { addItemToInventory } from '../player/inventory/inventoryManager.js';
 import inventoryUpdateHandler from '../player/inventory/inventoryUpdate.handler.js';
 
 export const gatheringSkillCheckHandler = async (socket, packetData) => {
@@ -55,10 +55,14 @@ export const gatheringSkillCheckHandler = async (socket, packetData) => {
         );
       }
     } else {
-      handleError(new CustomError(ErrorCodes.INVALID_INPUT, '이미 채집된 자원'));
+      handleError(
+        new CustomError(ErrorCodes.INVALID_INPUT, '이미 채집된 자원'),
+      );
     }
   } else {
-    handleError(new CustomError(ErrorCodes.INVALID_INPUT, '잘못된 자원 데이터'));
+    handleError(
+      new CustomError(ErrorCodes.INVALID_INPUT, '잘못된 자원 데이터'),
+    );
   }
 };
 
