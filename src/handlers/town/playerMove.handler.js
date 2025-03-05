@@ -20,20 +20,20 @@ export async function playerMoveHandler(socket, packetData) {
       targetPosZ,
     } = packetData;
 
-    const playerSession = getPlayerSession();
-    const player = playerSession.getPlayer(socket);
+    // const playerSession = getPlayerSession();
+    // const player = playerSession.getPlayer(socket);
 
-    if (!player) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.USER_NOT_FOUND,
-          '플레이어 정보를 찾을 수 없습니다.',
-        ),
-      );
-    }
+    // if (!player) {
+    //   return socket.emit(
+    //     'error',
+    //     new CustomError(
+    //       ErrorCodes.USER_NOT_FOUND,
+    //       '플레이어 정보를 찾을 수 없습니다.',
+    //     ),
+    //   );
+    // }
 
-    let navMesh = getNaveMesh(player.getSectorId());
+    let navMesh = getNaveMesh(100);
 
     const targetPos = { x: targetPosX, y: targetPosY, z: targetPosZ };
     const currentPos = { x: startPosX, y: startPosY, z: startPosZ };
