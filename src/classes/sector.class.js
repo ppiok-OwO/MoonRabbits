@@ -329,6 +329,7 @@ class Sector {
     }, this.updateInterval);
   }
   setSturnMonster(monsterIds, duration) {
+    console.log(monsterIds, duration);
     for (let id of monsterIds) {
       this.monsters.get(id).startSturn(duration);
     }
