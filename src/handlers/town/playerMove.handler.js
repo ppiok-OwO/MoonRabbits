@@ -52,6 +52,7 @@ export async function playerMoveHandler(socket, packetData) {
     // Jmeter용 빈 응답 패킷
     const packet = PACKET.S2CPlayerMove(path);
     socket.write(packet);
+    console.log(packet);
 
     // return isValidPath;
   } catch (error) {
