@@ -61,7 +61,7 @@ queueEvents.on('completed', async ({ jobId, returnvalue }) => {
   const userSession = getUserSessions();
   const user = userSession.getUserBySocketId(socketId);
 
-  user.socket.write({ path });
+  user.socket.write(JSON.stringify({ path }));
 
   // if (player) {
   //   player.setPath(path);
