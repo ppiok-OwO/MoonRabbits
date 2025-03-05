@@ -69,4 +69,4 @@ export const rankingHandler = async (socket, packetData) => {
   }
 };
 
-export default rankingHandlers;
+export default rankingHandler;
