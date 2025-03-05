@@ -50,11 +50,8 @@ export async function playerMoveHandler(socket, packetData) {
     // }
 
     // Jmeter용 빈 응답 패킷
-    // const packet = PACKET.S2CPlayerMove();
-    // console.log(packet);
-    // socket.write(packet);
-
-    // socket.write(path);
+    const packet = PACKET.S2CPlayerMove();
+    socket.write(packet);
 
     // return isValidPath;
   } catch (error) {
