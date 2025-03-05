@@ -7,7 +7,7 @@ export const Sector1NavMesh = await loadNavMesh('Sector1 Exported NavMesh.obj');
 export const Sector2NavMesh = await loadNavMesh('Sector2 Exported NavMesh.obj');
 export const Sector3NavMesh = await loadNavMesh('Sector3 Exported NavMesh.obj');
 
-export const getNaveMesh = (sectorCode) => {
+export const getNavMesh = (sectorCode) => {
   switch (sectorCode) {
     case 100:
       return townNavMesh;
