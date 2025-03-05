@@ -1,4 +1,4 @@
-import { getPlayerSession } from '../../session/sessions.js';
+import { getPlayerSession, getUserSessions } from '../../session/sessions.js';
 import { navigationQueue, queueEvents } from '../../utils/bullMQ/setting.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
@@ -16,26 +16,26 @@ export async function playerMoveHandler(socket, packetData) {
       targetPosZ,
     } = packetData;
 
-    const playerSession = getPlayerSession();
-    const player = playerSession.getPlayer(socket);
+    // const playerSession = getPlayerSession();
+    // const player = playerSession.getPlayer(socket);
 
-    if (!player) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.USER_NOT_FOUND,
-          '플레이어 정보를 찾을 수 없습니다.',
-        ),
-      );
-    }
+    // if (!player) {
+    //   return socket.emit(
+    //     'error',
+    //     new CustomError(
+    //       ErrorCodes.USER_NOT_FOUND,
+    //       '플레이어 정보를 찾을 수 없습니다.',
+    //     ),
+    //   );
+    // }
 
     const targetPos = { x: targetPosX, y: targetPosY, z: targetPosZ };
     const currentPos = { x: startPosX, y: startPosY, z: startPosZ };
-    const sectorCode = player.getSectorId();
+    // const sectorCode = player.getSectorId();
 
     // NavMesh 기반 경로 탐색, BullMQ Queue에 길찾기 요청 추가
     const job = await navigationQueue.add('findPath', {
-      sectorCode: sectorCode,
+      sectorCode: 1001,
       start: currentPos,
       end: targetPos,
       socketId: socket.id, // 응답을 받을 클라이언트 식별자
@@ -56,14 +56,18 @@ queueEvents.on('completed', async ({ jobId, returnvalue }) => {
 
   const { path, socketId } = returnvalue;
 
-  const playerSession = getPlayerSession();
-  const player = playerSession.getPlayerBySocketId(socketId);
+  // const playerSession = getPlayerSession();
+  // const player = playerSession.getPlayerBySocketId(socketId);
+  const userSession = getUserSessions();
+  const user = userSession.getUserBySocketId(socketId);
 
-  if (player) {
-    player.setPath(path);
-  } else {
-    console.error(`소켓ID에 해당하는 플레이어를 찾을 수 없습니다: ${socketId}`);
-  }
+  user.socket.write(path);
+
+  // if (player) {
+  //   player.setPath(path);
+  // } else {
+  //   console.error(`소켓ID에 해당하는 플레이어를 찾을 수 없습니다: ${socketId}`);
+  // }
 });
 
 export default playerMoveHandler;

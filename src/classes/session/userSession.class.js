@@ -65,6 +65,12 @@ class UserSession {
     return this.users.get(socket);
   }
 
+  getUserBySocketId(socketId) {
+    for (const user of this.users.values()) {
+      if (user.socket.id === socketId) return user;
+    }
+  }
+
   getAllUsers() {
     return this.users.values();
   }
