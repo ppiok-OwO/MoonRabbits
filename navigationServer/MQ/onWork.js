@@ -1,4 +1,4 @@
-import { Worker } from 'bullmq';
+import { Worker, Queue } from 'bullmq';
 import IORedis from 'ioredis';
 import dotenv from 'dotenv';
 import { findPath } from '../pathfinder/findPath.js';
@@ -18,7 +18,7 @@ export const connection = new IORedis({
 export const navigationWorker = new Worker(
   'navigationQueue',
   async (job) => {
-    console.log(`Processing job ${job.id}`);
+    console.log(`job 처리하는 중 : ${job.id}`);
 
     const { sectorCode, start, end, socketId } = job.data;
 
@@ -27,7 +27,7 @@ export const navigationWorker = new Worker(
     // 길찾기 수행
     const path = await findPath(navMesh, start, end);
 
-    console.log(`Path computed for job ${job.id}`);
+    console.log(`경로 생성 됨 : ${job.id}`);
 
     // Job 결과 반환
     return { path, socketId };

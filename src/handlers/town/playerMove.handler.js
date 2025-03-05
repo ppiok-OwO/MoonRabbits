@@ -14,8 +14,12 @@ const connection = new IORedis({
 });
 
 // BullMQ Queue 생성
-const navigationQueue = new Queue('navigationQueue', {
+export const navigationQueue = new Queue('navigationQueue', {
   connection,
+  defaultJobOptions: {
+    removeOnComplete: 50,  // 마지막 50개 Job만 유지
+    removeOnFail: 50        // 마지막 50개 실패한 Job만 유지
+  }
 });
 const queueEvents = new QueueEvents('navigationQueue', {
   connection,
@@ -58,7 +62,7 @@ export async function playerMoveHandler(socket, packetData) {
       socketId: socket.id, // 응답을 받을 클라이언트 식별자
     });
 
-    console.log(`Job ${job.id} added to queue for player ${player.id}`);
+    console.log(`Job ${job.id}이 추가되었습니다.`);
 
     return true;
   } catch (error) {
@@ -69,7 +73,7 @@ export async function playerMoveHandler(socket, packetData) {
 
 // BullMQ Queue에서 Job 완료 이벤트를 감지하고 클라이언트에게 응답
 queueEvents.on('completed', async ({ jobId, returnvalue }) => {
-  console.log(`Job ${jobId} completed! Sending path to client.`);
+  console.log(`Job ${jobId} 이 완료되었습니다!`);
 
   const { path, socketId } = returnvalue;
 
@@ -79,7 +83,7 @@ queueEvents.on('completed', async ({ jobId, returnvalue }) => {
   if (player) {
     player.setPath(path);
   } else {
-    console.error(`Player not found for socket: ${socketId}`);
+    console.error(`소켓ID에 해당하는 플레이어를 찾을 수 없습니다: ${socketId}`);
   }
 });
 

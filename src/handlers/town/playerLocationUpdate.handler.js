@@ -32,7 +32,7 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
 
     const path = player.getPath();
     if (path === null) {
-      console.log('생성된 경로가 없음!!');
+      console.log('아직 경로가 생성되지 않았습니다.');
       player.setPosition(transform);
     } else {
       // PathValidator 사용하여 가장 가까운 경로 포인트 찾기
