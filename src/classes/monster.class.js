@@ -5,6 +5,12 @@ import PAYLOAD from '../utils/packet/payload.js';
 import PAYLOAD_DATA from '../utils/packet/payloadData.js';
 import { getSectorSessions } from '../session/sessions.js';
 import { getNavMesh } from '../init/navMeshData.js';
+import { performance, PerformanceObserver } from 'perf_hooks';
+
+const obs = new PerformanceObserver((list) => {
+  console.log(list.getEntries());
+});
+obs.observe({ entryTypes: ['measure'] });
 
 class Monster {
   constructor(sectorCode, monsterIdx, area) {
@@ -349,12 +355,15 @@ class Monster {
         adjustedTarget.z = this.homePosition.z + dz * ratio;
       }
 
+      performance.mark('start');
       const path = await findPath(
         this.navMesh,
         this.position,
         adjustedTarget,
         this.stepSize,
       );
+      performance.mark('end');
+      performance.measure('몬스터 경로 계산 시간', 'start', 'end');
 
       // 경로를 찾지 못하면 현재 위치에서 홈으로 복귀 경로 계산
       if (!path || path.length === 0) {

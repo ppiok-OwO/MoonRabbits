@@ -41,7 +41,7 @@ export async function playerMoveHandler(socket, packetData) {
       socketId: socket.id, // 응답을 받을 클라이언트 식별자
     });
 
-    console.log(`Job ${job.id}이 추가되었습니다.`);
+    console.log(`Job ${job.id}가 추가되었습니다.`);
 
     return true;
   } catch (error) {
