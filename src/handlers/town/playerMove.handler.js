@@ -35,7 +35,7 @@ export async function playerMoveHandler(socket, packetData) {
 
     // NavMesh 기반 경로 탐색, BullMQ Queue에 길찾기 요청 추가
     const job = await navigationQueue.add('findPath', {
-      sectorCode: 1001,
+      sectorCode: 101,
       start: currentPos,
       end: targetPos,
       socketId: socket.id, // 응답을 받을 클라이언트 식별자
