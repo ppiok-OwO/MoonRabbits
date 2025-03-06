@@ -41,8 +41,8 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
         transform,
       );
 
-      const latency = player.user.getLatency() / 1000;
-      const predictedPos = predictPosition(socket, player, transform, latency);
+      // const latency = player.user.getLatency() / 1000;
+      // const predictedPos = predictPosition(socket, player, transform, latency);
 
       // 추측항법이 끝난 뒤에 플레이어 포지션 업데이트
       player.setPosition(transform);
@@ -70,8 +70,9 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
         }
         return;
       } else {
-        // 오차 범위를 벗어나지 않았으면 추측항법으로 예측한 위치를 전달
-        const packet = PACKET.S2CPlayerLocation(player.id, predictedPos, true);
+        // 오차 범위를 벗어나지 않았으면
+        // const packet = PACKET.S2CPlayerLocation(player.id, predictedPos, true);
+        const packet = PACKET.S2CPlayerLocation(player.id, transform, true);
         const sectorCode = player.getSectorId();
         if (sectorCode) {
           // 만약 던전이면
