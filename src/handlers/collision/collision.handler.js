@@ -164,10 +164,10 @@ export function checkCapsuleCollision(data) {
 
     // 3. 충돌이 없기 위한 최소 거리 계산
     const minDistance = myRadius + targetRadius;
-    const minDistanceSquared = minDistance * minDistance;
+    // const minDistanceSquared = minDistance * minDistance;
 
     // 4. 충돌 검사
-    if (distanceSquared < minDistanceSquared) {
+    if (Math.sqrt(distanceSquared) <= minDistance) {
       // 5. 밀어내기 방향 계산 (타겟에서 자신을 향하는 정규화된 벡터)
       const distance = Math.sqrt(distanceSquared);
       let pushDirection;

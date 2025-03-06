@@ -11,15 +11,15 @@ import fs from 'fs';
 // [8] 행복 프로토 생활 시작...
 
 const MSG_IDS = `
- C2S_REGISTER=0;
+  C2S_REGISTER=0;
   S2C_REGISTER=1;
   C2S_LOGIN=2;
   S2C_LOGIN=3;
   C2S_CREATE_CHARACTER=4;
   S2C_CREATE_CHARACTER=5;
 
-  C2S_ENTER=10;
-  S2C_ENTER=11;
+  C2S_ENTER_TOWN=10;
+  S2C_ENTER_TOWN=11;
   C2S_MOVE_SECTOR=12;
   S2C_MOVE_SECTOR=13;
 
@@ -144,19 +144,21 @@ message S2CCreateCharacter{
   string msg = 2;
 }
 
-message C2SEnter{
+message C2SEnterTown{
   string nickname = 1;
   int32 classCode = 2;
-  int32 targetSector = 3;
 }
-message S2CEnter{
-  int32 targetSector = 1;
-  PlayerInfo player = 2;
+message S2CEnterTown{
+  PlayerInfo myPlayer = 1;
 }
 message C2SMoveSector{
-  optional int32 targetSector = 1;
+  int32 targetSector = 1;
 }
-message S2CMoveSector{}
+message S2CMoveSector{
+  int32 targetSector = 1;
+  repeated PlayerInfo players = 2;
+  repeated TrapInfo traps = 3;
+}
 
 message C2SEmote{
   int32 animCode = 1;
@@ -180,10 +182,10 @@ message S2CChat{
 }
 
 message S2CSpawn{
-  repeated PlayerInfo players = 1;
+  PlayerInfo player = 1;
 }
 message S2CDespawn{
-  repeated int32 playerIds = 1;
+  int32 playerIds = 1;
 }
 
 message C2SPlayerMove{

@@ -24,4 +24,6 @@ export const SQL_QUERIES = {
   UPDATE_STAT_LEVEL: 'UPDATE Stats SET level = ?, exp = ?, ability_point = ? WHERE player_id = ?',
   UPDATE_STAT:
     'UPDATE Stats SET stamina = ?, pick_speed = ?, move_speed = ?, ability_point = ? WHERE player_id = ?',
+  TAKE_RANKING_DATA:
+    'SELECT p.player_id, p.nickname, s.exp FROM Players p JOIN Stats s ON p.player_id = s.player_id ORDER BY s.exp DESC',
 };

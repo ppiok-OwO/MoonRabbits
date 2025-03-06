@@ -4,7 +4,6 @@ import { ErrorCodes } from '../utils/error/errorCodes.js';
 import { animationHandler } from './social/playerAnimation.handler.js';
 import { chatHandler } from './social/playerChat.handler.js';
 import playerMoveHandler from './town/playerMove.handler.js';
-import playerSpawnNotificationHandler from './town/playerSpawnNotification.handler.js';
 import townEnterHandler from './town/townEnter.handler.js';
 import playerLocationUpdateHandler from './town/playerLocationUpdate.handler.js';
 import registerHandler from './account/register.handler.js';
@@ -42,14 +41,14 @@ import inventorySortHandler from './player/inventory/inventorySort.handler.js';
 import inventoryUpdateHandler from './player/inventory/inventoryUpdate.handler.js';
 import { pongHandler } from './pong.handler.js';
 import { portalHandler } from './playerAction/portal.handler.js';
+import rankingHandler from './ranking/ranking.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
 // 패킷 ID별로 핸들러 맵핑
 const handlers = {
-  [config.packetId.C2SEnter]: townEnterHandler,
+  [config.packetId.C2SEnterTown]: townEnterHandler,
   [config.packetId.C2SMoveSector]: moveSectorHandler,
-  [config.packetId.S2CPlayerSpawn]: playerSpawnNotificationHandler,
   [config.packetId.C2SPlayerLocation]: playerLocationUpdateHandler,
   [config.packetId.C2SPlayerMove]: playerMoveHandler,
   [config.packetId.C2SEmote]: animationHandler,
@@ -98,6 +97,9 @@ const handlers = {
   // 포탈 관련 핸들러
   [config.packetId.C2SPortal]: portalHandler,
   [config.packetId.C2SPong]: pongHandler,
+
+  // 랭킹 관련 핸들러
+  [config.packetId.C2SRankingList]: rankingHandler,
 };
 
 export const getHandlerByPacketId = (packetId) => {
