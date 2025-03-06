@@ -4,6 +4,7 @@ import { getGameAssets } from '../init/assets.js';
 import PACKET from '../utils/packet/packet.js';
 import Monster from './monster.class.js';
 import { getNaveMesh } from '../init/navMeshData.js';
+import { updateDurabilityHandler } from '../handlers/gathering/UpdateDurability.handler.js';
 
 class Sector {
   constructor(sectorId, sectorCode, resources = []) {
@@ -34,8 +35,13 @@ class Sector {
   }
   getResources() {
     const resourcesPayloadData = [];
-    for(let i = 1; i<this.resources.length; i++){
-      resourcesPayloadData.push(PAYLOAD_DATA.Resource(this.resources[i].getResourceIdx(), this.resources[i].getResourceId()));
+    for (let i = 1; i < this.resources.length; i++) {
+      resourcesPayloadData.push(
+        PAYLOAD_DATA.Resource(
+          this.resources[i].getResourceIdx(),
+          this.resources[i].getResourceId(),
+        ),
+      );
     }
     return resourcesPayloadData;
   }
@@ -47,10 +53,14 @@ class Sector {
     return this.sectorCode;
   }
 
+  getDurability(resourceIdx) {
+    return this.resources[resourceIdx].getDurability();
+  }
+
   subDurability(resourceIdx, sub = 1) {
     if (resourceIdx >= 0 && resourceIdx < this.resources.length) {
       const durability = this.resources[resourceIdx].subDurability(sub);
-      this.notify(PACKET.S2CUpdateDurability(resourceIdx, durability));
+      updateDurabilityHandler(this, { resourceIdx, durability });
       return durability;
     }
     return -1;
@@ -58,7 +68,7 @@ class Sector {
   resetDurability(resourceIdx) {
     if (resourceIdx >= 0 && resourceIdx < this.resources.length) {
       const durability = this.resources[resourceIdx].resetDurability();
-      this.notify(PACKET.S2CUpdateDurability(resourceIdx, durability));
+      updateDurabilityHandler(this, { resourceIdx, durability });
       return durability;
     }
     return -1;
