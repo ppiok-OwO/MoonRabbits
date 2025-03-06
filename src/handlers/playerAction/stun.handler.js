@@ -1,7 +1,7 @@
 import PACKET from '../../utils/packet/packet.js';
 import { getPlayerSession, getSectorSessions } from '../../session/sessions.js';
 
-const STUN_TIMER = { 0: 3, 1: 5 };
+const STUN_TIMER = { 1: 3, 2: 5 };
 
 const stunHandler = (socket, packetData) => {
   const { skillType, playerIds, monsterIds } = packetData;
