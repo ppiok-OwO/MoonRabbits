@@ -29,10 +29,24 @@ const PACKET = {
       PAYLOAD.S2CCreateCharacter(isSuccess_bool, msg_string),
     );
   },
-  S2CEnter: (targetSector_int32, player_PlayerInfo) => {
+  S2CEnterTown: (players_PlayerInfo_repeated) => {
     return makePacket(
-      PACKET_ID.S2CEnter,
-      PAYLOAD.S2CEnter(targetSector_int32, player_PlayerInfo),
+      PACKET_ID.S2CEnterTown,
+      PAYLOAD.S2CEnterTown(players_PlayerInfo_repeated),
+    );
+  },
+  S2CMoveSector: (
+    targetSector_int32,
+    players_PlayerInfo_repeated,
+    traps_TrapInfo_repeated,
+  ) => {
+    return makePacket(
+      PACKET_ID.S2CMoveSector,
+      PAYLOAD.S2CMoveSector(
+        targetSector_int32,
+        players_PlayerInfo_repeated,
+        traps_TrapInfo_repeated,
+      ),
     );
   },
   S2CEmote: (playerId_int32, animCode_int32) => {
@@ -47,16 +61,13 @@ const PACKET = {
       PAYLOAD.S2CChat(playerId_int32, chatMsg_string, chatType_string),
     );
   },
-  S2CSpawn: (players_PlayerInfo_repeated) => {
-    return makePacket(
-      PACKET_ID.S2CSpawn,
-      PAYLOAD.S2CSpawn(players_PlayerInfo_repeated),
-    );
+  S2CSpawn: (player_PlayerInfo) => {
+    return makePacket(PACKET_ID.S2CSpawn, PAYLOAD.S2CSpawn(player_PlayerInfo));
   },
-  S2CDespawn: (playerIds_int32_repeated) => {
+  S2CDespawn: (playerId_int32) => {
     return makePacket(
       PACKET_ID.S2CDespawn,
-      PAYLOAD.S2CDespawn(playerIds_int32_repeated),
+      PAYLOAD.S2CDespawn(playerId_int32),
     );
   },
   S2CPlayerMove: () => {

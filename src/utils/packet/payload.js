@@ -16,8 +16,19 @@ const PAYLOAD = {
   S2CCreateCharacter: (isSuccess_bool, msg_string) => {
     return { isSuccess: isSuccess_bool, msg: msg_string };
   },
-  S2CEnter: (targetSector_int32, player_PlayerInfo) => {
-    return { targetSector: targetSector_int32, player: player_PlayerInfo };
+  S2CEnterTown: (players_PlayerInfo_repeated) => {
+    return { players: players_PlayerInfo_repeated };
+  },
+  S2CMoveSector: (
+    targetSector_int32,
+    players_PlayerInfo_repeated,
+    traps_TrapInfo_repeated,
+  ) => {
+    return {
+      targetSector: targetSector_int32,
+      players: players_PlayerInfo_repeated,
+      traps: traps_TrapInfo_repeated,
+    };
   },
   S2CEmote: (playerId_int32, animCode_int32) => {
     return { playerId: playerId_int32, animCode: animCode_int32 };
@@ -29,11 +40,11 @@ const PAYLOAD = {
       chatType: chatType_string,
     };
   },
-  S2CSpawn: (players_PlayerInfo_repeated) => {
-    return { players: players_PlayerInfo_repeated };
+  S2CSpawn: (player_PlayerInfo) => {
+    return { player: player_PlayerInfo };
   },
-  S2CDespawn: (playerIds_int32_repeated) => {
-    return { playerIds: playerIds_int32_repeated };
+  S2CDespawn: (playerId_int32) => {
+    return { playerId: playerId_int32 };
   },
   S2CPlayerMove: () => {
     return {};
