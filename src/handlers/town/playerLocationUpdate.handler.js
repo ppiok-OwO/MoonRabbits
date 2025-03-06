@@ -102,7 +102,7 @@ function predictPosition(socket, player, transform, latency) {
   let magnitude = Math.sqrt(
     velocity.posX ** 2 + velocity.posY ** 2 + velocity.posZ ** 2,
   );
-  if (magnitude > 7) {
+  if (magnitude > 20) {
     magnitude = 10;
     return socket.emit(
       'error',
