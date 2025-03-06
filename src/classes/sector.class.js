@@ -141,6 +141,13 @@ class Sector {
     }
   }
 
+  notifyExceptMe(packet, myPlayerId) {
+    for (const player of this.players.values()) {
+      if (player.id === myPlayerId) continue;
+      player.sendPacket(packet);
+    }
+  }
+
   // 맵의 구역 정보 추가
   async addMapAreas(areas) {
     this.mapAreas.push(areas);
@@ -157,7 +164,7 @@ class Sector {
     if (!this.traps.has(casterId)) this.traps.set(casterId, new Map());
     // [2] 플레이어별 덫 Map에 설치할 덫 위치정보 삽입
     const trapKey = `${pos.x}${pos.z}`;
-    this.traps.get(casterId).set(trapKey, pos);
+    this.traps.get(casterId).set(trapKey, { pos, timestamp: Date.now() });
     // [3] 설치한 덫 정보 반환
     return PAYLOAD_DATA.TrapInfo(casterId, pos);
   }
@@ -166,8 +173,6 @@ class Sector {
   deleteTrap(casterId, pos, socket) {
     // [1] 플레이의 덫 Map 가져옴
     const currentTraps = this.traps.get(casterId);
-    console.log('!!! 지우기 전 : ', currentTraps);
-    console.log('!!! 지울 넘 : ', pos);
     // [2] 클라의 위치정보와 일치하는 덫이 없다면 리턴
     const trapKey = `${pos.x}${pos.z}`;
     if (!currentTraps.has(trapKey)) {
@@ -176,7 +181,6 @@ class Sector {
     }
     // [3] 해당 덫 Map에서 제거
     if (currentTraps.delete(trapKey)) {
-      console.log('!!! 지운 후 : ', currentTraps);
       // [4] 제거 성공 시 제거한 덫 정보 반환
       return PAYLOAD_DATA.TrapInfo(casterId, pos);
     }
@@ -188,8 +192,8 @@ class Sector {
     const traps = [];
     // [2] 플레이어의 덫 정보가 있으면 Map 순회하며 덫들 배열에 삽입
     if (this.traps.has(casterId)) {
-      this.traps.get(casterId).forEach((trapPos) => {
-        traps.push(PAYLOAD_DATA.TrapInfo(casterId, trapPos));
+      this.traps.get(casterId).forEach((trap) => {
+        traps.push(PAYLOAD_DATA.TrapInfo(casterId, trap.pos));
       });
       // [3] 섹터의 전체 덫 Map에서 해당 플레이어 관련 정보 제거
       if (this.traps.delete(casterId)) {
@@ -205,9 +209,10 @@ class Sector {
     const traps = [];
     // [2] 플레이어별로 순회하며 보유 덫들 배열에 삽입
     this.traps.forEach((currentTraps, playerId) => {
-      currentTraps.forEach((trapPos) => {
-        traps.push(PAYLOAD_DATA.TrapInfo(playerId, trapPos));
-      });
+      // 보유 최대 덫이 2개라 복잡도 높지 않음
+      for (const trap of currentTraps.values()) {
+        traps.push(PAYLOAD_DATA.TrapInfo(playerId, trap.pos));
+      }
     });
     // [3] 섹터 덫 현황 담긴 배열 반환
     return traps;

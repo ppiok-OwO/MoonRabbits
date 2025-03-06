@@ -35,13 +35,19 @@ class PlayerSession {
       const playerSectorId = player.getSectorId();
       const sector = SectorSessionManager.getSector(playerSectorId);
       sector.deletePlayer(player.user.socket);
+
+      const oldTraps = sector.removeTraps(player.id);
+      if (oldTraps){
+        sector.notifyExceptMe(PACKET.S2CRemoveTrap(oldTraps),player.id);
+      }
+
       const partyId = player.getPartyId();
       if (partyId) {
         const party = partySessionManager.getParty(partyId);
         leavePartyHandler(socket, { partyId, leftPlayerId: player.id });
       }
       // 디스폰
-      sector.notify(PACKET.S2CDespawn([player.id]));
+      sector.notify(PACKET.S2CDespawn(player.id));
 
       this.players.delete(socket);
 
@@ -94,8 +100,15 @@ class PlayerSession {
   }
 
   notify(packet) {
-    for (const player of this.players.keys()) {
-      player.write(packet);
+    for (const socket of this.players.keys()) {
+      socket.write(packet);
+    }
+  }
+
+  notifyExceptMe(packet, mySocketId) {
+    for (const socket of this.players.keys()) {
+      if (socket.id === mySocketId) continue;
+      socket.write(packet);
     }
   }
 }
