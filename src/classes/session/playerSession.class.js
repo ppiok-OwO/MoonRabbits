@@ -10,7 +10,13 @@ class PlayerSession {
   playerIdx = 1;
 
   async addPlayer(socket, user, nickname, classCode, statData) {
-    const newPlayer = new Player(user, this.playerIdx++, nickname, classCode, statData);
+    const newPlayer = new Player(
+      user,
+      this.playerIdx++,
+      nickname,
+      classCode,
+      statData,
+    );
     this.players.set(socket, newPlayer);
 
     // @@@ getSector가 sectorId로 탐색해서 수정 @@@
@@ -29,20 +35,30 @@ class PlayerSession {
       const playerSectorId = player.getSectorId();
       const sector = SectorSessionManager.getSector(playerSectorId);
       sector.deletePlayer(player.user.socket);
+
+      const oldTraps = sector.removeTraps(player.id);
+      if (oldTraps){
+        sector.notifyExceptMe(PACKET.S2CRemoveTrap(oldTraps),player.id);
+      }
+
       const partyId = player.getPartyId();
       if (partyId) {
         const party = partySessionManager.getParty(partyId);
         leavePartyHandler(socket, { partyId, leftPlayerId: player.id });
       }
       // 디스폰
-      sector.notify(PACKET.S2CDespawn([player.id]));
+      sector.notify(PACKET.S2CDespawn(player.id));
 
       this.players.delete(socket);
 
-      console.log(chalk.green(`[onEnd] playerSession에서 삭제된 socket ID: ${socket.id}`));
+      console.log(
+        chalk.green(`[onEnd] playerSession에서 삭제된 socket ID: ${socket.id}`),
+      );
     } else {
       console.log(
-        chalk.yellow(`[onEnd] playerSession에서 찾을 수 없습니다. socket ID : ${socket.id}`),
+        chalk.yellow(
+          `[onEnd] playerSession에서 찾을 수 없습니다. socket ID : ${socket.id}`,
+        ),
       );
     }
   }
@@ -77,8 +93,15 @@ class PlayerSession {
   }
 
   notify(packet) {
-    for (const player of this.players.keys()) {
-      player.write(packet);
+    for (const socket of this.players.keys()) {
+      socket.write(packet);
+    }
+  }
+
+  notifyExceptMe(packet, mySocketId) {
+    for (const socket of this.players.keys()) {
+      if (socket.id === mySocketId) continue;
+      socket.write(packet);
     }
   }
 }

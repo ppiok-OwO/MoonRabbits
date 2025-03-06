@@ -18,6 +18,8 @@ export const addItemToInventory = async (socket, playerId, dropItem) => {
   const currentData = (await redisClient.hgetall(redisKey)) || {};
   const inventorySlots = [];
 
+  console.log('currentData : \n', currentData);
+
   // 25칸 인벤토리 기본값 초기화 (빈 슬롯: itemId 0, stack 0)
   for (let i = 0; i < 25; i++) {
     const key = i.toString();

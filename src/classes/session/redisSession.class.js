@@ -44,6 +44,7 @@ class RedisSession {
   async saveToRedisPlayerSession(socket) {
     const playerSessionManager = getPlayerSession();
     const player = playerSessionManager.getPlayer(socket);
+    const sectorCode = player.getSectorId();
     if (!player) {
       console.error(
         chalk.red(
@@ -67,7 +68,7 @@ class RedisSession {
       nickname: player.nickname,
       classCode: player.classCode,
       status: 'active',
-      currentSector: 'Town',
+      currentSector: sectorCode,
       loginTime: new Date().toLocaleDateString(),
     };
     // 단일 객체로 저장하여 누적하지 않고 갱신
@@ -124,7 +125,8 @@ class RedisSession {
    */
   async saveToRedisSectorSession(socket) {
     const sectorSessionManager = getSectorSessions();
-    const sector = sectorSessionManager.getSector(socket);
+    const sector = sectorSessionManager.getSector(socket.player.playerId);
+    console.log('sectorSessionManager : ', sectorSessionManager);
     if (!sector) {
       console.error(
         chalk.red(

@@ -83,13 +83,28 @@
       "sector_code": 101,
       "sector_name": "아누논덴",
       "areas": [
-        { "position": { "x": -34.52, "y": 0, "z": -34.52 } },
         { "position": { "x": 0, "y": 0, "z": 0 } },
+        { "position": { "x": 0, "y": 0, "z": -34.52 } },
         { "position": { "x": -34.52, "y": 0, "z": 0 } },
-        { "position": { "x": 0, "y": 0, "z": -34.52 } }
+        { "position": { "x": -34.52, "y": 0, "z": -34.52 } }
       ],
       "monsters": [
-              
+        {
+          "monster_id": 1,
+          "areaIdx": 0
+        },
+        {
+          "monster_id": 2,
+          "areaIdx": 1
+        },
+        {
+          "monster_id": 3,
+          "areaIdx": 2
+        },
+        {
+          "monster_id": 4,
+          "areaIdx": 3
+        }
       ],
       "resources": [1, 1, 1, 1, 1, 1, 51, 51, 51, 51, 51, 51]
     },
@@ -98,8 +113,8 @@
       "sector_name": "누논덴",
       "areas": [
         { "position": { "x": 0, "y": 0, "z": 0 } },
-        { "position": { "x": 0, "y": 0, "z": -34.52 } },
         { "position": { "x": -34.52, "y": 0, "z": 0 } },
+        { "position": { "x": 0, "y": 0, "z": -34.52 } },
         { "position": { "x": -69.05, "y": 0, "z": 0 } },
         { "position": { "x": -69.05, "y": 0, "z": 34.52 } }
       ],
@@ -110,42 +125,22 @@
         },
         {
           "monster_id": 2,
-          "areaIdx": 0
+          "areaIdx": 1
         },
         {
           "monster_id": 3,
-          "areaIdx": 1
+          "areaIdx": 2
         },
         {
           "monster_id": 4,
-          "areaIdx": 1
+          "areaIdx": 3
         },
         {
           "monster_id": 5,
-          "areaIdx": 2
-        },
-        {
-          "monster_id": 6,
-          "areaIdx": 2
-        },
-        {
-          "monster_id": 7,
-          "areaIdx": 3
-        },
-        {
-          "monster_id": 8,
-          "areaIdx": 3
-        },
-        {
-          "monster_id": 9,
           "areaIdx": 4
-        },
-        {
-          "monster_id": 10,
-          "areaIdx": 4
-        }   
+        }
       ],
-      "resources": [1, 1, 1, 1, 51, 51, 51, 51, 51, 51, 51]
+      "resources": [1, 1, 1, 1, 1, 1, 1, 51, 51, 51, 51, 51, 51, 51]
     },
     {
       "sector_code": 103,
@@ -165,50 +160,26 @@
         },
         {
           "monster_id": 2,
-          "areaIdx": 0
+          "areaIdx": 1
         },
         {
           "monster_id": 3,
-          "areaIdx": 1
+          "areaIdx": 2
         },
         {
           "monster_id": 4,
-          "areaIdx": 1
+          "areaIdx": 3
         },
         {
           "monster_id": 5,
-          "areaIdx": 2
+          "areaIdx": 4
         },
         {
           "monster_id": 6,
-          "areaIdx": 2
-        },
-        {
-          "monster_id": 7,
-          "areaIdx": 3
-        },
-        {
-          "monster_id": 8,
-          "areaIdx": 3
-        },
-        {
-          "monster_id": 9,
-          "areaIdx": 4
-        },
-        {
-          "monster_id": 10,
-          "areaIdx": 4
-        },
-        {
-          "monster_id": 11,
           "areaIdx": 5
-        },
-        {
-          "monster_id": 12,
-          "areaIdx": 5
-        }      
+        }
       ],
-      "resources": []
+      "resources": [1, 1, 1, 1, 1, 1, 1, 1, 51, 51, 51, 51, 51, 51, 51, 51]
     }
   ]
 }

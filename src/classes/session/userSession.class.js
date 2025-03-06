@@ -27,11 +27,7 @@ class UserSession {
     // 1초마다 핑 측정
     this.intervalManager.addPlayer(socket.id, newUser.ping.bind(newUser), 1000);
     // 3초마다 연결 상태 체크
-    this.intervalManager.checkPong(
-      socket.id,
-      newUser.checkPong.bind(newUser),
-      3000,
-    );
+    this.intervalManager.checkPong(socket.id, newUser.checkPong.bind(newUser), 3000);
 
     return newUser;
   }
