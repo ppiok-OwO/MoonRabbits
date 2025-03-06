@@ -219,7 +219,7 @@ export const syncInventoryToRedisAndSend = async (playerId) => {
         redisKey,
         row.slot_idx.toString(),
         JSON.stringify({
-          itemId: row.item_id == null ? 0 : row.item_id,
+          itemId: row.item_id == null ? 0 : +row.item_id,
           stack: row.stack,
         }),
       );
@@ -306,4 +306,29 @@ export const updatePlayerStat = async (stamina, pickSpeed, moveSpeed, abilityPoi
     abilityPoint,
     playerId,
   ]);
+};
+
+export const rankingDataSaveToRedis = async () => {
+  try {
+    const [rows] = await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.TAKE_RANKING_DATA);
+
+    // 기존의 랭킹 데이터를 제거 (key 이름은 'ranking'으로 가정)
+    await redisClient.del('ranking');
+
+    // 조회한 각 레코드를 Redis의 Sorted Set에 저장
+    // score로 exp를 사용하고, member는 JSON 문자열로 변환한 객체로 저장
+    for (const row of rows) {
+      const memberData = {
+        playerId: row.player_id,
+        nickname: row.nickname,
+        exp: row.exp,
+      };
+      // JSON 문자열로 변환하여 저장 (Redis sorted set의 member는 문자열이어야 함)
+      await redisClient.zadd('ranking', row.exp, JSON.stringify(memberData));
+    }
+    console.log('rankingDataSaveToRedis Success');
+  } catch (err) {
+    console.error('rankingDataSaveToRedis Error : \n', err);
+    throw err;
+  }
 };

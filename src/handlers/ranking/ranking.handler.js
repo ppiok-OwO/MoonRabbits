@@ -3,33 +3,43 @@ import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import redisClient from '../../utils/redis/redis.config.js';
 import PACKET from '../../utils/packet/packet.js';
+import { rankingDataSaveToRedis } from '../../db/user/user.db.js';
 
 let rankingCache = null;
 
 // Redis에서 전체 랭킹 리스트를 업데이트하는 함수
 async function updateRankingList() {
   try {
-    // ioredis v5에서는 zRangeWithScore 대신 zrevrange와 WITHSCORES 옵션을 사용합니다.
+    await rankingDataSaveToRedis();
+
     const results = await redisClient.zrevrange('ranking', 0, -1, 'WITHSCORES');
     const rankingList = [];
     let rank = 1;
 
-    // results 배열은 [playerId, score, playerId, score, ...] 형태입니다.
+    // results 배열은 [playerId, score, playerId, score, ...] 형태
     for (let i = 0; i < results.length; i += 2) {
-      const playerId = results[i];
+      const memberJson = results[i];
       const score = results[i + 1];
-      // hgetall은 소문자형태로 제공됩니다.
-      const playerData = await redisClient.hgetall(`player:${playerId}`);
+      let memberData;
+      try {
+        // JSON 문자열을 파싱하여 랭킹 정보를 추출
+        memberData = JSON.parse(memberJson);
+      } catch (error) {
+        console.error('Ranking member 파싱 오류:', error);
+        continue;
+      }
       rankingList.push({
         rank: rank,
-        player_id: playerId,
-        nickname: playerData.nickname || '',
+        playerId: memberData.playerId,
+        nickname: memberData.nickname,
         exp: Math.floor(Number(score)),
       });
       rank++;
     }
     rankingCache = rankingList;
-    console.log(`랭킹 캐시가 ${new Date().toISOString()}에 갱신되었습니다.`);
+    console.log(
+      `랭킹 캐시가 ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}에 갱신되었습니다.`,
+    );
   } catch (err) {
     console.error('랭킹 업데이트 오류:', err);
   }
@@ -46,22 +56,18 @@ export const rankingHandler = async (socket, packetData) => {
     if (!rankingCache) await updateRankingList();
 
     let responseData;
-    if (packetData === 'ALL') {
+    if (type === 'ALL') {
       responseData = rankingCache; // 전체 유저 리스트
-    } else if (packetData === 'TOP') {
+    } else if (type === 'TOP') {
       responseData = rankingCache.slice(0, 10); // 상위 10명만 추출
     } else {
       throw new Error('유효하지 않은 요청 유형');
     }
 
-    const responsePacket = PACKET.S2CUpdateRanking({
-      status: 'success',
-      data: {
-        rankingList: responseData,
-        timestamp: new Date().toLocaleDateString(),
-      },
+    const responsePacket = PACKET.S2CUpdateRanking('success', {
+      rankingList: responseData,
+      timestamp: new Date().toISOString(),
     });
-
     socket.write(responsePacket);
   } catch (error) {
     console.error(chalk.red('[rankingHandler Error]\n', error));

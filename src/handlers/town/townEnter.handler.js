@@ -6,7 +6,7 @@ import { getUserSessions } from '../../session/sessions.js';
 
 import playerSpawnNotificationHandler from './playerSpawnNotification.handler.js';
 import chalk from 'chalk';
-import { loadStat, syncInventoryToRedisAndSend, updateInventory } from '../../db/user/user.db.js';
+import { loadStat, updateInventory } from '../../db/user/user.db.js';
 import RedisSession from '../../classes/session/redisSession.class.js';
 import { inventoryUpdateHandler } from '../player/inventory/inventoryUpdate.handler.js';
 
@@ -41,18 +41,14 @@ const townEnterHandler = async (socket, packetData) => {
 
     console.log('----- Player Session 업데이트 및 Redis 저장 완료 -----\n', newPlayer);
 
-     // @@@ 챗 패킷에 섹터 코드 필요!! @@@
-     const sectorCode = newPlayer.getSectorId();
+    // @@@ 챗 패킷에 섹터 코드 필요!! @@@
+    const sectorCode = newPlayer.getSectorId();
 
     const playerInfo = newPlayer.getPlayerInfo();
     const packet = PACKET.S2CEnter(sectorCode, playerInfo);
     socket.write(packet);
 
-    const chatPacket = PACKET.S2CChat(
-      0,
-      `${newPlayer.nickname}님이 입장하였습니다.`,
-      'System',
-    );
+    const chatPacket = PACKET.S2CChat(0, `${newPlayer.nickname}님이 입장하였습니다.`, 'System');
     getPlayerSession().notify(chatPacket);
 
     playerSpawnNotificationHandler(socket, packetData);
