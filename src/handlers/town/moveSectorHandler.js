@@ -11,8 +11,6 @@ const moveSectorHandler = (socket, packetData) => {
   const { targetSector } = packetData;
   const gameAssets = getGameAssets();
 
-  const targetSectorCode = targetSector || 2;
-
   const player = getPlayerSession().getPlayer(socket);
   const prevSector = getSectorSessions().getSector(player.getSectorId());
   const partySession = getPartySessions();
@@ -28,19 +26,21 @@ const moveSectorHandler = (socket, packetData) => {
       const party = partySession.getParty(player.partyId);
       const allMembers = party.getAllMembers().values();
       for (const member of allMembers) {
+        // 나 자신은 제외해야 함
+        if (member.id === player.id) continue;
         partyMembers.push(member);
       }
     } else {
-      const packet = PACKET.S2CChat(0, '당신은 파티장이 아닙니다.', 'System', player.getSectorId());
+      const packet = PACKET.S2CChat(0, '당신은 파티장이 아닙니다.', 'System');
       return socket.write(packet);
     }
   }
 
   try {
     // 현재는 섹터가 한개씩 존재함으로 섹터 코드로 탐색
-    const newSector = getSectorSessions().getSectorByCode(targetSectorCode);
+    const newSector = getSectorSessions().getSectorByCode(targetSector);
     if (!newSector) {
-      const packet = PACKET.S2CChat(0, '섹터가 존재하지 않습니다..', 'System', player.getSectorId());
+      const packet = PACKET.S2CChat(0, '섹터가 존재하지 않습니다.', 'System');
       return socket.write(packet);
     }
     // 디스폰
@@ -49,7 +49,6 @@ const moveSectorHandler = (socket, packetData) => {
         partyMembers.map((partyMember) => {
           return partyMember.id;
         }),
-        player.getSectorId(),
       ),
     );
 
@@ -58,13 +57,25 @@ const moveSectorHandler = (socket, packetData) => {
       prevSector.deletePlayer(member.user.socket);
       newSector.setPlayer(member.user.socket, member);
       const memberSocket = member.user.getSocket();
-      memberSocket.write(PACKET.S2CEnter(member.getPlayerInfo()));
-      playerSpawnNotificationHandler(member.user.socket, {});
-    });
+      memberSocket.write(
+        PACKET.S2CEnter(newSector.getSectorId(), member.getPlayerInfo()),
+      );
 
+      if (prevSector.sectorCode != 100) {
+        const oldTraps = prevSector.removeTraps(member.getPlayerId());
+        prevSector.notify(PACKET.S2CRemoveTrap(oldTraps)); // 이전 섹터에 남은 덫 제거
+      }
+      if (targetSector.sectorCode != 100) {
+        memberSocket.write(PACKET.S2CTraps(newSector.getAllTraps())); // 새 섹터의 덫 현황
+      }
+
+      playerSpawnNotificationHandler(member.user.socket, {});
+
+      // 파티 멤버의 경로 초기화
+      member.setPath(null);
+    });
   } catch (err) {
     console.error(err);
   }
 };
-
 export default moveSectorHandler;

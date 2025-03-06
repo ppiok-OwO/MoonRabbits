@@ -28,7 +28,7 @@ function makePacket(packetId, packetData = {}) {
   packetIdBuffer.writeUInt8(packetId, 0);
 
   // 디버그용 콘솔 출력, packetId 필터링해서 사용
-  if (packetId !== config.packetId.S2CPlayerLocation) {
+  if (packetId !== config.packetId.S2CPlayerLocation && packetId !== config.packetId.S2CMonsterLocation) {
     printPacket(packetSize, packetId, packetData, 'out');
   }
 

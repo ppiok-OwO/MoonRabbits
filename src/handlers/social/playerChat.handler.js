@@ -10,8 +10,7 @@ import PACKET from '../../utils/packet/packet.js';
 
 export const chatHandler = (socket, packetData) => {
   try {
-    const { playerId, chatMsg, chatType } =
-      packetData;
+    const { playerId, chatMsg, chatType } = packetData;
 
     // 플레이어 세션을 통해 플레이어 인스턴스를 불러온다.
     const playerSession = getPlayerSession();
@@ -27,8 +26,7 @@ export const chatHandler = (socket, packetData) => {
     }
 
     // 패킷 직렬화
-    const sectorId = player.getSectorId();
-    const packet = PACKET.S2CChat(playerId, chatMsg, chatType, sectorId);
+    const packet = PACKET.S2CChat(playerId, chatMsg, chatType);
 
     const partyId = player.getPartyId();
     if (partyId && chatType === '파티') {
@@ -43,7 +41,6 @@ export const chatHandler = (socket, packetData) => {
         0,
         '채팅 전송에 실패하였습니다.',
         'System',
-        sectorCode,
       );
       socket.write(warningPacket);
     }

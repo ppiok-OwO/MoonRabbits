@@ -8,19 +8,15 @@ const COOL_TIME = 5;
 const throwGrenadeHandler = (socket, packetData) => {
   const { startPos, targetPos } = packetData;
 
-  const playerSession = getPlayerSession();
-  const player = playerSession.getPlayer(socket);
+  const player = getPlayerSession().getPlayer(socket);
 
-  const sectorCode = player.getSectorId();
   const packet = PACKET.S2CThrowGrenade(
     player.id,
-    sectorCode,
     getThrowVelocity(startPos, targetPos),
     COOL_TIME,
   );
 
-  const sectorSession = getSectorSessions();
-  const sector = sectorSession.getSector(sectorCode);
+  const sector = getSectorSessions().getSector(player.getSectorId());
   sector.notify(packet);
 };
 
@@ -35,13 +31,13 @@ function getThrowVelocity(startPos, targetPos) {
   );
   const heightDifference = (targetPos.y || 0) - startPos.y;
 
-  // 🟢 수직 방향 속도 계산
+  // 수직 방향 속도 계산
   const initialVelocityY = Math.sqrt(2 * GRAVITY * THROW_POWER); // throwPower는 목표 높이
   const upTime = initialVelocityY / GRAVITY; // 상승 시간
   const downTime = Math.sqrt((2 * Math.max(0, heightDifference)) / GRAVITY); // 하강 시간
   const timeToTarget = upTime + downTime; // 총 비행 시간
 
-  // 🟢 수평 방향 속도 계산 (X, Z)
+  // 수평 방향 속도 계산
   const initialVelocityXZ = distance / timeToTarget;
   const direction = normalize({
     x: flatTarget.x - startPos.x,

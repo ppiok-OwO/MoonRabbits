@@ -1,25 +1,25 @@
 import PACKET from '../../utils/packet/packet.js';
 import { getPlayerSession, getSectorSessions } from '../../session/sessions.js';
 
-const STUN_TIMER = [3, 5];
+const STUN_TIMER = { 0: 3, 1: 5 };
 
 const stunHandler = (socket, packetData) => {
   const { skillType, playerIds, monsterIds } = packetData;
 
-  const playerSession = getPlayerSession();
-  const player = playerSession.getPlayer(socket);
-
-  const sectorCode = player.getSectorId();
+  const player = getPlayerSession().getPlayer(socket);
 
   const packet = PACKET.S2CStun(
-    sectorCode,
-    STUN_TIMER[skillType],
+    STUN_TIMER[skillType] || 3,
     playerIds,
     monsterIds,
   );
 
-  const sectorSession = getSectorSessions();
-  const sector = sectorSession.getSector(sectorCode);
+  const sector = getSectorSessions().getSector(player.getSectorId());
+
+  // Todo: Monster 몬스터 관련 로직도 해야함
+
+  sector.setSturnMonster(monsterIds, STUN_TIMER[skillType] || 3);
+
   sector.notify(packet);
 };
 

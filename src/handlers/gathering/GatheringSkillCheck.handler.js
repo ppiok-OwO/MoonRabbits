@@ -4,9 +4,11 @@ import handleError from '../../utils/error/errorHandler.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { addExpHandler } from '../player/addExp.handler.js';
+import { addItemToInventory } from '../player/inventory/InventoryManager.js';
+import inventoryUpdateHandler from '../player/inventory/inventoryUpdate.handler.js';
 
-export const gatheringSkillCheckHandler = (socket, packetData) => {
-  const { deltaTime } = packetData;
+export const gatheringSkillCheckHandler = async (socket, packetData) => {
+  const { deltatime } = packetData;
   const player = getPlayerSession().getPlayer(socket);
   const sector = getSectorSessions().getSector(player.getSectorId());
   const placedId = player.getGatheringIdx();
@@ -25,14 +27,13 @@ export const gatheringSkillCheckHandler = (socket, packetData) => {
       }
       player.gatheringSuccess = true;
       socket.write(PACKET.S2CGatheringSkillCheck(placedId, durability));
-
-
     } else {
       const packet = PACKET.S2CChat(0, '스킬체크 실패.', 'System');
       return socket.write(packet);
     }
   } else {
-    handleError(socket,
+    handleError(
+      socket,
       new CustomError(ErrorCodes.INVALID_INPUT, '잘못된 자원 데이터'),
     );
   }

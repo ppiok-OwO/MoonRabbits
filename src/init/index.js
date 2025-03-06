@@ -15,6 +15,7 @@ const initServer = async () => {
     sectorSessions.setSector(config.sector.testfield); // 채집공간
     sectorSessions.setSector(config.sector.S1);
     sectorSessions.setSector(config.sector.S2);
+    sectorSessions.setSector(config.sector.S3);
     // await testAllConnections(pools);
     // 다음 작업
   } catch (err) {

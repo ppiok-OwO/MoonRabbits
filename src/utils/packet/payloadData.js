@@ -6,7 +6,6 @@ const PAYLOAD_DATA = {
     classCode_int32,
     transform_TransformInfo,
     statInfo_StatInfo,
-    currentSector_int32,
   ) => {
     return {
       playerId: playerId_int32,
@@ -15,7 +14,6 @@ const PAYLOAD_DATA = {
       classCode: classCode_int32,
       transform: transform_TransformInfo,
       statInfo: statInfo_StatInfo,
-      currentSector: currentSector_int32,
     };
   },
   PlayerRank: (rank_int32, playerId_string, nickname_string, exp_int32) => {
@@ -182,5 +180,16 @@ const PAYLOAD_DATA = {
   InventorySlot: (slotIdx_int32, itemId_int32, stack_int32) => {
     return { slotIdx: slotIdx_int32, itemId: itemId_int32, stack: stack_int32 };
   },
+  TrapInfo: (casterId_int32, pos_Vec3) => {
+    return { casterId: casterId_int32, pos: pos_Vec3 };
+  },
+  MaterialInfo: (materialId_int32, count_int32, slot_int32) => {
+    return {
+      materialId: materialId_int32,
+      count: count_int32,
+      slot: slot_int32,
+    };
+  },
 };
+
 export default PAYLOAD_DATA;

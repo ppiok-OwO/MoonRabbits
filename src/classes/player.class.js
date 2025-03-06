@@ -2,6 +2,8 @@ import TransformInfo from './transformInfo.class.js';
 import PAYLOAD_DATA from '../utils/packet/payloadData.js';
 import { config } from '../config/config.js';
 import { getGameAssets } from '../init/assets.js';
+import CustomError from '../utils/error/customError.js';
+import { ErrorCodes } from '../utils/error/errorCodes.js';
 
 class Player {
   constructor(user, playerId, nickname, classCode, statData, sectorId = 100) {
@@ -18,7 +20,6 @@ class Player {
     this.exp = (statData && statData.exp) || 0;
     this.targetExp = this._getTargetExpByLevel(this.level);
     this.abilityPoint = baseStat.ability_point;
-    this.isPartyLeader = false;
     this.partyId = null;
     this.isInvited = false;
     this.gatheringIdx = 0;
@@ -70,7 +71,6 @@ class Player {
       this.classCode,
       this.position,
       this.getPlayerStats(),
-      this.currentSector,
     );
   }
   getPosition() {
@@ -151,12 +151,18 @@ class Player {
   }
 
   levelUp() {
-    // 레벨 변경
-    const newLevel = this.level + 1;
-    this.level = newLevel;
+    const { newLevel, newTargetExp } = this._getTargetExpByLevel(this.level);
+    
+    // 만렙이면 level만 올리고 요구 경험치 2배로
+    if(newLevel === -1) {
+      this.level += 1;
+      this.targetExp *= 2;
+      this.abilityPoint += 3;
+      return { newLevel:this.level, newTargetExp:this.targetExp, abilityPoint: this.abilityPoint};
+    }
 
-    // 요구 경험치 변경
-    const newTargetExp = this._getTargetExpByLevel(newLevel);
+    // 레벨, 요구 경험치 변경
+    this.level = newLevel;
     this.targetExp = newTargetExp;
 
     // 레벨업하면 올릴 수 있는 능력치 개수
@@ -171,11 +177,10 @@ class Player {
 
   _getTargetExpByLevel(level) {
     try {
-      return getGameAssets().targetExps.data.find(
-        (targetExp) => targetExp.level === level,
-      ).target_exp;
+      const data = getGameAssets().targetExps.data.find((target) => target.level === level);
+      return { targetLevel:data.targetLevel, targetExp:data.target_exp };
     } catch (error) {
-      throw new Error(`${level}lv 요구경험치 조회 오류`);
+      socket.emit(new CustomError(ErrorCodes.MISSING_FIELDS, `${level}lv 요구경험치 조회 오류`));
     }
   }
 
