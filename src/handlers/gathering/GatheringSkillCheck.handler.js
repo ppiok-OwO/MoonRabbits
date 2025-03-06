@@ -17,7 +17,6 @@ export const gatheringSkillCheckHandler = async (socket, packetData) => {
       sector.resources[placedId].CheckValidateTiming(
         player.gatheringAngle,
         player.gatheringStartTime,
-        deltaTime,
       )
     ) {
       const durability = sector.resources[placedId].getDurability();

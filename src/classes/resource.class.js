@@ -40,7 +40,7 @@ class Resource {
     return (this.durability = this.resourceData.resource_durability);
   }
 
-  CheckValidateTiming(angle, startTime, deltatime) {
+  CheckValidateTiming(angle, startTime) {
     const turnTime = 4000;
     const pingTime = 50;
     const validTimeStart = (turnTime / 360) * angle;
@@ -48,7 +48,7 @@ class Resource {
 
     const serverTime = (Date.now() - startTime) % turnTime;
 
-    console.log(`20250304: serverTime: ${serverTime} deltatime: ${deltatime} 
+    console.log(`20250304: serverTime: ${serverTime}
       validStart: ${validTimeStart} validEnd: ${validTimeEnd}`)
 
     if (
