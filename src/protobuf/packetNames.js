@@ -88,4 +88,6 @@ export const packetNames = [
   'S2CCraft',
   'S2CPing',
   'C2SPong',
+  'C2SGetInventorySlotByItemId',
+  'S2CGetInventorySlotByItemId',
 ];
