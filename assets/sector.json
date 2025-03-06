@@ -88,7 +88,23 @@
         { "position": { "x": -34.52, "y": 0, "z": 0 } },
         { "position": { "x": 0, "y": 0, "z": -34.52 } }
       ],
-      "monsters": [       
+      "monsters": [
+        {
+          "monster_id": 1,
+          "areaIdx": 0
+        },
+        {
+          "monster_id": 2,
+          "areaIdx": 1
+        },
+        {
+          "monster_id": 3,
+          "areaIdx": 2
+        },
+        {
+          "monster_id": 4,
+          "areaIdx": 3
+        }
       ],
       "resources": [1, 1, 1, 1, 1, 1, 51, 51, 51, 51, 51, 51]
     },
@@ -102,7 +118,27 @@
         { "position": { "x": -69.05, "y": 0, "z": 0 } },
         { "position": { "x": -69.05, "y": 0, "z": 34.52 } }
       ],
-      "monsters": [        
+      "monsters": [
+        {
+          "monster_id": 1,
+          "areaIdx": 0
+        },
+        {
+          "monster_id": 2,
+          "areaIdx": 1
+        },
+        {
+          "monster_id": 3,
+          "areaIdx": 2
+        },
+        {
+          "monster_id": 4,
+          "areaIdx": 3
+        },
+        {
+          "monster_id": 5,
+          "areaIdx": 4
+        }
       ],
       "resources": [1, 1, 1, 1, 1, 1, 1, 51, 51, 51, 51, 51, 51, 51]
     },
@@ -118,7 +154,30 @@
         { "position": { "x": -34.52, "y": 0, "z": 34.52 } }
       ],
       "monsters": [
-           
+        {
+          "monster_id": 1,
+          "areaIdx": 0
+        },
+        {
+          "monster_id": 2,
+          "areaIdx": 1
+        },
+        {
+          "monster_id": 3,
+          "areaIdx": 2
+        },
+        {
+          "monster_id": 4,
+          "areaIdx": 3
+        },
+        {
+          "monster_id": 5,
+          "areaIdx": 4
+        },
+        {
+          "monster_id": 6,
+          "areaIdx": 5
+        }
       ],
       "resources": [1, 1, 1, 1, 1, 1, 1, 1, 51, 51, 51, 51, 51, 51, 51, 51]
     }
