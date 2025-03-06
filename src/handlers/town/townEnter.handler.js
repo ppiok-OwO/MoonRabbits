@@ -6,11 +6,7 @@ import { getUserSessions } from '../../session/sessions.js';
 
 import playerSpawnNotificationHandler from './playerSpawnNotification.handler.js';
 import chalk from 'chalk';
-import {
-  loadStat,
-  syncInventoryToRedisAndSend,
-  updateInventory,
-} from '../../db/user/user.db.js';
+import { loadStat, updateInventory } from '../../db/user/user.db.js';
 import RedisSession from '../../classes/session/redisSession.class.js';
 import { inventoryUpdateHandler } from '../player/inventory/inventoryUpdate.handler.js';
 import { config } from '../../config/config.js';
