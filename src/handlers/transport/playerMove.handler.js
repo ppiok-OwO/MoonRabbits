@@ -1,8 +1,6 @@
-import { config } from '../../config/config.js';
-import { getGameAssets } from '../../init/assets.js';
 import { getNaveMesh } from '../../init/navMeshData.js';
 import { findPath } from '../../init/navMeshLoader.js';
-import { getSectorSessions, getPlayerSession } from '../../session/sessions.js';
+import { getPlayerSession } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import handleError from '../../utils/error/errorHandler.js';

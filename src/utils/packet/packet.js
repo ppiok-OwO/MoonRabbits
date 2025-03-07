@@ -70,6 +70,9 @@ const PACKET = {
       PAYLOAD.S2CDespawn(playerId_int32),
     );
   },
+  S2CPlayerMove: () => {
+    return makePacket(PACKET_ID.S2CPlayerMove, PAYLOAD.S2CPlayerMove());
+  },
   S2CPlayerLocation: (
     playerId_int32,
     transform_TransformInfo,
