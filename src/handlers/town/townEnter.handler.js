@@ -15,11 +15,7 @@ const townEnterHandler = async (socket, packetData) => {
   try {
     const user = getUserSessions().getUser(socket);
     const redisSession = new RedisSession();
-    if (!user)
-      socket.emit(
-        'error',
-        new CustomError(ErrorCodes.USER_NOT_FOUND, 'getUser 에러'),
-      );
+    if (!user) socket.emit('error', new CustomError(ErrorCodes.USER_NOT_FOUND, 'getUser 에러'));
 
     // 새 플레이어에 사용할 playerId 생성 또는 기존 ID 사용
     const playerId = socket.player.playerId;
@@ -44,10 +40,7 @@ const townEnterHandler = async (socket, packetData) => {
     // Redis에 playerSession 저장
     await redisSession.saveFullSession(socket);
 
-    console.log(
-      '----- Player Session 업데이트 및 Redis 저장 완료 -----\n',
-      newPlayer,
-    );
+    console.log('----- Player Session 업데이트 및 Redis 저장 완료 -----\n', newPlayer);
 
     // 서버의 타운 정보에 새 플레이어 추가
     const townSector = getSectorSessions().getSector(config.sector.town);
@@ -56,21 +49,14 @@ const townEnterHandler = async (socket, packetData) => {
 
     // 타운 접속 중인 플레이어 정보 모아서 패킷 전송 (나에게 다른 플레이어 보여주기 위함)
     const players = [];
-    townSector
-      .getAllPlayer()
-      .values()
-      .forEach((player) => {
-        players.push(player.getPlayerInfo());
-      });
+    for (const player of townSector.getAllPlayer().values()) {
+      players.push(player.getPlayerInfo());
+    }
 
     socket.write(PACKET.S2CEnterTown(players));
 
     // 전체 유저에게 내 입장을 알림
-    const chatPacket = PACKET.S2CChat(
-      0,
-      `${newPlayer.nickname}님이 입장하였습니다.`,
-      'System',
-    );
+    const chatPacket = PACKET.S2CChat(0, `${newPlayer.nickname}님이 입장하였습니다.`, 'System');
     getPlayerSession().notifyExceptMe(chatPacket, socket.id);
 
     // 타운에 있는 유저들에게 내 정보 전송할 예정 (다른 플레이어들에게 나를 보여주기 위함)
@@ -82,10 +68,7 @@ const townEnterHandler = async (socket, packetData) => {
     await inventoryUpdateHandler(socket);
   } catch (error) {
     console.error(`${chalk.red('[townEnterHanlder Error]')}\n${error}`);
-    socket.emit(
-      'error',
-      new CustomError(ErrorCodes.HANDLER_ERROR, 'townEnterHanlder 에러'),
-    );
+    socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'townEnterHanlder 에러'));
   }
 };
 

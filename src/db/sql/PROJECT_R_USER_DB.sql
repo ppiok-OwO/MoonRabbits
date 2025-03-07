@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS SaveHousing
     posX               FLOAT  NOT NULL,
     poxY               FLOAT  NOT NULL,
     posZ               FLOAT  NOT NULL,
+    rot                FLOAT  NOT NULL,
     FOREIGN KEY (player_id) REFERENCES Players(player_id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );

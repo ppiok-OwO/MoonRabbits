@@ -7,7 +7,6 @@ import { ErrorCodes } from './errorCodes.js';
 const handleError = (socket, error) => {
   // const nickname = getPlayerSession().getPlayer(socket).nickname;
   const player = getPlayerSession().getPlayer(socket);
-  const sectorCode = player.getSectorId();
 
   const nickname = '로그인 시도';
 
