@@ -188,6 +188,12 @@ const PAYLOAD = {
       quantity: quantity_int32,
     };
   },
+  S2COpenChest: (playerId_int32, openTimer_int32) => {
+    return {playerId:playerId_int32, openTimer:openTimer_int32}
+  },
+  S2CRegenChest: (sectorCode_int32) => {
+    return {sectorCode:sectorCode_int32}
+  },
   S2CRecall: (playerId_int32, recallTimer_int32) => {
     return { playerId: playerId_int32, recallTimer: recallTimer_int32 };
   },

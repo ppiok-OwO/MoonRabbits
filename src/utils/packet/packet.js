@@ -261,6 +261,18 @@ const PACKET = {
       PAYLOAD.S2CGatheringDone(placedId_int32, itemId_int32, quantity_int32),
     );
   },
+  S2COpenChest: (playerId_int32, openTimer_int32) => {
+    return makePacket(
+      PACKET_ID.S2COpenChest,
+      PAYLOAD.S2COpenChest(playerId_int32, openTimer_int32),
+    );
+  },
+  S2CRegenChest: (sectorCode_int32) => {
+    return makePacket(
+      PACKET_ID.S2CRegenChest,
+      PAYLOAD.S2CRegenChest(sectorCode_int32),
+    );
+  },
   S2CRecall: (playerId_int32, recallTimer_int32) => {
     return makePacket(
       PACKET_ID.S2CRecall,

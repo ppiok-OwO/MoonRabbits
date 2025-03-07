@@ -52,7 +52,8 @@ export const onData = (socket) => async (data) => {
       // 디버그용 콘솔 출력, packetId 필터링해서 사용
       if (
         packetId !== config.packetId.C2SPong &&
-        packetId !== config.packetId.C2SPlayerLocation
+        packetId !== config.packetId.C2SPlayerLocation &&
+        packetId !== config.packetId.C2SCollision
       ) {
         printPacket(packetSize, packetId, packetData, 'in');
       }

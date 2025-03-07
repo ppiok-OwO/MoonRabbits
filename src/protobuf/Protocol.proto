@@ -84,6 +84,11 @@ enum MsgId {
   C2S_GATHERING_DONE=148;
   S2C_GATHERING_DONE=149;
 
+
+  C2S_OPEN_CHEST = 156;
+  S2C_OPEN_CHEST = 157;
+  C2S_GET_TREASURE = 158;
+  S2C_REGEN_CHEST = 159;
   C2S_RECALL = 160;
   S2C_RECALL = 161;
   C2S_THROW_GRENADE = 162;
@@ -377,6 +382,15 @@ message S2CGatheringDone{
   int32 quantity = 3;
 }
 
+message C2SOpenChest {}
+message S2COpenChest {
+  int32 playerId = 1;
+  int32 openTimer = 2;
+}
+message C2SGetTreasure {}
+message S2CRegenChest {
+  int32 sectorCode = 1;
+}
 
 message C2SRecall {}
 message S2CRecall {

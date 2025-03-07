@@ -69,6 +69,11 @@ export const PACKET_ID = {
   S2CGatheringSkillCheck: 147,
   C2SGatheringDone: 148,
   S2CGatheringDone: 149,
+
+  C2SOpenChest: 156,
+  S2COpenChest: 157,
+  C2SGetTreasure: 158,
+  S2CRegenChest: 159,
   C2SRecall: 160,
   S2CRecall: 161,
   C2SThrowGrenade: 162,

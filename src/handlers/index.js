@@ -41,6 +41,8 @@ import inventoryUpdateHandler from './player/inventory/inventoryUpdate.handler.j
 import { pongHandler } from './pong.handler.js';
 import { portalHandler } from './playerAction/portal.handler.js';
 import rankingHandler from './ranking/ranking.handler.js';
+import openChestHandler from './playerAction/openChest.handler.js';
+import getTreasureHandler from './playerAction/getTreasure.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
@@ -77,6 +79,8 @@ const handlers = {
   [config.packetId.C2SGatheringStart]: StartGatheringHandler,
   [config.packetId.C2SResourcesList]: resourceListHandler,
 
+  [config.packetId.C2SOpenChest]: openChestHandler,
+  [config.packetId.C2SGetTreasure]: getTreasureHandler,
   [config.packetId.C2SRecall]: tryRecallHandler,
   [config.packetId.C2SThrowGrenade]: throwGrenadeHandler,
   [config.packetId.C2SSetTrap]: setTrapHandler,
