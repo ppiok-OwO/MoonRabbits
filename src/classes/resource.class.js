@@ -5,7 +5,7 @@ class Resource {
   constructor(resourceIdx, resourceId) {
     this.resourceIdx = resourceIdx;
     this.resourceId = resourceId;
-    
+
     this.resourceData = getGameAssets().resources.data.find((value) => {
       return value.resource_id === resourceId;
     });
@@ -31,7 +31,15 @@ class Resource {
     return this.resourceData.resource_respawn * 1000;
   }
   getAngle() {
-    return (createRandNum(30, 330));
+    return createRandNum(70, 290);
+  }
+  getType(){
+    if(this.resourceData.resource_type == "Tree"){
+      return 12;
+    }
+    else{
+      return 11;
+    }
   }
   subDurability(sub = 1) {
     return (this.durability -= sub);
@@ -40,18 +48,25 @@ class Resource {
     return (this.durability = this.resourceData.resource_durability);
   }
 
-  CheckValidateTiming(angle, startTime, deltatime) {
-    const validTime = (5000 / 36) * angle;
-    const validTimeRange = ((5000 / 36) * 60) / this.difficulty;
+  CheckValidateTiming(angle, startTime) {
+    const turnTime = 4000;
+    const pingTime = 50;
+    const validTimeStart = (turnTime / 360) * angle;
+    const validTimeEnd = validTimeStart + ((turnTime / 360) * 60/ this.difficulty);
+
+    const serverTime = (Date.now() - startTime) % turnTime;
+
+    console.log(`20250304: serverTime: ${serverTime}
+      validStart: ${validTimeStart} validEnd: ${validTimeEnd}`)
 
     if (
-      Math.abs(deltatime - validTime) < validTimeRange &&
-      Math.abs(Date.now() - startTime - validTime) < validTimeRange + 50
+      serverTime > validTimeStart - pingTime &&
+      serverTime < validTimeEnd + pingTime
     ) {
       return true;
     }
     //일단 무조건 성공으로 처리.
-    return true;
+    return false;
   }
 
   dropItem() {

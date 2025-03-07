@@ -25,6 +25,7 @@ class Player {
     this.gatheringIdx = 0;
     this.gatheringAngle = 180;
     this.gatheringStartTime = 0;
+    this.gatheringSuccess = false;
     this.stamina = baseStat.stamina;
     this.pickSpeed = baseStat.pick_speed;
     this.moveSpeed = baseStat.move_speed;
