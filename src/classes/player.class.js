@@ -28,6 +28,8 @@ class Player {
     this.stamina = baseStat.stamina;
     this.pickSpeed = baseStat.pick_speed;
     this.moveSpeed = baseStat.move_speed;
+    this.isCrafting = false;
+    this.craftingSlots = [];
   }
 
   sendPacket(packet) {
@@ -224,6 +226,10 @@ class Player {
     this.moveSpeed = statInfo.moveSpeed;
     this.abilityPoint = statInfo.abilityPoint;
     this.targetExp = statInfo.targetExp;
+  }
+
+  backupCraftingSlot(slotIdx, itemId, stack){
+    this.craftingSlots.push({ slotIdx, itemId, stack });
   }
 }
 

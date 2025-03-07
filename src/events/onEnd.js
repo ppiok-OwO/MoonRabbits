@@ -2,11 +2,31 @@ import chalk from 'chalk';
 import { getPlayerSession, getUserSessions } from '../session/sessions.js';
 import { updateInventory } from '../db/user/user.db.js';
 import RedisSession from '../classes/session/redisSession.class.js';
+import redisClient from '../utils/redis/redis.config.js';
 
 export const onEnd = (socket) => async () => {
   console.log('클라이언트 연결이 종료되었습니다. (END)');
 
   const player_id = socket.player.playerId;
+
+  const player = getPlayerSession().getPlayer(socket);
+  if(player.isCrafting) {
+    console.error('\x1b[31m제작중 종료 발생, 소모한 재료 복구 실행\x1b[0m');
+    // redis 인벤토리 가져옴
+    const redisKey = `inventory:${player_id}`;
+    const redisInventory = await redisClient.hgetall(redisKey);
+
+    // 소모한 재료 복구
+    try {
+      for(const slot of player.craftingSlots){
+        const stack = JSON.parse(redisInventory[slot.slotIdx]).stack + slot.stack;
+        redisClient.hset(redisKey, slot.slotIdx.toString(), JSON.stringify({itemId:slot.itemId, stack }));
+      }
+      console.log('복구 완료');
+    } catch (error) {
+      console.error('복구중 에러 :', error);
+    }
+  }
 
   await updateInventory(player_id);
   console.log('인벤토리 DB 저장 완료');
