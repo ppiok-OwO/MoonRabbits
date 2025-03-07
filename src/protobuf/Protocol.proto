@@ -83,6 +83,7 @@ enum MsgId {
   S2C_GATHERING_SKILL_CHECK=147;
   C2S_GATHERING_DONE=148;
   S2C_GATHERING_DONE=149;
+  C2S_GATHERING_ANIMATION_END = 150;
 
   C2S_RECALL = 160;
   S2C_RECALL = 161;
@@ -379,6 +380,10 @@ message S2CGatheringDone{
   int32 quantity = 3;
 }
 
+message C2SGatheringAnimationEnd{
+  
+}
+
 
 message C2SRecall {}
 message S2CRecall {
@@ -568,6 +573,7 @@ message Vec3 {
 message Resource {
   int32 resourceIdx = 1;
   int32 resourceId = 2;
+  int32 durability = 3;
 }
 
 message StatInfo {
