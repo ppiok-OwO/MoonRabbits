@@ -4,6 +4,7 @@ import { getGameAssets } from '../init/assets.js';
 import PACKET from '../utils/packet/packet.js';
 import Monster from './monster.class.js';
 import { getNaveMesh } from '../init/navMeshData.js';
+import { updateDurabilityHandler } from '../handlers/gathering/UpdateDurability.handler.js';
 
 class Sector {
   constructor(sectorId, sectorCode, resources = []) {
@@ -76,9 +77,9 @@ class Sector {
 
       // 디버깅: 전송된 패킷 수 로깅
       if (packets.length > 0) {
-        console.log(
-          `${new Date().toISOString()} - 전송된 몬스터 패킷: ${packets.length}개`,
-        );
+        // console.log(
+        //   `${new Date().toISOString()} - 전송된 몬스터 패킷: ${packets.length}개`,
+        // );
       }
     } catch (error) {
       console.error('몬스터 패킷 전송 중 오류 발생:', error);
@@ -96,11 +97,10 @@ class Sector {
     }
     return -1;
   }
-
   resetDurability(resourceIdx) {
     if (resourceIdx >= 0 && resourceIdx < this.resources.length) {
       const durability = this.resources[resourceIdx].resetDurability();
-      this.notify(PACKET.S2CUpdateDurability(resourceIdx, durability));
+      updateDurabilityHandler(this, { resourceIdx, durability });
       return durability;
     }
     return -1;
@@ -347,6 +347,7 @@ class Sector {
         PAYLOAD_DATA.Resource(
           this.resources[i].getResourceIdx(),
           this.resources[i].getResourceId(),
+          this.resources[i].getDurability(),
         ),
       );
     }

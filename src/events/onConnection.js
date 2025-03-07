@@ -4,7 +4,14 @@ import { onError } from './onError.js';
 import { onData } from './onData.js';
 import { getUserSessions } from '../session/sessions.js';
 export const onConnection = (socket) => {
-  console.log('클라이언트가 연결되었습니다:', socket.remoteAddress, socket.remotePort);
+  const clientIP = socket.remoteAddress; // 헬스 체크 및 클라이언트 IP 확인
+  console.log('클라이언트가 연결되었습니다:', clientIP, socket.remotePort);
+
+  if (clientIP.startsWith('172.31.')) {
+    console.log('헬스 체크 요청 감지, 세션 종료');
+    socket.destroy(); // 헬스 체크 요청이면 즉시 종료
+    return;
+  }
 
   // 소켓 객체에 buffer 속성을 추가하여 각 클라이언트에 고유한 버퍼를 유지
   socket.buffer = Buffer.alloc(0);

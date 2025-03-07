@@ -49,6 +49,7 @@ const townEnterHandler = async (socket, packetData) => {
 
     // 타운 접속 중인 플레이어 정보 모아서 패킷 전송 (나에게 다른 플레이어 보여주기 위함)
     const players = [];
+
     for (const player of townSector.getAllPlayer().values()) {
       players.push(player.getPlayerInfo());
     }

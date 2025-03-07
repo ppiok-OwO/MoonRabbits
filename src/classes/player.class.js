@@ -18,13 +18,14 @@ class Player {
     this.lastBattleLog = 0;
     this.path = null;
     this.exp = (statData && statData.exp) || 0;
-    this.targetExp = this._getTargetExpByLevel(this.level);
+    this.targetExp = this._getTargetExpByLevel(this.level).targetExp;
     this.abilityPoint = baseStat.ability_point;
     this.partyId = null;
     this.isInvited = false;
     this.gatheringIdx = 0;
     this.gatheringAngle = 180;
     this.gatheringStartTime = 0;
+    this.gatheringSuccess = false;
     this.stamina = baseStat.stamina;
     this.pickSpeed = baseStat.pick_speed;
     this.moveSpeed = baseStat.move_speed;
