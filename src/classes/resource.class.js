@@ -31,7 +31,15 @@ class Resource {
     return this.resourceData.resource_respawn * 1000;
   }
   getAngle() {
-    return createRandNum(30, 300);
+    return createRandNum(80, 280);
+  }
+  getType(){
+    if(this.resourceData.resource_type == "Tree"){
+      return 12;
+    }
+    else{
+      return 11;
+    }
   }
   subDurability(sub = 1) {
     return (this.durability -= sub);

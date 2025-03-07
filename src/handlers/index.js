@@ -32,6 +32,7 @@ import equipChangeHandler from './playerAction/equipChange.handler.js';
 import { collisionHandler } from './collision/collision.handler.js';
 import { resourceListHandler } from './gathering/ResourceList.handler.js';
 import { gatheringDoneHandler } from './gathering/GatheringDone.handler.js';
+import { gatheringAnimationEndHandler } from './gathering/GatheringAnimationEnd.handler.js';
 import setTrapHandler from './playerAction/setTrap.handler.js';
 import removeTrapHandler from './playerAction/removeTrap.handler.js';
 import itemObtainedHandler from './player/inventory/itemObtained.handler.js';
@@ -78,6 +79,7 @@ const handlers = {
   [config.packetId.C2SGatheringStart]: startGatheringHandler,
   [config.packetId.C2SResourcesList]: resourceListHandler,
   [config.packetId.C2SGatheringDone]: gatheringDoneHandler,
+  [config.packetId.C2SGatheringAnimationEnd]: gatheringAnimationEndHandler,
 
 
   [config.packetId.C2SRecall]: tryRecallHandler,

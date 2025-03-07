@@ -77,9 +77,9 @@ class Sector {
 
       // 디버깅: 전송된 패킷 수 로깅
       if (packets.length > 0) {
-        console.log(
-          `${new Date().toISOString()} - 전송된 몬스터 패킷: ${packets.length}개`,
-        );
+        // console.log(
+        //   `${new Date().toISOString()} - 전송된 몬스터 패킷: ${packets.length}개`,
+        // );
       }
     } catch (error) {
       console.error('몬스터 패킷 전송 중 오류 발생:', error);

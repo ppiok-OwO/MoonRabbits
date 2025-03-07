@@ -382,6 +382,8 @@ message S2CGatheringDone{
   int32 itemId = 2;
   int32 quantity = 3;
 }
+message C2SGatheringAnimationEnd{
+}
 
 
 message C2SRecall {}
