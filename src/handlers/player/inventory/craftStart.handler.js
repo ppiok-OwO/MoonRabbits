@@ -35,6 +35,7 @@ export const craftStartHandler = async (socket, packetData) => {
 
   const newInventory = [];
   let canCraft = true;
+  let hasMaterial = false;
 
   // # 제작중... 재료 아이템 소모
   try {
@@ -43,6 +44,7 @@ export const craftStartHandler = async (socket, packetData) => {
       newInventory[slotIdx] = JSON.parse(redisInventory[slotIdx]);
       for (const materialItem of recipe.material_items) {
         if (newInventory[slotIdx].itemId * 1 === materialItem.item_id) {
+          hasMaterial = true;
           if (newInventory[slotIdx].stack >= materialItem.count) {
             newInventory[slotIdx].stack -= materialItem.count;
             player.backupCraftingSlot(slotIdx, materialItem.item_id, materialItem.count);
@@ -63,10 +65,9 @@ export const craftStartHandler = async (socket, packetData) => {
     );
   }
 
-  // 보유중인 재료가 부족할 때
-  if (!canCraft) {
-    socket.write(PACKET.S2CChat(0, '재료가 부족합니다.', 'System'));
-    socket.write(PACKET.S2CCraftStart(false, recipeId, '재료 부족'));
+  // 보유중인 재료가 없거나 부족할 때
+  if (!canCraft || !hasMaterial) {
+    socket.write(PACKET.S2CCraftStart(false, recipeId, '재료가 부족합니다.'));
     return;
   }
 
