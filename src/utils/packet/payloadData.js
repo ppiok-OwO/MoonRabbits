@@ -134,7 +134,11 @@ const PAYLOAD_DATA = {
     return { x: x_float, y: y_float, z: z_float };
   },
   Resource: (resourceIdx_int32, resourceId_int32, durability_int32) => {
-    return { resourceIdx: resourceIdx_int32, resourceId: resourceId_int32, durability: durability_int32 };
+    return {
+      resourceIdx: resourceIdx_int32,
+      resourceId: resourceId_int32,
+      durability: durability_int32,
+    };
   },
   StatInfo: (
     level_int32,
@@ -145,6 +149,7 @@ const PAYLOAD_DATA = {
     curStamina_int32,
     exp_int32,
     targetExp_int32,
+    hp_int32,
   ) => {
     return {
       level: level_int32,
@@ -155,6 +160,7 @@ const PAYLOAD_DATA = {
       curStamina: curStamina_int32,
       exp: exp_int32,
       targetExp: targetExp_int32,
+      hp: hp_int32,
     };
   },
   MonsterStatus: (

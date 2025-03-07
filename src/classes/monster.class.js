@@ -5,6 +5,7 @@ import PAYLOAD from '../utils/packet/payload.js';
 import PAYLOAD_DATA from '../utils/packet/payloadData.js';
 import { getSectorSessions } from '../session/sessions.js';
 import { getNaveMesh } from '../init/navMeshData.js';
+import PACKET from '../utils/packet/packet.js';
 
 class Monster {
   constructor(sectorCode, monsterIdx, area) {
@@ -244,11 +245,30 @@ class Monster {
   }
 
   // 공격 시작 함수
-  startAttack() {
+  startAttack(targetPlayerObj) {
     if (!this.isAttacking) {
       this.isAttacking = true;
       this.attackStartTime = Date.now();
       this.stateChanged = true; // 상태 변경 플래그 설정
+
+      // 플레이어 체력 변화
+      const changedHp = targetPlayerObj.getHp() - 1;
+      const resultHp = targetPlayerObj.setHp(changedHp); // setHp 메서드 내부에서 음수일 경우 예외처리가 들어감
+
+      if (resultHp <= 0) {
+        // 플레이어 사망하면 마을로 이동시키기
+        const packet = PACKET.S2CMoveSector(
+          100,
+          targetPlayerObj.getPlayerInfo(),
+          [],
+        );
+
+        // 마을로 이동할 땐 피를 복구해줘야 함(부활)
+        targetPlayerObj.setHp(config.newPlayerStatData.hp);
+
+        // 회복된 스탯으로 moveSector 패킷 전송
+        targetPlayerObj.user.getSocket().write(packet);
+      }
     }
   }
   startSturn(duration) {
@@ -299,7 +319,7 @@ class Monster {
   // 클라이언트로부터 충돌 패킷 처리 함수
   handleCollisionPacket(data) {
     // 충돌 시 공격 시작 (이동 중지 2초)
-    this.startAttack();
+    this.startAttack(this.targetPlayer.player);
 
     // 타겟 플레이어 설정 (이미 설정되어 있을 수 있음)
     if (!this.targetPlayer && data && data.playerId) {
@@ -526,7 +546,7 @@ class Monster {
 
           // 플레이어와 충분히 가까우면 공격 시작
           if (calculatedDistance < 1) {
-            this.startAttack();
+            this.startAttack(targetPlayerObj);
           }
 
           return;

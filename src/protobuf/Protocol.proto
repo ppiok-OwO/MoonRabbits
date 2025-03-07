@@ -585,6 +585,7 @@ message StatInfo {
   int32 curStamina = 6;
   int32 exp = 7;
   int32 targetExp = 8;
+  int32 hp = 9;
 }
 
 message MonsterStatus {

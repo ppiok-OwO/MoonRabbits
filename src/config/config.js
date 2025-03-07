@@ -154,6 +154,7 @@ export const config = {
   },
   newPlayerStatData: {
     BASE_STAT_DATA,
+    hp: 3,
   },
   battletag: {
     Menu: BATTLE_LOG_ID.menu,

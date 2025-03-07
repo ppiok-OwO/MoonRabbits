@@ -27,6 +27,7 @@ class Player {
     this.gatheringStartTime = 0;
     this.gatheringSuccess = false;
     this.stamina = baseStat.stamina;
+    this.hp = config.newPlayerStatData.hp;
     this.pickSpeed = baseStat.pick_speed;
     this.moveSpeed = baseStat.move_speed;
   }
@@ -38,6 +39,21 @@ class Player {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  setHp(num) {
+    this.hp = num;
+    if (this.hp < 0) {
+      this.hp = 0;
+    }
+  }
+
+  getHp() {
+    return this.hp;
+  }
+
+  getStamina() {
+    return this.stamina;
   }
 
   getPlayerStatus() {
@@ -61,6 +77,7 @@ class Player {
       this.stamina,
       this.exp,
       this.targetExp,
+      this.hp,
     );
   }
   getPlayerInfo() {
@@ -152,13 +169,17 @@ class Player {
 
   levelUp() {
     const { newLevel, newTargetExp } = this._getTargetExpByLevel(this.level);
-    
+
     // 만렙이면 level만 올리고 요구 경험치 2배로
-    if(newLevel === -1) {
+    if (newLevel === -1) {
       this.level += 1;
       this.targetExp *= 2;
       this.abilityPoint += 3;
-      return { newLevel:this.level, newTargetExp:this.targetExp, abilityPoint: this.abilityPoint};
+      return {
+        newLevel: this.level,
+        newTargetExp: this.targetExp,
+        abilityPoint: this.abilityPoint,
+      };
     }
 
     // 레벨, 요구 경험치 변경
@@ -177,10 +198,17 @@ class Player {
 
   _getTargetExpByLevel(level) {
     try {
-      const data = getGameAssets().targetExps.data.find((target) => target.level === level);
-      return { targetLevel:data.targetLevel, targetExp:data.target_exp };
+      const data = getGameAssets().targetExps.data.find(
+        (target) => target.level === level,
+      );
+      return { targetLevel: data.targetLevel, targetExp: data.target_exp };
     } catch (error) {
-      socket.emit(new CustomError(ErrorCodes.MISSING_FIELDS, `${level}lv 요구경험치 조회 오류`));
+      socket.emit(
+        new CustomError(
+          ErrorCodes.MISSING_FIELDS,
+          `${level}lv 요구경험치 조회 오류`,
+        ),
+      );
     }
   }
 
