@@ -5,6 +5,7 @@ import { testAllConnections } from '../utils/db/testConnection.js';
 import pools from '../db/database.js';
 import { getSectorSessions } from '../session/sessions.js';
 import { config } from '../config/config.js';
+import fetch from 'node-fetch';
 
 const initServer = async () => {
   try {
@@ -17,7 +18,8 @@ const initServer = async () => {
     sectorSessions.setSector(config.sector.S2);
     sectorSessions.setSector(config.sector.S3);
     // await testAllConnections(pools);
-    // 다음 작업
+
+    getPublicIP().then(console.log);
   } catch (err) {
     console.error(err);
     process.exit(1); // 오류 발생 시 프로세스 종료
