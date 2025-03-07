@@ -124,7 +124,7 @@ export const config = {
     S2CGatheringSkillCheck: PACKET_ID.S2CGatheringSkillCheck,
     C2SGatheringDone: PACKET_ID.C2SGatheringDone,
     S2CGatheringDone: PACKET_ID.S2CGatheringDone,
-
+    C2SGatheringAnimationEnd: PACKET_ID.C2SGatheringAnimationEnd,
     C2SRecall: PACKET_ID.C2SRecall,
     S2CRecall: PACKET_ID.S2CRecall,
     C2SThrowGrenade: PACKET_ID.C2SThrowGrenade,
