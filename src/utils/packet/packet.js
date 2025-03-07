@@ -354,10 +354,16 @@ const PACKET = {
       PAYLOAD.S2CInvestPoint(statInfo_StatInfo),
     );
   },
-  S2CCraft: (craftedItemId_int32, count_int32, slot_int32) => {
+  S2CCraftStart: (isSuccess_bool, recipeId_int32, msg_string) => {
     return makePacket(
-      PACKET_ID.S2CCraft,
-      PAYLOAD.S2CCraft(craftedItemId_int32, count_int32, slot_int32),
+      PACKET_ID.S2CCraftStart,
+      { isSuccess: isSuccess_bool, recipeId: recipeId_int32, msg: msg_string},
+    );
+  },
+  S2CCraftEnd: (isSuccess_bool, msg_string) => {
+    return makePacket(
+      PACKET_ID.S2CCraftEnd,
+      { isSuccess: isSuccess_bool, msg: msg_string},
     );
   },
   S2CPing: (timestamp_int64) => {

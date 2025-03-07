@@ -21,8 +21,11 @@ import { allowInviteHandler } from './social/party/allowInvite.handler.js';
 import { leavePartyHandler } from './social/party/leaveParty.handler.js';
 import moveSectorHandler from './transport/moveSectorHandler.js';
 
-import { gatheringSkillCheckHandler } from './gathering/GatheringSkillCheck.handler.js';
-import { startGatheringHandler } from './gathering/StartGathering.handler.js';
+import { gatheringSkillCheckHandler } from './gathering/gatheringSkillCheck.handler.js';
+import { startGatheringHandler } from './gathering/startGathering.handler.js';
+import { gatheringDoneHandler } from './gathering/gatheringDone.handler.js';
+import { gatheringAnimationEndHandler } from './gathering/gatheringAnimationEnd.handler.js';
+import { resourceListHandler } from './gathering/resourceList.handler.js';
 import { rejectInviteHandler } from './social/party/rejectInvite.handler.js';
 import { chceckPartyListHandler } from './social/party/checkPartyList.handler.js';
 import tryRecallHandler from './playerAction/tryRecall.hander.js';
@@ -30,9 +33,6 @@ import throwGrenadeHandler from './playerAction/throwGrenade.handler.js';
 import stunHandler from './playerAction/stun.handler.js';
 import equipChangeHandler from './playerAction/equipChange.handler.js';
 import { collisionHandler } from './collision/collision.handler.js';
-import { resourceListHandler } from './gathering/ResourceList.handler.js';
-import { gatheringDoneHandler } from './gathering/GatheringDone.handler.js';
-import { gatheringAnimationEndHandler } from './gathering/GatheringAnimationEnd.handler.js';
 import setTrapHandler from './playerAction/setTrap.handler.js';
 import removeTrapHandler from './playerAction/removeTrap.handler.js';
 import itemObtainedHandler from './player/inventory/itemObtained.handler.js';
@@ -42,9 +42,10 @@ import inventorySortHandler from './player/inventory/inventorySort.handler.js';
 import inventoryUpdateHandler from './player/inventory/inventoryUpdate.handler.js';
 import { pongHandler } from './pong.handler.js';
 import { portalHandler } from './playerAction/portal.handler.js';
-import { craftHandler } from './player/inventory/craft.handler.js';
 import { getInventorySlotByItemIdHandler } from './player/inventory/getInventorySlotByItemId.handler.js';
 import rankingHandler from './ranking/ranking.handler.js';
+import { craftEndHandler } from './player/inventory/craftEnd.handler.js';
+import { craftStartHandler } from './player/inventory/craftStart.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
@@ -102,7 +103,8 @@ const handlers = {
   [config.packetId.C2SPortal]: portalHandler,
   [config.packetId.C2SPong]: pongHandler,
   
-  [config.packetId.C2SCraft]: craftHandler,
+  [config.packetId.C2SCraftStart]: craftStartHandler,
+  [config.packetId.C2SCraftEnd]: craftEndHandler,
   [config.packetId.C2SGetInventorySlotByItemId]: getInventorySlotByItemIdHandler,
 
   // 랭킹 관련 핸들러

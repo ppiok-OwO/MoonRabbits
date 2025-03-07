@@ -31,6 +31,8 @@ class Player {
     this.pickSpeed = baseStat.pick_speed;
     this.moveSpeed = baseStat.move_speed;
     this.currentEquip = 0;
+    this.isCrafting = false;
+    this.craftingSlots = [];
   }
 
   sendPacket(packet) {
@@ -268,6 +270,14 @@ class Player {
     this.abilityPoint = statInfo.abilityPoint;
     this.targetExp = statInfo.targetExp;
     this.hp = statInfo.hp;
+  }
+
+  backupCraftingSlot(slotIdx, itemId, stack){
+    this.craftingSlots.push({ slotIdx, itemId, stack });
+  }
+
+  backupCraftingSlot(slotIdx, itemId, stack){
+    this.craftingSlots.push({ slotIdx, itemId, stack });
   }
 }
 
