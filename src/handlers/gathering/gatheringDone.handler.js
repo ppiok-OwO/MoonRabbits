@@ -5,7 +5,7 @@ import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { addExpHandler } from '../player/addExp.handler.js';
 import { animationHandler } from '../social/playerAnimation.handler.js';
-import { addItemToInventory } from '../player/inventory/InventoryManager.js';
+import { addItemToInventory } from '../player/inventory/inventoryManager.js';
 import { getGameAssets } from '../../init/assets.js';
 
 export const gatheringDoneHandler = async (socket, packetData) => {
