@@ -47,7 +47,7 @@ export const onData = (socket) => async (data) => {
       const packetType = packetIdEntries.find(([, id]) => id === packetId)[0];
 
       // 역직렬화
-      const packetData = decodedPacket(packetType, packetDataBuffer);
+      const packetData = decodedPacket(socket, packetType, packetDataBuffer);
 
       // 디버그용 콘솔 출력, packetId 필터링해서 사용
       if (
@@ -77,7 +77,7 @@ export const onData = (socket) => async (data) => {
   }
 };
 
-const decodedPacket = (packetType, packetDataBuffer) => {
+const decodedPacket = (socket, packetType, packetDataBuffer) => {
   try {
     return getProtoMessages()[packetType].decode(packetDataBuffer);
   } catch (error) {
