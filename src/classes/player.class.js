@@ -272,11 +272,7 @@ class Player {
     this.hp = statInfo.hp;
   }
 
-  backupCraftingSlot(slotIdx, itemId, stack){
-    this.craftingSlots.push({ slotIdx, itemId, stack });
-  }
-
-  backupCraftingSlot(slotIdx, itemId, stack){
+  backupCraftingSlot(slotIdx, itemId, stack) {
     this.craftingSlots.push({ slotIdx, itemId, stack });
   }
 }
