@@ -65,10 +65,7 @@ const PACKET = {
     return makePacket(PACKET_ID.S2CSpawn, PAYLOAD.S2CSpawn(player_PlayerInfo));
   },
   S2CDespawn: (playerId_int32) => {
-    return makePacket(
-      PACKET_ID.S2CDespawn,
-      PAYLOAD.S2CDespawn(playerId_int32),
-    );
+    return makePacket(PACKET_ID.S2CDespawn, PAYLOAD.S2CDespawn(playerId_int32));
   },
   S2CPlayerMove: () => {
     return makePacket(PACKET_ID.S2CPlayerMove, PAYLOAD.S2CPlayerMove());
@@ -206,6 +203,22 @@ const PACKET = {
     return makePacket(
       PACKET_ID.S2CAllowInvite,
       PAYLOAD.S2CAllowInvite(
+        partyId_string,
+        leaderId_int32,
+        memberCount_int32,
+        members_MemberCardInfo_repeated,
+      ),
+    );
+  },
+  S2CUpdateParty: (
+    partyId_string,
+    leaderId_int32,
+    memberCount_int32,
+    members_MemberCardInfo_repeated,
+  ) => {
+    return makePacket(
+      PACKET_ID.S2CUpdateParty,
+      PAYLOAD.S2CUpdateParty(
         partyId_string,
         leaderId_int32,
         memberCount_int32,
@@ -357,7 +370,9 @@ const PACKET = {
     return makePacket(PACKET_ID.S2CPing, PAYLOAD.S2CPing(timestamp_int64));
   },
   S2CGetInventorySlotByItemId: (slots_InventorySlot_repeated) => {
-    return makePacket(PACKET_ID.S2CGetInventorySlotByItemId, {slots:slots_InventorySlot_repeated});
+    return makePacket(PACKET_ID.S2CGetInventorySlotByItemId, {
+      slots: slots_InventorySlot_repeated,
+    });
   },
 };
 export default PACKET;

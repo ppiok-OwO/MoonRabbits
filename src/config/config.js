@@ -107,6 +107,7 @@ export const config = {
     S2CAllowInvite: PACKET_ID.S2CAllowInvite,
     C2SRejectInvite: PACKET_ID.C2SRejectInvite,
     S2CRejectInvite: PACKET_ID.S2CRejectInvite,
+    S2CUpdateParty: PACKET_ID.S2CUpdateParty,
 
     C2SMonsterLocation: PACKET_ID.C2SMonsterLocation,
     S2CMonsterLocation: PACKET_ID.S2CMonsterLocation,
@@ -156,6 +157,7 @@ export const config = {
   },
   newPlayerStatData: {
     BASE_STAT_DATA,
+    hp: 3,
   },
   battletag: {
     Menu: BATTLE_LOG_ID.menu,
