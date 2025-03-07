@@ -10,11 +10,7 @@ import {
   REDIS_HOST,
   REDIS_PORT,
 } from '../constants/env.js';
-import {
-  PACKET_ID,
-  PACKET_ID_LENGTH,
-  PACKET_SIZE,
-} from '../constants/header.js';
+import { PACKET_ID, PACKET_ID_LENGTH, PACKET_SIZE } from '../constants/header.js';
 import { BASE_STAT_DATA } from '../constants/PlayerBaseStat.js';
 import { BATTLE_LOG_ID } from '../constants/BattleLog.js';
 import { UPDATE_LOCATION } from '../constants/UpdateLocation.js';
@@ -88,6 +84,13 @@ export const config = {
     C2SInventorySort: PACKET_ID.C2SInventorySort,
     C2SItemMove: PACKET_ID.C2SItemMove,
     S2CInventoryUpdate: PACKET_ID.S2CInventoryUpdate,
+
+    C2SHousingSave: PACKET_ID.C2SHousingSave,
+    S2CHousingSave: PACKET_ID.S2CHousingSave,
+    C2SHousingLoad: PACKET_ID.C2SHousingLoad,
+    S2CHousingLoad: PACKET_ID.S2CHousingLoad,
+    C2SFurnitureCraft: PACKET_ID.C2SFurnitureCraft,
+    S2CFurnitureCraft: PACKET_ID.S2CFurnitureCraft,
 
     C2SCreateParty: PACKET_ID.C2SCreateParty,
     S2CCreateParty: PACKET_ID.S2CCreateParty,

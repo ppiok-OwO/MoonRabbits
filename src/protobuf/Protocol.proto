@@ -52,6 +52,8 @@ enum MsgId {
   S2C_HOUSING_SAVE = 91;
   C2S_HOUSING_LOAD = 92;
   S2C_HOUSING_LOAD = 93;
+  C2S_FURNITURE_CRAFT = 94;
+  S2C_FURNITURE_CRAFT = 95;
 
   C2S_CREATE_PARTY=100;
   S2C_CREATE_PARTY=101;
@@ -271,6 +273,16 @@ message S2CHousingLoad {
   string status = 1;
   string msg = 2;
   repeated HousingInfo housingInfo = 3;
+}
+
+message C2SFurnitureCraft {
+  int32 recipeId = 1;
+}
+
+message S2CFurnitureCraft {
+  bool isSuccess = 1;
+  string msg = 2;
+  int32 recipeId = 3;
 }
 
 message C2SCreateParty{}
@@ -493,6 +505,7 @@ message S2CCraftStart{
   int32 recipeId = 2;
   string msg = 3;
 }
+
 message C2SCraftEnd{
   int32 recipeId = 1;
 }

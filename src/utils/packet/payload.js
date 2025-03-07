@@ -63,6 +63,9 @@ const PAYLOAD = {
       housingInfo: housingInfo_HousingInfo_repeated,
     };
   },
+  S2CFurnitureCraft: (isSuccess_bool, msg_string, recipeId_int32) => {
+    return { isSuccess: isSuccess_bool, msg: msg_string, recipeId: recipeId_int32 };
+  },
   S2CCreateParty: (
     partyId_string,
     leaderId_int32,
@@ -227,8 +230,11 @@ const PAYLOAD = {
   S2CInvestPoint: (statInfo_StatInfo) => {
     return { statInfo: statInfo_StatInfo };
   },
-  S2CCraft: (craftedItemId_int32, count_int32, slot_int32) => {
-    return { craftedItemId: craftedItemId_int32, count: count_int32, slot: slot_int32 };
+  S2CCraftStart: (isSuccess_bool, recipeId_int32, msg_string) => {
+    return { isSuccess: isSuccess_bool, recipeId: recipeId_int32, msg: msg_string };
+  },
+  S2CCraftEnd: (isSuccess_bool, msg_string) => {
+    return { isSuccess: isSuccess_bool, msg: msg_string };
   },
   S2CPing: (timestamp_int64) => {
     return { timestamp: timestamp_int64 };

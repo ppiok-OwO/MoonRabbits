@@ -40,6 +40,8 @@ export const PACKET_ID = {
   S2CHousingSave: 91,
   C2SHousingLoad: 92,
   S2CHousingLoad: 93,
+  C2SFurnitureCraft: 94,
+  S2CFurnitureCraft: 95,
   C2SCreateParty: 100,
   S2CCreateParty: 101,
   C2SInviteParty: 102,
