@@ -3,9 +3,9 @@ import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
 import { animationHandler } from './social/playerAnimation.handler.js';
 import { chatHandler } from './social/playerChat.handler.js';
-import playerMoveHandler from './town/playerMove.handler.js';
-import townEnterHandler from './town/townEnter.handler.js';
-import playerLocationUpdateHandler from './town/playerLocationUpdate.handler.js';
+import playerMoveHandler from './transport/playerMove.handler.js';
+import townEnterHandler from './transport/townEnter.handler.js';
+import playerLocationUpdateHandler from './transport/playerLocationUpdate.handler.js';
 import registerHandler from './account/register.handler.js';
 import loginHandler from './account/login.handler.js';
 import createCharacterHandler from './account/createCharacter.handler.js';
@@ -19,7 +19,7 @@ import { disbandPartyHandler } from './social/party/disbandParty.handler.js';
 import { kickOutPartyHandler } from './social/party/kickOutParty.handler.js';
 import { allowInviteHandler } from './social/party/allowInvite.handler.js';
 import { leavePartyHandler } from './social/party/leaveParty.handler.js';
-import moveSectorHandler from './town/moveSectorHandler.js';
+import moveSectorHandler from './transport/moveSectorHandler.js';
 
 import { gatheringSkillCheckHandler } from './gathering/gatheringSkillCheck.handler.js';
 import { startGatheringHandler } from './gathering/startGathering.handler.js';
@@ -42,6 +42,8 @@ import inventorySortHandler from './player/inventory/inventorySort.handler.js';
 import inventoryUpdateHandler from './player/inventory/inventoryUpdate.handler.js';
 import { pongHandler } from './pong.handler.js';
 import { portalHandler } from './playerAction/portal.handler.js';
+import { craftHandler } from './player/inventory/craft.handler.js';
+import { getInventorySlotByItemIdHandler } from './player/inventory/getInventorySlotByItemId.handler.js';
 import rankingHandler from './ranking/ranking.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
@@ -99,6 +101,9 @@ const handlers = {
   // 포탈 관련 핸들러
   [config.packetId.C2SPortal]: portalHandler,
   [config.packetId.C2SPong]: pongHandler,
+  
+  [config.packetId.C2SCraft]: craftHandler,
+  [config.packetId.C2SGetInventorySlotByItemId]: getInventorySlotByItemIdHandler,
 
   // 랭킹 관련 핸들러
   [config.packetId.C2SRankingList]: rankingHandler,

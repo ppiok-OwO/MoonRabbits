@@ -46,6 +46,9 @@ const PAYLOAD = {
   S2CDespawn: (playerId_int32) => {
     return { playerId: playerId_int32 };
   },
+  S2CPlayerMove: () => {
+    return {};
+  },
   S2CPlayerLocation: (
     playerId_int32,
     transform_TransformInfo,

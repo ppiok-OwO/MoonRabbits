@@ -70,6 +70,9 @@ const PACKET = {
       PAYLOAD.S2CDespawn(playerId_int32),
     );
   },
+  S2CPlayerMove: () => {
+    return makePacket(PACKET_ID.S2CPlayerMove, PAYLOAD.S2CPlayerMove());
+  },
   S2CPlayerLocation: (
     playerId_int32,
     transform_TransformInfo,
@@ -346,6 +349,9 @@ const PACKET = {
   },
   S2CPing: (timestamp_int64) => {
     return makePacket(PACKET_ID.S2CPing, PAYLOAD.S2CPing(timestamp_int64));
+  },
+  S2CGetInventorySlotByItemId: (slots_InventorySlot_repeated) => {
+    return makePacket(PACKET_ID.S2CGetInventorySlotByItemId, {slots:slots_InventorySlot_repeated});
   },
 };
 export default PACKET;
