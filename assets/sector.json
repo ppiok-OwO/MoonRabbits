@@ -83,10 +83,10 @@
       "sector_code": 101,
       "sector_name": "아누논덴",
       "areas": [
-        { "position": { "x": -34.52, "y": 0, "z": -34.52 } },
         { "position": { "x": 0, "y": 0, "z": 0 } },
+        { "position": { "x": 0, "y": 0, "z": -34.52 } },
         { "position": { "x": -34.52, "y": 0, "z": 0 } },
-        { "position": { "x": 0, "y": 0, "z": -34.52 } }
+        { "position": { "x": -34.52, "y": 0, "z": -34.52 } }
       ],
       "monsters": [
         {
@@ -113,8 +113,8 @@
       "sector_name": "누논덴",
       "areas": [
         { "position": { "x": 0, "y": 0, "z": 0 } },
-        { "position": { "x": 0, "y": 0, "z": -34.52 } },
         { "position": { "x": -34.52, "y": 0, "z": 0 } },
+        { "position": { "x": 0, "y": 0, "z": -34.52 } },
         { "position": { "x": -69.05, "y": 0, "z": 0 } },
         { "position": { "x": -69.05, "y": 0, "z": 34.52 } }
       ],
