@@ -564,6 +564,7 @@ message Vec3 {
 message Resource {
   int32 resourceIdx = 1;
   int32 resourceId = 2;
+  int32 durability = 3;
 }
 
 message StatInfo {

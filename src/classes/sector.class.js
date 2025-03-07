@@ -347,6 +347,7 @@ class Sector {
         PAYLOAD_DATA.Resource(
           this.resources[i].getResourceIdx(),
           this.resources[i].getResourceId(),
+          this.resources[i].getDurability(),
         ),
       );
     }

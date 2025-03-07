@@ -31,7 +31,7 @@ class Resource {
     return this.resourceData.resource_respawn * 1000;
   }
   getAngle() {
-    return createRandNum(80, 280);
+    return createRandNum(70, 290);
   }
   getType(){
     if(this.resourceData.resource_type == "Tree"){

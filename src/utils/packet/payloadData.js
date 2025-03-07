@@ -133,8 +133,8 @@ const PAYLOAD_DATA = {
   Vec3: (x_float, y_float, z_float) => {
     return { x: x_float, y: y_float, z: z_float };
   },
-  Resource: (resourceIdx_int32, resourceId_int32) => {
-    return { resourceIdx: resourceIdx_int32, resourceId: resourceId_int32 };
+  Resource: (resourceIdx_int32, resourceId_int32, durability_int32) => {
+    return { resourceIdx: resourceIdx_int32, resourceId: resourceId_int32, durability: durability_int32 };
   },
   StatInfo: (
     level_int32,
