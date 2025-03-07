@@ -90,8 +90,10 @@ export const PACKET_ID = {
   S2CInvestPoint: 204,
   C2SGetInventorySlotByItemId: 209,
   S2CGetInventorySlotByItemId: 210,
-  C2SCraft: 211,
-  S2CCraft: 212,
+  C2SCraftStart: 211,
+  S2CCraftStart: 212,
+  C2SCraftEnd: 213,
+  S2CCraftEnd: 214,
   S2CPing: 254,
   C2SPong: 255,
 };
