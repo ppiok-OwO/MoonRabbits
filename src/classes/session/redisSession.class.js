@@ -113,7 +113,6 @@ class RedisSession {
     };
     // 단일 객체로 저장하여 이후 호출 시 덮어씌우도록 처리
     await redisClient.hset(key, 'party', JSON.stringify(partyObj));
-    await redisClient.expire(key, 3600);
     console.log(chalk.green(`[Redis Log] partySession이 '${key}'에 저장(갱신)되었습니다.`));
   }
 

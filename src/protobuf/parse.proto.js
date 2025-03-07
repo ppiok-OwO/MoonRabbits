@@ -54,6 +54,11 @@ const MSG_IDS = `
   C2S_ITEM_MOVE	= 84;
   S2C_INVENTORY_UPDATE = 85;
 
+  C2S_HOUSING_SAVE = 90;
+  S2C_HOUSING_SAVE = 91;
+  C2S_HOUSING_LOAD = 92;
+  S2C_HOUSING_LOAD = 93;
+
   C2S_CREATE_PARTY=100;
   S2C_CREATE_PARTY=101;
   C2S_INVITE_PARTY=102;
@@ -89,6 +94,7 @@ const MSG_IDS = `
   S2C_GATHERING_SKILL_CHECK=147;
   C2S_GATHERING_DONE=148;
   S2C_GATHERING_DONE=149;
+  C2S_GATHERING_ANIMATION_END = 150;
 
   C2S_RECALL = 160;
   S2C_RECALL = 161;
@@ -110,6 +116,8 @@ const MSG_IDS = `
   C2S_INVEST_POINT=203;
   S2C_INVEST_POINT=204;
 
+  C2S_GET_INVENTORY_SLOT_BY_ITEM_ID=209;
+  S2C_GET_INVENTORY_SLOT_BY_ITEM_ID=210;
   C2S_CRAFT = 211;
   S2C_CRAFT = 212;
 
@@ -149,7 +157,7 @@ message C2SEnterTown{
   int32 classCode = 2;
 }
 message S2CEnterTown{
-  PlayerInfo myPlayer = 1;
+  repeated PlayerInfo players = 1;
 }
 message C2SMoveSector{
   int32 targetSector = 1;
@@ -185,7 +193,7 @@ message S2CSpawn{
   PlayerInfo player = 1;
 }
 message S2CDespawn{
-  int32 playerIds = 1;
+  int32 playerId = 1;
 }
 
 message C2SPlayerMove{
@@ -250,6 +258,24 @@ message C2SItemMove {
 message S2CInventoryUpdate {
   repeated InventorySlot slots = 1;
 }
+
+message C2SHousingSave {
+  repeated HousingInfo housingInfo = 1;
+}
+
+message S2CHousingSave {
+  string status = 1;
+  string msg = 2;
+}
+
+message C2SHousingLoad {}
+
+message S2CHousingLoad {
+  string status = 1;
+  string msg = 2;
+  repeated HousingInfo housingInfo = 3;
+}
+
 message C2SCreateParty{}
 message S2CCreateParty{
   string partyId = 1;
@@ -382,7 +408,9 @@ message S2CGatheringDone{
   int32 itemId = 2;
   int32 quantity = 3;
 }
+
 message C2SGatheringAnimationEnd{
+  
 }
 
 
@@ -456,7 +484,7 @@ message S2CInvestPoint {
 
 message C2SCraft{
   int32 recipeId = 1;
-  repeated MaterialInfo materialInfos = 2;
+  int32 count = 2;
 }
 message S2CCraft{
   int32 craftedItemId = 1;
@@ -469,6 +497,13 @@ message S2CPing {
 }
 message C2SPong {
   int64 timestamp = 1;
+}
+
+message C2SGetInventorySlotByItemId {
+  repeated int32 itemIds = 1;
+}
+message S2CGetInventorySlotByItemId {
+  repeated InventorySlot slots = 1;
 }
 `;
 const STRUCTS = `
@@ -567,6 +602,7 @@ message Vec3 {
 message Resource {
   int32 resourceIdx = 1;
   int32 resourceId = 2;
+  int32 durability = 3;
 }
 
 message StatInfo {
@@ -606,6 +642,12 @@ message MaterialInfo{
   int32 materialId = 1;
   int32 count = 2;
   int32 slot = 3;
+}
+
+message HousingInfo {
+  int32 itemId = 1;
+  int32 dataType = 2;
+  TransformInfo transform = 3;
 }
 `;
 
@@ -705,9 +747,7 @@ function getDataFuncs(Messages) {
       });
 
     const paramList = fields.map((f) => `${f.name}_${f.type}`).join(', ');
-    const returnObj = fields
-      .map((f) => `${f.name}: ${f.name}_${f.type}`)
-      .join(', ');
+    const returnObj = fields.map((f) => `${f.name}: ${f.name}_${f.type}`).join(', ');
 
     const funcStr = `(${paramList}) => { return { ${returnObj} }; }`;
 

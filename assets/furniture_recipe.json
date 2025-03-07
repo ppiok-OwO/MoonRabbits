@@ -1,0 +1,48 @@
+{
+  "name": "furniture_recipe",
+  "version": "1.0.0",
+  "data": [
+    {
+      "recipe_id": 60001,
+      "material_items": [
+        {
+          "item_id": 20001,
+          "count": 8
+        },
+        {
+          "item_id": 20002,
+          "count": 2
+        }
+      ],
+      "craft_item_id": 30010
+    },
+    {
+      "recipe_id": 60002,
+      "material_items": [
+        {
+          "item_id": 20001,
+          "count": 16
+        },
+        {
+          "item_id": 20002,
+          "count": 4
+        }
+      ],
+      "craft_item_id": 30011
+    },
+    {
+      "recipe_id": 60003,
+      "material_items": [
+        {
+          "item_id": 20002,
+          "count": 8
+        },
+        {
+          "item_id": 20003,
+          "count": 4
+        }
+      ],
+      "craft_item_id": 30012
+    }
+  ]
+}

@@ -36,8 +36,8 @@ export const housingSaveHandler = async (socket, packetData) => {
     await saveHousingData(playerId, housingInfo);
 
     // 저장 완료 후 클라이언트에 성공 응답 전송
-    // const responsePacket = PACKET.S2CHousingSave('success', '가구 배치 저장 완료');
-    // socket.emit(responsePacket);
+    const responsePacket = PACKET.S2CHousingSave('success', '가구 배치 저장 완료');
+    socket.emit(responsePacket);
     console.log(chalk.green(`[housingSaveHandler] 가구 배치 저장 완료 - playerId: ${playerId}`));
   } catch (error) {
     console.error(chalk.red('[housingSaveHandler Error]\n', error));

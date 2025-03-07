@@ -6,27 +6,6 @@ import chalk from 'chalk';
 import bcrypt from 'bcrypt';
 import redisClient from '../../utils/redis/redis.config.js';
 
-/**
- * 현재 날짜와 시간을 'YYYY-MM-DD HH:mm:ss' 형식으로 반환
- * @returns {string} 포맷된 타임스탬프
- */
-function getFormattedTimestamp() {
-  const now = new Date();
-
-  // 날짜 구성
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1 필요
-  const day = String(now.getDate()).padStart(2, '0');
-
-  // 시간 구성
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  const seconds = String(now.getSeconds()).padStart(2, '0');
-
-  // 최종 포맷
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-}
-
 // Email 기반으로 사용자 찾기
 export const findUserByEmail = async (email) => {
   const [rows] = await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.FIND_USER_BY_EMAIL, [email]);

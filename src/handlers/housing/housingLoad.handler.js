@@ -15,10 +15,12 @@ export const housingLoadHandler = async (socket, packetData) => {
     const housingInfos = await loadHousingData(playerId);
 
     // 클라이언트로 조회된 데이터를 포함해 응답 전송
-    // const responsePacket = PACKET.S2CHousingLoad( 'success',
-    //   '가구 배치 불러오기 성공',
-    //   housingInfos);
-    // socket.emit(responsePacket);
+    const responsePacket = PACKET.S2CHousingLoad(
+      'success',
+      '가구 배치 불러오기 성공',
+      housingInfos,
+    );
+    socket.emit(responsePacket);
     console.log(
       chalk.green(`[housingLoadHandler] 가구 배치 불러오기 성공 - playerId: ${playerId}`),
     );

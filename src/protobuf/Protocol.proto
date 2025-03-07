@@ -48,6 +48,11 @@ enum MsgId {
   C2S_ITEM_MOVE	= 84;
   S2C_INVENTORY_UPDATE = 85;
 
+  C2S_HOUSING_SAVE = 90;
+  S2C_HOUSING_SAVE = 91;
+  C2S_HOUSING_LOAD = 92;
+  S2C_HOUSING_LOAD = 93;
+
   C2S_CREATE_PARTY=100;
   S2C_CREATE_PARTY=101;
   C2S_INVITE_PARTY=102;
@@ -247,6 +252,24 @@ message C2SItemMove {
 message S2CInventoryUpdate {
   repeated InventorySlot slots = 1;
 }
+
+message C2SHousingSave {
+  repeated HousingInfo housingInfo = 1;
+}
+
+message S2CHousingSave {
+  string status = 1;
+  string msg = 2;
+}
+
+message C2SHousingLoad {}
+
+message S2CHousingLoad {
+  string status = 1;
+  string msg = 2;
+  repeated HousingInfo housingInfo = 3;
+}
+
 message C2SCreateParty{}
 message S2CCreateParty{
   string partyId = 1;
@@ -613,4 +636,10 @@ message MaterialInfo{
   int32 materialId = 1;
   int32 count = 2;
   int32 slot = 3;
+}
+
+message HousingInfo {
+  int32 itemId = 1;
+  int32 dataType = 2;
+  TransformInfo transform = 3;
 }
