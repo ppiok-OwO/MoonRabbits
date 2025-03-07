@@ -51,6 +51,7 @@ export const packetNames = [
   'S2CAllowInvite',
   'C2SRejectInvite',
   'S2CRejectInvite',
+  'S2CUpdateParty',
   'C2SMonsterLocation',
   'S2CMonsterLocation',
   'C2SDetectedPlayer',

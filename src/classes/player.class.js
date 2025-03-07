@@ -30,6 +30,7 @@ class Player {
     this.hp = config.newPlayerStatData.hp;
     this.pickSpeed = baseStat.pick_speed;
     this.moveSpeed = baseStat.move_speed;
+    this.currentEquip = 0;
   }
 
   sendPacket(packet) {
@@ -192,6 +193,16 @@ class Player {
     this.abilityPoint += 3;
 
     return { newLevel, newTargetExp, abilityPoint: this.abilityPoint };
+  }
+
+  setCurrentEquip(equipment) {
+    if (equipment > 2 || equipment < 0) return;
+
+    this.currentEquip = equipment;
+  }
+
+  getCurrentEquip() {
+    return this.currentEquip;
   }
 
   getTargetExp() {

@@ -70,6 +70,9 @@ const PAYLOAD_DATA = {
     currentSector_int32,
     isLeader_bool,
     isMine_bool,
+    hp_int32,
+    level_int32,
+    currentEquip_int32,
   ) => {
     return {
       id: id_int32,
@@ -77,6 +80,9 @@ const PAYLOAD_DATA = {
       currentSector: currentSector_int32,
       isLeader: isLeader_bool,
       isMine: isMine_bool,
+      hp: hp_int32,
+      level: level_int32,
+      currentEquip: currentEquip_int32,
     };
   },
   OwnedCharacter: (nickname_string, classCode_int32) => {

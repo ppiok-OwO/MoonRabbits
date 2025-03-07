@@ -210,6 +210,22 @@ const PACKET = {
       ),
     );
   },
+  S2CUpdateParty: (
+    partyId_string,
+    leaderId_int32,
+    memberCount_int32,
+    members_MemberCardInfo_repeated,
+  ) => {
+    return makePacket(
+      PACKET_ID.S2CUpdateParty,
+      PAYLOAD.S2CUpdateParty(
+        partyId_string,
+        leaderId_int32,
+        memberCount_int32,
+        members_MemberCardInfo_repeated,
+      ),
+    );
+  },
   S2CRejectInvite: () => {
     return makePacket(PACKET_ID.S2CRejectInvite, PAYLOAD.S2CRejectInvite());
   },

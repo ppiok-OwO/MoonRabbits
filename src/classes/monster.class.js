@@ -3,7 +3,7 @@ import { findPath } from '../init/navMeshLoader.js';
 import makePacket from '../utils/packet/makePacket.js';
 import PAYLOAD from '../utils/packet/payload.js';
 import PAYLOAD_DATA from '../utils/packet/payloadData.js';
-import { getSectorSessions } from '../session/sessions.js';
+import { getPartySessions, getSectorSessions } from '../session/sessions.js';
 import { getNaveMesh } from '../init/navMeshData.js';
 import PACKET from '../utils/packet/packet.js';
 import moveSectorHandler from '../handlers/transport/moveSectorHandler.js';
@@ -257,15 +257,26 @@ class Monster {
       const changedHp = targetPlayerObj.getHp() - 1;
       const resultHp = targetPlayerObj.setHp(changedHp); // setHp 메서드 내부에서 음수일 경우 예외처리가 들어감
 
-      await delay(800);
+      // 만약 파티 중이라면 멤버 카드 UI 업데이트
+      const partySession = getPartySessions();
+      const partyId = targetPlayerObj.getPartyId();
+      if (partyId) {
+        const party = partySession.getParty(partyId);
+        const members = party.getAllMembers();
+
+        members.forEach((value, key) => {
+          const partyPacket = PACKET.S2CUpdateParty(
+            party.getId(),
+            party.getPartyLeaderId(),
+            party.getMemberCount(),
+            party.getAllMemberCardInfo(value.id),
+          );
+          key.write(partyPacket);
+        });
+      }
 
       if (resultHp <= 0) {
-        // 플레이어 사망하면 마을로 이동시키기
-        // const packet = PACKET.S2CMoveSector(
-        //   100,
-        //   targetPlayerObj.getPlayerInfo(),
-        //   [],
-        // );
+        await delay(800);
 
         // 마을로 이동할 땐 피를 복구해줘야 함(부활)
         targetPlayerObj.setHp(config.newPlayerStatData.hp);
@@ -274,6 +285,23 @@ class Monster {
         moveSectorHandler(socket, { targetSector: 100 });
 
         // 마을로 이동할 땐 파티 목록 업데이트 해주기
+        // 만약 파티 중이라면 멤버 카드 UI 업데이트
+        const partySession = getPartySessions();
+        const partyId = targetPlayerObj.getPartyId();
+        if (partyId) {
+          const party = partySession.getParty(partyId);
+          const members = party.getAllMembers();
+
+          members.forEach((value, key) => {
+            const partyPacket = PACKET.S2CUpdateParty(
+              party.getId(),
+              party.getPartyLeaderId(),
+              party.getMemberCount(),
+              party.getAllMemberCardInfo(value.id),
+            );
+            key.write(partyPacket);
+          });
+        }
       }
     }
   }

@@ -54,6 +54,7 @@ export const PACKET_ID = {
   S2CAllowInvite: 115,
   C2SRejectInvite: 116,
   S2CRejectInvite: 117,
+  S2CUpdateParty: 118,
   C2SMonsterLocation: 120,
   S2CMonsterLocation: 121,
   C2SDetectedPlayer: 122,
