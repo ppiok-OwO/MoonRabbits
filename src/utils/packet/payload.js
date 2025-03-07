@@ -141,6 +141,19 @@ const PAYLOAD = {
       members: members_MemberCardInfo_repeated,
     };
   },
+  S2CUpdateParty: (
+    partyId_string,
+    leaderId_int32,
+    memberCount_int32,
+    members_MemberCardInfo_repeated,
+  ) => {
+    return {
+      partyId: partyId_string,
+      leaderId: leaderId_int32,
+      memberCount: memberCount_int32,
+      members: members_MemberCardInfo_repeated,
+    };
+  },
   S2CRejectInvite: () => {
     return {};
   },

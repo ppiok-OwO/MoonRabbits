@@ -77,6 +77,9 @@ class Party {
         currentSector: member.getSectorId(),
         isPartyLeader: member === this.partyLeader,
         isMine: member.id === playerId,
+        hp: member.getHp(),
+        level: member.getLevel(),
+        currentEquip: member.getCurrentEquip(),
       };
 
       memberCardInfos.push(memberInfo);

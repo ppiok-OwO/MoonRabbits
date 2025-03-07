@@ -53,13 +53,25 @@ const PAYLOAD_DATA = {
   ItemInfo: (itemId_int32, stack_int32) => {
     return { itemId: itemId_int32, stack: stack_int32 };
   },
-  MemberCardInfo: (id_int32, nickname_string, currentSector_int32, isLeader_bool, isMine_bool) => {
+  MemberCardInfo: (
+    id_int32,
+    nickname_string,
+    currentSector_int32,
+    isLeader_bool,
+    isMine_bool,
+    hp_int32,
+    level_int32,
+    currentEquip_int32,
+  ) => {
     return {
       id: id_int32,
       nickname: nickname_string,
       currentSector: currentSector_int32,
       isLeader: isLeader_bool,
       isMine: isMine_bool,
+      hp: hp_int32,
+      level: level_int32,
+      currentEquip: currentEquip_int32,
     };
   },
   OwnedCharacter: (nickname_string, classCode_int32) => {
@@ -132,6 +144,7 @@ const PAYLOAD_DATA = {
     curStamina_int32,
     exp_int32,
     targetExp_int32,
+    hp_int32,
   ) => {
     return {
       level: level_int32,
@@ -142,6 +155,7 @@ const PAYLOAD_DATA = {
       curStamina: curStamina_int32,
       exp: exp_int32,
       targetExp: targetExp_int32,
+      hp: hp_int32,
     };
   },
   MonsterStatus: (

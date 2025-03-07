@@ -55,6 +55,7 @@ export const packetNames = [
   'S2CAllowInvite',
   'C2SRejectInvite',
   'S2CRejectInvite',
+  'S2CUpdateParty',
   'C2SMonsterLocation',
   'S2CMonsterLocation',
   'C2SDetectedPlayer',
@@ -93,6 +94,10 @@ export const packetNames = [
   'S2CGetInventorySlotByItemId',
   'C2SCraft',
   'S2CCraft',
+  'C2SCraftStart',
+  'S2CCraftStart',
+  'C2SCraftEnd',
+  'S2CCraftEnd',
   'S2CPing',
   'C2SPong',
 ];

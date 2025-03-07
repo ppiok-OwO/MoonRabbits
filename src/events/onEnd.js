@@ -11,6 +11,25 @@ export const onEnd = (socket) => async () => {
   const inventoryKey = `inventory:${player_id}`;
   const fullSessionKey = `fullSession:${player_id}`;
 
+  const player = getPlayerSession().getPlayer(socket);
+  if(player.isCrafting) {
+    console.error('\x1b[31m제작중 종료 발생, 소모한 재료 복구 실행\x1b[0m');
+    // redis 인벤토리 가져옴
+    const redisKey = `inventory:${player_id}`;
+    const redisInventory = await redisClient.hgetall(redisKey);
+
+    // 소모한 재료 복구
+    try {
+      for(const slot of player.craftingSlots){
+        const stack = JSON.parse(redisInventory[slot.slotIdx]).stack + slot.stack;
+        redisClient.hset(redisKey, slot.slotIdx.toString(), JSON.stringify({itemId:slot.itemId, stack }));
+      }
+      console.log('복구 완료');
+    } catch (error) {
+      console.error('복구중 에러 :', error);
+    }
+  }
+
   await updateInventory(player_id);
   await redisClient.expire(inventoryKey, 1200);
   await redisClient.expire(fullSessionKey, 1200);

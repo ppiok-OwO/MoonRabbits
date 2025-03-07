@@ -177,6 +177,22 @@ const PACKET = {
       ),
     );
   },
+  S2CUpdateParty: (
+    partyId_string,
+    leaderId_int32,
+    memberCount_int32,
+    members_MemberCardInfo_repeated,
+  ) => {
+    return makePacket(
+      PACKET_ID.S2CUpdateParty,
+      PAYLOAD.S2CUpdateParty(
+        partyId_string,
+        leaderId_int32,
+        memberCount_int32,
+        members_MemberCardInfo_repeated,
+      ),
+    );
+  },
   S2CRejectInvite: () => {
     return makePacket(PACKET_ID.S2CRejectInvite, PAYLOAD.S2CRejectInvite());
   },
@@ -282,20 +298,23 @@ const PACKET = {
   S2CInvestPoint: (statInfo_StatInfo) => {
     return makePacket(PACKET_ID.S2CInvestPoint, PAYLOAD.S2CInvestPoint(statInfo_StatInfo));
   },
-  S2CCraft: (craftedItemId_int32, count_int32, slot_int32) => {
-    return makePacket(
-      PACKET_ID.S2CCraft,
-      PAYLOAD.S2CCraft(craftedItemId_int32, count_int32, slot_int32),
-    );
+  S2CCraftStart: (isSuccess_bool, recipeId_int32, msg_string) => {
+    return makePacket(PACKET_ID.S2CCraftStart, {
+      isSuccess: isSuccess_bool,
+      recipeId: recipeId_int32,
+      msg: msg_string,
+    });
+  },
+  S2CCraftEnd: (isSuccess_bool, msg_string) => {
+    return makePacket(PACKET_ID.S2CCraftEnd, { isSuccess: isSuccess_bool, msg: msg_string });
   },
   S2CPing: (timestamp_int64) => {
     return makePacket(PACKET_ID.S2CPing, PAYLOAD.S2CPing(timestamp_int64));
   },
   S2CGetInventorySlotByItemId: (slots_InventorySlot_repeated) => {
-    return makePacket(
-      PACKET_ID.S2CGetInventorySlotByItemId,
-      PAYLOAD.S2CGetInventorySlotByItemId(slots_InventorySlot_repeated),
-    );
+    return makePacket(PACKET_ID.S2CGetInventorySlotByItemId, {
+      slots: slots_InventorySlot_repeated,
+    });
   },
 };
 
