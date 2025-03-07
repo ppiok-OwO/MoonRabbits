@@ -42,7 +42,7 @@ const moveSectorHandler = (socket, packetData) => {
     // [3-2] 이전 섹터가 마을이 아니면, 내가 남긴 덫들 제거
     if (prevSector.sectorCode != 100) {
       const oldTraps = prevSector.removeTraps(player.id);
-      prevSector.notifyExceptMe(PACKET.S2CRemoveTrap(oldTraps),player.id);
+      prevSector.notifyExceptMe(PACKET.S2CRemoveTrap(oldTraps), player.id);
     }
 
     // [4] 내 플레이어 정보 갱신
@@ -53,9 +53,9 @@ const moveSectorHandler = (socket, packetData) => {
     // [5] 신규 섹터에 내 플레이어 정보 기록하고, 이동에 필요한 데이터 준비
     const players = [];
     newSector.setPlayer(socket, player);
-      for (const player of newSector.getAllPlayer().values()) {
-        players.push(player.getPlayerInfo());
-      }
+    for (const player of newSector.getAllPlayer().values()) {
+      players.push(player.getPlayerInfo());
+    }
     // [5-1] 이동할 섹터가 마을이 아니면, 설치돼있는 덫 현황 가져옴
     const traps = newSector.sectorCode != 100 ? newSector.getAllTraps() : [];
 

@@ -46,6 +46,8 @@ class Player {
     if (this.hp < 0) {
       this.hp = 0;
     }
+
+    return this.hp;
   }
 
   getHp() {
@@ -242,6 +244,7 @@ class Player {
       this.stamina,
       this.exp,
       this.targetExp,
+      this.hp,
     );
   }
 
@@ -253,6 +256,7 @@ class Player {
     this.moveSpeed = statInfo.moveSpeed;
     this.abilityPoint = statInfo.abilityPoint;
     this.targetExp = statInfo.targetExp;
+    this.hp = statInfo.hp;
   }
 }
 
