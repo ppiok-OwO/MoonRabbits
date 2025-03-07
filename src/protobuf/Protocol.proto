@@ -106,8 +106,10 @@ enum MsgId {
 
   C2S_GET_INVENTORY_SLOT_BY_ITEM_ID=209;
   S2C_GET_INVENTORY_SLOT_BY_ITEM_ID=210;
-  C2S_CRAFT = 211;
-  S2C_CRAFT = 212;
+  C2S_CRAFT_START = 211;
+  S2C_CRAFT_START = 212;
+  C2S_CRAFT_END = 213;
+  S2C_CRAFT_END = 214;
 
   S2C_PING=254;
   C2S_PONG=255;
@@ -448,14 +450,20 @@ message S2CInvestPoint {
   StatInfo statInfo = 1;
 }
 
-message C2SCraft{
+message C2SCraftStart{
   int32 recipeId = 1;
-  int32 count = 2;
 }
-message S2CCraft{
-  int32 craftedItemId = 1;
-  int32 count = 2;
-  int32 slot = 3;
+message S2CCraftStart{
+  bool isSuccess = 1;
+  int32 recipeId = 2;
+  string msg = 3;
+}
+message C2SCraftEnd{
+  int32 recipeId = 1;
+}
+message S2CCraftEnd{
+  bool isSuccess = 1;
+  string msg = 2;
 }
 
 message S2CPing {

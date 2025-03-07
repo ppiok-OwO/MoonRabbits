@@ -147,8 +147,10 @@ export const config = {
 
     C2SGetInventorySlotByItemId: PACKET_ID.C2SGetInventorySlotByItemId,
     S2CGetInventorySlotByItemId: PACKET_ID.S2CGetInventorySlotByItemId,
-    C2SCraft: PACKET_ID.C2SCraft,
-    S2CCraft: PACKET_ID.S2CCraft,
+    C2SCraftStart: PACKET_ID.C2SCraftStart,
+    S2CCraftStart: PACKET_ID.S2CCraftStart,
+    C2SCraftEnd: PACKET_ID.C2SCraftEnd,
+    S2CCraftEnd: PACKET_ID.S2CCraftEnd,
     S2CPing: PACKET_ID.S2CPing,
     C2SPong: PACKET_ID.C2SPong,
   },

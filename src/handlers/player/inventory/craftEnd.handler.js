@@ -5,8 +5,8 @@ import PACKET from '../../../utils/packet/packet.js';
 import PAYLOAD_DATA from '../../../utils/packet/payloadData.js';
 import redisClient from '../../../utils/redis/redis.config.js';
 
-export const craftHandler = async (socket, packetData) => {
-  const { recipeId, count } = packetData; // 조합식ID, 재료 정보 [{itemId, count}]
+export const craftEndHandler = async (socket, packetData) => {
+  const { recipeId } = packetData;
 
   const recipeData = getGameAssets().recipes.data;
   const recipe = recipeData.find((recipe) => recipe.recipe_id === recipeId);
@@ -14,16 +14,16 @@ export const craftHandler = async (socket, packetData) => {
     socket.emit(new Error('C2SCraft : 그런 레시피 없음'));
   }
 
+  const player_id = socket.player.playerId;
+
   // 클라이언트에 결과로 보내줄 조합아이템
   const craftItemId = recipe.craft_item_id;
   let craftSlotIdx = -1;
 
-  const player_id = socket.player.playerId;
-
   // Redis 인벤토리 키 설정
   const redisKey = `inventory:${player_id}`;
 
-  // Redis에 저장된 인벤토리 데이터
+  // Redis 인벤토리 데이터
   const redisInventory = {};
   try {
     const data = (await redisClient.hgetall(redisKey)) || {};
@@ -34,51 +34,10 @@ export const craftHandler = async (socket, packetData) => {
     );
   }
 
-  const slots = [];
   const newInventory = [];
   let canCraft = false;
-  try {
-    for (const materialItem of recipe.material_items) {
-      for (let slotIdx = 0; slotIdx < 25; slotIdx++) {
-        newInventory[slotIdx] = JSON.parse(redisInventory[slotIdx]);
-        slots.push(
-          PAYLOAD_DATA.InventorySlot(
-            slotIdx,
-            newInventory[slotIdx].itemId*1,
-            newInventory[slotIdx].stack,
-          ),
-        );
-        if (newInventory[slotIdx].itemId*1 === materialItem.item_id) {
-          if (newInventory[slotIdx].stack >= materialItem.count * count) {
-            canCraft = true;
-            newInventory[slotIdx].stack -= materialItem.count * count;
-            slots[slotIdx].stack = newInventory[slotIdx].stack;
-            if(newInventory[slotIdx].stack===0) newInventory[slotIdx].itemId = 0;
-          }
-        }
-      }
-    }
-  } catch (error) {
-    socket.emit(
-      new CustomError(
-        ErrorCodes.HANDLER_ERROR,
-        'Craft 핸들러 재료 확인 반복문 에러',
-      ),
-    );
-  }
 
-  // 보유중인 재료가 부족할 때
-  if (!canCraft) {
-    socket.write(
-      PACKET.S2CChat(
-        0,
-        '제작에 필요한 재료가 부족합니다.',
-        'System',
-      ),
-    );
-    return;
-  }
-
+  // # 제작 성공! 제작 아이템 추가
   // 인벤토리 빈 슬롯 찾아서 제작 아이템 추가하기 
   canCraft = false;
   let isNewCraft = true;
@@ -86,12 +45,11 @@ export const craftHandler = async (socket, packetData) => {
 
   // 인벤에 있는 경우, 기존 슬롯에 누적
   for (let slotIdx = 0; slotIdx < 25; slotIdx++) {
+    newInventory[slotIdx] = JSON.parse(redisInventory[slotIdx]);
     if (newInventory[slotIdx].itemId*1 === craftItemId) {
       isNewCraft = false;
       canCraft = true;
-      slots[slotIdx].itemId = craftItemId;
-      newInventory[slotIdx].stack += count;
-      slots[slotIdx].stack = newInventory[slotIdx].stack;
+      newInventory[slotIdx].stack += 1;
     }
     if (newInventory[slotIdx].itemId*1 === 0) {
       tempSlotIdx = Math.min(slotIdx, tempSlotIdx);
@@ -102,26 +60,27 @@ export const craftHandler = async (socket, packetData) => {
   if(tempSlotIdx<100 && isNewCraft) {
     canCraft = true;
     newInventory[tempSlotIdx].itemId = craftItemId;
-    slots[tempSlotIdx].itemId = craftItemId;
-    newInventory[tempSlotIdx].stack = count;
-    slots[tempSlotIdx].stack = count;
+    newInventory[tempSlotIdx].stack = 1;
     craftSlotIdx = tempSlotIdx;
   }
 
   // 빈 인벤토리가 없어서 제작 아이템을 추가하지 못했을 때
   if (!canCraft) {
     socket.write(PACKET.S2CChat(0, '빈 인벤토리 슬롯이 없습니다', 'System'));
+    socket.write(PACKET.S2CCraftEnd(false, "빈 슬롯이 없어서 제작 완료 실패"));
     return;
   }
 
   // 레디스 인벤토리 업데이트
+  const slots = [];
   await redisClient.del(redisKey);
   for (let i = 0; i < 25; i++) {
-    await redisClient.hset(
+    redisClient.hset(
       redisKey,
       i.toString(),
       JSON.stringify(newInventory[i]),
     );
+    slots.push(PAYLOAD_DATA.InventorySlot(i, newInventory[i].itemId, newInventory[i].stack));
   }
   console.log(`플레이어 ${player_id}의 전체 인벤토리 업데이트 완료.`);
 
@@ -134,8 +93,8 @@ export const craftHandler = async (socket, packetData) => {
 
   // 제작 결과 업데이트 패킷 전송
   try {
-    socket.write(PACKET.S2CCraft(craftItemId, count, craftSlotIdx));
+    socket.write(PACKET.S2CCraftEnd(true, "제작 완료"));
   } catch (error) {
-    socket.emit(new Error('S2CCraft 제작 결과 패킷 생성 에러'));
+    socket.emit(new Error('S2CCraftEnd 제작 완료 패킷 생성 에러'));
   }
 };
