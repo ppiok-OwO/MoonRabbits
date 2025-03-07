@@ -4,7 +4,7 @@ import { getGameAssets } from '../init/assets.js';
 import PACKET from '../utils/packet/packet.js';
 import Monster from './monster.class.js';
 import { getNaveMesh } from '../init/navMeshData.js';
-import { updateDurabilityHandler } from '../handlers/gathering/updateDurability.handlers.js';
+import { updateDurabilityHandler } from '../handlers/gathering/updateDurability.handler.js';
 
 class Sector {
   constructor(sectorId, sectorCode, resources = []) {
