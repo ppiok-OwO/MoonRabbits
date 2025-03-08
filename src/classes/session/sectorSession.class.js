@@ -20,18 +20,18 @@ class SectorSession {
     // console.log(sectorResources);
 
     if (sectorResources && sectorResources.length > 0) {
-      for(let i = 0; i< sectorResources.length+1; i++){
-        if(i === 0){
+      for (let i = 0; i < sectorResources.length + 1; i++) {
+        if (i === 0) {
           resources.push(new Resource(i, sectorResources[0]));
           continue;
         }
-        resources.push(new Resource(i, sectorResources[i-1]));
+        resources.push(new Resource(i, sectorResources[i - 1]));
       }
     }
     // console.log(resources.length);
     // console.log(resources);
 
-    const newSector = new Sector(sectorId , sectorCode, resources);
+    const newSector = new Sector(sectorId, sectorCode, resources);
     this.sectors.set(sectorId, newSector);
     return newSector;
   }

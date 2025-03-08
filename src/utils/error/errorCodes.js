@@ -14,5 +14,6 @@ export const ErrorCodes = {
   PARTY_NOT_FOUND: 10013,
   INVALID_INPUT: 10014,
   INVALID_SPEED: 10015,
+  INVALID_RECIPE: 10016,
   // 추가적인 에러 코드들
 };

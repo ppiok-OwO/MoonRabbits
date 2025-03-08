@@ -84,7 +84,6 @@ const handlers = {
   [config.packetId.C2SGatheringDone]: gatheringDoneHandler,
   [config.packetId.C2SGatheringAnimationEnd]: gatheringAnimationEndHandler,
 
-
   [config.packetId.C2SRecall]: tryRecallHandler,
   [config.packetId.C2SThrowGrenade]: throwGrenadeHandler,
   [config.packetId.C2SSetTrap]: setTrapHandler,
@@ -102,10 +101,11 @@ const handlers = {
   // 포탈 관련 핸들러
   [config.packetId.C2SPortal]: portalHandler,
   [config.packetId.C2SPong]: pongHandler,
-  
+
   [config.packetId.C2SCraftStart]: craftStartHandler,
   [config.packetId.C2SCraftEnd]: craftEndHandler,
-  [config.packetId.C2SGetInventorySlotByItemId]: getInventorySlotByItemIdHandler,
+  [config.packetId.C2SGetInventorySlotByItemId]:
+    getInventorySlotByItemIdHandler,
 
   // 랭킹 관련 핸들러
   [config.packetId.C2SRankingList]: rankingHandler,

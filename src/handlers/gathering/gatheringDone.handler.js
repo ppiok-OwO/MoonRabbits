@@ -17,13 +17,17 @@ export const gatheringDoneHandler = async (socket, packetData) => {
     player.gatheringSuccess = false;
 
     const dropItem = sector.resources[placedId].dropItem();
-    const dropItemData = getGameAssets().item.data.find(item =>{return item.item_id == dropItem});
+    const dropItemData = getGameAssets().item.data.find((item) => {
+      return item.item_id == dropItem;
+    });
     const quentity = 1;
-    player.sendPacket(PACKET.S2CChat(
-      0,
-      `${dropItemData.item_name}아이템을 ${quentity}개 획득했습니다.`,
-      'System',
-    ))
+    player.sendPacket(
+      PACKET.S2CChat(
+        0,
+        `${dropItemData.item_name}아이템을 ${quentity}개 획득했습니다.`,
+        'System',
+      ),
+    );
     socket.write(PACKET.S2CGatheringDone(placedId, dropItem, 1));
     console.log('dropItem : \n', dropItem);
     const durability = sector.subDurability(placedId);
@@ -49,7 +53,5 @@ export const gatheringDoneHandler = async (socket, packetData) => {
     addExpHandler(socket, {
       count: sector.resources[placedId].getDifficulty(),
     });
-
   }
 };
-
