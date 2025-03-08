@@ -45,4 +45,3 @@ export const gatheringSkillCheckHandler = async (socket, packetData) => {
 //     int32 placedId;
 //     int32 durabillity;
 //   }
-

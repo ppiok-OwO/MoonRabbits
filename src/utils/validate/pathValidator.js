@@ -1,11 +1,9 @@
-
 class PathValidator {
   static async validatePosition(path, transform) {
     if (!path || path.length === 0) return null;
 
     // path를 청크로 나누기
     const chunks = this.dividePathIntoChunks(path);
-
 
     const results = await Promise.all(
       chunks.map((chunk) => this.processChunk(chunk, transform)),

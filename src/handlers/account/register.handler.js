@@ -1,4 +1,8 @@
-import { AddPlayerRow, createUser, findUserByEmail } from '../../db/user/user.db.js';
+import {
+  AddPlayerRow,
+  createUser,
+  findUserByEmail,
+} from '../../db/user/user.db.js';
 import { getUserSessions } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
@@ -73,7 +77,10 @@ const registerHandler = async (socket, packetData) => {
       ${error}
       `,
     );
-    socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'registerHandler 에러'));
+    socket.emit(
+      'error',
+      new CustomError(ErrorCodes.HANDLER_ERROR, 'registerHandler 에러'),
+    );
   }
 };
 

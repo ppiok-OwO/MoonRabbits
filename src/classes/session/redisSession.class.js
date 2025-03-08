@@ -34,7 +34,9 @@ class RedisSession {
     // 단일 객체로 저장하여 이후 호출 시 덮어씌움
     await redisClient.hset(key, 'user', JSON.stringify(userData));
     await redisClient.expire(key, 3600);
-    console.log(chalk.green(`[Redis Log] userSession이 '${key}'에 저장(갱신)되었습니다.`));
+    console.log(
+      chalk.green(`[Redis Log] userSession이 '${key}'에 저장(갱신)되었습니다.`),
+    );
   }
 
   /**
@@ -74,7 +76,11 @@ class RedisSession {
     // 단일 객체로 저장하여 누적하지 않고 갱신
     await redisClient.hset(key, 'player', JSON.stringify(playerData));
     await redisClient.expire(key, 3600);
-    console.log(chalk.green(`[Redis Log] playerSession이 '${key}'에 저장(갱신)되었습니다.`));
+    console.log(
+      chalk.green(
+        `[Redis Log] playerSession이 '${key}'에 저장(갱신)되었습니다.`,
+      ),
+    );
   }
 
   /**
@@ -116,7 +122,11 @@ class RedisSession {
     // 단일 객체로 저장하여 이후 호출 시 덮어씌우도록 처리
     await redisClient.hset(key, 'party', JSON.stringify(partyObj));
     await redisClient.expire(key, 3600);
-    console.log(chalk.green(`[Redis Log] partySession이 '${key}'에 저장(갱신)되었습니다.`));
+    console.log(
+      chalk.green(
+        `[Redis Log] partySession이 '${key}'에 저장(갱신)되었습니다.`,
+      ),
+    );
   }
 
   /**
@@ -143,7 +153,11 @@ class RedisSession {
     // 단일 객체로 저장하여 데이터 누적 없이 갱신 처리
     await redisClient.hset(key, 'sector', JSON.stringify(sectorData));
     await redisClient.expire(key, 3600);
-    console.log(chalk.green(`[Redis Log] sectorSession이 '${key}'에 저장(갱신)되었습니다.`));
+    console.log(
+      chalk.green(
+        `[Redis Log] sectorSession이 '${key}'에 저장(갱신)되었습니다.`,
+      ),
+    );
   }
 
   /**
@@ -164,7 +178,9 @@ class RedisSession {
   async removeFullSession(userId) {
     const key = `fullSession:${userId}`;
     await redisClient.del(key);
-    console.log(chalk.green(`[Redis Log] 모든 세션이 삭제되었습니다. : ${userId}`));
+    console.log(
+      chalk.green(`[Redis Log] 모든 세션이 삭제되었습니다. : ${userId}`),
+    );
   }
 }
 

@@ -355,16 +355,17 @@ const PACKET = {
     );
   },
   S2CCraftStart: (isSuccess_bool, recipeId_int32, msg_string) => {
-    return makePacket(
-      PACKET_ID.S2CCraftStart,
-      { isSuccess: isSuccess_bool, recipeId: recipeId_int32, msg: msg_string},
-    );
+    return makePacket(PACKET_ID.S2CCraftStart, {
+      isSuccess: isSuccess_bool,
+      recipeId: recipeId_int32,
+      msg: msg_string,
+    });
   },
   S2CCraftEnd: (isSuccess_bool, msg_string) => {
-    return makePacket(
-      PACKET_ID.S2CCraftEnd,
-      { isSuccess: isSuccess_bool, msg: msg_string},
-    );
+    return makePacket(PACKET_ID.S2CCraftEnd, {
+      isSuccess: isSuccess_bool,
+      msg: msg_string,
+    });
   },
   S2CPing: (timestamp_int64) => {
     return makePacket(PACKET_ID.S2CPing, PAYLOAD.S2CPing(timestamp_int64));

@@ -18,7 +18,9 @@ export const craftEndHandler = async (socket, packetData) => {
   const player_id = socket.player.playerId;
   const player = getPlayerSession().getPlayer(socket);
   if (player.isCrafting === false) {
-    socket.emit(new CustomError(ErrorCodes.INVALID_INPUT, '잘못된 제작 완료 요청'));
+    socket.emit(
+      new CustomError(ErrorCodes.INVALID_INPUT, '잘못된 제작 완료 요청'),
+    );
     return;
   }
 
@@ -51,10 +53,10 @@ export const craftEndHandler = async (socket, packetData) => {
   // 인벤에 있는 경우, 기존 슬롯에 누적
   for (let slotIdx = 0; slotIdx < 25; slotIdx++) {
     try {
-        newInventory[slotIdx] = JSON.parse(redisInventory[slotIdx]);
+      newInventory[slotIdx] = JSON.parse(redisInventory[slotIdx]);
     } catch (error) {
-        console.error(`invalid format : redisInventory[slotIdx]`);
-        return;
+      console.error(`invalid format : redisInventory[slotIdx]`);
+      return;
     }
     if (newInventory[slotIdx].itemId * 1 === craftItemId) {
       isNewCraft = false;
@@ -86,9 +88,15 @@ export const craftEndHandler = async (socket, packetData) => {
   await redisClient.del(redisKey);
   for (let i = 0; i < 25; i++) {
     redisClient.hset(redisKey, i.toString(), JSON.stringify(newInventory[i]));
-    slots.push(PAYLOAD_DATA.InventorySlot(i, newInventory[i].itemId, newInventory[i].stack));
+    slots.push(
+      PAYLOAD_DATA.InventorySlot(
+        i,
+        newInventory[i].itemId,
+        newInventory[i].stack,
+      ),
+    );
   }
-  
+
   // 인벤토리 업데이트 패킷 전송
   try {
     socket.write(PACKET.S2CInventoryUpdate(slots));
