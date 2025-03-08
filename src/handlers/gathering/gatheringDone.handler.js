@@ -13,7 +13,7 @@ export const gatheringDoneHandler = async (socket, packetData) => {
   const player = getPlayerSession().getPlayer(socket);
   const sector = getSectorSessions().getSector(player.getSectorId());
   const placedId = player.getGatheringIdx();
-  const player_id = player.getPlayerId();
+  const player_id = socket.player.playerId;
   if (player.gatheringSuccess) {
     player.gatheringSuccess = false;
 
