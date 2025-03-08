@@ -7,6 +7,7 @@ import { addExpHandler } from '../player/addExp.handler.js';
 import { animationHandler } from '../social/playerAnimation.handler.js';
 import { addItemToInventory } from '../player/inventory/inventoryManager.js';
 import { getGameAssets } from '../../init/assets.js';
+import { startGatheringHandler } from './StartGathering.handler.js';
 
 export const gatheringDoneHandler = async (socket, packetData) => {
   const player = getPlayerSession().getPlayer(socket);
@@ -33,6 +34,8 @@ export const gatheringDoneHandler = async (socket, packetData) => {
         () => sector.resetDurability(placedId),
         sector.resources[placedId].getRespawnTime(),
       );
+    } else {
+      startGatheringHandler(socket, { placedId });
     }
 
     // 채집한 아이템을 인벤토리 추가하는 로직
