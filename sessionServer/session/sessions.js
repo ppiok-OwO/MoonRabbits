@@ -6,5 +6,5 @@ export const getPartySession = () => {
 };
 
 export const getPlayerSession = () => {
-  playerSession;
+  return playerSession;
 };

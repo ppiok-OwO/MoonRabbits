@@ -2,14 +2,14 @@ import { getPlayerSession } from './sessions.js';
 
 addPlayer = (player) => {
   const playerSession = getPlayerSession();
-  playerSession.set(player.nickname, player);
+  playerSession.set(player.socketId, player);
 };
 
-getPlayerBySocketId = (socketId) => {
+getPlayerByNickname = (nickname) => {
   const playerSession = getPlayerSession();
 
-  for (const player of partySession) {
-    if (player.socketId === socketId) {
+  for (const player of playerSession) {
+    if (player.nickname === nickname) {
       return player;
     }
   }
