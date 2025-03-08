@@ -23,11 +23,7 @@ export const gatheringDoneHandler = async (socket, packetData) => {
     });
     const quentity = 1;
     player.sendPacket(
-      PACKET.S2CChat(
-        0,
-        `${dropItemData.item_name}아이템을 ${quentity}개 획득했습니다.`,
-        'System',
-      ),
+      PACKET.S2CChat(0, `${dropItemData.item_name}아이템을 ${quentity}개 획득했습니다.`, 'System'),
     );
     socket.write(PACKET.S2CGatheringDone(placedId, dropItem, 1));
     console.log('dropItem : \n', dropItem);
@@ -53,7 +49,7 @@ export const gatheringDoneHandler = async (socket, packetData) => {
       // 인벤토리 오류 발생 시 클라이언트에 알림 처리 가능
     }
 
-    addExpHandler(socket, {
+    await addExpHandler(socket, {
       count: sector.resources[placedId].getDifficulty(),
     });
   }

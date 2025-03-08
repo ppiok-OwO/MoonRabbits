@@ -18,11 +18,7 @@ const handleError = (socket, error) => {
       printCustomErrorConsole(nickname, error);
       break;
     case ErrorCodes.GAME_NOT_FOUND:
-      const gameNotFound_sChat = PACKET.S2CChat(
-        0,
-        `게임을 찾을 수 없습니다.`,
-        'System',
-      );
+      const gameNotFound_sChat = PACKET.S2CChat(0, `게임을 찾을 수 없습니다.`, 'System');
       socket.write(gameNotFound_sChat);
       printCustomErrorConsole(nickname, error);
       break;
@@ -36,38 +32,22 @@ const handleError = (socket, error) => {
       printCustomErrorConsole(nickname, error);
       break;
     case ErrorCodes.INVALID_PACKET:
-      const invalidPacket_sChat = PACKET.S2CChat(
-        0,
-        `유효하지 않은 패킷입니다.`,
-        'System',
-      );
+      const invalidPacket_sChat = PACKET.S2CChat(0, `유효하지 않은 패킷입니다.`, 'System');
       socket.write(invalidPacket_sChat);
       printCustomErrorConsole(nickname, error);
       break;
     case ErrorCodes.INVALID_SEQUENCE:
-      const invalidSequence_sChat = PACKET.S2CChat(
-        0,
-        `시퀀스 오류가 발생하였습니다.`,
-        'System',
-      );
+      const invalidSequence_sChat = PACKET.S2CChat(0, `시퀀스 오류가 발생하였습니다.`, 'System');
       socket.write(invalidSequence_sChat);
       printCustomErrorConsole(nickname, error);
       break;
     case ErrorCodes.MISSING_FIELDS:
-      const missingFields_sChat = PACKET.S2CChat(
-        0,
-        `패킷에서 필드값이 누락되었습니다.`,
-        'System',
-      );
+      const missingFields_sChat = PACKET.S2CChat(0, `패킷에서 필드값이 누락되었습니다.`, 'System');
       socket.write(missingFields_sChat);
       printCustomErrorConsole(nickname, error);
       break;
     case ErrorCodes.NOT_ENOUGH_MONEY:
-      const notEnoughMoney_sChat = PACKET.S2CChat(
-        0,
-        `금액이 충분하지 않습니다.`,
-        'System',
-      );
+      const notEnoughMoney_sChat = PACKET.S2CChat(0, `금액이 충분하지 않습니다.`, 'System');
       socket.write(notEnoughMoney_sChat);
       printCustomErrorConsole(nickname, error);
       break;
@@ -118,20 +98,12 @@ const handleError = (socket, error) => {
       printCustomErrorConsole(nickname, error);
       break;
     case ErrorCodes.PARTY_NOT_FOUND:
-      const partyNotFound_sChat = PACKET.S2CChat(
-        0,
-        `파티 정보를 찾을 수 없습니다.`,
-        'System',
-      );
+      const partyNotFound_sChat = PACKET.S2CChat(0, `파티 정보를 찾을 수 없습니다.`, 'System');
       socket.write(partyNotFound_sChat);
       printCustomErrorConsole(nickname, error);
       break;
     case ErrorCodes.INVALID_INPUT:
-      const invalidInput = PACKET.S2CChat(
-        0,
-        `클라이언트에서 잘못된 값을 전송했습니다.`,
-        'System',
-      );
+      const invalidInput = PACKET.S2CChat(0, `클라이언트에서 잘못된 값을 전송했습니다.`, 'System');
       socket.write(invalidInput);
       printCustomErrorConsole(nickname, error);
       break;
@@ -143,21 +115,15 @@ const handleError = (socket, error) => {
       );
       socket.write(defaultError_sChat);
 
-      console.error(
-        '\x1b[31m-------------------- 일반 에러 발생 --------------------\x1b[0m',
-      );
-      console.error(
-        `클라이언트: ${nickname ? `${nickname}` : `로그인하지 않음`}`,
-      );
+      console.error('\x1b[31m-------------------- 일반 에러 발생 --------------------\x1b[0m');
+      console.error(`클라이언트: ${nickname ? `${nickname}` : `로그인하지 않음`}`);
       console.error(error);
       break;
   }
 };
 
 function printCustomErrorConsole(nickname, error) {
-  console.error(
-    '\x1b[31m-------------------- 커스텀 에러 발생 --------------------\x1b[0m',
-  );
+  console.error('\x1b[31m-------------------- 커스텀 에러 발생 --------------------\x1b[0m');
   console.error(`클라이언트: ${nickname ? `${nickname}` : `로그인하지 않음`}`);
   console.error(error);
 }
