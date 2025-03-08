@@ -32,9 +32,9 @@ sessionQueueEvents.on('completed', async ({ jobId, returnvalue }) => {
     const { status, socketId } = returnvalue;
 
     const playerSession = getPlayerSession();
-    const newMember = playerSession.getPlayerBySocketId(socketId);
+    const player = playerSession.getPlayerBySocketId(socketId);
 
-    const socket = newMember.user.getSocket();
+    const socket = player.user.getSocket();
 
     if (!status) {
       const packet = PACKET.S2CChat(
@@ -46,8 +46,9 @@ sessionQueueEvents.on('completed', async ({ jobId, returnvalue }) => {
       return socket.write(packet);
     }
 
-    // TCP 재연결 패킷 전송하기
-    // 이동하는 플레이어의 이메일, 비밀번호, partyId, partyLeaderId, memberCount를 미리 레디스에 저장해두기
+    // 서버 이동 패킷 전송하기
+    // 클라이언트는 서버 이동 후, 알림 패킷 전송
+    // 이동 패킷과 알림 패킷에는 partyId가 담겨 있음
     // 다른 서버에서 플레이어가 접속하면 레디스에서 서버를 이동한 플레이어인지 확인
     // 서버를 이동한 플레이어라면 나머지 파티 참가 프로세스 진행
   }

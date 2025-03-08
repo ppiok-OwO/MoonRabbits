@@ -11,6 +11,8 @@ enum MsgId {
   S2C_LOGIN=3;
   C2S_CREATE_CHARACTER=4;
   S2C_CREATE_CHARACTER=5;
+  
+  S2C_SWITCH_SERVER=6;
 
   C2S_ENTER_TOWN=10;
   S2C_ENTER_TOWN=11;
@@ -142,6 +144,10 @@ message C2SCreateCharacter{
 message S2CCreateCharacter{
   bool isSuccess = 1;
   string msg = 2;
+}
+
+message S2CSwitchServer {
+  string serverIP = 1;
 }
 
 message C2SEnterTown{

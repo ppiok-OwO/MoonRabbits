@@ -64,6 +64,12 @@ if (cluster.isMaster) {
         player.setIsLeader(isLeader);
         player.setPartyId(partyId);
       } else if (job.name === 'joinParty') {
+        const { partyId, socketId } = job.data;
+
+        // 파티장이 속한 서버의 혼잡도 계산
+        // 혼잡하지 않으면 true, 혼잡하면 false 반환
+        return { status: true, partyId, socketId };
+      } else if (job.name === 'joinParty') {
         const { partyId, partyLeaderId, memberCount, socketId } = job.data;
         const party = getParty(partyId);
         party.setPartyLeaderId(partyLeaderId);
