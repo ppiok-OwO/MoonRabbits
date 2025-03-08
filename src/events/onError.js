@@ -1,4 +1,4 @@
-import handleError from "../utils/error/errorHandler.js";
+import handleError from '../utils/error/errorHandler.js';
 
 export const onError = (socket) => (err) => {
   handleError(socket, err);

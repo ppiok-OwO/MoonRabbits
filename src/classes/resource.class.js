@@ -33,11 +33,10 @@ class Resource {
   getAngle() {
     return createRandNum(70, 290);
   }
-  getType(){
-    if(this.resourceData.resource_type == "Tree"){
+  getType() {
+    if (this.resourceData.resource_type == 'Tree') {
       return 12;
-    }
-    else{
+    } else {
       return 11;
     }
   }

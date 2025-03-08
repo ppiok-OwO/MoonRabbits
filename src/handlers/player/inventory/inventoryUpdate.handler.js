@@ -12,7 +12,11 @@ export const inventoryUpdateHandler = async (socket, packetData) => {
     const redisKey = `inventory:${player_id}`;
 
     // 클라이언트로부터 슬롯 데이터가 전송된 경우 (즉, 인벤토리 상태 변화가 있을 경우)
-    if (packetData && Array.isArray(packetData.slots) && packetData.slots.length > 0) {
+    if (
+      packetData &&
+      Array.isArray(packetData.slots) &&
+      packetData.slots.length > 0
+    ) {
       // 현재 Redis에 저장되어 있는 인벤토리 데이터를 불러옴 (25칸 유지)
       const currentData = (await redisClient.hgetall(redisKey)) || {};
       const fullInventory = [];
@@ -43,7 +47,11 @@ export const inventoryUpdateHandler = async (socket, packetData) => {
       // Redis에 저장된 기존 인벤토리 데이터를 삭제 후, 전체 25칸 업데이트
       await redisClient.del(redisKey);
       for (let i = 0; i < 25; i++) {
-        await redisClient.hset(redisKey, i.toString(), JSON.stringify(fullInventory[i]));
+        await redisClient.hset(
+          redisKey,
+          i.toString(),
+          JSON.stringify(fullInventory[i]),
+        );
       }
       console.log(
         `${chalk.green('[InventoryHandler Log]')} 플레이어 ${player_id}의 전체 인벤토리 업데이트 완료.`,
@@ -75,12 +83,18 @@ export const inventoryUpdateHandler = async (socket, packetData) => {
       for (const key of keys) {
         const slotData = redisData[key.toString()];
         if (!slotData) {
-          console.warn(`플레이어 ${player_id}의 슬롯 ${key} 데이터가 undefined입니다.`);
+          console.warn(
+            `플레이어 ${player_id}의 슬롯 ${key} 데이터가 undefined입니다.`,
+          );
           continue;
         }
         try {
           const dataObj = JSON.parse(slotData);
-          slots.push({ slotIdx: key, itemId: +dataObj.itemId, stack: dataObj.stack });
+          slots.push({
+            slotIdx: key,
+            itemId: +dataObj.itemId,
+            stack: dataObj.stack,
+          });
         } catch (err) {
           console.error(`슬롯 ${key} 데이터 파싱 에러: ${err}`);
           continue;
@@ -91,7 +105,10 @@ export const inventoryUpdateHandler = async (socket, packetData) => {
     }
   } catch (error) {
     console.error(chalk.red('[inventoryUpdate Error]\n', error));
-    socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'inventoryUpdate 에러'));
+    socket.emit(
+      'error',
+      new CustomError(ErrorCodes.HANDLER_ERROR, 'inventoryUpdate 에러'),
+    );
   }
 };
 

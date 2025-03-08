@@ -7,6 +7,7 @@ import PACKET from '../../utils/packet/packet.js';
 import playerSpawnNotificationHandler from './playerSpawnNotification.handler.js';
 import { getGameAssets } from '../../init/assets.js';
 import TransformInfo from '../../classes/transformInfo.class.js';
+import { config } from '../../config/config.js';
 
 const moveSectorHandler = (socket, packetData) => {
   // [1] 패킷 데이터에서 이동할 섹터코드 꺼내고, 내 플레이어 정보와 비교
@@ -42,7 +43,7 @@ const moveSectorHandler = (socket, packetData) => {
     // [3-2] 이전 섹터가 마을이 아니면, 내가 남긴 덫들 제거
     if (prevSector.sectorCode != 100) {
       const oldTraps = prevSector.removeTraps(player.id);
-      prevSector.notifyExceptMe(PACKET.S2CRemoveTrap(oldTraps),player.id);
+      prevSector.notifyExceptMe(PACKET.S2CRemoveTrap(oldTraps), player.id);
     }
 
     // [4] 내 플레이어 정보 갱신
@@ -50,12 +51,35 @@ const moveSectorHandler = (socket, packetData) => {
     player.setPath(null);
     player.setSectorId(newSector.sectorCode);
 
+    // [4-1] 도착지가 마을이라면 체력 모두 회복
+    if (newSector.sectorCode === 100) {
+      player.setHp(config.newPlayerStatData.hp);
+    }
+
+    // [4-2] 만약 파티 상태라면, 파티원들에게 회복된 체력을 브로드 캐스트
+    // 각 멤버에 대하여 맞춤형 패킷 생성
+    const partySession = getPartySessions();
+    const party = partySession.getParty(player.getPartyId());
+    if (party) {
+      const members = party.getAllMembers();
+
+      members.forEach((value, key) => {
+        const packet = PACKET.S2CJoinParty(
+          party.getId(),
+          party.getPartyLeaderId(),
+          party.getMemberCount(),
+          party.getAllMemberCardInfo(value.id),
+        );
+        key.write(packet);
+      });
+    }
+
     // [5] 신규 섹터에 내 플레이어 정보 기록하고, 이동에 필요한 데이터 준비
     const players = [];
     newSector.setPlayer(socket, player);
-      for (const player of newSector.getAllPlayer().values()) {
-        players.push(player.getPlayerInfo());
-      }
+    for (const player of newSector.getAllPlayer().values()) {
+      players.push(player.getPlayerInfo());
+    }
     // [5-1] 이동할 섹터가 마을이 아니면, 설치돼있는 덫 현황 가져옴
     const traps = newSector.sectorCode != 100 ? newSector.getAllTraps() : [];
 

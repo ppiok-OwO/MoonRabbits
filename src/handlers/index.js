@@ -42,9 +42,10 @@ import inventorySortHandler from './player/inventory/inventorySort.handler.js';
 import inventoryUpdateHandler from './player/inventory/inventoryUpdate.handler.js';
 import { pongHandler } from './pong.handler.js';
 import { portalHandler } from './playerAction/portal.handler.js';
-import { craftHandler } from './player/inventory/craft.handler.js';
 import { getInventorySlotByItemIdHandler } from './player/inventory/getInventorySlotByItemId.handler.js';
 import rankingHandler from './ranking/ranking.handler.js';
+import { craftEndHandler } from './player/inventory/craftEnd.handler.js';
+import { craftStartHandler } from './player/inventory/craftStart.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
@@ -83,7 +84,6 @@ const handlers = {
   [config.packetId.C2SGatheringDone]: gatheringDoneHandler,
   [config.packetId.C2SGatheringAnimationEnd]: gatheringAnimationEndHandler,
 
-
   [config.packetId.C2SRecall]: tryRecallHandler,
   [config.packetId.C2SThrowGrenade]: throwGrenadeHandler,
   [config.packetId.C2SSetTrap]: setTrapHandler,
@@ -101,9 +101,11 @@ const handlers = {
   // 포탈 관련 핸들러
   [config.packetId.C2SPortal]: portalHandler,
   [config.packetId.C2SPong]: pongHandler,
-  
-  [config.packetId.C2SCraft]: craftHandler,
-  [config.packetId.C2SGetInventorySlotByItemId]: getInventorySlotByItemIdHandler,
+
+  [config.packetId.C2SCraftStart]: craftStartHandler,
+  [config.packetId.C2SCraftEnd]: craftEndHandler,
+  [config.packetId.C2SGetInventorySlotByItemId]:
+    getInventorySlotByItemIdHandler,
 
   // 랭킹 관련 핸들러
   [config.packetId.C2SRankingList]: rankingHandler,

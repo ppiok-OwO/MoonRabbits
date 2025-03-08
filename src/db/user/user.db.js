@@ -8,7 +8,10 @@ import redisClient from '../../utils/redis/redis.config.js';
 
 // Email 기반으로 사용자 찾기
 export const findUserByEmail = async (email) => {
-  const [rows] = await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.FIND_USER_BY_EMAIL, [email]);
+  const [rows] = await pools.PROJECT_R_USER_DB.query(
+    SQL_QUERIES.FIND_USER_BY_EMAIL,
+    [email],
+  );
   if (rows.length > 0) {
     console.log(`${chalk.green('[DB Log]')} 사용자를 찾았습니다 : `, rows[0]); // 여기서 user_id 값을 확인
     const user = toCamelCase(rows[0]);
@@ -16,7 +19,9 @@ export const findUserByEmail = async (email) => {
     // updateLastLogin 메서드 추가
     user.updateLastLogin = async () => {
       // user.userId를 사용해서 마지막 로그인 시간 업데이트
-      await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_USER_LAST_LOGIN, [user.userId]);
+      await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_USER_LAST_LOGIN, [
+        user.userId,
+      ]);
     };
 
     return user;
@@ -31,7 +36,11 @@ export const createUser = async (email, password) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   // 사용자 생성 쿼리 실행
-  await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.CREATE_USER, [userId, email, hashedPassword]);
+  await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.CREATE_USER, [
+    userId,
+    email,
+    hashedPassword,
+  ]);
 
   return { userId, email }; // 새로 생성된 사용자 정보 반환
 };
@@ -41,7 +50,10 @@ export const createStat = async (playerId) => {
   const statId = uuidv4(); // UUID 생성
 
   // 스탯 생성 쿼리 실행
-  await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.CREATE_STAT, [statId, playerId]);
+  await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.CREATE_STAT, [
+    statId,
+    playerId,
+  ]);
 
   return { statId, playerId }; // 새로 생성된 사용자 정보 반환
 };
@@ -49,7 +61,9 @@ export const createStat = async (playerId) => {
 // Town에 접속하면 저장해둔 스탯을 DB에서 로드
 export const loadStat = async (playerId) => {
   try {
-    const [rows] = await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.LOAD_STAT, [playerId]);
+    const [rows] = await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.LOAD_STAT, [
+      playerId,
+    ]);
     if (!rows || rows.length === 0) {
       // 만약 DB에 스탯 정보가 없다면 null 또는 기본값을 반환할 수 있음
       return null;
@@ -73,7 +87,10 @@ export const updateStat = async (playerId, statData) => {
       statData.ability_point,
       playerId,
     ];
-    const [result] = await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_STAT, params);
+    const [result] = await pools.PROJECT_R_USER_DB.query(
+      SQL_QUERIES.UPDATE_STAT,
+      params,
+    );
     return result;
   } catch (error) {
     console.error(`${playerId}에서 stat을 가져오는데 실패했습니다 : `, error);
@@ -124,9 +141,10 @@ export const createInventory = async (playerId) => {
 export const updateInventory = async (playerId) => {
   try {
     // 플레이어의 인벤토리 ID 조회 (인벤토리는 이미 생성되어 있다고 가정)
-    const [inventoryRows] = await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.SEARCH_INVENTORY, [
-      playerId,
-    ]);
+    const [inventoryRows] = await pools.PROJECT_R_USER_DB.query(
+      SQL_QUERIES.SEARCH_INVENTORY,
+      [playerId],
+    );
     if (!inventoryRows || inventoryRows.length === 0) {
       console.error(
         `${chalk.green('[DB Log]')} 플레이어 ${playerId}의 인벤토리 정보가 존재하지 않습니다.`,
@@ -197,9 +215,10 @@ export const updateInventory = async (playerId) => {
 export const syncInventoryToRedisAndSend = async (playerId) => {
   try {
     // MySQL에서 플레이어 인벤토리 전체 데이터를 슬롯 순서대로 조회
-    const [rows] = await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.SEARCH_ALL_INVENTORY, [
-      playerId,
-    ]);
+    const [rows] = await pools.PROJECT_R_USER_DB.query(
+      SQL_QUERIES.SEARCH_ALL_INVENTORY,
+      [playerId],
+    );
 
     if (!rows || rows.length === 0) {
       console.log(
@@ -225,16 +244,23 @@ export const syncInventoryToRedisAndSend = async (playerId) => {
       );
     }
   } catch (error) {
-    console.error(`${chalk.red('[DB Error]')} syncInventoryToRedisAndSend 오류: ${error}`);
+    console.error(
+      `${chalk.red('[DB Error]')} syncInventoryToRedisAndSend 오류: ${error}`,
+    );
     throw error;
   }
 };
 
 // user_id 기반으로 플레이어 찾기
 export const findPlayerByUserId = async (userId) => {
-  const [rows] = await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.FIND_PLAYER_BY_USER_ID, [userId]);
+  const [rows] = await pools.PROJECT_R_USER_DB.query(
+    SQL_QUERIES.FIND_PLAYER_BY_USER_ID,
+    [userId],
+  );
   if (rows.length > 0) {
-    console.log(`${chalk.green('[DB Log]')} 플레이어를 찾았습니다 : ${rows[0]}`); // 여기서 player_id 값을 확인
+    console.log(
+      `${chalk.green('[DB Log]')} 플레이어를 찾았습니다 : ${rows[0]}`,
+    ); // 여기서 player_id 값을 확인
     return toCamelCase(rows[0]);
   } else {
     return null;
@@ -244,7 +270,10 @@ export const findPlayerByUserId = async (userId) => {
 // DB에 nickname이 존재하는지 확인
 // nickname 기반으로 user_id 찾기
 export const findUserByNickname = async (nickname) => {
-  const [rows] = await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.FIND_USER_BY_NICKNAME, [nickname]);
+  const [rows] = await pools.PROJECT_R_USER_DB.query(
+    SQL_QUERIES.FIND_USER_BY_NICKNAME,
+    [nickname],
+  );
   if (rows.length > 0) {
     console.log(`${chalk.green('[DB Log]')} 사용자를 찾았습니다 : ${rows[0]}`); // 여기서 user_id 값을 확인
     return toCamelCase(rows[0]);
@@ -259,7 +288,10 @@ export const AddPlayerRow = async (email) => {
   const user_id = await findUserByEmail(email);
   const userId = user_id.userId;
   // 사용자 생성 쿼리 실행
-  await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.ADD_PLAYER_TO_USERID, [playerId, userId]);
+  await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.ADD_PLAYER_TO_USERID, [
+    playerId,
+    userId,
+  ]);
 
   return { playerId, userId }; // 새로 생성된 사용자 정보 반환
 };
@@ -268,11 +300,17 @@ export const AddPlayerRow = async (email) => {
 export const updatePlayer = async (userId, nickname, classCode) => {
   try {
     // SQL_QUERIES.UPDATE_PLAYER는 "UPDATE Players SET nickname = ?, class_code = ? WHERE user_id = ?"로 정의되어 있다고 가정합니다.
-    await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_PLAYER, [nickname, classCode, userId]);
+    await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_PLAYER, [
+      nickname,
+      classCode,
+      userId,
+    ]);
     console.log(`${chalk.green('[DB Log]')} 플레이어 업데이트 완료: ${userId}`);
     return { userId, nickname, classCode };
   } catch (error) {
-    console.error(`${chalk.red('[DB Error]')} 플레이어 업데이트 실패: ${error}`);
+    console.error(
+      `${chalk.red('[DB Error]')} 플레이어 업데이트 실패: ${error}`,
+    );
     throw error;
   }
 };
@@ -284,7 +322,10 @@ export const updateUserLogin = async (id) => {
 
 // 경험치 획득 시 경험치 업데이트
 export const updatePlayerExp = async (exp, playerId) => {
-  await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_STAT_EXP, [exp, playerId]);
+  await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_STAT_EXP, [
+    exp,
+    playerId,
+  ]);
 };
 
 // 레벨업 시 레벨, 경험치, AP 업데이트
@@ -298,7 +339,13 @@ export const updatePlayerLevel = async (level, exp, abilityPoint, playerId) => {
 };
 
 // AP 선택 시 능력치 업데이트
-export const updatePlayerStat = async (stamina, pickSpeed, moveSpeed, abilityPoint, playerId) => {
+export const updatePlayerStat = async (
+  stamina,
+  pickSpeed,
+  moveSpeed,
+  abilityPoint,
+  playerId,
+) => {
   await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_STAT, [
     stamina,
     pickSpeed,
@@ -310,7 +357,9 @@ export const updatePlayerStat = async (stamina, pickSpeed, moveSpeed, abilityPoi
 
 export const rankingDataSaveToRedis = async () => {
   try {
-    const [rows] = await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.TAKE_RANKING_DATA);
+    const [rows] = await pools.PROJECT_R_USER_DB.query(
+      SQL_QUERIES.TAKE_RANKING_DATA,
+    );
 
     // 기존의 랭킹 데이터를 제거 (key 이름은 'ranking'으로 가정)
     await redisClient.del('ranking');
