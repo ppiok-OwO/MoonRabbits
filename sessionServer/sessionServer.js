@@ -5,6 +5,8 @@ import { Worker } from 'bullmq';
 import IORedis from 'ioredis';
 import os from 'os';
 import cluster from 'cluster';
+import { addPlayer, getPlayer } from './session/playerSession.js';
+import { addParty, getParty } from './session/partySession.js';
 
 dotenv.config();
 
@@ -38,17 +40,39 @@ if (cluster.isMaster) {
 
   cluster.on('exit', (worker, code, signal) => {
     console.log(
-      `Worker ${worker.process.pid} 종료됨 (code: ${code}, signal: ${signal}). 새로운 워커 생성.`,
+      `sessionWorker ${worker.process.pid} 종료됨 (code: ${code}, signal: ${signal}). 새로운 워커 생성.`,
     );
     cluster.fork();
   });
 } else {
-  console.log(`Worker 프로세스 실행: PID ${process.pid}`);
+  console.log(`sessionWorker 프로세스 실행: PID ${process.pid}`);
 
-  new Worker(
+  const worker = new Worker(
     'sessionQueue',
     async (job) => {
-      console.log(`Job 처리 중: ${job.id} (PID: ${process.pid})`);
+      console.log(`sessionJob 처리 중: ${job.id} (PID: ${process.pid})`);
+
+      if (job.name === 'addPlayer') {
+        const { serverIP, socketId, nickname } = job.data;
+        addPlayer(new Player(serverIP, socketId, nickname));
+      } else if (job.name === 'addParty') {
+        const { partyId, partyLeaderId, memberCount, serverIP } = job.data;
+        addParty(new Party(partyId, partyLeaderId, memberCount, serverIP));
+      } else if (job.name === 'updatePlayer') {
+        const { socketId, isLeader, partyId } = job.data;
+        const player = getPlayer(socketId);
+        player.setIsLeader(isLeader);
+        player.setPartyId(partyId);
+      } else if (job.name === 'joinParty') {
+        const { partyId, partyLeaderId, memberCount, socketId } = job.data;
+        const party = getParty(partyId);
+        party.setPartyLeaderId(partyLeaderId);
+        party.setMemberCount(memberCount);
+
+        // 파티장이 속한 서버의 혼잡도 계산
+        // 혼잡하지 않으면 true, 혼잡하면 false 반환
+        return { status: true, partyId, partyLeaderId, memberCount, socketId };
+      }
     },
     {
       concurrency: 2, // 각 프로세스에서 2개씩 처리

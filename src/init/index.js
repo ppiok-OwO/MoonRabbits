@@ -19,7 +19,7 @@ const initServer = async () => {
     sectorSessions.setSector(config.sector.S3);
     // await testAllConnections(pools);
 
-    getPublicIP().then(console.log);
+    // getPublicIP().then(console.log);
   } catch (err) {
     console.error(err);
     process.exit(1); // 오류 발생 시 프로세스 종료

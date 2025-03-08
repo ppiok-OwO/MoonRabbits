@@ -37,8 +37,8 @@ class PlayerSession {
       sector.deletePlayer(player.user.socket);
 
       const oldTraps = sector.removeTraps(player.id);
-      if (oldTraps){
-        sector.notifyExceptMe(PACKET.S2CRemoveTrap(oldTraps),player.id);
+      if (oldTraps) {
+        sector.notifyExceptMe(PACKET.S2CRemoveTrap(oldTraps), player.id);
       }
 
       const partyId = player.getPartyId();
@@ -70,6 +70,13 @@ class PlayerSession {
   getPlayerById(playerId) {
     for (const player of this.players.values()) {
       if (player.id === playerId) return player;
+    }
+    return -1;
+  }
+
+  getPlayerBySocketId(socketId) {
+    for (const player of this.players.values()) {
+      if (player.user.socket.id === socketId) return player;
     }
     return -1;
   }

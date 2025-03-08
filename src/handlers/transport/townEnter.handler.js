@@ -10,6 +10,11 @@ import { loadStat, updateInventory } from '../../db/user/user.db.js';
 import RedisSession from '../../classes/session/redisSession.class.js';
 import { inventoryUpdateHandler } from '../player/inventory/inventoryUpdate.handler.js';
 import { config } from '../../config/config.js';
+import {
+  sessionQueue,
+  sessionQueueEvents,
+} from '../../utils/bullMQ/settings.js';
+import { serverIP } from '../../server.js';
 
 const townEnterHandler = async (socket, packetData) => {
   try {
@@ -44,6 +49,14 @@ const townEnterHandler = async (socket, packetData) => {
     // Redis에 playerSession 저장
     await redisSession.saveFullSession(socket);
 
+    // Redis에 플레이어 세션 자체를 올리기 보다는 세션 서버한테 데이터를 넘기고 그곳에서 플레이어 세션을 생성해달라고 하는 게 좋을 듯(색인에 쓰이는 시간을 다른 서버에 분산시키기 위함, 이렇게 하면 읽기 지연 시간만 신경쓰면 됨)
+    const addPlayerJob = await sessionQueue.add('addPlayer', {
+      serverIP: serverIP,
+      socketId: socket.id,
+      nickname: packetData.nickname,
+    });
+    console.log(`addPlayerJob ${addPlayerJob.id}가 추가되었습니다.`);
+
     console.log(
       '----- Player Session 업데이트 및 Redis 저장 완료 -----\n',
       newPlayer,
@@ -56,7 +69,7 @@ const townEnterHandler = async (socket, packetData) => {
 
     // 타운 접속 중인 플레이어 정보 모아서 패킷 전송 (나에게 다른 플레이어 보여주기 위함)
     const players = [];
-    
+
     for (const player of townSector.getAllPlayer().values()) {
       players.push(player.getPlayerInfo());
     }

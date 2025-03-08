@@ -50,6 +50,12 @@ export const invitePartyHandler = (socket, packetData) => {
 
     // 초대를 보낸 멤버의 플레이어 인스턴스
     const newMember = playerSession.getPlayerByNickname(nickname);
+
+    // 서버 내에서 멤버를 찾지 못하면 레디스에서 다시 검색
+    if(!newMember || newMember === -1) {
+      
+    }
+
     if (!newMember || newMember === -1) {
       return socket.emit(
         'error',

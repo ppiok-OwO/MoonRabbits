@@ -3,12 +3,16 @@ import {
   getPartySessions,
   getPlayerSession,
 } from '../../../session/sessions.js';
+import {
+  sessionQueue,
+  sessionQueueEvents,
+} from '../../../utils/bullMQ/settings.js';
 import CustomError from '../../../utils/error/customError.js';
 import { ErrorCodes } from '../../../utils/error/errorCodes.js';
 import handleError from '../../../utils/error/errorHandler.js';
 import PACKET from '../../../utils/packet/packet.js';
 
-export const allowInviteHandler = (socket, packetData) => {
+export const allowInviteHandler = async (socket, packetData) => {
   try {
     const { partyId, memberId } = packetData;
 
@@ -27,7 +31,7 @@ export const allowInviteHandler = (socket, packetData) => {
 
     // 새로운 멤버의 플레이어 인스턴스
     const playerSession = getPlayerSession();
-    const newMember = playerSession.getPlayerById(memberId);
+    const newMember = playerSession.getPlayer(socket);
     if (!newMember || newMember === -1) {
       return socket.emit(
         'error',
@@ -38,28 +42,48 @@ export const allowInviteHandler = (socket, packetData) => {
       );
     }
 
-    if (
-      newMember &&
-      newMember !== -1 &&
-      party.getMemberCount() < config.party.MaxMember
-    ) {
-      // 새 플레이어를 파티에 추가
-      party.addMember(newMember.user.getSocket(), newMember);
-      newMember.setPartyId(partyId);
-      newMember.isInvited = false;
+    const memberCount = party.getMemberCount();
 
-      // 각 멤버에 대하여 맞춤형 패킷 생성
-      const members = party.getAllMembers();
+    if (newMember && newMember !== -1 && memberCount < config.party.MaxMember) {
+      const partyLeaderId = party.getPartyLeaderId();
 
-      members.forEach((value, key) => {
-        const packet = PACKET.S2CJoinParty(
-          party.getId(),
-          party.getPartyLeaderId(),
-          party.getMemberCount(),
-          party.getAllMemberCardInfo(value.id),
-        );
-        key.write(packet);
+      // 파티 가입 요청 job으로 추가
+      const joinPartyJob = await sessionQueue.add('joinParty', {
+        partyId,
+        partyLeaderId,
+        memberCount,
+        socketId: socket.id,
       });
+      console.log(`updatePartyJob ${joinPartyJob.id}가 추가되었습니다.`);
+
+      // const partySession = getPartySessions();
+      // const party = partySession.getParty(partyId);
+
+      // // 새 플레이어를 파티에 추가
+      // party.addMember(socket, newMember);
+      // newMember.setPartyId(partyId);
+      // newMember.isInvited = false;
+
+      // // 플레이어 데이터 업데이트
+      // const updatePlayerJob = await sessionQueue.add('updatePlayer', {
+      //   socketId,
+      //   isLeader: false,
+      //   partyId,
+      // });
+      // console.log(`updatePlayerJob ${updatePlayerJob.id}가 추가되었습니다.`);
+
+      // // 각 멤버에 대하여 맞춤형 패킷 생성
+      // const members = party.getAllMembers();
+
+      // members.forEach((value, key) => {
+      //   const packet = PACKET.S2CJoinParty(
+      //     partyId,
+      //     partyLeaderId,
+      //     memberCount,
+      //     party.getAllMemberCardInfo(value.id),
+      //   );
+      //   key.write(packet);
+      // });
     } else {
       const packet = PACKET.S2CChat(
         0,
@@ -67,7 +91,7 @@ export const allowInviteHandler = (socket, packetData) => {
         'System',
       );
 
-      return newMember.user.getSocket().write(packet);
+      return socket.write(packet);
     }
   } catch (error) {
     handleError(socket, error);

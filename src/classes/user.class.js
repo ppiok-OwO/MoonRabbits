@@ -1,4 +1,3 @@
-import { serverIP } from '../server.js';
 import { getPlayerSession, getUserSessions } from '../session/sessions.js';
 import { makePingPacket } from '../utils/packet/makePingPacket.js';
 
@@ -8,7 +7,6 @@ class User {
     this.socket = socket;
     this.latency = 0;
     this.lastPong = Date.now();
-    this.serverIP = serverIP;
   }
 
   getSocket() {

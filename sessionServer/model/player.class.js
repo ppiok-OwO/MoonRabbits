@@ -1,5 +1,5 @@
 class Player {
-  constructor(serverIP, socketId, nickname, isLeader, partyId) {
+  constructor(serverIP, socketId, nickname, isLeader = false, partyId = null) {
     this.serverIP = serverIP;
     this.socketId = socketId;
     this.nickname = nickname;

@@ -1,13 +1,15 @@
+import { serverIP } from '../../../server.js';
 import {
   getPartySessions,
   getPlayerSession,
 } from '../../../session/sessions.js';
+import { sessionQueue } from '../../../utils/bullMQ/settings.js';
 import CustomError from '../../../utils/error/customError.js';
 import { ErrorCodes } from '../../../utils/error/errorCodes.js';
 import handleError from '../../../utils/error/errorHandler.js';
 import PACKET from '../../../utils/packet/packet.js';
 
-export const createPartyHandler = (socket, packetData) => {
+export const createPartyHandler = async (socket, packetData) => {
   try {
     // 플레이어 세션을 통해 플레이어 인스턴스를 불러온다.
     const playerSession = getPlayerSession();
@@ -27,6 +29,23 @@ export const createPartyHandler = (socket, packetData) => {
     const party = partySession.addParty(socket, player);
     const partyId = party.getId();
     player.setPartyId(partyId);
+
+    // 세션 서버에도 파티 세션 추가
+    const addPartyJob = await sessionQueue.add('addParty', {
+      partyId,
+      partyLeaderId: party.getPartyLeaderId(),
+      memberCount: party.getMemberCount(),
+      serverIP,
+    });
+    console.log(`addPartyJob ${addPartyJob.id}가 추가되었습니다.`);
+
+    // 파티장 데이터 업데이트
+    const updatePlayerJob = await sessionQueue.add('updatePlayer', {
+      socketId: socket.id,
+      isLeader: true,
+      partyId,
+    });
+    console.log(`updatePlayerJob ${updatePlayerJob.id}가 추가되었습니다.`);
 
     const packet = PACKET.S2CCreateParty(
       party.getId(),
