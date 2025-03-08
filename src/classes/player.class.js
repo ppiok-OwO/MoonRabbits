@@ -173,10 +173,10 @@ class Player {
   }
 
   levelUp() {
-    const { newLevel, newTargetExp } = this._getTargetExpByLevel(this.level);
+    const { targetLevel, targetExp } = this._getTargetExpByLevel(this.level);
 
     // 만렙이면 level만 올리고 요구 경험치 2배로
-    if (newLevel === -1) {
+    if (targetLevel === -1) {
       this.level += 1;
       this.targetExp *= 2;
       this.abilityPoint += 3;
@@ -188,13 +188,17 @@ class Player {
     }
 
     // 레벨, 요구 경험치 변경
-    this.level = newLevel;
-    this.targetExp = newTargetExp;
+    this.level = targetLevel;
+    this.targetExp = targetExp;
 
     // 레벨업하면 올릴 수 있는 능력치 개수
     this.abilityPoint += 3;
 
-    return { newLevel, newTargetExp, abilityPoint: this.abilityPoint };
+    return {
+      newLevel: this.level,
+      newTargetExp: this.targetExp,
+      abilityPoint: this.abilityPoint,
+    };
   }
 
   setCurrentEquip(equipment) {
