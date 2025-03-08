@@ -46,6 +46,7 @@ import { getInventorySlotByItemIdHandler } from './player/inventory/getInventory
 import rankingHandler from './ranking/ranking.handler.js';
 import { craftEndHandler } from './player/inventory/craftEnd.handler.js';
 import { craftStartHandler } from './player/inventory/craftStart.handler.js';
+import { furnitureCraftHandler } from './housing/furnitureCraft.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
@@ -109,6 +110,9 @@ const handlers = {
 
   // 랭킹 관련 핸들러
   [config.packetId.C2SRankingList]: rankingHandler,
+
+  // 하우징 관련 핸들러
+  [config.packetId.C2SFurnitureCraft]: furnitureCraftHandler,
 };
 
 export const getHandlerByPacketId = (packetId) => {

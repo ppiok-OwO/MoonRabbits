@@ -8,6 +8,8 @@ export const onEnd = (socket) => async () => {
   console.log('클라이언트 연결이 종료되었습니다. (END)');
 
   const player_id = socket.player.playerId;
+  const inventoryKey = `inventory:${player_id}`;
+  const fullSessionKey = `fullSession:${player_id}`;
 
   const player = getPlayerSession().getPlayer(socket);
   if (player.isCrafting) {
@@ -34,7 +36,10 @@ export const onEnd = (socket) => async () => {
   }
 
   await updateInventory(player_id);
+  await redisClient.expire(inventoryKey, 1200);
+  await redisClient.expire(fullSessionKey, 1200);
   console.log('인벤토리 DB 저장 완료');
+  console.log('Inventory TTL 적용');
 
   const userSessionManager = getUserSessions();
 
