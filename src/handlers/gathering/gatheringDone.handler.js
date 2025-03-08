@@ -7,6 +7,7 @@ import { addExpHandler } from '../player/addExp.handler.js';
 import { animationHandler } from '../social/playerAnimation.handler.js';
 import { addItemToInventory } from '../player/inventory/inventoryManager.js';
 import { getGameAssets } from '../../init/assets.js';
+import { startGatheringHandler } from './StartGathering.handler.js';
 
 export const gatheringDoneHandler = async (socket, packetData) => {
   const player = getPlayerSession().getPlayer(socket);
@@ -17,13 +18,17 @@ export const gatheringDoneHandler = async (socket, packetData) => {
     player.gatheringSuccess = false;
 
     const dropItem = sector.resources[placedId].dropItem();
-    const dropItemData = getGameAssets().item.data.find(item =>{return item.item_id == dropItem});
+    const dropItemData = getGameAssets().item.data.find((item) => {
+      return item.item_id == dropItem;
+    });
     const quentity = 1;
-    player.sendPacket(PACKET.S2CChat(
-      0,
-      `${dropItemData.item_name}아이템을 ${quentity}개 획득했습니다.`,
-      'System',
-    ))
+    player.sendPacket(
+      PACKET.S2CChat(
+        0,
+        `${dropItemData.item_name}아이템을 ${quentity}개 획득했습니다.`,
+        'System',
+      ),
+    );
     socket.write(PACKET.S2CGatheringDone(placedId, dropItem, 1));
     console.log('dropItem : \n', dropItem);
     const durability = sector.subDurability(placedId);
@@ -33,6 +38,8 @@ export const gatheringDoneHandler = async (socket, packetData) => {
         () => sector.resetDurability(placedId),
         sector.resources[placedId].getRespawnTime(),
       );
+    } else {
+      startGatheringHandler(socket, { placedId });
     }
 
     // 채집한 아이템을 인벤토리 추가하는 로직
@@ -49,7 +56,5 @@ export const gatheringDoneHandler = async (socket, packetData) => {
     addExpHandler(socket, {
       count: sector.resources[placedId].getDifficulty(),
     });
-
   }
 };
-

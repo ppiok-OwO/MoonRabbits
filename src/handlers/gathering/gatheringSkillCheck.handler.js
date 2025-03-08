@@ -5,7 +5,7 @@ import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { addExpHandler } from '../player/addExp.handler.js';
 import { addItemToInventory } from '../player/inventory/inventoryManager.js';
-
+import { gatheringDoneHandler } from './GatheringDone.handler.js';
 export const gatheringSkillCheckHandler = async (socket, packetData) => {
   const { deltatime } = packetData;
   const player = getPlayerSession().getPlayer(socket);
@@ -13,10 +13,7 @@ export const gatheringSkillCheckHandler = async (socket, packetData) => {
   const placedId = player.getGatheringIdx();
   if (placedId >= 0 && placedId < sector.resources.length) {
     if (
-      sector.resources[placedId].CheckValidateTiming(
-        player.gatheringAngle,
-        player.gatheringStartTime,
-      )
+      player.CheckValidateTiming(sector.resources[placedId].getDifficulty())
     ) {
       const durability = sector.resources[placedId].getDurability();
       if (durability < 0) {
@@ -25,6 +22,7 @@ export const gatheringSkillCheckHandler = async (socket, packetData) => {
       }
       player.gatheringSuccess = true;
       socket.write(PACKET.S2CGatheringSkillCheck(placedId, durability));
+      gatheringDoneHandler(socket);
     } else {
       const packet = PACKET.S2CChat(0, '스킬체크 실패.', 'System');
       return socket.write(packet);

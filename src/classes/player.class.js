@@ -150,6 +150,31 @@ class Player {
     return this.abilityPoint;
   }
 
+  CheckValidateTiming(difficulty) {
+    const turnTime = 4000;
+    const pingTime = 50;
+    const validTimeStart = (turnTime / 360) * this.gatheringAngle;
+    const validTimeEnd =
+      validTimeStart +
+      ((turnTime / 360) *
+        (60 +
+          (this.pickSpeed < 30 ? this.pickSpeed : 60 - 60 / this.pickSpeed))) /
+        difficulty;
+
+    const serverTime = (Date.now() - this.gatheringStartTime) % turnTime;
+
+    console.log(`20250304: serverTime: ${serverTime}
+      validStart: ${validTimeStart} validEnd: ${validTimeEnd}`);
+
+    if (
+      serverTime > validTimeStart - pingTime &&
+      serverTime < validTimeEnd + pingTime
+    ) {
+      return true;
+    }
+    //일단 무조건 성공으로 처리.
+    return false;
+  }
   levelUp() {
     const { newLevel, newTargetExp } = this._getTargetExpByLevel(this.level);
     
