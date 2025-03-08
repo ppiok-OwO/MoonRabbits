@@ -48,6 +48,8 @@ class Player {
     this.hp = num;
     if (this.hp < 0) {
       this.hp = 0;
+    } else if (this.hp > 3) {
+      this.hp = 3;
     }
 
     return this.hp;

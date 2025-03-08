@@ -33,11 +33,10 @@ class Resource {
   getAngle() {
     return createRandNum(70, 290);
   }
-  getType(){
-    if(this.resourceData.resource_type == "Tree"){
+  getType() {
+    if (this.resourceData.resource_type == 'Tree') {
       return 12;
-    }
-    else{
+    } else {
       return 11;
     }
   }
@@ -52,12 +51,13 @@ class Resource {
     const turnTime = 4000;
     const pingTime = 50;
     const validTimeStart = (turnTime / 360) * angle;
-    const validTimeEnd = validTimeStart + ((turnTime / 360) * 60/ this.difficulty);
+    const validTimeEnd =
+      validTimeStart + ((turnTime / 360) * 60) / this.difficulty;
 
     const serverTime = (Date.now() - startTime) % turnTime;
 
     console.log(`20250304: serverTime: ${serverTime}
-      validStart: ${validTimeStart} validEnd: ${validTimeEnd}`)
+      validStart: ${validTimeStart} validEnd: ${validTimeEnd}`);
 
     if (
       serverTime > validTimeStart - pingTime &&

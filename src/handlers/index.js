@@ -105,7 +105,8 @@ const handlers = {
 
   [config.packetId.C2SCraftStart]: craftStartHandler,
   [config.packetId.C2SCraftEnd]: craftEndHandler,
-  [config.packetId.C2SGetInventorySlotByItemId]: getInventorySlotByItemIdHandler,
+  [config.packetId.C2SGetInventorySlotByItemId]:
+    getInventorySlotByItemIdHandler,
 
   // 랭킹 관련 핸들러
   [config.packetId.C2SRankingList]: rankingHandler,

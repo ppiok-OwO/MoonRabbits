@@ -28,7 +28,7 @@ export const getInventorySlotByItemIdHandler = async (socket, packetData) => {
     for (const itemId of itemIds) {
       for (let slotIdx = 0; slotIdx < 25; slotIdx++) {
         const redisSlot = JSON.parse(redisInventory[slotIdx]);
-        if (redisSlot.itemId*1 === itemId) {
+        if (redisSlot.itemId * 1 === itemId) {
           slots.push(
             PAYLOAD_DATA.InventorySlot(slotIdx, itemId, redisSlot.stack),
           );

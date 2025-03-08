@@ -37,8 +37,8 @@ class PlayerSession {
       sector.deletePlayer(player.user.socket);
 
       const oldTraps = sector.removeTraps(player.id);
-      if (oldTraps){
-        sector.notifyExceptMe(PACKET.S2CRemoveTrap(oldTraps),player.id);
+      if (oldTraps) {
+        sector.notifyExceptMe(PACKET.S2CRemoveTrap(oldTraps), player.id);
       }
 
       const partyId = player.getPartyId();

@@ -9,4 +9,3 @@ import { animationHandler } from '../social/playerAnimation.handler.js';
 export const gatheringAnimationEndHandler = (socket, packetData) => {
   animationHandler(socket, { animCode: 10 });
 };
-

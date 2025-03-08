@@ -5,9 +5,6 @@ import { ErrorCodes } from './errorCodes.js';
 // !!! Packet.S_Chat -> Packet.S2CChat으로 일괄 수정해씀다
 
 const handleError = (socket, error) => {
-  // const nickname = getPlayerSession().getPlayer(socket).nickname;
-  const player = getPlayerSession().getPlayer(socket);
-
   const nickname = '로그인 시도';
 
   switch (error.code) {

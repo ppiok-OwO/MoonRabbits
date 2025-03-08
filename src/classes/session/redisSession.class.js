@@ -1,12 +1,7 @@
 // redisSession.class.js
 import redisClient from '../../utils/redis/redis.config.js';
 import chalk from 'chalk';
-import {
-  getUserSessions,
-  getPlayerSession,
-  getPartySessions,
-  getSectorSessions,
-} from '../../session/sessions.js';
+import { getUserSessions, getPlayerSession, getPartySessions } from '../../session/sessions.js';
 import { formatDate } from '../../utils/dateFormatter.js';
 
 class RedisSession {

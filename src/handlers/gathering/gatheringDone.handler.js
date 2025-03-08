@@ -51,4 +51,3 @@ export const gatheringDoneHandler = async (socket, packetData) => {
     });
   }
 };
-

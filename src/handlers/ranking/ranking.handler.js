@@ -72,7 +72,10 @@ export const rankingHandler = async (socket, packetData) => {
     socket.write(responsePacket);
   } catch (error) {
     console.error(chalk.red('[rankingHandler Error]\n', error));
-    socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'rankingHandler 에러'));
+    socket.emit(
+      'error',
+      new CustomError(ErrorCodes.HANDLER_ERROR, 'rankingHandler 에러'),
+    );
   }
 };
 
