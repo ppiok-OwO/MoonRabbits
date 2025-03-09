@@ -46,6 +46,8 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
       player.setPosition(transform);
 
       if (validationResult && validationResult.distance > 1.4) {
+        console.log('클라이언트의 경로가 올바르지 않습니다.');
+        
         // 오차범위를 벗어나면 플레이어의 위치를 가장 가까운 포인트로 재조정
         const newTransform = {
           posX: validationResult.point.PosX,
