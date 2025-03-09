@@ -22,8 +22,6 @@ import { leavePartyHandler } from './social/party/leaveParty.handler.js';
 import moveSectorHandler from './transport/moveSectorHandler.js';
 
 import { gatheringSkillCheckHandler } from './gathering/gatheringSkillCheck.handler.js';
-import { startGatheringHandler } from './gathering/startGathering.handler.js';
-import { gatheringDoneHandler } from './gathering/gatheringDone.handler.js';
 import { gatheringAnimationEndHandler } from './gathering/gatheringAnimationEnd.handler.js';
 import { resourceListHandler } from './gathering/resourceList.handler.js';
 import { rejectInviteHandler } from './social/party/rejectInvite.handler.js';
@@ -47,6 +45,8 @@ import rankingHandler from './ranking/ranking.handler.js';
 import { craftEndHandler } from './player/inventory/craftEnd.handler.js';
 import { craftStartHandler } from './player/inventory/craftStart.handler.js';
 import { furnitureCraftHandler } from './housing/furnitureCraft.handler.js';
+import { startGatheringHandler } from './gathering/StartGathering.handler.js';
+import { gatheringDoneHandler } from './gathering/GatheringDone.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
@@ -105,8 +105,7 @@ const handlers = {
 
   [config.packetId.C2SCraftStart]: craftStartHandler,
   [config.packetId.C2SCraftEnd]: craftEndHandler,
-  [config.packetId.C2SGetInventorySlotByItemId]:
-    getInventorySlotByItemIdHandler,
+  [config.packetId.C2SGetInventorySlotByItemId]: getInventorySlotByItemIdHandler,
 
   // 랭킹 관련 핸들러
   [config.packetId.C2SRankingList]: rankingHandler,
