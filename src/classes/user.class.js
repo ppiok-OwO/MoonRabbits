@@ -35,12 +35,12 @@ class User {
     console.log('연결 췤!: ', now - this.lastPong);
 
     // 10초 이상 퐁이 오지 않으면 연결 종료(디버깅할 땐 주석처리하기!!)
-    // if (now - this.lastPong > 10000) {
-    //   console.log('클라이언트와 연결이 끊어졌습니다.');
+    if (now - this.lastPong > 10000) {
+      console.log('클라이언트와 연결이 끊어졌습니다.');
 
-    //   onEnd(this.socket)();
-    //   this.socket.destroy(); // 서버에서 소켓 종료
-    // }
+      onEnd(this.socket)();
+      this.socket.destroy(); // 서버에서 소켓 종료
+    }
   };
 }
 
