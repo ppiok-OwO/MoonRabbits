@@ -54,10 +54,6 @@ class Party {
     return this.members;
   }
 
-  getAllMemberEntries() {
-    return this.members.entries();
-  }
-
   getAllMemberIds() {
     const memberIds = [];
     for (const member of this.members.values()) {

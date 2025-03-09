@@ -42,7 +42,7 @@ export const chceckPartyListHandler = (socket, packetData) => {
         }
         partyInfos.push(partyInfo);
 
-        if (partyInfos.length >= 20) break;
+        if (partyInfos.length >= 100) break;
       }
     }
 
