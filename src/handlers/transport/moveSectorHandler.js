@@ -1,4 +1,8 @@
-import { getPlayerSession, getSectorSessions, getPartySessions } from '../../session/sessions.js';
+import {
+  getPlayerSession,
+  getSectorSessions,
+  getPartySessions,
+} from '../../session/sessions.js';
 import PACKET from '../../utils/packet/packet.js';
 import playerSpawnNotificationHandler from './playerSpawnNotification.handler.js';
 import { getGameAssets } from '../../init/assets.js';
@@ -13,7 +17,11 @@ const moveSectorHandler = async (socket, packetData) => {
   const redisSession = new RedisSession();
 
   if (targetSector === player.getSectorId()) {
-    const packet = PACKET.S2CChat(0, '현 위치와 같은 섹터로 이동할 순 없습니다', 'System');
+    const packet = PACKET.S2CChat(
+      0,
+      '현 위치와 같은 섹터로 이동할 순 없습니다',
+      'System',
+    );
     return socket.write(packet);
   }
 
@@ -21,7 +29,11 @@ const moveSectorHandler = async (socket, packetData) => {
     // [2] 이동할 섹터 유효한지 확인
     const newSector = getSectorSessions().getSector(targetSector);
     if (!newSector) {
-      const packet = PACKET.S2CChat(0, '이동할 섹터를 찾을 수 없습니다.', 'System');
+      const packet = PACKET.S2CChat(
+        0,
+        '이동할 섹터를 찾을 수 없습니다.',
+        'System',
+      );
       return socket.write(packet);
     }
 
@@ -70,14 +82,21 @@ const moveSectorHandler = async (socket, packetData) => {
     for (const player of newSector.getAllPlayer().values()) {
       players.push(player.getPlayerInfo());
     }
-    // [5-1] 이동할 섹터가 마을이 아니면, 설치돼있는 덫 현황 가져옴
+    // [5-1] 이동할 섹터가 마을이 아니면, 설치돼있는 덫과 보물상자 현황 가져옴
     const traps = newSector.sectorCode != 100 ? newSector.getAllTraps() : [];
 
     // [5-2] Redis에 이동한 setorCode 저장
     await redisSession.saveToRedisPlayerSession(socket);
 
     // [6] 준비한 데이터 모아서 패킷 전송 (나에게 다른 플레이어 및 설치된 덫들 보여주기 위함)
-    socket.write(PACKET.S2CMoveSector(newSector.sectorCode, players, traps));
+    socket.write(
+      PACKET.S2CMoveSector(
+        newSector.sectorCode,
+        players,
+        traps,
+        newSector.hasChest,
+      ),
+    );
 
     // [7] 이동할 섹터에 있는 유저들에게 내 정보 전송할 예정 (다른 플레이어들에게 나를 보여주기 위함)
     playerSpawnNotificationHandler(socket);

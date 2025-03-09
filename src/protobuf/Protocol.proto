@@ -170,6 +170,7 @@ message S2CMoveSector{
   int32 targetSector = 1;
   repeated PlayerInfo players = 2;
   repeated TrapInfo traps = 3;
+  bool hasChest = 4;
 }
 
 message C2SEmote{
@@ -477,6 +478,7 @@ message C2SStun {
   int32 skillType = 1;
   repeated int32 playerIds = 2;
   repeated int32 monsterIds = 3;
+  TrapInfo trap = 4;
 }
 message S2CStun {
   int32 stunTimer = 1;
