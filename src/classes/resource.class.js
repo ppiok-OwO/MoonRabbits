@@ -5,7 +5,7 @@ class Resource {
   constructor(resourceIdx, resourceId) {
     this.resourceIdx = resourceIdx;
     this.resourceId = resourceId;
-    
+
     this.resourceData = getGameAssets().resources.data.find((value) => {
       return value.resource_id === resourceId;
     });
@@ -30,8 +30,15 @@ class Resource {
   getRespawnTime() {
     return this.resourceData.resource_respawn * 1000;
   }
-  getAngle() {
-    return (createRandNum(30, 330));
+  getAngle(pickSpeed) {
+    return createRandNum(30, 290 - (pickSpeed<30? pickSpeed : 30 +  pickSpeed * 0.3));
+  }
+  getType() {
+    if (this.resourceData.resource_type == 'Tree') {
+      return 12;
+    } else {
+      return 11;
+    }
   }
   subDurability(sub = 1) {
     return (this.durability -= sub);
@@ -40,19 +47,6 @@ class Resource {
     return (this.durability = this.resourceData.resource_durability);
   }
 
-  CheckValidateTiming(angle, startTime, deltatime) {
-    const validTime = (5000 / 36) * angle;
-    const validTimeRange = ((5000 / 36) * 60) / this.difficulty;
-
-    if (
-      Math.abs(deltatime - validTime) < validTimeRange &&
-      Math.abs(Date.now() - startTime - validTime) < validTimeRange + 50
-    ) {
-      return true;
-    }
-    //일단 무조건 성공으로 처리.
-    return true;
-  }
 
   dropItem() {
     let sum = 0;

@@ -4,8 +4,6 @@ import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import PACKET from '../../utils/packet/packet.js';
 import PathValidator from '../../utils/validate/pathValidator.js';
 
-// !!! 패킷 변경에 따라 S_Chat -> S2CChat, S_Location -> S2CPlayerLocation으로 일괄 수정해씀다
-
 // 경로 탐색 성공: [
 //   { x: 0, y: 0, z: 0 },
 //   { x: 5, y: 0, z: 5 },
@@ -13,7 +11,7 @@ import PathValidator from '../../utils/validate/pathValidator.js';
 //   { x: 20, y: 0, z: 30 }
 // ]
 
-// 이동중이라면 10프레임마다 location 패킷 전송
+// 이동중이라면 0.1초마다 location 패킷 전송
 const playerLocationUpdateHandler = async (socket, packetData) => {
   try {
     const { transform } = packetData;
@@ -99,11 +97,12 @@ function predictPosition(socket, player, transform, latency) {
   };
 
   // 속도 벡터 크기(속력) 계산 및 검증
+  const playerSpeed = player.getMoveSpeed();
   let magnitude = Math.sqrt(
     velocity.posX ** 2 + velocity.posY ** 2 + velocity.posZ ** 2,
   );
-  if (magnitude > 20) {
-    magnitude = 10;
+  if (magnitude > playerSpeed) {
+    magnitude = playerSpeed;
     return socket.emit(
       'error',
       new CustomError(

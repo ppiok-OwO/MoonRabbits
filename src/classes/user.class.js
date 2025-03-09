@@ -27,7 +27,6 @@ class User {
     const now = Date.now();
     this.lastPong = now;
     this.latency = (now - milliseconds) / 2; // 왕복이니까
-    console.log('레이턴시 췤!: ', this.latency);
   }
 
   checkPong = async () => {
@@ -43,7 +42,6 @@ class User {
 
       // 게임 세션에서 유저 삭제
       userSession.removeUser(this.socket);
-      // 세션의 유저 배열이 빈 배열이면 세션과 인터벌도 삭제
 
       this.socket.destroy(); // 서버에서 소켓 종료
     }

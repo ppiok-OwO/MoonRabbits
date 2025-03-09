@@ -38,6 +38,18 @@ export const joinPartyHandler = (socket, packetData) => {
       );
     }
 
+    // 파티에 이미 참여 중이라면 현재 파티 정보 반환
+    const isExistedMember = party.getMember(socket);
+    if (isExistedMember) {
+      const packet = PACKET.S2CChat(
+        0,
+        '해당 파티에 이미 소속되어 있습니다.',
+        'System',
+      );
+
+      return socket.write(packet);
+    }
+
     if (party.getMemberCount() < config.party.MaxMember) {
       party.addMember(socket, player);
       const partyId = party.getId();

@@ -66,11 +66,11 @@ export const animationHandler = (socket, packetData) => {
       const sectorSessions = getSectorSessions();
       const sector = sectorSessions.getSector(sectorCode);
       sector.notify(packet);
-      sector.notify(chatPacket);
+      if (chatPacket) sector.notify(chatPacket);
     } else {
       // 던전이 아니면
       playerSession.notify(packet);
-      playerSession.notify(chatPacket);
+      if (chatPacket) playerSession.notify(chatPacket);
     }
   } catch (error) {
     handleError(socket, error);

@@ -47,3 +47,18 @@ CREATE TABLE IF NOT EXISTS Inventories
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS SaveHousing
+(
+    house_id     VARCHAR(36) PRIMARY KEY,
+    player_id    VARCHAR(36) NOT NULL,
+    item_id            INT  NOT NULL,
+    data_type          INT  NOT NULL ,
+    posX               FLOAT  NOT NULL,
+    poxY               FLOAT  NOT NULL,
+    posZ               FLOAT  NOT NULL,
+    rot                FLOAT  NOT NULL,
+    FOREIGN KEY (player_id) REFERENCES Players(player_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+

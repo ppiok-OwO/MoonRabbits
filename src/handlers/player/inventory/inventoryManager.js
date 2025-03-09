@@ -45,7 +45,11 @@ export const addItemToInventory = async (socket, playerId, dropItem) => {
         inventorySlots[i].stack += 1; // 항상 +1씩 증가
         updatedSlotIdx = i;
         updatedStack = inventorySlots[i].stack;
-        await redisClient.hset(redisKey, i.toString(), JSON.stringify(inventorySlots[i]));
+        await redisClient.hset(
+          redisKey,
+          i.toString(),
+          JSON.stringify(inventorySlots[i]),
+        );
         break;
       }
     }
@@ -58,7 +62,11 @@ export const addItemToInventory = async (socket, playerId, dropItem) => {
         inventorySlots[i] = { itemId: item.itemId, stack: item.stack };
         updatedSlotIdx = i;
         updatedStack = item.stack;
-        await redisClient.hset(redisKey, i.toString(), JSON.stringify(inventorySlots[i]));
+        await redisClient.hset(
+          redisKey,
+          i.toString(),
+          JSON.stringify(inventorySlots[i]),
+        );
         break;
       }
     }

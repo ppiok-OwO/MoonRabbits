@@ -10,11 +10,7 @@ import {
   REDIS_HOST,
   REDIS_PORT,
 } from '../constants/env.js';
-import {
-  PACKET_ID,
-  PACKET_ID_LENGTH,
-  PACKET_SIZE,
-} from '../constants/header.js';
+import { PACKET_ID, PACKET_ID_LENGTH, PACKET_SIZE } from '../constants/header.js';
 import { BASE_STAT_DATA } from '../constants/PlayerBaseStat.js';
 import { BATTLE_LOG_ID } from '../constants/BattleLog.js';
 import { UPDATE_LOCATION } from '../constants/UpdateLocation.js';
@@ -89,6 +85,13 @@ export const config = {
     C2SItemMove: PACKET_ID.C2SItemMove,
     S2CInventoryUpdate: PACKET_ID.S2CInventoryUpdate,
 
+    C2SHousingSave: PACKET_ID.C2SHousingSave,
+    S2CHousingSave: PACKET_ID.S2CHousingSave,
+    C2SHousingLoad: PACKET_ID.C2SHousingLoad,
+    S2CHousingLoad: PACKET_ID.S2CHousingLoad,
+    C2SFurnitureCraft: PACKET_ID.C2SFurnitureCraft,
+    S2CFurnitureCraft: PACKET_ID.S2CFurnitureCraft,
+
     C2SCreateParty: PACKET_ID.C2SCreateParty,
     S2CCreateParty: PACKET_ID.S2CCreateParty,
     C2SInviteParty: PACKET_ID.C2SInviteParty,
@@ -107,6 +110,7 @@ export const config = {
     S2CAllowInvite: PACKET_ID.S2CAllowInvite,
     C2SRejectInvite: PACKET_ID.C2SRejectInvite,
     S2CRejectInvite: PACKET_ID.S2CRejectInvite,
+    S2CUpdateParty: PACKET_ID.S2CUpdateParty,
 
     C2SMonsterLocation: PACKET_ID.C2SMonsterLocation,
     S2CMonsterLocation: PACKET_ID.S2CMonsterLocation,
@@ -124,7 +128,7 @@ export const config = {
     S2CGatheringSkillCheck: PACKET_ID.S2CGatheringSkillCheck,
     C2SGatheringDone: PACKET_ID.C2SGatheringDone,
     S2CGatheringDone: PACKET_ID.S2CGatheringDone,
-
+    C2SGatheringAnimationEnd: PACKET_ID.C2SGatheringAnimationEnd,
     C2SRecall: PACKET_ID.C2SRecall,
     S2CRecall: PACKET_ID.S2CRecall,
     C2SThrowGrenade: PACKET_ID.C2SThrowGrenade,
@@ -145,13 +149,18 @@ export const config = {
     C2SInvestPoint: PACKET_ID.C2SInvestPoint,
     S2CInvestPoint: PACKET_ID.S2CInvestPoint,
 
-    C2SCraft: PACKET_ID.C2SCraft,
-    S2CCraft: PACKET_ID.S2CCraft,
+    C2SGetInventorySlotByItemId: PACKET_ID.C2SGetInventorySlotByItemId,
+    S2CGetInventorySlotByItemId: PACKET_ID.S2CGetInventorySlotByItemId,
+    C2SCraftStart: PACKET_ID.C2SCraftStart,
+    S2CCraftStart: PACKET_ID.S2CCraftStart,
+    C2SCraftEnd: PACKET_ID.C2SCraftEnd,
+    S2CCraftEnd: PACKET_ID.S2CCraftEnd,
     S2CPing: PACKET_ID.S2CPing,
     C2SPong: PACKET_ID.C2SPong,
   },
   newPlayerStatData: {
     BASE_STAT_DATA,
+    hp: 3,
   },
   battletag: {
     Menu: BATTLE_LOG_ID.menu,
