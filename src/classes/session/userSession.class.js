@@ -4,6 +4,7 @@ import redisClient from '../../utils/redis/redis.config.js';
 import { getUserSessions } from '../../session/sessions.js';
 import IntervalManager from '../manager/interval.manager.js';
 import { getPlayerSession } from '../../session/sessions.js';
+import { formatDate } from '../../utils/dateFormatter.js';
 
 class UserSession {
   users = new Map();
@@ -27,7 +28,11 @@ class UserSession {
     // 1초마다 핑 측정
     this.intervalManager.addPlayer(socket.id, newUser.ping.bind(newUser), 1000);
     // 3초마다 연결 상태 체크
-    this.intervalManager.checkPong(socket.id, newUser.checkPong.bind(newUser), 3000);
+    this.intervalManager.checkPong(
+      socket.id,
+      newUser.checkPong.bind(newUser),
+      3000,
+    );
 
     return newUser;
   }
@@ -36,13 +41,13 @@ class UserSession {
   async updateUserSessionAfterLogin(socket, loginData) {
     // loginData: { userId, nickname, ... }
     const user = this.getUser(socket);
+    const date = new Date();
     if (!user) return;
 
     // in-memory에 사용자 정보 업데이트
     user.userId = loginData.userId;
     user.nickname = loginData.nickname;
-    user.loginTime = new Date().toISOString();
-    user.status = 'online';
+    user.loginTime = formatDate(date);
 
     // 기존 임시 Redis 세션 삭제 (socket 기반)
     const tempKey = `userSession:temp:${socket.id}`;

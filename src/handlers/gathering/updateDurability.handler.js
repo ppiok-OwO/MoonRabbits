@@ -11,4 +11,3 @@ export const updateDurabilityHandler = (sector, packetData) => {
 
   sector.notify(PACKET.S2CUpdateDurability(resourceIdx, durability));
 };
-

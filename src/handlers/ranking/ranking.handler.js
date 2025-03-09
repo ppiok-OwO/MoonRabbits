@@ -4,6 +4,7 @@ import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import redisClient from '../../utils/redis/redis.config.js';
 import PACKET from '../../utils/packet/packet.js';
 import { rankingDataSaveToRedis } from '../../db/user/user.db.js';
+import { formatDate } from '../../utils/dateFormatter.js';
 
 let rankingCache = null;
 
@@ -12,6 +13,7 @@ async function updateRankingList() {
   try {
     await rankingDataSaveToRedis();
 
+    const date = new Date();
     const results = await redisClient.zrevrange('ranking', 0, -1, 'WITHSCORES');
     const rankingList = [];
     let rank = 1;
@@ -37,9 +39,7 @@ async function updateRankingList() {
       rank++;
     }
     rankingCache = rankingList;
-    console.log(
-      `랭킹 캐시가 ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}에 갱신되었습니다.`,
-    );
+    console.log(`랭킹 캐시가 ${formatDate(date)}에 갱신되었습니다.`);
   } catch (err) {
     console.error('랭킹 업데이트 오류:', err);
   }
@@ -52,6 +52,7 @@ updateRankingList();
 export const rankingHandler = async (socket, packetData) => {
   try {
     const { type } = packetData;
+    const date = new Date();
 
     if (!rankingCache) await updateRankingList();
 
@@ -66,12 +67,15 @@ export const rankingHandler = async (socket, packetData) => {
 
     const responsePacket = PACKET.S2CUpdateRanking('success', {
       rankingList: responseData,
-      timestamp: new Date().toISOString(),
+      timestamp: formatDate(date),
     });
     socket.write(responsePacket);
   } catch (error) {
     console.error(chalk.red('[rankingHandler Error]\n', error));
-    socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'rankingHandler 에러'));
+    socket.emit(
+      'error',
+      new CustomError(ErrorCodes.HANDLER_ERROR, 'rankingHandler 에러'),
+    );
   }
 };
 

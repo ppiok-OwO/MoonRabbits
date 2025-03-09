@@ -40,17 +40,20 @@ export const craftStartHandler = async (socket, packetData) => {
   // # 제작중... 재료 아이템 소모
   try {
     for (let slotIdx = 0; slotIdx < 25; slotIdx++) {
-
       newInventory[slotIdx] = JSON.parse(redisInventory[slotIdx]);
       for (const materialItem of recipe.material_items) {
         if (newInventory[slotIdx].itemId * 1 === materialItem.item_id) {
           hasMaterial = true;
           if (newInventory[slotIdx].stack >= materialItem.count) {
             newInventory[slotIdx].stack -= materialItem.count;
-            player.backupCraftingSlot(slotIdx, materialItem.item_id, materialItem.count);
+            player.backupCraftingSlot(
+              slotIdx,
+              materialItem.item_id,
+              materialItem.count,
+            );
             if (newInventory[slotIdx].stack === 0)
               newInventory[slotIdx].itemId = 0;
-          }else {
+          } else {
             canCraft = false;
           }
         }
@@ -85,10 +88,13 @@ export const craftStartHandler = async (socket, packetData) => {
         ),
       );
     } catch (error) {
-        socket.emit(
-          new CustomError(ErrorCodes.HANDLER_ERROR, 'redis inventory 저장장 에러'),
-        );
-        return;
+      socket.emit(
+        new CustomError(
+          ErrorCodes.HANDLER_ERROR,
+          'redis inventory 저장장 에러',
+        ),
+      );
+      return;
     }
   }
 

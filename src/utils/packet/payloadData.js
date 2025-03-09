@@ -25,24 +25,13 @@ const PAYLOAD_DATA = {
     };
   },
   RankingList: (rankingList_PlayerRank_repeated, timestamp_string) => {
-    return {
-      rankingList: rankingList_PlayerRank_repeated,
-      timestamp: timestamp_string,
-    };
+    return { rankingList: rankingList_PlayerRank_repeated, timestamp: timestamp_string };
   },
   TransformInfo: (posX_float, posY_float, posZ_float, rot_float) => {
-    return {
-      posX: posX_float,
-      posY: posY_float,
-      posZ: posZ_float,
-      rot: rot_float,
-    };
+    return { posX: posX_float, posY: posY_float, posZ: posZ_float, rot: rot_float };
   },
   SectorInfo: (sectorId_int32, monsters_MonsterStatus_repeated) => {
-    return {
-      sectorId: sectorId_int32,
-      monsters: monsters_MonsterStatus_repeated,
-    };
+    return { sectorId: sectorId_int32, monsters: monsters_MonsterStatus_repeated };
   },
   PlayerStatus: (
     playerLevel_int32,
@@ -70,6 +59,9 @@ const PAYLOAD_DATA = {
     currentSector_int32,
     isLeader_bool,
     isMine_bool,
+    hp_int32,
+    level_int32,
+    currentEquip_int32,
   ) => {
     return {
       id: id_int32,
@@ -77,6 +69,9 @@ const PAYLOAD_DATA = {
       currentSector: currentSector_int32,
       isLeader: isLeader_bool,
       isMine: isMine_bool,
+      hp: hp_int32,
+      level: level_int32,
+      currentEquip: currentEquip_int32,
     };
   },
   OwnedCharacter: (nickname_string, classCode_int32) => {
@@ -134,7 +129,11 @@ const PAYLOAD_DATA = {
     return { x: x_float, y: y_float, z: z_float };
   },
   Resource: (resourceIdx_int32, resourceId_int32, durability_int32) => {
-    return { resourceIdx: resourceIdx_int32, resourceId: resourceId_int32, durability: durability_int32 };
+    return {
+      resourceIdx: resourceIdx_int32,
+      resourceId: resourceId_int32,
+      durability: durability_int32,
+    };
   },
   StatInfo: (
     level_int32,
@@ -145,6 +144,7 @@ const PAYLOAD_DATA = {
     curStamina_int32,
     exp_int32,
     targetExp_int32,
+    hp_int32,
   ) => {
     return {
       level: level_int32,
@@ -155,6 +155,7 @@ const PAYLOAD_DATA = {
       curStamina: curStamina_int32,
       exp: exp_int32,
       targetExp: targetExp_int32,
+      hp: hp_int32,
     };
   },
   MonsterStatus: (
@@ -171,11 +172,7 @@ const PAYLOAD_DATA = {
     };
   },
   PartyInfo: (partyId_string, leaderId_int32, memberCount_int32) => {
-    return {
-      partyId: partyId_string,
-      leaderId: leaderId_int32,
-      memberCount: memberCount_int32,
-    };
+    return { partyId: partyId_string, leaderId: leaderId_int32, memberCount: memberCount_int32 };
   },
   InventorySlot: (slotIdx_int32, itemId_int32, stack_int32) => {
     return { slotIdx: slotIdx_int32, itemId: itemId_int32, stack: stack_int32 };
@@ -184,11 +181,10 @@ const PAYLOAD_DATA = {
     return { casterId: casterId_int32, pos: pos_Vec3 };
   },
   MaterialInfo: (materialId_int32, count_int32, slot_int32) => {
-    return {
-      materialId: materialId_int32,
-      count: count_int32,
-      slot: slot_int32,
-    };
+    return { materialId: materialId_int32, count: count_int32, slot: slot_int32 };
+  },
+  HousingInfo: (itemId_int32, dataType_int32, transform_TransformInfo) => {
+    return { itemId: itemId_int32, dataType: dataType_int32, transform: transform_TransformInfo };
   },
 };
 

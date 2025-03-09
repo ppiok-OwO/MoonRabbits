@@ -3,8 +3,11 @@ import { findPath } from '../init/navMeshLoader.js';
 import makePacket from '../utils/packet/makePacket.js';
 import PAYLOAD from '../utils/packet/payload.js';
 import PAYLOAD_DATA from '../utils/packet/payloadData.js';
-import { getSectorSessions } from '../session/sessions.js';
+import { getPartySessions, getSectorSessions } from '../session/sessions.js';
 import { getNaveMesh } from '../init/navMeshData.js';
+import PACKET from '../utils/packet/packet.js';
+import moveSectorHandler from '../handlers/transport/moveSectorHandler.js';
+import delay from '../utils/delay.js';
 
 class Monster {
   constructor(sectorCode, monsterIdx, area) {
@@ -244,11 +247,62 @@ class Monster {
   }
 
   // 공격 시작 함수
-  startAttack() {
+  async startAttack(targetPlayerObj) {
     if (!this.isAttacking) {
       this.isAttacking = true;
       this.attackStartTime = Date.now();
       this.stateChanged = true; // 상태 변경 플래그 설정
+
+      // 플레이어 체력 변화
+      const changedHp = targetPlayerObj.getHp() - 1;
+      const resultHp = targetPlayerObj.setHp(changedHp); // setHp 메서드 내부에서 음수일 경우 예외처리가 들어감
+
+      // 만약 파티 중이라면 멤버 카드 UI 업데이트
+      const partySession = getPartySessions();
+      const partyId = targetPlayerObj.getPartyId();
+      if (partyId) {
+        const party = partySession.getParty(partyId);
+        const members = party.getAllMembers();
+
+        members.forEach((value, key) => {
+          const partyPacket = PACKET.S2CUpdateParty(
+            party.getId(),
+            party.getPartyLeaderId(),
+            party.getMemberCount(),
+            party.getAllMemberCardInfo(value.id),
+          );
+          key.write(partyPacket);
+        });
+      }
+
+      if (resultHp <= 0) {
+        await delay(800);
+
+        // 마을로 이동할 땐 피를 복구해줘야 함(부활)
+        targetPlayerObj.setHp(config.newPlayerStatData.hp);
+
+        const socket = targetPlayerObj.user.getSocket();
+        moveSectorHandler(socket, { targetSector: 100 });
+
+        // 마을로 이동할 땐 파티 목록 업데이트 해주기
+        // 만약 파티 중이라면 멤버 카드 UI 업데이트
+        const partySession = getPartySessions();
+        const partyId = targetPlayerObj.getPartyId();
+        if (partyId) {
+          const party = partySession.getParty(partyId);
+          const members = party.getAllMembers();
+
+          members.forEach((value, key) => {
+            const partyPacket = PACKET.S2CUpdateParty(
+              party.getId(),
+              party.getPartyLeaderId(),
+              party.getMemberCount(),
+              party.getAllMemberCardInfo(value.id),
+            );
+            key.write(partyPacket);
+          });
+        }
+      }
     }
   }
   startSturn(duration) {
@@ -299,7 +353,7 @@ class Monster {
   // 클라이언트로부터 충돌 패킷 처리 함수
   handleCollisionPacket(data) {
     // 충돌 시 공격 시작 (이동 중지 2초)
-    this.startAttack();
+    this.startAttack(this.targetPlayer.player);
 
     // 타겟 플레이어 설정 (이미 설정되어 있을 수 있음)
     if (!this.targetPlayer && data && data.playerId) {
@@ -526,7 +580,7 @@ class Monster {
 
           // 플레이어와 충분히 가까우면 공격 시작
           if (calculatedDistance < 1) {
-            this.startAttack();
+            // this.startAttack(targetPlayerObj);
           }
 
           return;
@@ -642,18 +696,36 @@ class Monster {
           !this.targetPlayer &&
           (!this.currentPath || this.pathIndex >= this.currentPath.length)
         ) {
-          // 새로운 랜덤 위치 설정
-          const randomAngle = Math.random() * Math.PI * 2; // 360도 전 범위
-          const randomDist =
-            this.roamingRange * 0.3 + Math.random() * this.roamingRange * 0.7; // 최소 30% ~ 최대 100% 범위
+          // NavMesh에 기반한 유효한 랜덤 위치를 찾을 때까지 시도
+          let validPath = false;
+          let attempts = 0;
+          const maxAttempts = 5; // 최대 시도 횟수
 
-          const randomTarget = {
-            x: this.homePosition.x + Math.cos(randomAngle) * randomDist,
-            y: this.homePosition.y,
-            z: this.homePosition.z + Math.sin(randomAngle) * randomDist,
-          };
+          while (!validPath && attempts < maxAttempts) {
+            // 새로운 랜덤 위치 설정
+            const randomAngle = Math.random() * Math.PI * 2; // 360도 전 범위
+            // 시도가 실패할수록 더 작은 범위에서 찾음
+            const rangeFactor = 1 - attempts * 0.15; // 시도할 때마다 15%씩 범위 축소
+            const randomDist =
+              this.roamingRange * 0.3 +
+              Math.random() * this.roamingRange * 0.7 * rangeFactor;
 
-          await this.calculatePath(randomTarget);
+            const randomTarget = {
+              x: this.homePosition.x + Math.cos(randomAngle) * randomDist,
+              y: this.homePosition.y,
+              z: this.homePosition.z + Math.sin(randomAngle) * randomDist,
+            };
+
+            // 경로 계산 시도
+            const path = await this.calculatePath(randomTarget);
+            validPath = path; // calculatePath에서 true/false를 반환하도록 설정
+            attempts++;
+          }
+
+          // 모든 시도가 실패하면 홈 위치로 돌아가도록 함
+          if (!validPath) {
+            await this.calculatePath(this.homePosition);
+          }
         }
 
         // 이동 실행

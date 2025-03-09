@@ -30,14 +30,13 @@ class Resource {
   getRespawnTime() {
     return this.resourceData.resource_respawn * 1000;
   }
-  getAngle() {
-    return createRandNum(70, 290);
+  getAngle(pickSpeed) {
+    return createRandNum(30, 290 - (pickSpeed<30? pickSpeed : 30 +  pickSpeed * 0.3));
   }
-  getType(){
-    if(this.resourceData.resource_type == "Tree"){
+  getType() {
+    if (this.resourceData.resource_type == 'Tree') {
       return 12;
-    }
-    else{
+    } else {
       return 11;
     }
   }
@@ -48,26 +47,6 @@ class Resource {
     return (this.durability = this.resourceData.resource_durability);
   }
 
-  CheckValidateTiming(angle, startTime) {
-    const turnTime = 4000;
-    const pingTime = 50;
-    const validTimeStart = (turnTime / 360) * angle;
-    const validTimeEnd = validTimeStart + ((turnTime / 360) * 60/ this.difficulty);
-
-    const serverTime = (Date.now() - startTime) % turnTime;
-
-    console.log(`20250304: serverTime: ${serverTime}
-      validStart: ${validTimeStart} validEnd: ${validTimeEnd}`)
-
-    if (
-      serverTime > validTimeStart - pingTime &&
-      serverTime < validTimeEnd + pingTime
-    ) {
-      return true;
-    }
-    //일단 무조건 성공으로 처리.
-    return false;
-  }
 
   dropItem() {
     let sum = 0;

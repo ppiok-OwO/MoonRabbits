@@ -18,7 +18,7 @@ export const startGatheringHandler = (socket, packetData) => {
     return socket.write(
       PACKET.S2CGatheringStart(
         placedId,
-        player.setAngle(resource.getAngle()),
+        player.setAngle(resource.getAngle(player.getPickSpeed() )),
         resource.getDifficulty(),
       ),
     );
@@ -26,4 +26,3 @@ export const startGatheringHandler = (socket, packetData) => {
     return false;
   }
 };
-

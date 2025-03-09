@@ -1,5 +1,5 @@
 import UserSession from '../../classes/session/userSession.class.js';
-import { findPlayerByUserId, findUserByEmail } from '../../db/user/user.db.js';
+import { findPlayerByUserId, findUserByEmail, updateLastLogin } from '../../db/user/user.db.js';
 import { getPlayerSession, getUserSessions } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
@@ -7,6 +7,7 @@ import PACKET from '../../utils/packet/packet.js';
 import PAYLOAD_DATA from '../../utils/packet/payloadData.js';
 import bcrypt from 'bcrypt';
 import chalk from 'chalk';
+import redisClient from '../../utils/redis/redis.config.js';
 
 // !!! 패킷 정의 수정으로 S_Login -> S2CLogin 으로 일괄 수정해씀다
 
@@ -26,7 +27,6 @@ const loginHandler = async (socket, packetData) => {
     }
     // 비밀번호 일치 여부 확인
     const passwordMatch = await bcrypt.compare(pw, userData.password);
-
     if (!passwordMatch) {
       const isSuccess = false;
       const msg = '비밀번호가 일치하지 않습니다.';
@@ -35,19 +35,42 @@ const loginHandler = async (socket, packetData) => {
       return socket.write(failResponse);
     }
 
-    // 중복 로그인도 방지 (중복 로그인 처리는 추후 구현)
-
-    // 로그인 성공 시 socket.user에 사용자 정보 저장
+    // UserSession에 있는 id에 userData.userId를 저장
+    const findPlayer = await findPlayerByUserId(userData.userId);
+    socket.player = findPlayer;
     socket.user = userData;
-    console.log();
+
+    // 중복 로그인 방지
+    // 4. Redis에 중복 로그인 체크
+    const redisKey = `fullSession:${userData.userId}`;
+    const sessionExists = await redisClient.exists(redisKey);
+    if (sessionExists) {
+      // 이미 존재하는 세션에서 플레이어 정보 가져오기
+      const existingPlayerSessionStr = await redisClient.hget(redisKey, 'player');
+      if (existingPlayerSessionStr) {
+        const existingPlayerSession = JSON.parse(existingPlayerSessionStr);
+        // 현재 로그인하려는 플레이어와 일치하는 경우 중복 로그인으로 간주
+        if (existingPlayerSession.playerId === findPlayer.playerId) {
+          const isSuccess = false;
+          const msg = '중복 로그인 감지: 이미 로그인되어 있습니다.';
+
+          const failResponse = PACKET.S2CLogin(isSuccess, msg);
+          return socket.write(failResponse);
+        }
+      } else {
+        // 사용자 세션은 존재하지만 player 정보가 없는 경우에도 중복 로그인으로 처리 가능
+        const isSuccess = false;
+        const msg = '중복 로그인 감지: 이미 로그인되어 있습니다.';
+
+        const failResponse = PACKET.S2CLogin(isSuccess, msg);
+        return socket.write(failResponse);
+      }
+    }
 
     // 로그인 성공 시, 사용자의 캐릭터 정보를 가져옴
     const isSuccess = true;
     const msg = '로그인에 성공했습니다.';
-
-    // UserSession에 있는 id에 userData.userId를 저장해야함
-    const findPlayer = await findPlayerByUserId(userData.userId);
-    socket.player = findPlayer;
+    await updateLastLogin(userData.userId);
 
     // login 이후에 userSession의 소켓 기반 임시 세션을 userId를 키로 사용한 Redis 해시로 업데이트
     const userSessionManager = getUserSessions();
@@ -59,7 +82,8 @@ const loginHandler = async (socket, packetData) => {
         userId: userData.userId,
         // 캐릭터가 없다면 빈 문자열이나 null, 캐릭터가 있으면 해당 정보를 저장
         nickname: findPlayer && findPlayer.nickname ? findPlayer.nickname : '',
-        classCode: findPlayer && findPlayer.classCode ? findPlayer.classCode : '',
+        classCode:
+          findPlayer && findPlayer.classCode ? findPlayer.classCode : '',
       });
       //console.log('----- 업데이트된 userSession ----- \n', user);
     }
@@ -83,7 +107,10 @@ const loginHandler = async (socket, packetData) => {
       ${error}
       `,
     );
-    socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'loginHandler 에러'));
+    socket.emit(
+      'error',
+      new CustomError(ErrorCodes.HANDLER_ERROR, 'loginHandler 에러'),
+    );
   }
 };
 
