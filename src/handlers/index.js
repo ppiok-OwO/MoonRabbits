@@ -47,8 +47,8 @@ import getTreasureHandler from './playerAction/getTreasure.handler.js';
 import { craftEndHandler } from './player/inventory/craftEnd.handler.js';
 import { craftStartHandler } from './player/inventory/craftStart.handler.js';
 import { furnitureCraftHandler } from './housing/furnitureCraft.handler.js';
-import { startGatheringHandler } from './gathering/StartGathering.handler.js';
-import { gatheringDoneHandler } from './gathering/GatheringDone.handler.js';
+import { gatheringDoneHandler } from './gathering/gatheringDone.handler.js';
+import { startGatheringHandler } from './gathering/startGathering.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
