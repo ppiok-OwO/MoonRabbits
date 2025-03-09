@@ -4,6 +4,7 @@ import { getGameAssets } from '../init/assets.js';
 import PACKET from '../utils/packet/packet.js';
 import Monster from './monster.class.js';
 import { getNaveMesh } from '../init/navMeshData.js';
+import { updateDurabilityHandler } from '../handlers/gathering/updateDurability.handler.js';
 
 class Sector {
   constructor(sectorId, sectorCode, resources = []) {
@@ -15,11 +16,74 @@ class Sector {
     this.players = new Map();
     this.resources = resources;
     this.traps = new Map();
+
+    // 업데이트 관련 속성
     this.lastUpdateTime = Date.now();
+    this.updateInterval = 16; // 기본 업데이트 간격
     this.isUpdating = false;
-    //this.battleStatus = null;
+
+    // 패킷 전송 관련 속성 (별도 관리)
+    this.packetSendInterval = 200; // 패킷 전송 간격
+    this.packetSendTimer = null; // 패킷 전송용 타이머
 
     this.initArea(); // 클래스 내부 자동 호출
+    this.initPacketSendTimer(); // 패킷 전송 타이머 초기화
+  }
+
+  // 패킷 전송 타이머 초기화
+  initPacketSendTimer() {
+    if (this.packetSendTimer) {
+      clearInterval(this.packetSendTimer);
+    }
+
+    // 패킷을 전송하는 타이머 설정
+    this.packetSendTimer = setInterval(() => {
+      this.sendMonsterPackets();
+    }, this.packetSendInterval);
+
+    console.log(
+      `몬스터 패킷 전송 타이머 시작: ${this.packetSendInterval}ms 간격`,
+    );
+  }
+
+  // 몬스터 패킷 전송 함수
+  async sendMonsterPackets() {
+    // 플레이어가 없으면 패킷 전송하지 않음
+    if (this.players.size === 0) return;
+
+    try {
+      const currentTime = Date.now();
+      const packets = [];
+
+      // 몬스터 패킷 생성
+      for (const monster of this.monsters.values()) {
+        try {
+          const packet = await monster.createPacket(currentTime);
+          if (packet) {
+            packets.push(packet);
+          }
+        } catch (error) {
+          console.error(
+            `몬스터 패킷 생성 오류 (ID: ${monster.monsterIdx}):`,
+            error,
+          );
+        }
+      }
+
+      // 생성된 패킷 전송
+      for (const packet of packets) {
+        this.notify(packet);
+      }
+
+      // 디버깅: 전송된 패킷 수 로깅
+      if (packets.length > 0) {
+        // console.log(
+        //   `${new Date().toISOString()} - 전송된 몬스터 패킷: ${packets.length}개`,
+        // );
+      }
+    } catch (error) {
+      console.error('몬스터 패킷 전송 중 오류 발생:', error);
+    }
   }
 
   setResource(resourceId) {
@@ -28,43 +92,15 @@ class Sector {
     });
     if (resource) {
       const resourceIdx = this.resources.length;
-      this.resources.push(new Resource(resourceIdx, id, resource));
+      this.resources.push(new Resource(resourceIdx, resourceId, resource));
       return resourceIdx;
-    }
-    return -1;
-  }
-  getResources() {
-    const resourcesPayloadData = [];
-    for (let i = 1; i < this.resources.length; i++) {
-      resourcesPayloadData.push(
-        PAYLOAD_DATA.Resource(
-          this.resources[i].getResourceIdx(),
-          this.resources[i].getResourceId(),
-        ),
-      );
-    }
-    return resourcesPayloadData;
-  }
-  getSectorId() {
-    return this.sectorId;
-  }
-
-  getSectorCode() {
-    return this.sectorCode;
-  }
-
-  subDurability(resourceIdx, sub = 1) {
-    if (resourceIdx >= 0 && resourceIdx < this.resources.length) {
-      const durability = this.resources[resourceIdx].subDurability(sub);
-      this.notify(PACKET.S2CUpdateDurability(resourceIdx, durability));
-      return durability;
     }
     return -1;
   }
   resetDurability(resourceIdx) {
     if (resourceIdx >= 0 && resourceIdx < this.resources.length) {
       const durability = this.resources[resourceIdx].resetDurability();
-      this.notify(PACKET.S2CUpdateDurability(resourceIdx, durability));
+      updateDurabilityHandler(this, { resourceIdx, durability });
       return durability;
     }
     return -1;
@@ -81,9 +117,11 @@ class Sector {
   getPlayer(socket) {
     return this.players.get(socket);
   }
+
   getAllPlayer() {
     return this.players;
   }
+
   getMonster(id) {
     const monster = Array.from(this.monsters.values()).find(
       (monster) => monster.monsterIdx === id,
@@ -91,13 +129,21 @@ class Sector {
     return monster || null; // 몬스터가 존재하지 않으면 null 반환
   }
 
-  // monsters는 monster 인스턴스들이 담긴 일반 배열
   setMonsters(monsters) {
-    this.monsters = monsters;
+    monsters.forEach((monster, id) => {
+      this.monsters.set(id, monster);
+    });
   }
 
   notify(packet) {
     for (const player of this.players.values()) {
+      player.sendPacket(packet);
+    }
+  }
+
+  notifyExceptMe(packet, myPlayerId) {
+    for (const player of this.players.values()) {
+      if (player.id === myPlayerId) continue;
       player.sendPacket(packet);
     }
   }
@@ -118,16 +164,15 @@ class Sector {
     if (!this.traps.has(casterId)) this.traps.set(casterId, new Map());
     // [2] 플레이어별 덫 Map에 설치할 덫 위치정보 삽입
     const trapKey = `${pos.x}${pos.z}`;
-    this.traps.get(casterId).set(trapKey, pos);
+    this.traps.get(casterId).set(trapKey, { pos, timestamp: Date.now() });
     // [3] 설치한 덫 정보 반환
     return PAYLOAD_DATA.TrapInfo(casterId, pos);
   }
+
   /* 특정 덫 제거 */
   deleteTrap(casterId, pos, socket) {
     // [1] 플레이의 덫 Map 가져옴
     const currentTraps = this.traps.get(casterId);
-    console.log("!!! 지우기 전 : ",currentTraps)
-    console.log("!!! 지울 넘 : ",pos)
     // [2] 클라의 위치정보와 일치하는 덫이 없다면 리턴
     const trapKey = `${pos.x}${pos.z}`;
     if (!currentTraps.has(trapKey)) {
@@ -136,28 +181,28 @@ class Sector {
     }
     // [3] 해당 덫 Map에서 제거
     if (currentTraps.delete(trapKey)) {
-      console.log("!!! 지운 후 : ",currentTraps)
       // [4] 제거 성공 시 제거한 덫 정보 반환
       return PAYLOAD_DATA.TrapInfo(casterId, pos);
     }
   }
+
   /* 특정 플레이어의 모든 덫 제거 */
   removeTraps(casterId) {
     // [1] 제거할 플레이어의 덫들 보관할 배열 선언
     const traps = [];
     // [2] 플레이어의 덫 정보가 있으면 Map 순회하며 덫들 배열에 삽입
-    if(this.traps.has(casterId)){
-      this.traps.get(casterId).forEach((trapPos) => {
-        traps.push(PAYLOAD_DATA.TrapInfo(casterId, trapPos));
+    if (this.traps.has(casterId)) {
+      this.traps.get(casterId).forEach((trap) => {
+        traps.push(PAYLOAD_DATA.TrapInfo(casterId, trap.pos));
       });
       // [3] 섹터의 전체 덫 Map에서 해당 플레이어 관련 정보 제거
       if (this.traps.delete(casterId)) {
         // [4] 제거 성공 시 제거할 덫들 반환
         return traps;
       }
-
     }
   }
+
   /* 섹터의 모든 덫 정보 조회 */
   getAllTraps() {
     // [1] 덫들 보관할 배열 선언
@@ -165,8 +210,8 @@ class Sector {
     // [2] 플레이어별로 순회하며 보유 덫들 배열에 삽입
     this.traps.forEach((currentTraps, playerId) => {
       // 보유 최대 덫이 2개라 복잡도 높지 않음
-      for (const trapPos of currentTraps) {
-        traps.push(PAYLOAD_DATA.TrapInfo(playerId, trapPos));
+      for (const trap of currentTraps.values()) {
+        traps.push(PAYLOAD_DATA.TrapInfo(playerId, trap.pos));
       }
     });
     // [3] 섹터 덫 현황 담긴 배열 반환
@@ -174,8 +219,8 @@ class Sector {
   }
 
   // 몬스터 생성
-  spawnMonster(monster, mapcode) {
-    const namesh = this.navMeshes.get(mapcode);
+  spawnMonster(monster, mapcode, area) {
+    const navMesh = this.navMeshes.get(mapcode);
 
     if (this.mapAreas && this.mapAreas[area]) {
       monster.initialize(this.mapAreas[area]);
@@ -189,7 +234,7 @@ class Sector {
     return monster;
   }
 
-  // 몬스터들을 여러 그룹으로 나누기 (성능 최적화)
+  // 몬스터들을 여러 그룹으로 나누기
   divideMonsters(monsters) {
     const groupSize = 12; // 한 그룹당 몬스터 수 조절
     const groups = [];
@@ -203,34 +248,40 @@ class Sector {
 
   // 몬스터 업데이트를 개별 Promise로 래핑
   async updateMonster(monster, currentTime) {
-    if (!monster) return;
+    if (!monster) return null;
+
     try {
-      await monster.update(currentTime);
+      // 몬스터 업데이트 실행
+      return await monster.update(currentTime, false);
     } catch (error) {
       console.error(`Monster ${monster.monsterIdx} update failed:`, error);
+      return null;
     }
   }
 
+  // 섹터 업데이트
   async update() {
+    // 플레이어가 없거나 이미 업데이트 중이면 실행하지 않음
     if (this.players.size === 0 || this.isUpdating) return;
 
     const currentTime = Date.now();
+    // 업데이트 간격이 지나지 않았으면 실행하지 않음
     if (currentTime - this.lastUpdateTime < this.updateInterval) return;
 
     try {
       this.isUpdating = true;
 
-      // 몬스터들을 그룹으로 나누어 병렬 처리
+      // 몬스터들을 그룹으로 나누어 처리
       const monsterGroups = this.divideMonsters(
         Array.from(this.monsters.values()),
       );
 
-      // 각 그룹을 비동기적으로 처리
-      const updatePromises = monsterGroups.map((group) =>
-        Promise.all(
+      // 각 그룹에 대한 업데이트 처리
+      const updatePromises = monsterGroups.map(async (group) => {
+        await Promise.all(
           group.map((monster) => this.updateMonster(monster, currentTime)),
-        ),
-      );
+        );
+      });
 
       // 모든 그룹의 업데이트 완료 대기
       await Promise.all(updatePromises);
@@ -264,6 +315,7 @@ class Sector {
     // 모든 area를 한번에 추가
     this.mapAreas = sectorJsonData.areas || [];
 
+    // 몬스터 생성 및 초기화
     sectorJsonData.monsters.forEach((monster, index) => {
       const monsterIdx = index + 1;
       this.monsters.set(
@@ -276,9 +328,54 @@ class Sector {
       );
     });
 
+    // 업데이트 함수 정기적 호출 설정
     setInterval(async () => {
       await this.update();
-    }, 16); // 게임 프레임 간격으로 호출
+    }, this.updateInterval);
+  }
+  setSturnMonster(monsterIds, duration) {
+    console.log(monsterIds, duration);
+    for (let id of monsterIds) {
+      this.monsters.get(id).startSturn(duration);
+    }
+  }
+
+  getResources() {
+    const resourcesPayloadData = [];
+    for (let i = 1; i < this.resources.length; i++) {
+      resourcesPayloadData.push(
+        PAYLOAD_DATA.Resource(
+          this.resources[i].getResourceIdx(),
+          this.resources[i].getResourceId(),
+          this.resources[i].getDurability(),
+        ),
+      );
+    }
+    return resourcesPayloadData;
+  }
+
+  getSectorId() {
+    return this.sectorId;
+  }
+
+  getSectorCode() {
+    return this.sectorCode;
+  }
+
+  subDurability(resourceIdx, sub = 1) {
+    if (resourceIdx >= 0 && resourceIdx < this.resources.length) {
+      const durability = this.resources[resourceIdx].subDurability(sub);
+      this.notify(PACKET.S2CUpdateDurability(resourceIdx, durability));
+      return durability;
+    }
+  }
+
+  // 타이머 정리
+  destroy() {
+    if (this.packetSendTimer) {
+      clearInterval(this.packetSendTimer);
+      this.packetSendTimer = null;
+    }
   }
 }
 

@@ -54,10 +54,6 @@ class Party {
     return this.members;
   }
 
-  getAllMemberEntries() {
-    return this.members.entries();
-  }
-
   getAllMemberIds() {
     const memberIds = [];
     for (const member of this.members.values()) {
@@ -77,6 +73,9 @@ class Party {
         currentSector: member.getSectorId(),
         isPartyLeader: member === this.partyLeader,
         isMine: member.id === playerId,
+        hp: member.getHp(),
+        level: member.getLevel(),
+        currentEquip: member.getCurrentEquip(),
       };
 
       memberCardInfos.push(memberInfo);

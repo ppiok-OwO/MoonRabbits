@@ -4,6 +4,7 @@ import redisClient from '../../utils/redis/redis.config.js';
 import { getUserSessions } from '../../session/sessions.js';
 import IntervalManager from '../manager/interval.manager.js';
 import { getPlayerSession } from '../../session/sessions.js';
+import { formatDate } from '../../utils/dateFormatter.js';
 
 class UserSession {
   users = new Map();
@@ -40,13 +41,13 @@ class UserSession {
   async updateUserSessionAfterLogin(socket, loginData) {
     // loginData: { userId, nickname, ... }
     const user = this.getUser(socket);
+    const date = new Date();
     if (!user) return;
 
     // in-memory에 사용자 정보 업데이트
     user.userId = loginData.userId;
     user.nickname = loginData.nickname;
-    user.loginTime = new Date().toISOString();
-    user.status = 'online';
+    user.loginTime = formatDate(date);
 
     // 기존 임시 Redis 세션 삭제 (socket 기반)
     const tempKey = `userSession:temp:${socket.id}`;

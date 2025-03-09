@@ -35,7 +35,7 @@
     {
       "level": 7,
       "targetLevel": 8,
-      "require_exp": 640
+      "target_exp": 640
     },
     {
       "level": 8,
@@ -49,8 +49,48 @@
     },
     {
       "level": 10,
-      "targetLevel": 10,
+      "targetLevel": 11,
       "target_exp": 5120
+    },
+    {
+      "level": 11,
+      "targetLevel": 12,
+      "target_exp": 10240
+    },
+    {
+      "level": 12,
+      "targetLevel": 13,
+      "target_exp": 20480
+    },
+    {
+      "level": 13,
+      "targetLevel": 14,
+      "target_exp": 40960
+    },
+    {
+      "level": 14,
+      "targetLevel": 15,
+      "target_exp": 81920
+    },
+    {
+      "level": 15,
+      "targetLevel": 16,
+      "target_exp": 163840
+    },
+    {
+      "level": 16,
+      "targetLevel": 17,
+      "target_exp": 327680
+    },
+    {
+      "level": 17,
+      "targetLevel": 18,
+      "target_exp": 655360
+    },
+    {
+      "level": 18,
+      "targetLevel": -1,
+      "target_exp": -1
     }
   ]
 }

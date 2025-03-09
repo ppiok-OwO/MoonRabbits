@@ -10,7 +10,9 @@ export const itemDisassemblyHandler = async (socket, packetData) => {
 
     const player_id = socket.player.playerId;
 
-    console.log(`playerID ${player_id}가 ${slotIdx}에 있는 ${itemId} 분해를 요청했습니다.`);
+    console.log(
+      `playerID ${player_id}가 ${slotIdx}에 있는 ${itemId} 분해를 요청했습니다.`,
+    );
 
     // assets 폴더에서 item_disassembly.json 파일 로드
     const assets = getGameAssets();
@@ -50,7 +52,10 @@ export const itemDisassemblyHandler = async (socket, packetData) => {
     }
   } catch (error) {
     console.error(chalk.red('[itemObtainedHandler Error]\n', error));
-    socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'itemObtainedhandler 에러'));
+    socket.emit(
+      'error',
+      new CustomError(ErrorCodes.HANDLER_ERROR, 'itemObtainedhandler 에러'),
+    );
   }
 };
 

@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import { getPlayerSession, getUserSessions } from '../session/sessions.js';
 import { updateInventory } from '../db/user/user.db.js';
 import RedisSession from '../classes/session/redisSession.class.js';
+import redisClient from '../utils/redis/redis.config.js';
 
 export const onEnd = (socket) => async () => {
   console.log('클라이언트 연결이 종료되었습니다. (END)');

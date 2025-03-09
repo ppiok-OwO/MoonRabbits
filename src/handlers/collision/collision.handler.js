@@ -2,6 +2,12 @@ import Vec3 from '../../classes/Vec3.class.js';
 import PAYLOAD_DATA from '../../utils/packet/payloadData.js';
 import { getPlayerSession, getSectorSessions } from '../../session/sessions.js';
 import PACKET from '../../utils/packet/packet.js';
+import { performance, PerformanceObserver } from 'perf_hooks';
+
+const obs = new PerformanceObserver((list) => {
+  console.log(list.getEntries());
+});
+obs.observe({ entryTypes: ['measure'] });
 
 /* 해당 코드는 현재 마음에 들지 않음 나중에 리팩토링 씨게 가야함 */
 
@@ -164,10 +170,10 @@ export function checkCapsuleCollision(data) {
 
     // 3. 충돌이 없기 위한 최소 거리 계산
     const minDistance = myRadius + targetRadius;
-    const minDistanceSquared = minDistance * minDistance;
+    // const minDistanceSquared = minDistance * minDistance;
 
     // 4. 충돌 검사
-    if (distanceSquared < minDistanceSquared) {
+    if (Math.sqrt(distanceSquared) <= minDistance) {
       // 5. 밀어내기 방향 계산 (타겟에서 자신을 향하는 정규화된 벡터)
       const distance = Math.sqrt(distanceSquared);
       let pushDirection;
@@ -350,8 +356,12 @@ function getPlayer(id) {
 
 export function collisionHandler(socket, data) {
   try {
+    performance.mark('start');
     // 충돌 검사 수행
     const packet = checkCapsuleCollision(data);
+
+    performance.mark('end');
+    performance.measure('몬스터 충돌에 걸리는 시간', 'start', 'end');
 
     // 충돌 정보에서 섹터 코드 추출 (중첩 구조 고려)
     const collisionInfo = data.CollisionInfo || data.collisionInfo || data;

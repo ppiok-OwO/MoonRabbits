@@ -2,6 +2,8 @@ import TransformInfo from './transformInfo.class.js';
 import PAYLOAD_DATA from '../utils/packet/payloadData.js';
 import { config } from '../config/config.js';
 import { getGameAssets } from '../init/assets.js';
+import CustomError from '../utils/error/customError.js';
+import { ErrorCodes } from '../utils/error/errorCodes.js';
 
 class Player {
   constructor(user, playerId, nickname, classCode, statData, sectorId = 100) {
@@ -16,16 +18,21 @@ class Player {
     this.lastBattleLog = 0;
     this.path = null;
     this.exp = (statData && statData.exp) || 0;
-    this.targetExp = this._getTargetExpByLevel(this.level);
+    this.targetExp = this._getTargetExpByLevel(this.level).targetExp;
     this.abilityPoint = baseStat.ability_point;
     this.partyId = null;
     this.isInvited = false;
     this.gatheringIdx = 0;
     this.gatheringAngle = 180;
     this.gatheringStartTime = 0;
+    this.gatheringSuccess = false;
     this.stamina = baseStat.stamina;
+    this.hp = config.newPlayerStatData.hp;
     this.pickSpeed = baseStat.pick_speed;
     this.moveSpeed = baseStat.move_speed;
+    this.currentEquip = 0;
+    this.isCrafting = false;
+    this.craftingSlots = [];
   }
 
   sendPacket(packet) {
@@ -35,6 +42,25 @@ class Player {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  setHp(num) {
+    this.hp = num;
+    if (this.hp < 0) {
+      this.hp = 0;
+    } else if (this.hp > 3) {
+      this.hp = 3;
+    }
+
+    return this.hp;
+  }
+
+  getHp() {
+    return this.hp;
+  }
+
+  getStamina() {
+    return this.stamina;
   }
 
   getPlayerStatus() {
@@ -58,6 +84,7 @@ class Player {
       this.stamina,
       this.exp,
       this.targetExp,
+      this.hp,
     );
   }
   getPlayerInfo() {
@@ -147,19 +174,68 @@ class Player {
     return this.abilityPoint;
   }
 
-  levelUp() {
-    // 레벨 변경
-    const newLevel = this.level + 1;
-    this.level = newLevel;
+  CheckValidateTiming(difficulty) {
+    const turnTime = 4000;
+    const pingTime = 50;
+    const validTimeStart = (turnTime / 360) * this.gatheringAngle;
+    const validTimeEnd =
+      validTimeStart +
+      ((turnTime / 360) *
+        (60 +
+          (this.pickSpeed < 30 ? this.pickSpeed : 30 +  this.pickSpeed * 0.3))) /
+        difficulty;
 
-    // 요구 경험치 변경
-    const newTargetExp = this._getTargetExpByLevel(newLevel);
-    this.targetExp = newTargetExp;
+    const serverTime = (Date.now() - this.gatheringStartTime) % turnTime;
+
+    console.log(`20250304: serverTime: ${serverTime}
+      validStart: ${validTimeStart} validEnd: ${validTimeEnd}`);
+
+    if (
+      serverTime > validTimeStart - pingTime &&
+      serverTime < validTimeEnd + pingTime
+    ) {
+      return true;
+    }
+    //일단 무조건 성공으로 처리.
+    return false;
+  }
+  levelUp() {
+    const { targetLevel, targetExp } = this._getTargetExpByLevel(this.level);
+
+    // 만렙이면 level만 올리고 요구 경험치 2배로
+    if (targetLevel === -1) {
+      this.level += 1;
+      this.targetExp *= 2;
+      this.abilityPoint += 3;
+      return {
+        newLevel: this.level,
+        newTargetExp: this.targetExp,
+        abilityPoint: this.abilityPoint,
+      };
+    }
+
+    // 레벨, 요구 경험치 변경
+    this.level = targetLevel;
+    this.targetExp = targetExp;
 
     // 레벨업하면 올릴 수 있는 능력치 개수
     this.abilityPoint += 3;
 
-    return { newLevel, newTargetExp, abilityPoint: this.abilityPoint };
+    return {
+      newLevel: this.level,
+      newTargetExp: this.targetExp,
+      abilityPoint: this.abilityPoint,
+    };
+  }
+
+  setCurrentEquip(equipment) {
+    if (equipment > 2 || equipment < 0) return;
+
+    this.currentEquip = equipment;
+  }
+
+  getCurrentEquip() {
+    return this.currentEquip;
   }
 
   getTargetExp() {
@@ -168,11 +244,17 @@ class Player {
 
   _getTargetExpByLevel(level) {
     try {
-      return getGameAssets().targetExps.data.find(
-        (targetExp) => targetExp.level === level,
-      ).target_exp;
+      const data = getGameAssets().targetExps.data.find(
+        (target) => target.level === level,
+      );
+      return { targetLevel: data.targetLevel, targetExp: data.target_exp };
     } catch (error) {
-      throw new Error(`${level}lv 요구경험치 조회 오류`);
+      socket.emit(
+        new CustomError(
+          ErrorCodes.MISSING_FIELDS,
+          `${level}lv 요구경험치 조회 오류`,
+        ),
+      );
     }
   }
 
@@ -206,6 +288,7 @@ class Player {
       this.stamina,
       this.exp,
       this.targetExp,
+      this.hp,
     );
   }
 
@@ -217,6 +300,11 @@ class Player {
     this.moveSpeed = statInfo.moveSpeed;
     this.abilityPoint = statInfo.abilityPoint;
     this.targetExp = statInfo.targetExp;
+    this.hp = statInfo.hp;
+  }
+
+  backupCraftingSlot(slotIdx, itemId, stack) {
+    this.craftingSlots.push({ slotIdx, itemId, stack });
   }
 }
 

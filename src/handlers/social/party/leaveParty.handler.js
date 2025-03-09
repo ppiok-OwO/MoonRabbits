@@ -26,9 +26,7 @@ export const leavePartyHandler = (socket, packetData) => {
 
     // 해당 파티에 소속 중인지 확인
     // member = ['Socket', { Player 인스턴스 }]
-    
 
-      
     let member;
 
     for (const [key, value] of members) {
@@ -36,7 +34,6 @@ export const leavePartyHandler = (socket, packetData) => {
         member = [key, value];
       }
     }
-
 
     if (!member) {
       return socket.emit(
@@ -116,7 +113,6 @@ export const leavePartyHandler = (socket, packetData) => {
         member[0].write(msgToKickedMember);
       }
     }
-
 
     // 각 멤버에 대하여 맞춤형 패킷 생성
     members.forEach((value, key) => {

@@ -1,0 +1,78 @@
+{
+  "name": "housing_item_data",
+  "version": "1.0.0",
+  "data": [
+    {
+      "item_id": 30000,
+      "item_name": "재료 이름",
+      "item_type": "int 타입으로, 0은 Housing, 1은 Material",
+      "item_description": "하우징 아이템은 30000부터 시작",
+      "item_prefab": "오브젝트 이름",
+      "item_dataType": "int 타입으로, 0은 floor, 1은 furniture",
+      "item_gridSize": [1, 1]
+    },
+    {
+      "item_id": 30001,
+      "item_name": "testHSItem",
+      "item_type": 0,
+      "item_description": "테스트용 하우징 아이템",
+      "item_prefab": "TestCube",
+      "item_dataType": 0,
+      "item_gridSize": [1, 1]
+    },
+    {
+      "item_id": 30002,
+      "item_name": "testHSItem",
+      "item_type": 0,
+      "item_description": "테스트용 하우징 아이템",
+      "item_prefab": "TestLongCube",
+      "item_dataType": 0,
+      "item_gridSize": [3, 1]
+    },
+    {
+      "item_id": 30003,
+      "item_name": "testHSItem",
+      "item_type": 0,
+      "item_description": "테스트용 하우징 아이템",
+      "item_prefab": "TestPlane",
+      "item_dataType": 1,
+      "item_gridSize": [1, 1]
+    },
+    {
+      "item_id": 30004,
+      "item_name": "testHSItem",
+      "item_type": 0,
+      "item_description": "테스트용 하우징 아이템",
+      "item_prefab": "TestLargeCube",
+      "item_dataType": 0,
+      "item_gridSize": [4, 3]
+    },
+    {
+      "item_id": 30010,
+      "item_name": "나무 의자",
+      "item_type": 1,
+      "item_description": "나무로 만들어진 의자",
+      "item_prefab": "WoodChair",
+      "item_dataType": 1,
+      "item_gridSize": [1, 1]
+    },
+    {
+      "item_id": 30011,
+      "item_name": "나무 책상",
+      "item_type": 1,
+      "item_description": "나무로 만들어진 책상",
+      "item_prefab": "WoodTable",
+      "item_dataType": 1,
+      "item_gridSize": [1, 2]
+    },
+    {
+      "item_id": 30012,
+      "item_name": "나무 침대",
+      "item_type": 1,
+      "item_description": "나무로 만든 침대, 푹신푹신할까?",
+      "item_prefab": "WoodBed",
+      "item_dataType": 1,
+      "item_gridSize": [3, 4]
+    }
+  ]
+}

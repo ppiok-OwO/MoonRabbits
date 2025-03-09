@@ -20,18 +20,18 @@ class SectorSession {
     // console.log(sectorResources);
 
     if (sectorResources && sectorResources.length > 0) {
-      for(let i = 0; i< sectorResources.length+1; i++){
-        if(i === 0){
+      for (let i = 0; i < sectorResources.length + 1; i++) {
+        if (i === 0) {
           resources.push(new Resource(i, sectorResources[0]));
           continue;
         }
-        resources.push(new Resource(i, sectorResources[i-1]));
+        resources.push(new Resource(i, sectorResources[i - 1]));
       }
     }
     // console.log(resources.length);
     // console.log(resources);
 
-    const newSector = new Sector(sectorId , sectorCode, resources);
+    const newSector = new Sector(sectorId, sectorCode, resources);
     this.sectors.set(sectorId, newSector);
     return newSector;
   }
@@ -40,16 +40,8 @@ class SectorSession {
     //플레이어가 섹션이 없는 경우는 존재해서는 안됨.(반드시 마을 혹은 기타 장소가 저장이 되어 있어야함.)
     //플레이어가 해당 섹터에 있을경우 섹터가 삭제되어사는 안됨. 혹은 마을로 보내줘야함.
     if (this.sectors[sectorId].players.keys.length > 0) {
-      handleError(
-        new CustomError(
-          ErrorCodes.INVALID_INPUT,
-          '플레이어가 존재하는 섹터를 삭제하려 시도함.',
-        ),
-        new CustomError(
-          ErrorCodes.INVALID_INPUT,
-          '플레이어가 존재하는 섹터를 삭제하려 시도함.',
-        ),
-      );
+      console.error(error, '플레이어가 존재하는 섹터를 삭제하려 시도함.');
+
       return false;
     }
     return this.sectors.delete(sectorId);

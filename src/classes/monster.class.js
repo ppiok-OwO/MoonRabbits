@@ -1,22 +1,28 @@
 import { config } from '../config/config.js';
-import { findPath, loadNavMesh } from '../init/navMeshLoader.js';
+import { findPath } from '../init/navMeshLoader.js';
 import makePacket from '../utils/packet/makePacket.js';
 import PAYLOAD from '../utils/packet/payload.js';
 import PAYLOAD_DATA from '../utils/packet/payloadData.js';
-import { getSectorSessions } from '../session/sessions.js';
+import { getPartySessions, getSectorSessions } from '../session/sessions.js';
 import { getNaveMesh } from '../init/navMeshData.js';
+import PACKET from '../utils/packet/packet.js';
+import moveSectorHandler from '../handlers/transport/moveSectorHandler.js';
+import delay from '../utils/delay.js';
 
 class Monster {
   constructor(sectorCode, monsterIdx, area) {
     this.sectorCode = sectorCode; // 맵 코드 - 어느 섹터에 있는지
     this.monsterIdx = monsterIdx; // 몬스터 ID - 어떤 몬스터인지 구분
     this.navMesh = getNaveMesh(sectorCode);
-    this.moveSpeed = 7; // 이동 속도
-    this.anglerSpeed = 150; // 회전 속도
-    this.acc = 10; // 가속도
+    this.moveSpeed = 5; // 이동 속도
     this.lastUpdateTime = 0; // 마지막 업데이트 시간
-    this.updateInterval = 100; // 10프레임 (100ms) 간격으로 위치 업데이트
+    this.updateInterval = 100; // 10프레임 간격으로 위치 업데이트
     this.position = { x: 0, y: 0, z: 0 }; // 기본값으로 초기화
+
+    // 패킷 전송 관련 새로운 속성 추가
+    this.lastPacketSentTime = 0; // 마지막 패킷 전송 시간
+    this.positionChanged = false; // 위치 변경 여부 플래그
+    this.stateChanged = false; // 상태 변경 여부 플래그 (공격 등)
 
     // area가 제공되면 위치 초기화
     if (area && area.position) {
@@ -28,21 +34,26 @@ class Monster {
     }
 
     this.homePosition = { ...this.position };
-    this.roamingRange = 45; // 배회 범위 (-45 ~ +45)
+    this.roamingRange = 12; // 배회 범위
     this.currentPath = []; // 현재 이동 경로
     this.pathIndex = 0; // 현재 경로에서의 위치
     this.stepSize = 10; // 경로 보간 간격
 
     // 플레이어 추적 관련 속성
-    this.detectionRadius = 16; // 플레이어 감지 반경
+    this.detectionRadius = 8; // 플레이어 감지 반경
     this.targetPlayer = null; // 현재 타겟팅 중인 플레이어
     this.lastPlayerContactTime = 0; // 마지막으로 플레이어와 접촉한 시간
     this.playerLostTimeout = 3000; // 플레이어를 잃은 후 홈으로 돌아가기까지의 시간 (3초)
 
     // 공격 관련 속성
     this.isAttacking = false; // 공격 중인지 여부
-    this.attackDuration = 2000; // 공격 지속 시간 (2초)
+    this.attackDuration = 1000; // 공격 지속 시간
     this.attackStartTime = 0; // 공격 시작 시간
+
+    // 스턴 관련 속성
+    this.isSturn = false; // 스턴 중인지 여부
+    this.sturnDuration = 2000; // 스턴 지속 시간
+    this.sturnStartTime = 0; // 스턴 시작 시간
 
     // 움직임 방향 저장
     this.direction = { x: 0, z: 0 };
@@ -77,7 +88,7 @@ class Monster {
   getDistance(pos1, pos2) {
     if (!pos1 || !pos2) return Infinity;
 
-    // x/y/z와 posX/posY/posZ 형식 모두 처리
+    // x/z와 posX/posZ 형식 모두 처리
     const x1 =
       pos1.x !== undefined ? pos1.x : pos1.posX !== undefined ? pos1.posX : 0;
     const z1 =
@@ -96,7 +107,7 @@ class Monster {
   updateDirection(targetPos) {
     if (!targetPos) return;
 
-    // x/y/z와 posX/posY/posZ 형식 모두 처리
+    // x/z와 posX/posZ 형식 모두 처리
     const targetX =
       targetPos.x !== undefined
         ? targetPos.x
@@ -131,7 +142,7 @@ class Monster {
   isPlayerInFront(playerPos) {
     if (!playerPos || !this.direction) return false;
 
-    // x/y/z와 posX/posY/posZ 형식 모두 처리
+    // x/z와 posX/posZ 형식 모두 처리
     const playerX =
       playerPos.x !== undefined
         ? playerPos.x
@@ -162,7 +173,7 @@ class Monster {
       z: toPlayer.z / distance,
     };
 
-    // 내적 계산 (두 방향 벡터의 유사도)
+    // 내적 계산
     const dotProduct =
       this.direction.x * normalizedToPlayer.x +
       this.direction.z * normalizedToPlayer.z;
@@ -171,7 +182,7 @@ class Monster {
     return dotProduct > 0;
   }
 
-  // 가장 가까운 플레이어 찾기 (범위 내에 있는 플레이어 중)
+  // 가장 가까운 플레이어 찾기
   findNearestPlayer() {
     try {
       // 섹터의 모든 플레이어 가져오기
@@ -188,7 +199,7 @@ class Monster {
       for (const player of players) {
         if (!player) continue;
 
-        // 플레이어 위치 안전하게 가져오기
+        // 플레이어 위치
         let playerPos = null;
 
         // 여러 방법으로 플레이어 위치 가져오기 시도
@@ -236,11 +247,70 @@ class Monster {
   }
 
   // 공격 시작 함수
-  startAttack() {
+  async startAttack(targetPlayerObj) {
     if (!this.isAttacking) {
       this.isAttacking = true;
       this.attackStartTime = Date.now();
-      // 클라이언트에서 충돌 패킷을 보내므로 별도의 공격 알림 패킷은 필요 없음
+      this.stateChanged = true; // 상태 변경 플래그 설정
+
+      // 플레이어 체력 변화
+      const changedHp = targetPlayerObj.getHp() - 1;
+      const resultHp = targetPlayerObj.setHp(changedHp); // setHp 메서드 내부에서 음수일 경우 예외처리가 들어감
+
+      // 만약 파티 중이라면 멤버 카드 UI 업데이트
+      const partySession = getPartySessions();
+      const partyId = targetPlayerObj.getPartyId();
+      if (partyId) {
+        const party = partySession.getParty(partyId);
+        const members = party.getAllMembers();
+
+        members.forEach((value, key) => {
+          const partyPacket = PACKET.S2CUpdateParty(
+            party.getId(),
+            party.getPartyLeaderId(),
+            party.getMemberCount(),
+            party.getAllMemberCardInfo(value.id),
+          );
+          key.write(partyPacket);
+        });
+      }
+
+      if (resultHp <= 0) {
+        await delay(800);
+
+        // 마을로 이동할 땐 피를 복구해줘야 함(부활)
+        targetPlayerObj.setHp(config.newPlayerStatData.hp);
+
+        const socket = targetPlayerObj.user.getSocket();
+        moveSectorHandler(socket, { targetSector: 100 });
+
+        // 마을로 이동할 땐 파티 목록 업데이트 해주기
+        // 만약 파티 중이라면 멤버 카드 UI 업데이트
+        const partySession = getPartySessions();
+        const partyId = targetPlayerObj.getPartyId();
+        if (partyId) {
+          const party = partySession.getParty(partyId);
+          const members = party.getAllMembers();
+
+          members.forEach((value, key) => {
+            const partyPacket = PACKET.S2CUpdateParty(
+              party.getId(),
+              party.getPartyLeaderId(),
+              party.getMemberCount(),
+              party.getAllMemberCardInfo(value.id),
+            );
+            key.write(partyPacket);
+          });
+        }
+      }
+    }
+  }
+  startSturn(duration) {
+    if (!this.isSturn) {
+      this.isSturn = true;
+      this.sturnDuration = duration * 1000;
+      this.sturnStartTime = Date.now();
+      this.stateChanged = true;
     }
   }
 
@@ -248,6 +318,15 @@ class Monster {
   endAttack() {
     if (this.isAttacking) {
       this.isAttacking = false;
+      this.stateChanged = true; // 상태 변경 플래그 설정
+    }
+  }
+
+  // 스턴 종료 함수
+  endSturn() {
+    if (this.isSturn) {
+      this.isSturn = false;
+      this.stateChanged = true;
     }
   }
 
@@ -261,10 +340,20 @@ class Monster {
     }
   }
 
+  //스턴 상태 업데이트
+  updateSturnState(currentTime) {
+    if (
+      this.isSturn &&
+      currentTime - this.sturnStartTime >= this.sturnDuration
+    ) {
+      this.endSturn();
+    }
+  }
+
   // 클라이언트로부터 충돌 패킷 처리 함수
   handleCollisionPacket(data) {
     // 충돌 시 공격 시작 (이동 중지 2초)
-    this.startAttack();
+    this.startAttack(this.targetPlayer.player);
 
     // 타겟 플레이어 설정 (이미 설정되어 있을 수 있음)
     if (!this.targetPlayer && data && data.playerId) {
@@ -303,7 +392,7 @@ class Monster {
       }
     }
 
-    // 필요한 경우 충돌에 대한 응답 패킷 전송
+    // 충돌 시 강제로 패킷 전송 - 즉시 상태 업데이트를 위해
     try {
       const transformInfo = PAYLOAD_DATA.TransformInfo(
         this.position.x,
@@ -390,7 +479,7 @@ class Monster {
   // 경로를 따라 이동
   moveAlongPath(deltaTime) {
     // 공격 중이면 이동하지 않음
-    if (this.isAttacking) {
+    if (this.isAttacking || this.isSturn) {
       return false;
     }
 
@@ -410,6 +499,9 @@ class Monster {
       return this.pathIndex >= this.currentPath.length; // 전체 경로가 끝났는지 반환
     }
 
+    // 이동 전 위치 저장
+    const prevPos = { ...this.position };
+
     // 이동 속도 적용
     const movement = this.moveSpeed * (deltaTime / 1000);
     const ratio = Math.min(movement / distance, 1);
@@ -423,13 +515,21 @@ class Monster {
     // 이동 방향 업데이트
     this.updateDirection(targetPoint);
 
+    // 위치가 변경되었는지 체크
+    if (
+      Math.abs(this.position.x - prevPos.x) > 0.01 ||
+      Math.abs(this.position.z - prevPos.z) > 0.01
+    ) {
+      this.positionChanged = true;
+    }
+
     return false; // 아직 이동 중
   }
 
   // 플레이어 추적 관련 로직 업데이트
   async updatePlayerTracking(currentTime) {
     // 공격 중이면 플레이어 추적 로직 건너뜀
-    if (this.isAttacking) {
+    if (this.isAttacking || this.isSturn) {
       return;
     }
 
@@ -480,7 +580,7 @@ class Monster {
 
           // 플레이어와 충분히 가까우면 공격 시작
           if (calculatedDistance < 1) {
-            this.startAttack();
+            // this.startAttack(targetPlayerObj);
           }
 
           return;
@@ -507,20 +607,79 @@ class Monster {
     }
   }
 
-  // 몬스터 업데이트 함수
-  async update(currentTime) {
+  // 별도 패킷 생성 함수 - 패킷 전송 로직을 업데이트에서 분리
+  async createPacket(currentTime) {
+    try {
+      // 위치 패킷 생성
+      const transformInfo = PAYLOAD_DATA.TransformInfo(
+        this.position.x,
+        this.position.y,
+        this.position.z,
+        0,
+      );
+      const monsterInfo = PAYLOAD.S2CMonsterLocation(
+        this.monsterIdx,
+        transformInfo,
+      );
+      const packet = makePacket(
+        config.packetId.S2CMonsterLocation,
+        monsterInfo,
+      );
+
+      // 패킷 전송 시간 기록
+      this.lastPacketSentTime = currentTime;
+
+      // 디버깅 정보 - 위치나 상태가 변경되었을 때만 출력
+      if (this.positionChanged || this.stateChanged) {
+        // console.log(
+        //   `몬스터 ${this.monsterIdx} 업데이트: 위치(${this.position.x.toFixed(2)}, ${this.position.z.toFixed(2)}), 공격중: ${this.isAttacking}, 시간: ${Data.now()}`,
+        // );
+
+        // 패킷 생성 후 변경 상태 초기화
+        this.positionChanged = false;
+        this.stateChanged = false;
+      }
+
+      return packet;
+    } catch (error) {
+      console.error(`몬스터 ${this.monsterIdx} 패킷 생성 중 오류 발생:`, error);
+      return null;
+    }
+  }
+
+  // 몬스터 업데이트 함수 - 패킷 전송 로직 제거
+  async update(currentTime, shouldSendPacket = false) {
     const deltaTime = currentTime - this.lastUpdateTime;
     if (deltaTime < this.updateInterval) {
       return null;
     }
+
+    // 업데이트 시간 기록
     this.lastUpdateTime = currentTime;
 
+    // 이전 상태 백업
+    const prevIsAttacking = this.isAttacking;
+    const prevIsSturn = this.isSturn;
+    const prevPosition = { ...this.position };
+
     try {
-      // 공격 상태 업데이트 (2초 후 공격 상태 해제)
+      // 공격 상태 업데이트
       this.updateAttackState(currentTime);
+      // 스턴 상태 업데이트
+      this.updateSturnState(currentTime);
+
+      // 공격 상태 변경 감지
+      if (prevIsAttacking !== this.isAttacking) {
+        this.stateChanged = true;
+      }
+
+      // 스턴 상태 변경 감지
+      if (prevIsSturn !== this.isSturn) {
+        this.stateChanged = true;
+      }
 
       // 공격 중이 아닐 때만 플레이어 추적 및 이동 로직 실행
-      if (!this.isAttacking) {
+      if (!this.isAttacking || !this.isSturn) {
         // 플레이어 추적 로직 업데이트
         await this.updatePlayerTracking(currentTime);
 
@@ -555,40 +714,23 @@ class Monster {
         this.moveAlongPath(deltaTime);
       }
 
-      // 현재 위치 패킷 전송
-      const transformInfo = PAYLOAD_DATA.TransformInfo(
-        this.position.x,
-        this.position.y,
-        this.position.z,
-        0,
-      );
-      const monsterInfo = PAYLOAD.S2CMonsterLocation(
-        this.monsterIdx,
-        transformInfo,
-      );
-      const packet = makePacket(
-        config.packetId.S2CMonsterLocation,
-        monsterInfo,
-      );
-
-      const sector = getSectorSessions().getSectorByCode(this.sectorCode);
-      if (sector) {
-        sector.notify(packet);
+      // 위치 변경 감지
+      if (
+        Math.abs(prevPosition.x - this.position.x) > 0.01 ||
+        Math.abs(prevPosition.z - this.position.z) > 0.01
+      ) {
+        this.positionChanged = true;
       }
     } catch (error) {
-      console.error('몬스터 업데이트 오류:', error);
+      console.error(`몬스터 ${this.monsterIdx} 업데이트 중 오류 발생:`, error);
+      // 오류 발생 시 홈 위치로 설정
       this.position = { ...this.homePosition };
+      this.targetPlayer = null;
+      this.currentPath = [];
+      this.pathIndex = 0;
     }
-  }
 
-  // 업데이트 패킷 생성
-  createUpdatePacket() {
-    return {
-      id: this.monsterIdx,
-      sectorCode: this.sectorCode,
-      position: { ...this.position },
-      isAttacking: this.isAttacking,
-    };
+    return null; // 업데이트는 패킷을 반환하지 않음
   }
 }
 
