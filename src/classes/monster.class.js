@@ -696,18 +696,36 @@ class Monster {
           !this.targetPlayer &&
           (!this.currentPath || this.pathIndex >= this.currentPath.length)
         ) {
-          // 새로운 랜덤 위치 설정
-          const randomAngle = Math.random() * Math.PI * 2; // 360도 전 범위
-          const randomDist =
-            this.roamingRange * 0.3 + Math.random() * this.roamingRange * 0.7; // 최소 30% ~ 최대 100% 범위
+          // NavMesh에 기반한 유효한 랜덤 위치를 찾을 때까지 시도
+          let validPath = false;
+          let attempts = 0;
+          const maxAttempts = 5; // 최대 시도 횟수
 
-          const randomTarget = {
-            x: this.homePosition.x + Math.cos(randomAngle) * randomDist,
-            y: this.homePosition.y,
-            z: this.homePosition.z + Math.sin(randomAngle) * randomDist,
-          };
+          while (!validPath && attempts < maxAttempts) {
+            // 새로운 랜덤 위치 설정
+            const randomAngle = Math.random() * Math.PI * 2; // 360도 전 범위
+            // 시도가 실패할수록 더 작은 범위에서 찾음
+            const rangeFactor = 1 - attempts * 0.15; // 시도할 때마다 15%씩 범위 축소
+            const randomDist =
+              this.roamingRange * 0.3 +
+              Math.random() * this.roamingRange * 0.7 * rangeFactor;
 
-          await this.calculatePath(randomTarget);
+            const randomTarget = {
+              x: this.homePosition.x + Math.cos(randomAngle) * randomDist,
+              y: this.homePosition.y,
+              z: this.homePosition.z + Math.sin(randomAngle) * randomDist,
+            };
+
+            // 경로 계산 시도
+            const path = await this.calculatePath(randomTarget);
+            validPath = path; // calculatePath에서 true/false를 반환하도록 설정
+            attempts++;
+          }
+
+          // 모든 시도가 실패하면 홈 위치로 돌아가도록 함
+          if (!validPath) {
+            await this.calculatePath(this.homePosition);
+          }
         }
 
         // 이동 실행
