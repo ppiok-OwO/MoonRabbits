@@ -87,7 +87,6 @@ const handlers = {
   [config.packetId.C2SGatheringDone]: gatheringDoneHandler,
   [config.packetId.C2SGatheringAnimationEnd]: gatheringAnimationEndHandler,
 
-
   [config.packetId.C2SOpenChest]: openChestHandler,
   [config.packetId.C2SGetTreasure]: getTreasureHandler,
   [config.packetId.C2SRecall]: tryRecallHandler,

@@ -7,7 +7,7 @@ import { addExpHandler } from '../player/addExp.handler.js';
 import { animationHandler } from '../social/playerAnimation.handler.js';
 import { addItemToInventory } from '../player/inventory/inventoryManager.js';
 import { getGameAssets } from '../../init/assets.js';
-import { startGatheringHandler } from './StartGathering.handler.js';
+import { startGatheringHandler } from './startGathering.handler.js';
 
 export const gatheringDoneHandler = async (socket, packetData) => {
   const player = getPlayerSession().getPlayer(socket);
