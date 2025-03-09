@@ -1,3 +1,4 @@
+import { onEnd } from '../events/onEnd.js';
 import { getPlayerSession, getUserSessions } from '../session/sessions.js';
 import { makePingPacket } from '../utils/packet/makePingPacket.js';
 
@@ -35,13 +36,9 @@ class User {
 
     // 10초 이상 퐁이 오지 않으면 연결 종료(디버깅할 땐 주석처리하기!!)
     if (now - this.lastPong > 10000) {
-      console.log('클라이언트가 연결을 종료했습니다.');
+      console.log('클라이언트와 연결이 끊어졌습니다.');
 
-      // 세션들
-      const userSession = getUserSessions();
-
-      // 게임 세션에서 유저 삭제
-      userSession.removeUser(this.socket);
+      onEnd(this.socket)();
 
       this.socket.destroy(); // 서버에서 소켓 종료
     }
