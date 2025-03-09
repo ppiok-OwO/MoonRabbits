@@ -15,13 +15,12 @@ export const invitePartyHandler = (socket, packetData) => {
     const partySession = getPartySessions();
     const party = partySession.getParty(partyId);
     if (!party) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.PARTY_NOT_FOUND,
-          '파티 정보를 찾을 수 없습니다.',
-        ),
+      const packet = PACKET.S2CChat(
+        0,
+        '파티 정보를 찾을 수 없습니다.',
+        'System',
       );
+      return socket.write(packet);
     }
 
     const playerSession = getPlayerSession();
@@ -29,35 +28,32 @@ export const invitePartyHandler = (socket, packetData) => {
     // 파티장이 맞는지 검증
     const player = playerSession.getPlayer(socket);
     if (!player) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.USER_NOT_FOUND,
-          '플레이어 정보를 찾을 수 없습니다.',
-        ),
+      const packet = PACKET.S2CChat(
+        0,
+        '플레이어 정보를 찾을 수 없습니다.',
+        'System',
       );
+      return socket.write(packet);
     }
     const partyLeader = party.getPartyLeader();
     if (player !== partyLeader) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.HANDLER_ERROR,
-          '파티원 초대 권한을 가지고 있지 않습니다.',
-        ),
+      const packet = PACKET.S2CChat(
+        0,
+        '파티원 초대 권한을 가지고 있지 않습니다.',
+        'System',
       );
+      return socket.write(packet);
     }
 
     // 초대를 보낸 멤버의 플레이어 인스턴스
     const newMember = playerSession.getPlayerByNickname(nickname);
     if (!newMember || newMember === -1) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.USER_NOT_FOUND,
-          '플레이어 정보를 찾을 수 없습니다.',
-        ),
+      const packet = PACKET.S2CChat(
+        0,
+        '해당 플레이어의 정보를 찾을 수 없습니다.',
+        'System',
       );
+      return socket.write(packet);
     }
 
     // 해당 플레이어가 파티 중이면 return

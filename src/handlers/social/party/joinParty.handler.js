@@ -16,26 +16,24 @@ export const joinPartyHandler = (socket, packetData) => {
     const partySession = getPartySessions();
     const party = partySession.getParty(partyId);
     if (!party) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.PARTY_NOT_FOUND,
-          '파티 정보를 찾을 수 없습니다.',
-        ),
+      const packet = PACKET.S2CChat(
+        0,
+        '파티 정보를 찾을 수 없습니다.',
+        'System',
       );
+      return socket.write(packet);
     }
 
     // 새로운 멤버의 플레이어 인스턴스
     const playerSession = getPlayerSession();
     const player = playerSession.getPlayer(socket);
     if (!player) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.USER_NOT_FOUND,
-          '플레이어 정보를 찾을 수 없습니다.',
-        ),
+      const packet = PACKET.S2CChat(
+        0,
+        '플레이어 정보를 찾을 수 없습니다.',
+        'System',
       );
+      return socket.write(packet);
     }
 
     // 파티에 이미 참여 중이라면 현재 파티 정보 반환
@@ -46,7 +44,6 @@ export const joinPartyHandler = (socket, packetData) => {
         '해당 파티에 이미 소속되어 있습니다.',
         'System',
       );
-
       return socket.write(packet);
     }
 

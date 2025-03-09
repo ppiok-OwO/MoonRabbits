@@ -14,13 +14,13 @@ export const createPartyHandler = (socket, packetData) => {
     const player = playerSession.getPlayer(socket);
 
     if (!player) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.USER_NOT_FOUND,
-          '플레이어 정보를 찾을 수 없습니다.',
-        ),
+      const packet = PACKET.S2CChat(
+        0,
+        '플레이어 정보를 찾을 수 없습니다.',
+        'System',
       );
+
+      return socket.write(packet);
     }
 
     const partySession = getPartySessions();

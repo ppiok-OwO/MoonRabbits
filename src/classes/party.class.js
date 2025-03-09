@@ -46,6 +46,10 @@ class Party {
     return this.partyLeader.id;
   }
 
+  getPartyLeaderNickname() {
+    return this.partyLeader.nickname;
+  }
+
   getAllMembersSockets() {
     return this.members.keys();
   }
@@ -92,6 +96,7 @@ class Party {
     return {
       partyId: this.getId(),
       leaderId: this.getPartyLeaderId(),
+      leaderNickname: this.getPartyLeaderNickname(),
       memberCount: this.getMemberCount(),
     };
   }

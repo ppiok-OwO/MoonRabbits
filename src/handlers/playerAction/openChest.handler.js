@@ -7,9 +7,11 @@ const openChestHandler = (socket, packetData) => {
   const player = getPlayerSession().getPlayer(socket);
 
   const sector = getSectorSessions().getSector(player.getSectorId());
-  
+
   if (!sector.hasChest) {
-    socket.write(PACKET.S2CChat(0,"보물상자가 비활성화 상태입니다.",'System'));
+    socket.write(
+      PACKET.S2CChat(0, '보물상자가 비활성화 상태입니다.', 'System'),
+    );
     return;
   }
 

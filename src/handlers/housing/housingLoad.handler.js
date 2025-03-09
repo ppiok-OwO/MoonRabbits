@@ -22,11 +22,16 @@ export const housingLoadHandler = async (socket, packetData) => {
     );
     socket.emit(responsePacket);
     console.log(
-      chalk.green(`[housingLoadHandler] 가구 배치 불러오기 성공 - playerId: ${playerId}`),
+      chalk.green(
+        `[housingLoadHandler] 가구 배치 불러오기 성공 - playerId: ${playerId}`,
+      ),
     );
   } catch (error) {
     console.error(chalk.red('[housingLoadHandler Error]\n', error));
-    socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'housingLoadHandler 에러'));
+    socket.emit(
+      'error',
+      new CustomError(ErrorCodes.HANDLER_ERROR, 'housingLoadHandler 에러'),
+    );
   }
 };
 

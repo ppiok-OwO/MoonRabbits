@@ -10,7 +10,11 @@ import {
   REDIS_HOST,
   REDIS_PORT,
 } from '../constants/env.js';
-import { PACKET_ID, PACKET_ID_LENGTH, PACKET_SIZE } from '../constants/header.js';
+import {
+  PACKET_ID,
+  PACKET_ID_LENGTH,
+  PACKET_SIZE,
+} from '../constants/header.js';
 import { BASE_STAT_DATA } from '../constants/PlayerBaseStat.js';
 import { BATTLE_LOG_ID } from '../constants/BattleLog.js';
 import { UPDATE_LOCATION } from '../constants/UpdateLocation.js';

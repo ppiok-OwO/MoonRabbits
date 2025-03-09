@@ -779,7 +779,9 @@ function getDataFuncs(Messages) {
       });
 
     const paramList = fields.map((f) => `${f.name}_${f.type}`).join(', ');
-    const returnObj = fields.map((f) => `${f.name}: ${f.name}_${f.type}`).join(', ');
+    const returnObj = fields
+      .map((f) => `${f.name}: ${f.name}_${f.type}`)
+      .join(', ');
 
     const funcStr = `(${paramList}) => { return { ${returnObj} }; }`;
 
