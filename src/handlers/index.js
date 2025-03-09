@@ -21,7 +21,7 @@ import { allowInviteHandler } from './social/party/allowInvite.handler.js';
 import { leavePartyHandler } from './social/party/leaveParty.handler.js';
 import moveSectorHandler from './town/moveSectorHandler.js';
 
-import { gatheringSkillCheckHandler } from './gathering/GatheringSkillCheck.handler.js';
+import { gatheringSkillCheckHandler } from './gathering/gatheringSkillCheck.handler.js';
 import { StartGatheringHandler } from './gathering/StartGathering.handler.js';
 import { rejectInviteHandler } from './social/party/rejectInvite.handler.js';
 import { chceckPartyListHandler } from './social/party/checkPartyList.handler.js';
