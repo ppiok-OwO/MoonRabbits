@@ -1,3 +1,4 @@
+import { onEnd } from '../events/onEnd.js';
 import { getPlayerSession, getUserSessions } from '../session/sessions.js';
 import { makePingPacket } from '../utils/packet/makePingPacket.js';
 
@@ -37,12 +38,7 @@ class User {
     if (now - this.lastPong > 10000) {
       console.log('클라이언트가 연결을 종료했습니다.');
 
-      // 세션들
-      const userSession = getUserSessions();
-
-      // 게임 세션에서 유저 삭제
-      userSession.removeUser(this.socket);
-
+      onEnd(this.socket)();
       this.socket.destroy(); // 서버에서 소켓 종료
     }
   };
