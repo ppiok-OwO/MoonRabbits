@@ -5,7 +5,7 @@ import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
 import { addExpHandler } from '../player/addExp.handler.js';
 import { addItemToInventory } from '../player/inventory/inventoryManager.js';
-import { gatheringDoneHandler } from './GatheringDone.handler.js';
+import { gatheringDoneHandler } from './gatheringDone.handler.js';
 export const gatheringSkillCheckHandler = async (socket, packetData) => {
   const { deltatime } = packetData;
   const player = getPlayerSession().getPlayer(socket);

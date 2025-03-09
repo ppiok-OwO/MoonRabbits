@@ -42,6 +42,8 @@ import { pongHandler } from './pong.handler.js';
 import { portalHandler } from './playerAction/portal.handler.js';
 import { getInventorySlotByItemIdHandler } from './player/inventory/getInventorySlotByItemId.handler.js';
 import rankingHandler from './ranking/ranking.handler.js';
+import openChestHandler from './playerAction/openChest.handler.js';
+import getTreasureHandler from './playerAction/getTreasure.handler.js';
 import { craftEndHandler } from './player/inventory/craftEnd.handler.js';
 import { craftStartHandler } from './player/inventory/craftStart.handler.js';
 import { furnitureCraftHandler } from './housing/furnitureCraft.handler.js';
@@ -85,6 +87,8 @@ const handlers = {
   [config.packetId.C2SGatheringDone]: gatheringDoneHandler,
   [config.packetId.C2SGatheringAnimationEnd]: gatheringAnimationEndHandler,
 
+  [config.packetId.C2SOpenChest]: openChestHandler,
+  [config.packetId.C2SGetTreasure]: getTreasureHandler,
   [config.packetId.C2SRecall]: tryRecallHandler,
   [config.packetId.C2SThrowGrenade]: throwGrenadeHandler,
   [config.packetId.C2SSetTrap]: setTrapHandler,
