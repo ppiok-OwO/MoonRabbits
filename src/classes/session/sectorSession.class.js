@@ -23,13 +23,15 @@ class SectorSession {
       for (let i = 0; i < sectorResources.length + 1; i++) {
         if (i === 0) {
           resources.push(new Resource(i, sectorResources[0]));
-          continue;
         }
-        resources.push(new Resource(i, sectorResources[i - 1]));
+        else{
+          resources.push(new Resource(i, sectorResources[i - 1]));
+        }
       }
     }
-    // console.log(resources.length);
-    // console.log(resources);
+
+    //  console.log(resources.length);
+    //  console.log(resources);
 
     const newSector = new Sector(sectorId, sectorCode, resources);
     this.sectors.set(sectorId, newSector);

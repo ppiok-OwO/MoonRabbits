@@ -1,5 +1,9 @@
 import UserSession from '../../classes/session/userSession.class.js';
-import { findPlayerByUserId, findUserByEmail, updateLastLogin } from '../../db/user/user.db.js';
+import {
+  findPlayerByUserId,
+  findUserByEmail,
+  updateLastLogin,
+} from '../../db/user/user.db.js';
 import { getPlayerSession, getUserSessions } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
@@ -46,7 +50,10 @@ const loginHandler = async (socket, packetData) => {
     const sessionExists = await redisClient.exists(redisKey);
     if (sessionExists) {
       // 이미 존재하는 세션에서 플레이어 정보 가져오기
-      const existingPlayerSessionStr = await redisClient.hget(redisKey, 'player');
+      const existingPlayerSessionStr = await redisClient.hget(
+        redisKey,
+        'player',
+      );
       if (existingPlayerSessionStr) {
         const existingPlayerSession = JSON.parse(existingPlayerSessionStr);
         // 현재 로그인하려는 플레이어와 일치하는 경우 중복 로그인으로 간주
@@ -82,8 +89,7 @@ const loginHandler = async (socket, packetData) => {
         userId: userData.userId,
         // 캐릭터가 없다면 빈 문자열이나 null, 캐릭터가 있으면 해당 정보를 저장
         nickname: findPlayer && findPlayer.nickname ? findPlayer.nickname : '',
-        classCode:
-          findPlayer && findPlayer.classCode ? findPlayer.classCode : '',
+        classCode: findPlayer && findPlayer.classCode ? findPlayer.classCode : '',
       });
       //console.log('----- 업데이트된 userSession ----- \n', user);
     }
@@ -107,10 +113,7 @@ const loginHandler = async (socket, packetData) => {
       ${error}
       `,
     );
-    socket.emit(
-      'error',
-      new CustomError(ErrorCodes.HANDLER_ERROR, 'loginHandler 에러'),
-    );
+    socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'loginHandler 에러'));
   }
 };
 

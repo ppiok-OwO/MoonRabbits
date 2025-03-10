@@ -1,6 +1,7 @@
 import { getSectorSessions, getPlayerSession } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
+import handleError from '../../utils/error/errorHandler.js';
 import PACKET from '../../utils/packet/packet.js';
 import PathValidator from '../../utils/validate/pathValidator.js';
 
@@ -84,53 +85,58 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
     }
   } catch (error) {
     console.error(error);
+    handleError(socket, error);
   }
 };
 
 function predictPosition(socket, player, transform, latency) {
-  // 직전 좌표와 transform의 좌표를 빼서 방향벡터를 구하고 노말라이즈
-  const prevPosition = player.getPosition();
-  const velocity = {
-    posX: transform.posX - prevPosition.x,
-    posY: transform.posY - prevPosition.y,
-    posZ: transform.posZ - prevPosition.z,
-  };
+  try {
+    // 직전 좌표와 transform의 좌표를 빼서 방향벡터를 구하고 노말라이즈
+    const prevPosition = player.getPosition();
+    const velocity = {
+      posX: transform.posX - prevPosition.x,
+      posY: transform.posY - prevPosition.y,
+      posZ: transform.posZ - prevPosition.z,
+    };
 
-  // 속도 벡터 크기(속력) 계산 및 검증
-  const playerSpeed = player.getMoveSpeed();
-  let magnitude = Math.sqrt(
-    velocity.posX ** 2 + velocity.posY ** 2 + velocity.posZ ** 2,
-  );
-  if (magnitude > playerSpeed) {
-    magnitude = playerSpeed;
-    return socket.emit(
-      'error',
-      new CustomError(
-        ErrorCodes.INVALID_SPEED,
-        '플레이어의 이동 속도가 올바르지 않습니다.',
-      ),
+    // 속도 벡터 크기(속력) 계산 및 검증
+    const playerSpeed = player.getMoveSpeed();
+    let magnitude = Math.sqrt(
+      velocity.posX ** 2 + velocity.posY ** 2 + velocity.posZ ** 2,
     );
+    if (magnitude > playerSpeed) {
+      magnitude = playerSpeed;
+      return socket.emit(
+        'error',
+        new CustomError(
+          ErrorCodes.INVALID_SPEED,
+          '플레이어의 이동 속도가 올바르지 않습니다.',
+        ),
+      );
+    }
+
+    // 초당 속도 벡터 구하기(노말라이즈)
+    const normalizedVelocity =
+      magnitude > 0
+        ? {
+            posX: velocity.posX / magnitude,
+            posY: velocity.posY / magnitude,
+            posZ: velocity.posZ / magnitude,
+          }
+        : { posX: 0, posY: 0, posZ: 0 };
+
+    // 예측한 위치 = 현재 transform 위치 + (속도 벡터 * 레이턴시)
+    const predictedPosition = {
+      posX: transform.posX + normalizedVelocity.posX * latency,
+      posY: transform.posY + normalizedVelocity.posY * latency,
+      posZ: transform.posZ + normalizedVelocity.posZ * latency,
+      rot: transform.rot,
+    };
+
+    return predictedPosition;
+  } catch (error) {
+    handleError(socket, error);
   }
-
-  // 초당 속도 벡터 구하기(노말라이즈)
-  const normalizedVelocity =
-    magnitude > 0
-      ? {
-          posX: velocity.posX / magnitude,
-          posY: velocity.posY / magnitude,
-          posZ: velocity.posZ / magnitude,
-        }
-      : { posX: 0, posY: 0, posZ: 0 };
-
-  // 예측한 위치 = 현재 transform 위치 + (속도 벡터 * 레이턴시)
-  const predictedPosition = {
-    posX: transform.posX + normalizedVelocity.posX * latency,
-    posY: transform.posY + normalizedVelocity.posY * latency,
-    posZ: transform.posZ + normalizedVelocity.posZ * latency,
-    rot: transform.rot,
-  };
-
-  return predictedPosition;
 }
 
 export default playerLocationUpdateHandler;

@@ -23,7 +23,11 @@ export const gatheringDoneHandler = async (socket, packetData) => {
     });
     const quentity = 1;
     player.sendPacket(
-      PACKET.S2CChat(0, `${dropItemData.item_name}아이템을 ${quentity}개 획득했습니다.`, 'System'),
+      PACKET.S2CChat(
+        0,
+        `${dropItemData.item_name}아이템을 ${quentity}개 획득했습니다.`,
+        'System',
+      ),
     );
     socket.write(PACKET.S2CGatheringDone(placedId, dropItem, 1));
     console.log('dropItem : \n', dropItem);

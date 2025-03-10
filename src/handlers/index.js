@@ -22,8 +22,6 @@ import { leavePartyHandler } from './social/party/leaveParty.handler.js';
 import moveSectorHandler from './transport/moveSectorHandler.js';
 
 import { gatheringSkillCheckHandler } from './gathering/gatheringSkillCheck.handler.js';
-import { startGatheringHandler } from './gathering/startGathering.handler.js';
-import { gatheringDoneHandler } from './gathering/gatheringDone.handler.js';
 import { gatheringAnimationEndHandler } from './gathering/gatheringAnimationEnd.handler.js';
 import { resourceListHandler } from './gathering/resourceList.handler.js';
 import { rejectInviteHandler } from './social/party/rejectInvite.handler.js';
@@ -49,6 +47,10 @@ import getTreasureHandler from './playerAction/getTreasure.handler.js';
 import { craftEndHandler } from './player/inventory/craftEnd.handler.js';
 import { craftStartHandler } from './player/inventory/craftStart.handler.js';
 import { furnitureCraftHandler } from './housing/furnitureCraft.handler.js';
+import { gatheringDoneHandler } from './gathering/gatheringDone.handler.js';
+import { startGatheringHandler } from './gathering/startGathering.handler.js';
+import housingSaveHandler from './housing/housingSave.handler.js';
+import housingLoadHandler from './housing/housingLoad.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
@@ -116,6 +118,8 @@ const handlers = {
   [config.packetId.C2SRankingList]: rankingHandler,
 
   // 하우징 관련 핸들러
+  [config.packetId.C2SHousingSave]: housingSaveHandler,
+  [config.packetId.C2SHousingLoad]: housingLoadHandler,
   [config.packetId.C2SFurnitureCraft]: furnitureCraftHandler,
 };
 
