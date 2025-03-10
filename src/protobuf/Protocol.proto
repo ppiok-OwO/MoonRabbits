@@ -398,6 +398,12 @@ message S2CMissingPlayer{
   int32 playerId = 2;
 }
 
+message  S2CBatchMonsterLocation {
+    int32 count = 1; // 몬스터 수
+    repeated MonsterInfo monsters = 2; // 몬스터 목록
+}
+
+
 message C2SResourcesList{
 }
 message S2CResourcesList{
@@ -692,4 +698,10 @@ message HousingInfo {
   int32 itemId = 1;
   int32 dataType = 2;
   TransformInfo transform = 3;
+}
+
+message MonsterInfo {
+    int32 id = 1; // 몬스터 ID
+    float x = 2; // 몬스터 X 좌표
+    float y = 3; // 몬스터 Y 좌표
 }

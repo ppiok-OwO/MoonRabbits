@@ -73,10 +73,6 @@ class Sector {
           const monsterInfo = {
             monsterId: monster.monsterIdx,
             transform: transformInfo,
-            state: {
-              isAttacking: monster.isAttacking,
-              isStunned: monster.isStunned,
-            },
           };
 
           updatedMonsters.push(monsterInfo);
@@ -89,16 +85,13 @@ class Sector {
 
       // 업데이트할 몬스터가 있는 경우에만 패킷 전송
       if (updatedMonsters.length > 0) {
-        // 네트워크 효율을 위해 배치 크기 조정
-        const batchSize = 15; // 한 패킷에 포함할 최대 몬스터 수
+        const batchSize = 10; // 한 패킷에 포함할 최대 몬스터 수
 
         // 배치 단위로 분할
         for (let i = 0; i < updatedMonsters.length; i += batchSize) {
           const batch = updatedMonsters.slice(i, i + batchSize);
 
           // 배치 패킷 생성
-          // 참고: 아래는 새로운 S2CBatchMonsterLocation 패킷을 사용한다고 가정합니다.
-          // 이 패킷 타입이 아직 구현되지 않았다면, 구현해야 합니다.
           const batchPayload = {
             count: batch.length,
             monsters: batch,
@@ -113,10 +106,9 @@ class Sector {
           this.notify(batchPacket);
         }
 
-        // 디버깅 정보 (필요시)
-        // console.log(
-        //   `${new Date().toISOString()} - 배치 전송된 몬스터: ${updatedMonsters.length}개, 패킷 수: ${Math.ceil(updatedMonsters.length / batchSize)}`
-        // );
+        console.log(
+          `${new Date().toISOString()} - 배치 전송된 몬스터: ${updatedMonsters.length}개, 패킷 수: ${Math.ceil(updatedMonsters.length / batchSize)}`,
+        );
       }
     } catch (error) {
       console.error('몬스터 패킷 배치 전송 중 오류 발생:', error);

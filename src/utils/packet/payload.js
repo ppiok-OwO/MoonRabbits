@@ -201,6 +201,7 @@ const PAYLOAD = {
   S2CMissingPlayer: (monsterId_int32, playerId_int32) => {
     return { monsterId: monsterId_int32, playerId: playerId_int32 };
   },
+  S2CbatchMonsterLocation: () => {},
   S2CResourcesList: (resources_Resource_repeated) => {
     return { resources: resources_Resource_repeated };
   },
