@@ -64,7 +64,7 @@ export const onData = (socket) => {
       if (
         !packetSize ||
         packetSize < headerSize ||
-        packetSize > config.blacklist.MAX_REQUESTS_PER_SECOND
+        packetSize > config.blacklist.MAX_PACKET_SIZE
       ) {
         console.log(
           `잘못된 패킷 크기: ${packetSize} (IP: ${socket.remoteAddress})`,

@@ -194,7 +194,7 @@ export const config = {
     greeting: 333,
   },
   blacklist: {
-    MAX_REQUESTS_PER_SECOND: 50,
+    MAX_REQUESTS_PER_SECOND: 70,
     MAX_PACKET_SIZE: 1024,
   },
 };
