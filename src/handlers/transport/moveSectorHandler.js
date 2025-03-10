@@ -82,7 +82,7 @@ const moveSectorHandler = async (socket, packetData) => {
     for (const player of newSector.getAllPlayer().values()) {
       players.push(player.getPlayerInfo());
     }
-    // [5-1] 이동할 섹터가 마을이 아니면, 설치돼있는 덫과 보물상자 현황 가져옴
+    // [5-1] 이동할 섹터가 마을이 아니면, 설치돼있는 덫 현황 가져옴
     const traps = newSector.sectorCode != 100 ? newSector.getAllTraps() : [];
 
     // [5-2] Redis에 이동한 setorCode 저장

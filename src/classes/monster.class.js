@@ -248,7 +248,7 @@ class Monster {
 
   // 공격 시작 함수
   async startAttack(targetPlayerObj) {
-    if (!this.isAttacking) {
+    if (!this.isAttacking && targetPlayerObj.getHp() > 0) {
       this.isAttacking = true;
       this.attackStartTime = Date.now();
       this.stateChanged = true; // 상태 변경 플래그 설정
@@ -276,7 +276,7 @@ class Monster {
       }
 
       if (resultHp <= 0) {
-        await delay(800);
+        await delay(3000);
 
         // 마을로 이동할 땐 피를 복구해줘야 함(부활)
         targetPlayerObj.setHp(config.newPlayerStatData.hp);
