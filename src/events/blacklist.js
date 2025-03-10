@@ -15,6 +15,20 @@ export const addBlacklist = async (IP) => {
   }
 };
 
+export const addSuspect = async (IP) => {
+  try {
+    // Redis에 블랙리스트 추가 (Set 자료형 사용)
+    await redisClient.sadd('Suspect:suspiciousIPs', IP);
+    console.log(
+      chalk.green(`[Redis Log] ${IP}가 용의자 리스트에 추가되었습니다.`),
+    );
+  } catch (error) {
+    console.error(
+      chalk.red(`[Redis Error] 용의자 리스트 추가 실패: ${error.message}`),
+    );
+  }
+};
+
 export const getBlacklist = async () => {
   try {
     // Redis에서 모든 블랙리스트 IP 조회

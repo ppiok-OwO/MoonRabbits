@@ -4,7 +4,7 @@ import { getProtoMessages } from '../init/loadProtos.js';
 import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
 import printPacket from '../utils/log/printPacket.js';
-import { addBlacklist, isBlacklisted } from './blacklist.js';
+import { addBlacklist, addSuspect, isBlacklisted } from './blacklist.js';
 
 export const onData = (socket) => {
   if (!socket.buffer) {
@@ -37,7 +37,11 @@ export const onData = (socket) => {
     // 초당 요청 제한
     socket.requestCounter++;
     if (socket.requestCounter > config.blacklist.MAX_REQUESTS_PER_SECOND) {
-      console.log(`과도한 요청 감지 (IP: ${clientIP}) -> 검토 필요`);
+      console.log(
+        `과도한 요청 감지 (요청 횟수 : ${socket.requestCounter}, IP: ${clientIP}) -> 용의자 리스트 추가`,
+      );
+      await addSuspect(socket.remoteAddress);
+      socket.buffer = Buffer.alloc(0); // 버퍼 초기화
     }
 
     socket.buffer = Buffer.concat([socket.buffer, data]);
@@ -66,6 +70,7 @@ export const onData = (socket) => {
           `잘못된 패킷 ID: ${packetId} (IP: ${socket.remoteAddress})`,
         );
         socket.anomalyCounter += 1;
+        socket.buffer = Buffer.alloc(0); // 버퍼 초기화
         if (socket.anomalyCounter >= 5) {
           console.log(`반복적인 잘못된 패킷 ID 감지 (IP: ${clientIP}) -> 차단`);
           await addBlacklist(clientIP);
