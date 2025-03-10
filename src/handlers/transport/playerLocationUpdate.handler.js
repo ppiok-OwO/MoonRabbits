@@ -6,13 +6,6 @@ import handleError from '../../utils/error/errorHandler.js';
 import PACKET from '../../utils/packet/packet.js';
 import PathValidator from '../../utils/validate/pathValidator.js';
 
-// 경로 탐색 성공: [
-//   { x: 0, y: 0, z: 0 },
-//   { x: 5, y: 0, z: 5 },
-//   { x: 10, y: 0, z: 15 },
-//   { x: 20, y: 0, z: 30 }
-// ]
-
 // 이동중이라면 0.1초마다 location 패킷 전송
 const playerLocationUpdateHandler = async (socket, packetData) => {
   try {
@@ -35,10 +28,13 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
       // PathValidator 사용하여 가장 가까운 경로 포인트 찾기
       const validationResult = await PathValidator.validatePosition(path, transform);
 
-      const latency = player.user.getLatency() / 1000;
-      const predictedPos = predictPosition(socket, player, transform, latency);
+      const distance = validateSpeed(transform, player);
 
-      // 추측항법이 끝난 뒤에 플레이어 포지션 업데이트
+      if (distance > 0.2 || distance < 0.08) {
+        console.log('속도 검증 실패!!', distance);
+      }
+
+      // 속도 검증 끝난 뒤에 플레이어 포지션 업데이트
       player.setPosition(transform);
 
       if (validationResult && validationResult.distance > 1.4) {
@@ -65,7 +61,7 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
         return;
       } else {
         // 오차 범위를 벗어나지 않았으면 추측항법으로 예측한 위치를 전달
-        const packet = PACKET.S2CPlayerLocation(player.id, transform, true);
+        const packet = PACKET.S2CPlayerLocation(player.id, predictedPos, true);
         const sectorCode = player.getSectorId();
         if (sectorCode) {
           // 만약 던전이면
@@ -84,9 +80,21 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
   }
 };
 
-function predictPosition(socket, player, transform, latency) {
+function validateSpeed(transform, player) {
   try {
-    // 직전 좌표와 transform의 좌표를 빼서 방향벡터를 구하고 노말라이즈
+    if (player.usePortal) {
+      const distance = 0.1;
+      player.usePortal = false;
+      return distance;
+    }
+
+    // 섹터 이동한 경우에도
+    if (player.useMoveSector) {
+      const distance = 0.1;
+      player.useMoveSector = false;
+      return distance;
+    }
+
     const prevPosition = player.getPosition();
     const velocity = {
       posX: transform.posX - prevPosition.x,
@@ -119,9 +127,9 @@ function predictPosition(socket, player, transform, latency) {
       rot: transform.rot,
     };
 
-    return predictedPosition;
+    return distance;
   } catch (error) {
-    handleError(socket, error);
+    console.error(error);
   }
 }
 
