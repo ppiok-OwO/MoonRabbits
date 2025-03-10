@@ -193,6 +193,10 @@ export const config = {
     sad: 222,
     greeting: 333,
   },
+  blacklist: {
+    MAX_REQUESTS_PER_SECOND: 70,
+    MAX_PACKET_SIZE: 1024,
+  },
 };
 
 export const packetIdEntries = Object.entries(config.packetId);
