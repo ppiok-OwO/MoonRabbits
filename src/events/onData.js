@@ -34,6 +34,16 @@ export const onData = (socket) => {
       return;
     }
 
+    // 패킷 크기 검사
+    if (data.length > config.blacklist.MAX_PACKET_SIZE) {
+      console.log(
+        `너무 큰 패킷 감지 (크기: ${data.length}, IP: ${clientIP}) -> 연결 종료`,
+      );
+      await addBlacklist(clientIP);
+      socket.destroy();
+      return;
+    }
+
     // 초당 요청 제한
     socket.requestCounter++;
     if (socket.requestCounter > config.blacklist.MAX_REQUESTS_PER_SECOND) {
@@ -51,7 +61,11 @@ export const onData = (socket) => {
     while (socket.buffer.length >= headerSize) {
       const packetSize = socket.buffer.readUInt32LE(0);
 
-      if (!packetSize || packetSize < headerSize) {
+      if (
+        !packetSize ||
+        packetSize < headerSize ||
+        packetSize > config.blacklist.MAX_REQUESTS_PER_SECOND
+      ) {
         console.log(
           `잘못된 패킷 크기: ${packetSize} (IP: ${socket.remoteAddress})`,
         );

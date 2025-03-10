@@ -195,7 +195,7 @@ export const config = {
   },
   blacklist: {
     MAX_REQUESTS_PER_SECOND: 50,
-    MAX_PACKET_SIZE: 200,
+    MAX_PACKET_SIZE: 1024,
   },
 };
 
