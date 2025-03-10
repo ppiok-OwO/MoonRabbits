@@ -88,6 +88,19 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
 
 function validateSpeed(transform, player) {
   try {
+    if (player.usePortal) {
+      const distance = 0.1;
+      player.usePortal = false;
+      return distance;
+    }
+
+    // 섹터 이동한 경우에도
+    if (player.useMoveSector) {
+      const distance = 0.1;
+      player.useMoveSector = false;
+      return distance;
+    }
+
     const prevPosition = player.getPosition();
 
     const dx = transform.posX - prevPosition.x;

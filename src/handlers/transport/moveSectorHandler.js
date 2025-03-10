@@ -98,6 +98,8 @@ const moveSectorHandler = async (socket, packetData) => {
       ),
     );
 
+    player.useMoveSector = true;
+
     // [7] 이동할 섹터에 있는 유저들에게 내 정보 전송할 예정 (다른 플레이어들에게 나를 보여주기 위함)
     playerSpawnNotificationHandler(socket);
   } catch (err) {
