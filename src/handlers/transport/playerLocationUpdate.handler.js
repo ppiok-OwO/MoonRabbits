@@ -1,3 +1,4 @@
+import { config } from '../../config/config.js';
 import { getSectorSessions, getPlayerSession } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
@@ -89,19 +90,16 @@ function predictPosition(socket, player, transform, latency) {
     const prevPosition = player.getPosition();
     const velocity = {
       posX: transform.posX - prevPosition.x,
-      posY: transform.posY - prevPosition.y,
       posZ: transform.posZ - prevPosition.z,
     };
 
     // 속도 벡터 크기(속력) 계산 및 검증
     const playerSpeed = player.getMoveSpeed();
-    let magnitude = Math.sqrt(velocity.posX ** 2 + velocity.posY ** 2 + velocity.posZ ** 2);
-    if (magnitude > playerSpeed) {
+    let magnitude = Math.sqrt(velocity.posX ** 2 + velocity.posZ ** 2);
+    if (magnitude > playerSpeed + config.updateLocation.tolerance) {
       magnitude = playerSpeed;
-      return socket.emit(
-        'error',
-        new CustomError(ErrorCodes.INVALID_SPEED, '플레이어의 이동 속도가 올바르지 않습니다.'),
-      );
+      return console.log('플레이어의 이동 속도가 올바르지 않습니다.');
+      // 다른 오브젝트와 비빌 때 속도가 들쭉날쭉해지는 현상이 있어서 에러와 구별하기 어렵다.
     }
 
     // 초당 속도 벡터 구하기(노말라이즈)
@@ -109,15 +107,14 @@ function predictPosition(socket, player, transform, latency) {
       magnitude > 0
         ? {
             posX: velocity.posX / magnitude,
-            posY: velocity.posY / magnitude,
             posZ: velocity.posZ / magnitude,
           }
-        : { posX: 0, posY: 0, posZ: 0 };
+        : { posX: 0, posZ: 0 };
 
     // 예측한 위치 = 현재 transform 위치 + (속도 벡터 * 레이턴시)
     const predictedPosition = {
       posX: transform.posX + normalizedVelocity.posX * latency,
-      posY: transform.posY + normalizedVelocity.posY * latency,
+      posY: transform.posY, // 높이(y축)에는 적용 안 함
       posZ: transform.posZ + normalizedVelocity.posZ * latency,
       rot: transform.rot,
     };
