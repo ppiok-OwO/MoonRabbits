@@ -39,7 +39,9 @@ export const furnitureCraftHandler = async (socket, packetData) => {
     const data = (await redisClient.hgetall(redisKey)) || {};
     Object.assign(redisInventory, data);
   } catch (error) {
-    socket.emit(new CustomError(ErrorCodes.HANDLER_ERROR, 'redis inventory 조회 에러'));
+    socket.emit(
+      new CustomError(ErrorCodes.HANDLER_ERROR, 'redis inventory 조회 에러'),
+    );
     return;
   }
 
@@ -62,7 +64,11 @@ export const furnitureCraftHandler = async (socket, packetData) => {
         if (newInventory[slotIdx].stack >= materialItem.count) {
           // 재료 차감 및 백업(추후 롤백용)
           newInventory[slotIdx].stack -= materialItem.count;
-          player.backupCraftingSlot(slotIdx, materialItem.item_id, materialItem.count);
+          player.backupCraftingSlot(
+            slotIdx,
+            materialItem.item_id,
+            materialItem.count,
+          );
           if (newInventory[slotIdx].stack === 0) {
             newInventory[slotIdx].itemId = 0;
           }
@@ -82,7 +88,9 @@ export const furnitureCraftHandler = async (socket, packetData) => {
 
   // 재료가 부족한 경우 실패 패킷을 전송하고 함수 종료
   if (!hasAllMaterials) {
-    socket.write(PACKET.S2CFurnitureCraft(false, recipeId, '재료가 부족합니다.'));
+    socket.write(
+      PACKET.S2CFurnitureCraft(false, recipeId, '재료가 부족합니다.'),
+    );
     return;
   }
 
@@ -91,13 +99,28 @@ export const furnitureCraftHandler = async (socket, packetData) => {
   try {
     await redisClient.del(redisKey);
     for (let i = 0; i < 25; i++) {
-      await redisClient.hset(redisKey, i.toString(), JSON.stringify(newInventory[i]));
-      slots.push(PAYLOAD_DATA.InventorySlot(i, newInventory[i].itemId, newInventory[i].stack));
+      await redisClient.hset(
+        redisKey,
+        i.toString(),
+        JSON.stringify(newInventory[i]),
+      );
+      slots.push(
+        PAYLOAD_DATA.InventorySlot(
+          i,
+          newInventory[i].itemId,
+          newInventory[i].stack,
+        ),
+      );
     }
     // 업데이트된 인벤토리 정보를 클라이언트에 전송
     socket.write(PACKET.S2CInventoryUpdate(slots));
   } catch (error) {
-    socket.emit(new CustomError(ErrorCodes.HANDLER_ERROR, 'redis inventory 업데이트 에러'));
+    socket.emit(
+      new CustomError(
+        ErrorCodes.HANDLER_ERROR,
+        'redis inventory 업데이트 에러',
+      ),
+    );
     return;
   }
 

@@ -39,7 +39,6 @@ class User {
       console.log('클라이언트와 연결이 끊어졌습니다.');
 
       onEnd(this.socket)();
-
       this.socket.destroy(); // 서버에서 소켓 종료
     }
   };

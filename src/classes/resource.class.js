@@ -31,7 +31,10 @@ class Resource {
     return this.resourceData.resource_respawn * 1000;
   }
   getAngle(pickSpeed) {
-    return createRandNum(30, 290 - (pickSpeed<30? pickSpeed : 30 +  pickSpeed * 0.3));
+    return createRandNum(
+      30,
+      290 - (pickSpeed < 30 ? pickSpeed : 30 + pickSpeed * 0.3),
+    );
   }
   getType() {
     if (this.resourceData.resource_type == 'Tree') {
@@ -46,7 +49,6 @@ class Resource {
   resetDurability() {
     return (this.durability = this.resourceData.resource_durability);
   }
-
 
   dropItem() {
     let sum = 0;
