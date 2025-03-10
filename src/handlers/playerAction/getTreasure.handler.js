@@ -13,7 +13,7 @@ const getTreasureHandler = async (socket, packetData) => {
   sector.hasChest = false;
 
   const dropItem = sector.resources[1].dropItem(); // 아이템 뭐 줄지 골라야해
-  
+
   try {
     const slotIdx = await addItemToInventory(socket, player_id, dropItem);
     console.log(`아이템이 인벤토리 ${slotIdx}번 슬롯에 저장되었습니다.`);

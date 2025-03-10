@@ -1,7 +1,11 @@
 // redisSession.class.js
 import redisClient from '../../utils/redis/redis.config.js';
 import chalk from 'chalk';
-import { getUserSessions, getPlayerSession, getPartySessions } from '../../session/sessions.js';
+import {
+  getUserSessions,
+  getPlayerSession,
+  getPartySessions,
+} from '../../session/sessions.js';
 import { formatDate } from '../../utils/dateFormatter.js';
 
 class RedisSession {
@@ -27,7 +31,9 @@ class RedisSession {
     };
     // 단일 객체로 저장하여 이후 호출 시 덮어씌움
     await redisClient.hset(key, 'user', JSON.stringify(userData));
-    console.log(chalk.green(`[Redis Log] userSession이 '${key}'에 저장(갱신)되었습니다.`));
+    console.log(
+      chalk.green(`[Redis Log] userSession이 '${key}'에 저장(갱신)되었습니다.`),
+    );
   }
 
   /**
@@ -67,7 +73,11 @@ class RedisSession {
     };
     // 단일 객체로 저장하여 누적하지 않고 갱신
     await redisClient.hset(key, 'player', JSON.stringify(playerData));
-    console.log(chalk.green(`[Redis Log] playerSession이 '${key}'에 저장(갱신)되었습니다.`));
+    console.log(
+      chalk.green(
+        `[Redis Log] playerSession이 '${key}'에 저장(갱신)되었습니다.`,
+      ),
+    );
   }
 
   /**
@@ -108,7 +118,11 @@ class RedisSession {
     };
     // 단일 객체로 저장하여 이후 호출 시 덮어씌우도록 처리
     await redisClient.hset(key, 'party', JSON.stringify(partyObj));
-    console.log(chalk.green(`[Redis Log] partySession이 '${key}'에 저장(갱신)되었습니다.`));
+    console.log(
+      chalk.green(
+        `[Redis Log] partySession이 '${key}'에 저장(갱신)되었습니다.`,
+      ),
+    );
   }
 
   /**
@@ -128,7 +142,9 @@ class RedisSession {
   async removeFullSession(userId) {
     const key = `fullSession:${userId}`;
     await redisClient.del(key);
-    console.log(chalk.green(`[Redis Log] 모든 세션이 삭제되었습니다. : ${userId}`));
+    console.log(
+      chalk.green(`[Redis Log] 모든 세션이 삭제되었습니다. : ${userId}`),
+    );
   }
 }
 

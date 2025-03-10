@@ -1,5 +1,9 @@
 import UserSession from '../../classes/session/userSession.class.js';
-import { findPlayerByUserId, findUserByEmail, updateLastLogin } from '../../db/user/user.db.js';
+import {
+  findPlayerByUserId,
+  findUserByEmail,
+  updateLastLogin,
+} from '../../db/user/user.db.js';
 import { getPlayerSession, getUserSessions } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
@@ -46,7 +50,10 @@ const loginHandler = async (socket, packetData) => {
     const sessionExists = await redisClient.exists(redisKey);
     if (sessionExists) {
       // 이미 존재하는 세션에서 플레이어 정보 가져오기
-      const existingPlayerSessionStr = await redisClient.hget(redisKey, 'player');
+      const existingPlayerSessionStr = await redisClient.hget(
+        redisKey,
+        'player',
+      );
       if (existingPlayerSessionStr) {
         const existingPlayerSession = JSON.parse(existingPlayerSessionStr);
         // 현재 로그인하려는 플레이어와 일치하는 경우 중복 로그인으로 간주

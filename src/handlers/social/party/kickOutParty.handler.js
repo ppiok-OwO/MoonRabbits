@@ -15,13 +15,12 @@ export const kickOutPartyHandler = (socket, packetData) => {
     const partySession = getPartySessions();
     const party = partySession.getParty(partyId);
     if (!party) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.PARTY_NOT_FOUND,
-          '파티 정보를 찾을 수 없습니다.',
-        ),
+      const packet = PACKET.S2CChat(
+        0,
+        '파티 정보를 찾을 수 없습니다.',
+        'System',
       );
+      return socket.write(packet);
     }
     const members = party.getAllMembers();
 
@@ -30,23 +29,21 @@ export const kickOutPartyHandler = (socket, packetData) => {
     // 파티장이 맞는지 검증
     const player = playerSession.getPlayer(socket);
     if (!player) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.USER_NOT_FOUND,
-          '플레이어 정보를 찾을 수 없습니다.',
-        ),
+      const packet = PACKET.S2CChat(
+        0,
+        '플레이어 정보를 찾을 수 없습니다.',
+        'System',
       );
+      return socket.write(packet);
     }
     const partyLeader = party.getPartyLeader();
     if (player !== partyLeader) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.HANDLER_ERROR,
-          '파티원 퇴출 권한을 가지고 있지 않습니다.',
-        ),
+      const packet = PACKET.S2CChat(
+        0,
+        '파티원 퇴출 권한을 가지고 있지 않습니다.',
+        'System',
       );
+      return socket.write(packet);
     }
 
     // 퇴출시키려는 멤버가 파티에 존재하는가?
@@ -59,13 +56,12 @@ export const kickOutPartyHandler = (socket, packetData) => {
       }
     }
     if (!member) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.HANDLER_ERROR,
-          '파티에 소속되지 않은 플레이어입니다.',
-        ),
+      const packet = PACKET.S2CChat(
+        0,
+        '파티에 소속되지 않은 플레이어입니다.',
+        'System',
       );
+      return socket.write(packet);
     }
 
     // 멤버 퇴출
