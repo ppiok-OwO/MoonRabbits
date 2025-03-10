@@ -186,6 +186,9 @@ const PAYLOAD_DATA = {
   HousingInfo: (itemId_int32, dataType_int32, transform_TransformInfo) => {
     return { itemId: itemId_int32, dataType: dataType_int32, transform: transform_TransformInfo };
   },
+  MonsterInfo: (id_int32, x_float, z_float) => {
+    return { id: id_int32, x: x_float, z: z_float };
+  },
 };
 
 export default PAYLOAD_DATA;

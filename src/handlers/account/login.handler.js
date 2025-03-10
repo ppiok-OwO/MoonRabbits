@@ -65,6 +65,7 @@ const loginHandler = async (socket, packetData) => {
     // 중복 로그인 방지
     // 4. Redis에 중복 로그인 체크
     const redisKey = `fullSession:${userData.userId}`;
+    await redisClient.del(redisKey);
     const sessionExists = await redisClient.exists(redisKey);
     if (sessionExists) {
       // 이미 존재하는 세션에서 플레이어 정보 가져오기
