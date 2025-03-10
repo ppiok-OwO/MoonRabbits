@@ -74,7 +74,8 @@ class Sector {
         }
       }
 
-      console.log(monsterInfos);
+      //console.log(monsterInfos);
+      if (monsterInfos.length === 0) return;
 
       const monsterBatchPacket = PACKET.S2CMonsterBatchLocation(
         monsterInfos.length,
