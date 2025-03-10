@@ -122,6 +122,7 @@ export const config = {
     S2CDetectedPlayer: PACKET_ID.S2CDetectedPlayer,
     C2SMissingPlayer: PACKET_ID.C2SMissingPlayer,
     S2CMissingPlayer: PACKET_ID.S2CMissingPlayer,
+    S2CMonsterBatchLocation: PACKET_ID.S2CMonsterBatchLocation,
 
     C2SResourcesList: PACKET_ID.C2SResourcesList,
     S2CResourcesList: PACKET_ID.S2CResourcesList,

@@ -215,6 +215,9 @@ const PAYLOAD_DATA = {
       transform: transform_TransformInfo,
     };
   },
+  MonsterInfo: (id_int32, x_float, z_float) => {
+    return { id: id_int32, x: x_float, z: z_float };
+  },
 };
 
 export default PAYLOAD_DATA;

@@ -81,6 +81,7 @@ enum MsgId {
   S2C_DETECTED_PLAYER=123;
   C2S_MISSING_PLAYER=124;
   S2C_MISSING_PLAYER=125;
+  S2C_MONSTER_BATCH_LOCATION=126;
 
   C2S_RESOURCES_LIST=141;
   S2C_RESOURCES_LIST=142;
@@ -543,6 +544,10 @@ message C2SGetInventorySlotByItemId {
 message S2CGetInventorySlotByItemId {
   repeated InventorySlot slots = 1;
 }
+message S2CMonsterBatchLocation {
+  int32 count = 1;
+  repeated MonsterInfo monsters = 2;
+}
 
 /* 구조체 */
 message PlayerInfo {
@@ -691,4 +696,10 @@ message HousingInfo {
   int32 itemId = 1;
   int32 dataType = 2;
   TransformInfo transform = 3;
+}
+
+message  MonsterInfo {
+  int32 id = 1;
+  float x = 2;
+  float z = 3;
 }
