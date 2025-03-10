@@ -72,6 +72,7 @@ const loginHandler = async (socket, packetData) => {
         const failResponse = PACKET.S2CLogin(isSuccess, msg);
         return socket.write(failResponse);
       }
+      await redisClient.del(redisKey);
     }
 
     // 로그인 성공 시, 사용자의 캐릭터 정보를 가져옴
@@ -89,7 +90,8 @@ const loginHandler = async (socket, packetData) => {
         userId: userData.userId,
         // 캐릭터가 없다면 빈 문자열이나 null, 캐릭터가 있으면 해당 정보를 저장
         nickname: findPlayer && findPlayer.nickname ? findPlayer.nickname : '',
-        classCode: findPlayer && findPlayer.classCode ? findPlayer.classCode : '',
+        classCode:
+          findPlayer && findPlayer.classCode ? findPlayer.classCode : '',
       });
       //console.log('----- 업데이트된 userSession ----- \n', user);
     }
@@ -113,7 +115,10 @@ const loginHandler = async (socket, packetData) => {
       ${error}
       `,
     );
-    socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'loginHandler 에러'));
+    socket.emit(
+      'error',
+      new CustomError(ErrorCodes.HANDLER_ERROR, 'loginHandler 에러'),
+    );
   }
 };
 
