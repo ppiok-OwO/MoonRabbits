@@ -22,10 +22,7 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
     if (!player) {
       return socket.emit(
         'error',
-        new CustomError(
-          ErrorCodes.USER_NOT_FOUND,
-          '플레이어 정보를 찾을 수 없습니다.',
-        ),
+        new CustomError(ErrorCodes.USER_NOT_FOUND, '플레이어 정보를 찾을 수 없습니다.'),
       );
     }
 
@@ -35,10 +32,7 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
       player.setPosition(transform);
     } else {
       // PathValidator 사용하여 가장 가까운 경로 포인트 찾기
-      const validationResult = await PathValidator.validatePosition(
-        path,
-        transform,
-      );
+      const validationResult = await PathValidator.validatePosition(path, transform);
 
       const latency = player.user.getLatency() / 1000;
       const predictedPos = predictPosition(socket, player, transform, latency);
@@ -70,7 +64,7 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
         return;
       } else {
         // 오차 범위를 벗어나지 않았으면 추측항법으로 예측한 위치를 전달
-        const packet = PACKET.S2CPlayerLocation(player.id, predictedPos, true);
+        const packet = PACKET.S2CPlayerLocation(player.id, transform, true);
         const sectorCode = player.getSectorId();
         if (sectorCode) {
           // 만약 던전이면
@@ -101,17 +95,12 @@ function predictPosition(socket, player, transform, latency) {
 
     // 속도 벡터 크기(속력) 계산 및 검증
     const playerSpeed = player.getMoveSpeed();
-    let magnitude = Math.sqrt(
-      velocity.posX ** 2 + velocity.posY ** 2 + velocity.posZ ** 2,
-    );
+    let magnitude = Math.sqrt(velocity.posX ** 2 + velocity.posY ** 2 + velocity.posZ ** 2);
     if (magnitude > playerSpeed) {
       magnitude = playerSpeed;
       return socket.emit(
         'error',
-        new CustomError(
-          ErrorCodes.INVALID_SPEED,
-          '플레이어의 이동 속도가 올바르지 않습니다.',
-        ),
+        new CustomError(ErrorCodes.INVALID_SPEED, '플레이어의 이동 속도가 올바르지 않습니다.'),
       );
     }
 

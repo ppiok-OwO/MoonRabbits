@@ -75,6 +75,26 @@ const loginHandler = async (socket, packetData) => {
           const isSuccess = false;
           const msg = '중복 로그인 감지: 이미 로그인되어 있습니다.';
 
+          await redisClient.del(redisKey);
+
+          const playerSessionManager = getPlayerSession();
+          const existingSocket = playerSessionManager.getSocketByNickname(
+            existingPlayerSession.nickname,
+          );
+
+          const existingPlayer = playerSessionManager.getPlayer(existingSocket);
+          const existingSocket_playerIdx = existingPlayer ? +existingPlayer.id : null;
+          if (existingSocket) {
+            const disconnectMsg = PACKET.S2CLogin(
+              false,
+              '다른 기기에서 로그인되어 기존 연결이 종료되었습니다.',
+            );
+            const deletePlayerCharacter = PACKET.S2CDespawn(existingSocket_playerIdx);
+            existingSocket.write(disconnectMsg);
+            existingSocket.write(deletePlayerCharacter);
+            existingSocket.destroy();
+          }
+
           const failResponse = PACKET.S2CLogin(isSuccess, msg);
           return socket.write(failResponse);
         }

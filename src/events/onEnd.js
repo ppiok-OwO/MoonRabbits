@@ -15,7 +15,7 @@ export const onEnd = (socket) => async () => {
       // const fullSessionKey = `fullSession:${player_id}`;
 
       const player = getPlayerSession().getPlayer(socket);
-      // if (player === undefined) return;
+      if (player === undefined) return;
       if (player.isCrafting) {
         console.error('\x1b[31m제작중 종료 발생, 소모한 재료 복구 실행\x1b[0m');
         // redis 인벤토리 가져옴

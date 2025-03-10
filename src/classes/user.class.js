@@ -23,8 +23,8 @@ class User {
   // 레이턴시
   ping() {
     const now = Date.now();
-    const date = new Date();
-    console.log('ping : ', formatDate(date));
+    // const date = new Date();
+    // console.log('ping : ', formatDate(date));
     this.socket.write(makePingPacket(now));
   }
 
