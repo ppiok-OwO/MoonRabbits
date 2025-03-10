@@ -65,7 +65,6 @@ const loginHandler = async (socket, packetData) => {
     // 중복 로그인 방지
     // 4. Redis에 중복 로그인 체크
     const redisKey = `fullSession:${userData.userId}`;
-    await redisClient.del(redisKey);
     const sessionExists = await redisClient.exists(redisKey);
     if (sessionExists) {
       // 이미 존재하는 세션에서 플레이어 정보 가져오기
@@ -82,7 +81,7 @@ const loginHandler = async (socket, packetData) => {
             existingPlayerSession.nickname,
           );
           if (!existingSocket) {
-            redisClient.del(redisKey);
+            await redisClient.del(redisKey);
             const failResponse = PACKET.S2CLogin(isSuccess, msg);
             return socket.write(failResponse);
           }
@@ -99,6 +98,8 @@ const loginHandler = async (socket, packetData) => {
             existingSocket.write(deletePlayerCharacter);
             return existingSocket.destroy();
           }
+          const failResponse = PACKET.S2CLogin(isSuccess, msg);
+          return socket.write(failResponse);
         }
       } else {
         // 사용자 세션은 존재하지만 player 정보가 없는 경우에도 중복 로그인으로 처리 가능
@@ -109,8 +110,6 @@ const loginHandler = async (socket, packetData) => {
         return socket.write(failResponse);
       }
     }
-
-    await redisClient.del(redisKey);
 
     // 로그인 성공 시, 사용자의 캐릭터 정보를 가져옴
     const isSuccess = true;

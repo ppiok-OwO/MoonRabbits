@@ -118,7 +118,7 @@ class RedisSession {
    */
   async updatePing(socket, pingValue) {
     try {
-      const user = socket.user;
+      const user = socket.id;
       const date = new Date();
       if (!user || !user.userId) {
         console.error(chalk.red(`[updatePing Error] user 정보가 없음. socket.id: ${socket.id}`));

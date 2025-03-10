@@ -37,12 +37,11 @@ export const onEnd = (socket) => async () => {
           console.error('복구중 에러 :', error);
         }
       } else {
-        await deleteUserSession(socket);
       }
 
       await updateInventory(player_id);
       await redisClient.expire(inventoryKey, 1200);
-      // await redisClient.expire(fullSessionKey, 1200);
+
       console.log('인벤토리 DB 저장 완료');
       console.log('Inventory TTL 적용');
 
