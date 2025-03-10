@@ -80,6 +80,11 @@ const loginHandler = async (socket, packetData) => {
           const existingSocket = playerSessionManager.getSocketByNickname(
             existingPlayerSession.nickname,
           );
+          if (!existingSocket) {
+            redisClient.del(redisKey);
+            const failResponse = PACKET.S2CLogin(isSuccess, msg);
+            return socket.write(failResponse);
+          }
 
           const existingPlayer = playerSessionManager.getPlayer(existingSocket);
           const existingSocket_playerIdx = existingPlayer ? +existingPlayer.id : null;
@@ -91,23 +96,20 @@ const loginHandler = async (socket, packetData) => {
             const deletePlayerCharacter = PACKET.S2CDespawn(existingSocket_playerIdx);
             existingSocket.write(disconnectMsg);
             existingSocket.write(deletePlayerCharacter);
-            existingSocket.destroy();
+            return existingSocket.destroy();
           }
-
-          const failResponse = PACKET.S2CLogin(isSuccess, msg);
-          return socket.write(failResponse);
         }
       } else {
         // 사용자 세션은 존재하지만 player 정보가 없는 경우에도 중복 로그인으로 처리 가능
         const isSuccess = false;
         const msg = '중복 로그인 감지: 이미 로그인되어 있습니다.';
 
-        await redisClient.del(redisKey);
-
         const failResponse = PACKET.S2CLogin(isSuccess, msg);
         return socket.write(failResponse);
       }
     }
+
+    await redisClient.del(redisKey);
 
     // 로그인 성공 시, 사용자의 캐릭터 정보를 가져옴
     const isSuccess = true;

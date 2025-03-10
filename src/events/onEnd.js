@@ -15,7 +15,8 @@ export const onEnd = (socket) => async () => {
       // const fullSessionKey = `fullSession:${player_id}`;
 
       const player = getPlayerSession().getPlayer(socket);
-      if (player.isCrafting) {
+
+      if (player && player.isCrafting) {
         console.error('\x1b[31m제작중 종료 발생, 소모한 재료 복구 실행\x1b[0m');
         // redis 인벤토리 가져옴
         const redisKey = `inventory:${player_id}`;
@@ -35,6 +36,8 @@ export const onEnd = (socket) => async () => {
         } catch (error) {
           console.error('복구중 에러 :', error);
         }
+      } else {
+        await deleteUserSession(socket);
       }
 
       await updateInventory(player_id);
@@ -43,39 +46,28 @@ export const onEnd = (socket) => async () => {
       console.log('인벤토리 DB 저장 완료');
       console.log('Inventory TTL 적용');
 
-      const userSessionManager = getUserSessions();
-
-      // 1. userSession에서 해당 소켓에 대한 사용자 세션 삭제
-      const user = userSessionManager.getUser(socket);
-      if (user) {
-        userSessionManager.removeUser(socket);
-        console.log(chalk.green(`[onEnd] userSession에서 삭제된 socket ID : ${socket.id}`));
-        // Redis에 저장된 전체 세션(fullSession:{userId})도 삭제
-        const redisSession = new RedisSession();
-        await redisSession.removeFullSession(user.userId);
-        console.log(chalk.green(`[onEnd] Redis에 저장된 fullSession:${user.userId} 삭제됨`));
-      } else {
-        console.log(chalk.yellow(`[onEnd] userSession에서 찾을 수 없습니다. : ${socket.id}`));
-      }
+      await deleteUserSession(socket);
     } else {
-      const userSessionManager = getUserSessions();
-
-      // 1. userSession에서 해당 소켓에 대한 사용자 세션 삭제
-      const user = userSessionManager.getUser(socket);
-      if (user) {
-        userSessionManager.removeUser(socket);
-        console.log(chalk.green(`[onEnd] userSession에서 삭제된 socket ID : ${socket.id}`));
-        // Redis에 저장된 전체 세션(fullSession:{userId})도 삭제
-        const redisSession = new RedisSession();
-        await redisSession.removeFullSession(user.userId);
-        console.log(chalk.green(`[onEnd] Redis에 저장된 fullSession:${user.userId} 삭제됨`));
-      } else {
-        console.log(chalk.yellow(`[onEnd] userSession에서 찾을 수 없습니다. : ${socket.id}`));
-      }
+      await deleteUserSession(socket);
     }
   } catch (error) {
     console.error(error);
   }
 };
+
+async function deleteUserSession(socket) {
+  const userSessionManager = getUserSessions();
+  const user = userSessionManager.getUser(socket);
+  if (user) {
+    userSessionManager.removeUser(socket);
+    console.log(chalk.green(`[onEnd] userSession에서 삭제된 socket ID : ${socket.id}`));
+    // Redis에 저장된 전체 세션(fullSession:{userId})도 삭제
+    const redisSession = new RedisSession();
+    await redisSession.removeFullSession(socket.user.userId);
+    console.log(chalk.green(`[onEnd] Redis에 저장된 fullSession:${user.userId} 삭제됨`));
+  } else {
+    console.log(chalk.yellow(`[onEnd] userSession에서 찾을 수 없습니다. : ${socket.id}`));
+  }
+}
 
 export default onEnd;
