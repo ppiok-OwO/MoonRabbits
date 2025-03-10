@@ -353,6 +353,7 @@ class Monster {
   // 클라이언트로부터 충돌 패킷 처리 함수
   handleCollisionPacket(data) {
     // 충돌 시 공격 시작 (이동 중지 2초)
+    // null 체크
     this.startAttack(this.targetPlayer.player);
 
     // 타겟 플레이어 설정 (이미 설정되어 있을 수 있음)
