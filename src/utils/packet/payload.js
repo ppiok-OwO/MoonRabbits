@@ -23,11 +23,13 @@ const PAYLOAD = {
     targetSector_int32,
     players_PlayerInfo_repeated,
     traps_TrapInfo_repeated,
+    hasChest_bool,
   ) => {
     return {
       targetSector: targetSector_int32,
       players: players_PlayerInfo_repeated,
       traps: traps_TrapInfo_repeated,
+      hasChest: hasChest_bool,
     };
   },
   S2CEmote: (playerId_int32, animCode_int32) => {
@@ -45,9 +47,6 @@ const PAYLOAD = {
   },
   S2CDespawn: (playerId_int32) => {
     return { playerId: playerId_int32 };
-  },
-  S2CPlayerMove: () => {
-    return {};
   },
   S2CPlayerLocation: (
     playerId_int32,
@@ -71,6 +70,27 @@ const PAYLOAD = {
   },
   S2CInventoryUpdate: (slots_InventorySlot_repeated) => {
     return { slots: slots_InventorySlot_repeated };
+  },
+  S2CHousingSave: (status_string, msg_string) => {
+    return { status: status_string, msg: msg_string };
+  },
+  S2CHousingLoad: (
+    status_string,
+    msg_string,
+    housingInfo_HousingInfo_repeated,
+  ) => {
+    return {
+      status: status_string,
+      msg: msg_string,
+      housingInfo: housingInfo_HousingInfo_repeated,
+    };
+  },
+  S2CFurnitureCraft: (isSuccess_bool, msg_string, recipeId_int32) => {
+    return {
+      isSuccess: isSuccess_bool,
+      msg: msg_string,
+      recipeId: recipeId_int32,
+    };
   },
   S2CCreateParty: (
     partyId_string,
@@ -204,6 +224,12 @@ const PAYLOAD = {
       quantity: quantity_int32,
     };
   },
+  S2COpenChest: (playerId_int32, openTimer_int32) => {
+    return { playerId: playerId_int32, openTimer: openTimer_int32 };
+  },
+  S2CRegenChest: (sectorCode_int32) => {
+    return { sectorCode: sectorCode_int32 };
+  },
   S2CRecall: (playerId_int32, recallTimer_int32) => {
     return { playerId: playerId_int32, recallTimer: recallTimer_int32 };
   },
@@ -258,15 +284,21 @@ const PAYLOAD = {
   S2CInvestPoint: (statInfo_StatInfo) => {
     return { statInfo: statInfo_StatInfo };
   },
-  S2CCraft: (craftedItemId_int32, count_int32, slot_int32) => {
+  S2CCraftStart: (isSuccess_bool, recipeId_int32, msg_string) => {
     return {
-      craftedItemId: craftedItemId_int32,
-      count: count_int32,
-      slot: slot_int32,
+      isSuccess: isSuccess_bool,
+      recipeId: recipeId_int32,
+      msg: msg_string,
     };
+  },
+  S2CCraftEnd: (isSuccess_bool, msg_string) => {
+    return { isSuccess: isSuccess_bool, msg: msg_string };
   },
   S2CPing: (timestamp_int64) => {
     return { timestamp: timestamp_int64 };
+  },
+  S2CGetInventorySlotByItemId: (slots_InventorySlot_repeated) => {
+    return { slots: slots_InventorySlot_repeated };
   },
 };
 

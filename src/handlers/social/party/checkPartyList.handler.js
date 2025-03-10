@@ -13,13 +13,13 @@ export const chceckPartyListHandler = (socket, packetData) => {
     const playerSession = getPlayerSession();
     const player = playerSession.getPlayer(socket);
     if (!player) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.USER_NOT_FOUND,
-          '플레이어 정보를 찾을 수 없습니다.',
-        ),
+      const packet = PACKET.S2CChat(
+        0,
+        '플레이어 정보를 찾을 수 없습니다.',
+        'System',
       );
+
+      return socket.write(packet);
     }
 
     // partySession에서 인원이 1 이상 5미만인 파티를 20개 검색
@@ -32,13 +32,13 @@ export const chceckPartyListHandler = (socket, packetData) => {
       if (memberCount >= 1 && memberCount < 5) {
         const partyInfo = party[1].getPartyInfo();
         if (!party[1].getPartyInfo) {
-          return socket.emit(
-            'error',
-            new CustomError(
-              ErrorCodes.PARTY_NOT_FOUND,
-              '파티 조회 중 오류가 발생했습니다.',
-            ),
+          const packet = PACKET.S2CChat(
+            0,
+            '파티 조회 중 오류가 발생했습니다.',
+            'System',
           );
+
+          return newMember.user.getSocket().write(packet);
         }
         partyInfos.push(partyInfo);
 

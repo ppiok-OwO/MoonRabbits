@@ -7,12 +7,14 @@ import PACKET from '../../utils/packet/packet.js';
 import playerSpawnNotificationHandler from './playerSpawnNotification.handler.js';
 import { getGameAssets } from '../../init/assets.js';
 import TransformInfo from '../../classes/transformInfo.class.js';
+import RedisSession from '../../classes/session/redisSession.class.js';
 import { config } from '../../config/config.js';
 
-const moveSectorHandler = (socket, packetData) => {
+const moveSectorHandler = async (socket, packetData) => {
   // [1] 패킷 데이터에서 이동할 섹터코드 꺼내고, 내 플레이어 정보와 비교
   const { targetSector } = packetData;
   const player = getPlayerSession().getPlayer(socket);
+  const redisSession = new RedisSession();
 
   if (targetSector === player.getSectorId()) {
     const packet = PACKET.S2CChat(
@@ -80,11 +82,21 @@ const moveSectorHandler = (socket, packetData) => {
     for (const player of newSector.getAllPlayer().values()) {
       players.push(player.getPlayerInfo());
     }
-    // [5-1] 이동할 섹터가 마을이 아니면, 설치돼있는 덫 현황 가져옴
+    // [5-1] 이동할 섹터가 마을이 아니면, 설치돼있는 덫과 보물상자 현황 가져옴
     const traps = newSector.sectorCode != 100 ? newSector.getAllTraps() : [];
 
+    // [5-2] Redis에 이동한 setorCode 저장
+    await redisSession.saveToRedisPlayerSession(socket);
+
     // [6] 준비한 데이터 모아서 패킷 전송 (나에게 다른 플레이어 및 설치된 덫들 보여주기 위함)
-    socket.write(PACKET.S2CMoveSector(newSector.sectorCode, players, traps));
+    socket.write(
+      PACKET.S2CMoveSector(
+        newSector.sectorCode,
+        players,
+        traps,
+        newSector.hasChest,
+      ),
+    );
 
     // [7] 이동할 섹터에 있는 유저들에게 내 정보 전송할 예정 (다른 플레이어들에게 나를 보여주기 위함)
     playerSpawnNotificationHandler(socket);

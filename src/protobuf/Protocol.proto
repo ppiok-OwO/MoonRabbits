@@ -48,6 +48,13 @@ enum MsgId {
   C2S_ITEM_MOVE	= 84;
   S2C_INVENTORY_UPDATE = 85;
 
+  C2S_HOUSING_SAVE = 90;
+  S2C_HOUSING_SAVE = 91;
+  C2S_HOUSING_LOAD = 92;
+  S2C_HOUSING_LOAD = 93;
+  C2S_FURNITURE_CRAFT = 94;
+  S2C_FURNITURE_CRAFT = 95;
+
   C2S_CREATE_PARTY=100;
   S2C_CREATE_PARTY=101;
   C2S_INVITE_PARTY=102;
@@ -86,6 +93,11 @@ enum MsgId {
   S2C_GATHERING_DONE=149;
   C2S_GATHERING_ANIMATION_END = 150;
 
+
+  C2S_OPEN_CHEST = 156;
+  S2C_OPEN_CHEST = 157;
+  C2S_GET_TREASURE = 158;
+  S2C_REGEN_CHEST = 159;
   C2S_RECALL = 160;
   S2C_RECALL = 161;
   C2S_THROW_GRENADE = 162;
@@ -158,6 +170,7 @@ message S2CMoveSector{
   int32 targetSector = 1;
   repeated PlayerInfo players = 2;
   repeated TrapInfo traps = 3;
+  bool hasChest = 4;
 }
 
 message C2SEmote{
@@ -250,6 +263,34 @@ message C2SItemMove {
 message S2CInventoryUpdate {
   repeated InventorySlot slots = 1;
 }
+
+message C2SHousingSave {
+  repeated HousingInfo housingInfo = 1;
+}
+
+message S2CHousingSave {
+  string status = 1;
+  string msg = 2;
+}
+
+message C2SHousingLoad {}
+
+message S2CHousingLoad {
+  string status = 1;
+  string msg = 2;
+  repeated HousingInfo housingInfo = 3;
+}
+
+message C2SFurnitureCraft {
+  int32 recipeId = 1;
+}
+
+message S2CFurnitureCraft {
+  bool isSuccess = 1;
+  string msg = 2;
+  int32 recipeId = 3;
+}
+
 message C2SCreateParty{}
 message S2CCreateParty{
   string partyId = 1;
@@ -389,8 +430,17 @@ message S2CGatheringDone{
   int32 quantity = 3;
 }
 
-message C2SGatheringAnimationEnd{
-  
+message C2SGatheringAnimationEnd {}
+
+
+message C2SOpenChest {}
+message S2COpenChest {
+  int32 playerId = 1;
+  int32 openTimer = 2;
+}
+message C2SGetTreasure {}
+message S2CRegenChest {
+  int32 sectorCode = 1;
 }
 
 
@@ -428,6 +478,7 @@ message C2SStun {
   int32 skillType = 1;
   repeated int32 playerIds = 2;
   repeated int32 monsterIds = 3;
+  TrapInfo trap = 4;
 }
 message S2CStun {
   int32 stunTimer = 1;
@@ -470,6 +521,7 @@ message S2CCraftStart{
   int32 recipeId = 2;
   string msg = 3;
 }
+
 message C2SCraftEnd{
   int32 recipeId = 1;
 }
@@ -615,7 +667,8 @@ message MonsterStatus {
 message PartyInfo {
   string partyId = 1;
   int32 leaderId = 2;
-  int32 memberCount = 3;
+  string leaderNickname = 3;
+  int32 memberCount = 4;
 }
 message InventorySlot {
   int32 slotIdx = 1;
@@ -632,4 +685,10 @@ message MaterialInfo{
   int32 materialId = 1;
   int32 count = 2;
   int32 slot = 3;
+}
+
+message HousingInfo {
+  int32 itemId = 1;
+  int32 dataType = 2;
+  TransformInfo transform = 3;
 }

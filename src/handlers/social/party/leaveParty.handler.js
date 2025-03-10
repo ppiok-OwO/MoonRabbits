@@ -14,13 +14,12 @@ export const leavePartyHandler = (socket, packetData) => {
     const partySession = getPartySessions();
     const party = partySession.getParty(partyId);
     if (!party) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.PARTY_NOT_FOUND,
-          '파티 정보를 찾을 수 없습니다.',
-        ),
+      const packet = PACKET.S2CChat(
+        0,
+        '파티 정보를 찾을 수 없습니다.',
+        'System',
       );
+      return socket.write(packet);
     }
     const members = party.getAllMembers();
 
@@ -36,31 +35,27 @@ export const leavePartyHandler = (socket, packetData) => {
     }
 
     if (!member) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.HANDLER_ERROR,
-          '파티에 소속되지 않은 플레이어입니다.',
-        ),
+      const packet = PACKET.S2CChat(
+        0,
+        '파티에 소속되지 않은 플레이어입니다.',
+        'System',
       );
+      return socket.write(packet);
     }
 
     // 소켓으로 구한 플레이어와 비교하기(패킷 유효성 검증)
     const playerSession = getPlayerSession();
     const player = playerSession.getPlayer(socket);
     if (!player) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.USER_NOT_FOUND,
-          '플레이어 정보를 찾을 수 없습니다.',
-        ),
+      const packet = PACKET.S2CChat(
+        0,
+        '플레이어 정보를 찾을 수 없습니다.',
+        'System',
       );
+      return socket.write(packet);
     } else if (player !== member[1]) {
-      return socket.emit(
-        'error',
-        new CustomError(ErrorCodes.USER_NOT_FOUND, '올바르지 않은 요청입니다.'),
-      );
+      const packet = PACKET.S2CChat(0, '올바르지 않은 요청입니다.', 'System');
+      return socket.write(packet);
     }
 
     // 멤버 퇴출

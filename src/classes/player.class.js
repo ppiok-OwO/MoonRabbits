@@ -182,7 +182,7 @@ class Player {
       validTimeStart +
       ((turnTime / 360) *
         (60 +
-          (this.pickSpeed < 30 ? this.pickSpeed : 30 +  this.pickSpeed * 0.3))) /
+          (this.pickSpeed < 30 ? this.pickSpeed : 30 + this.pickSpeed * 0.3))) /
         difficulty;
 
     const serverTime = (Date.now() - this.gatheringStartTime) % turnTime;

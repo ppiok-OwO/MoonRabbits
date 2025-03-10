@@ -16,6 +16,7 @@ class Sector {
     this.players = new Map();
     this.resources = resources;
     this.traps = new Map();
+    this.hasChest = true;
 
     // 업데이트 관련 속성
     this.lastUpdateTime = Date.now();
@@ -333,7 +334,7 @@ class Sector {
       await this.update();
     }, this.updateInterval);
   }
-  setSturnMonster(monsterIds, duration) {
+  setStunMonster(monsterIds, duration) {
     console.log(monsterIds, duration);
     for (let id of monsterIds) {
       this.monsters.get(id).startSturn(duration);

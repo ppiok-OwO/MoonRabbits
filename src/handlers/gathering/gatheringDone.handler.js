@@ -7,7 +7,7 @@ import { addExpHandler } from '../player/addExp.handler.js';
 import { animationHandler } from '../social/playerAnimation.handler.js';
 import { addItemToInventory } from '../player/inventory/inventoryManager.js';
 import { getGameAssets } from '../../init/assets.js';
-import { startGatheringHandler } from './StartGathering.handler.js';
+import { startGatheringHandler } from './startGathering.handler.js';
 
 export const gatheringDoneHandler = async (socket, packetData) => {
   const player = getPlayerSession().getPlayer(socket);
@@ -53,7 +53,7 @@ export const gatheringDoneHandler = async (socket, packetData) => {
       // 인벤토리 오류 발생 시 클라이언트에 알림 처리 가능
     }
 
-    addExpHandler(socket, {
+    await addExpHandler(socket, {
       count: sector.resources[placedId].getDifficulty(),
     });
   }

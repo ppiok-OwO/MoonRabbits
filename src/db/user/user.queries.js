@@ -34,4 +34,9 @@ export const SQL_QUERIES = {
     'UPDATE Stats SET stamina = ?, pick_speed = ?, move_speed = ?, ability_point = ? WHERE player_id = ?',
   TAKE_RANKING_DATA:
     'SELECT p.player_id, p.nickname, s.exp FROM Players p JOIN Stats s ON p.player_id = s.player_id ORDER BY s.exp DESC',
+  SAVE_HOUSING_DATA:
+    'INSERT INTO Players (item_id, player_id, data_type, posX, posY, posZ, rot) VALUES (?, ?, ?, ?, ?, ?, ?)',
+  LOAD_HOUSING_DATA:
+    'SELECT item_id, data_type, posX, poxY, posZ, rot FROM SaveHousing WHERE player_id = ?',
+  DELETE_OLD_HOUSING_DATA: 'DELETE FROM SaveHousing WHERE player_id = ?',
 };

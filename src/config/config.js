@@ -89,6 +89,13 @@ export const config = {
     C2SItemMove: PACKET_ID.C2SItemMove,
     S2CInventoryUpdate: PACKET_ID.S2CInventoryUpdate,
 
+    C2SHousingSave: PACKET_ID.C2SHousingSave,
+    S2CHousingSave: PACKET_ID.S2CHousingSave,
+    C2SHousingLoad: PACKET_ID.C2SHousingLoad,
+    S2CHousingLoad: PACKET_ID.S2CHousingLoad,
+    C2SFurnitureCraft: PACKET_ID.C2SFurnitureCraft,
+    S2CFurnitureCraft: PACKET_ID.S2CFurnitureCraft,
+
     C2SCreateParty: PACKET_ID.C2SCreateParty,
     S2CCreateParty: PACKET_ID.S2CCreateParty,
     C2SInviteParty: PACKET_ID.C2SInviteParty,
@@ -125,6 +132,11 @@ export const config = {
     S2CGatheringSkillCheck: PACKET_ID.S2CGatheringSkillCheck,
     C2SGatheringDone: PACKET_ID.C2SGatheringDone,
     S2CGatheringDone: PACKET_ID.S2CGatheringDone,
+
+    C2SOpenChest: PACKET_ID.C2SOpenChest,
+    S2COpenChest: PACKET_ID.S2COpenChest,
+    C2SGetTreasure: PACKET_ID.C2SGetTreasure,
+    S2CRegenChest: PACKET_ID.S2CRegenChest,
     C2SGatheringAnimationEnd: PACKET_ID.C2SGatheringAnimationEnd,
     C2SRecall: PACKET_ID.C2SRecall,
     S2CRecall: PACKET_ID.S2CRecall,
@@ -180,6 +192,10 @@ export const config = {
     happy: 111,
     sad: 222,
     greeting: 333,
+  },
+  blacklist: {
+    MAX_REQUESTS_PER_SECOND: 70,
+    MAX_PACKET_SIZE: 1024,
   },
 };
 

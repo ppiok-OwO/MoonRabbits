@@ -16,18 +16,16 @@ export const findUserByEmail = async (email) => {
     console.log(`${chalk.green('[DB Log]')} 사용자를 찾았습니다 : `, rows[0]); // 여기서 user_id 값을 확인
     const user = toCamelCase(rows[0]);
 
-    // updateLastLogin 메서드 추가
-    user.updateLastLogin = async () => {
-      // user.userId를 사용해서 마지막 로그인 시간 업데이트
-      await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_USER_LAST_LOGIN, [
-        user.userId,
-      ]);
-    };
-
     return user;
   } else {
     return null;
   }
+};
+
+export const updateLastLogin = async (userId) => {
+  await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.UPDATE_USER_LAST_LOGIN, [
+    userId,
+  ]);
 };
 
 // User 생성 시 DB 접근
@@ -379,5 +377,94 @@ export const rankingDataSaveToRedis = async () => {
   } catch (err) {
     console.error('rankingDataSaveToRedis Error : \n', err);
     throw err;
+  }
+};
+
+// 저장하는 과정에서 계속해서 통신
+export const saveHousingData = async (playerId, housingInfos) => {
+  try {
+    // 데이터베이스 커넥션 획득 및 트랜잭션 시작
+    const connection = await pools.PROJECT_R_USER_DB.getConnection();
+    try {
+      await connection.beginTransaction();
+
+      // 플레이어의 기존 가구 배치 데이터 삭제 (중복 삽입 방지)
+      await connection.query(SQL_QUERIES.DELETE_OLD_HOUSING_DATA, [playerId]);
+
+      // housingInfos 배열 내 모든 데이터를 순회하며 삽입
+      for (const housingInfo of housingInfos) {
+        const houseId = uuidv4(); // 각 레코드에 대해 고유 ID 생성
+        const insertQuery = await pools.PROJECT_R_USER_DB.query(
+          SQL_QUERIES.SAVE_HOUSING_DATA,
+        );
+        await connection.query(insertQuery, [
+          houseId,
+          playerId,
+          housingInfo.itemId,
+          housingInfo.dataType,
+          housingInfo.transform.posX,
+          housingInfo.transform.posY, // 스키마 컬럼명이 poxY인 경우 수정 필요
+          housingInfo.transform.posZ,
+          housingInfo.transform.rot,
+        ]);
+      }
+
+      // 트랜잭션 커밋
+      await connection.commit();
+      console.log(
+        `${chalk.green('[DB Log]')} 가구 배치 저장 완료! playerId: ${playerId}`,
+      );
+    } catch (error) {
+      await connection.rollback();
+      console.error(`${chalk.red('[DB Error]')} 가구 배치 저장 실패: ${error}`);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  } catch (error) {
+    console.error(
+      `${chalk.red('[DB Error]')} 데이터베이스 연결 실패: ${error}`,
+    );
+    throw error;
+  }
+};
+
+// 하우징 Scene에 들어가면 호출
+export const loadHousingData = async (playerId) => {
+  try {
+    // 해당 플레이어의 가구 배치 데이터를 조회
+    const [rows] = await pools.PROJECT_R_USER_DB.query(
+      SQL_QUERIES.LOAD_HOUSING_DATA,
+      [playerId],
+    );
+
+    if (!rows || rows.length === 0) {
+      console.log(
+        `${chalk.green('[DB Log]')} 가구 배치 데이터가 없습니다. playerId: ${playerId}`,
+      );
+      return [];
+    }
+
+    // 조회 결과를 HousingInfo 구조에 맞게 매핑
+    const housingInfos = rows.map((row) => ({
+      itemId: row.item_id,
+      dataType: row.data_type,
+      transform: {
+        posX: row.posX,
+        posY: row.poxY, // 스키마 필드명이 poxY인 경우 그대로 사용합니다.
+        posZ: row.posZ,
+        rot: row.rot,
+      },
+    }));
+
+    console.log(
+      `${chalk.green('[DB Log]')} 가구 배치 불러오기 성공! playerId: ${playerId}`,
+    );
+    return housingInfos;
+  } catch (error) {
+    console.error(
+      `${chalk.red('[DB Error]')} 가구 배치 불러오기 실패: ${error}`,
+    );
+    throw error;
   }
 };

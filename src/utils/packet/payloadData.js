@@ -182,10 +182,16 @@ const PAYLOAD_DATA = {
       monsterMoveSpeed: monsterMoveSpeed_float,
     };
   },
-  PartyInfo: (partyId_string, leaderId_int32, memberCount_int32) => {
+  PartyInfo: (
+    partyId_string,
+    leaderId_int32,
+    leaderNickname_string,
+    memberCount_int32,
+  ) => {
     return {
       partyId: partyId_string,
       leaderId: leaderId_int32,
+      leaderNickname: leaderNickname_string,
       memberCount: memberCount_int32,
     };
   },
@@ -200,6 +206,13 @@ const PAYLOAD_DATA = {
       materialId: materialId_int32,
       count: count_int32,
       slot: slot_int32,
+    };
+  },
+  HousingInfo: (itemId_int32, dataType_int32, transform_TransformInfo) => {
+    return {
+      itemId: itemId_int32,
+      dataType: dataType_int32,
+      transform: transform_TransformInfo,
     };
   },
 };

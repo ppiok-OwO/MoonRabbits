@@ -22,8 +22,6 @@ import { leavePartyHandler } from './social/party/leaveParty.handler.js';
 import moveSectorHandler from './transport/moveSectorHandler.js';
 
 import { gatheringSkillCheckHandler } from './gathering/gatheringSkillCheck.handler.js';
-import { startGatheringHandler } from './gathering/startGathering.handler.js';
-import { gatheringDoneHandler } from './gathering/gatheringDone.handler.js';
 import { gatheringAnimationEndHandler } from './gathering/gatheringAnimationEnd.handler.js';
 import { resourceListHandler } from './gathering/resourceList.handler.js';
 import { rejectInviteHandler } from './social/party/rejectInvite.handler.js';
@@ -44,8 +42,13 @@ import { pongHandler } from './pong.handler.js';
 import { portalHandler } from './playerAction/portal.handler.js';
 import { getInventorySlotByItemIdHandler } from './player/inventory/getInventorySlotByItemId.handler.js';
 import rankingHandler from './ranking/ranking.handler.js';
+import openChestHandler from './playerAction/openChest.handler.js';
+import getTreasureHandler from './playerAction/getTreasure.handler.js';
 import { craftEndHandler } from './player/inventory/craftEnd.handler.js';
 import { craftStartHandler } from './player/inventory/craftStart.handler.js';
+import { furnitureCraftHandler } from './housing/furnitureCraft.handler.js';
+import { gatheringDoneHandler } from './gathering/gatheringDone.handler.js';
+import { startGatheringHandler } from './gathering/startGathering.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
@@ -84,6 +87,8 @@ const handlers = {
   [config.packetId.C2SGatheringDone]: gatheringDoneHandler,
   [config.packetId.C2SGatheringAnimationEnd]: gatheringAnimationEndHandler,
 
+  [config.packetId.C2SOpenChest]: openChestHandler,
+  [config.packetId.C2SGetTreasure]: getTreasureHandler,
   [config.packetId.C2SRecall]: tryRecallHandler,
   [config.packetId.C2SThrowGrenade]: throwGrenadeHandler,
   [config.packetId.C2SSetTrap]: setTrapHandler,
@@ -109,6 +114,9 @@ const handlers = {
 
   // 랭킹 관련 핸들러
   [config.packetId.C2SRankingList]: rankingHandler,
+
+  // 하우징 관련 핸들러
+  [config.packetId.C2SFurnitureCraft]: furnitureCraftHandler,
 };
 
 export const getHandlerByPacketId = (packetId) => {

@@ -39,6 +39,7 @@ const PACKET = {
     targetSector_int32,
     players_PlayerInfo_repeated,
     traps_TrapInfo_repeated,
+    hasChest_bool,
   ) => {
     return makePacket(
       PACKET_ID.S2CMoveSector,
@@ -46,6 +47,7 @@ const PACKET = {
         targetSector_int32,
         players_PlayerInfo_repeated,
         traps_TrapInfo_repeated,
+        hasChest_bool,
       ),
     );
   },
@@ -66,9 +68,6 @@ const PACKET = {
   },
   S2CDespawn: (playerId_int32) => {
     return makePacket(PACKET_ID.S2CDespawn, PAYLOAD.S2CDespawn(playerId_int32));
-  },
-  S2CPlayerMove: () => {
-    return makePacket(PACKET_ID.S2CPlayerMove, PAYLOAD.S2CPlayerMove());
   },
   S2CPlayerLocation: (
     playerId_int32,
@@ -106,6 +105,32 @@ const PACKET = {
     return makePacket(
       PACKET_ID.S2CInventoryUpdate,
       PAYLOAD.S2CInventoryUpdate(slots_InventorySlot_repeated),
+    );
+  },
+  S2CHousingSave: (status_string, msg_string) => {
+    return makePacket(
+      PACKET_ID.S2CHousingSave,
+      PAYLOAD.S2CHousingSave(status_string, msg_string),
+    );
+  },
+  S2CHousingLoad: (
+    status_string,
+    msg_string,
+    housingInfo_HousingInfo_repeated,
+  ) => {
+    return makePacket(
+      PACKET_ID.S2CHousingLoad,
+      PAYLOAD.S2CHousingLoad(
+        status_string,
+        msg_string,
+        housingInfo_HousingInfo_repeated,
+      ),
+    );
+  },
+  S2CFurnitureCraft: (isSuccess_bool, msg_string, recipeId_int32) => {
+    return makePacket(
+      PACKET_ID.S2CFurnitureCraft,
+      PAYLOAD.S2CFurnitureCraft(isSuccess_bool, msg_string, recipeId_int32),
     );
   },
   S2CCreateParty: (
@@ -277,6 +302,18 @@ const PACKET = {
       PAYLOAD.S2CGatheringDone(placedId_int32, itemId_int32, quantity_int32),
     );
   },
+  S2COpenChest: (playerId_int32, openTimer_int32) => {
+    return makePacket(
+      PACKET_ID.S2COpenChest,
+      PAYLOAD.S2COpenChest(playerId_int32, openTimer_int32),
+    );
+  },
+  S2CRegenChest: (sectorCode_int32) => {
+    return makePacket(
+      PACKET_ID.S2CRegenChest,
+      PAYLOAD.S2CRegenChest(sectorCode_int32),
+    );
+  },
   S2CRecall: (playerId_int32, recallTimer_int32) => {
     return makePacket(
       PACKET_ID.S2CRecall,
@@ -355,25 +392,26 @@ const PACKET = {
     );
   },
   S2CCraftStart: (isSuccess_bool, recipeId_int32, msg_string) => {
-    return makePacket(PACKET_ID.S2CCraftStart, {
-      isSuccess: isSuccess_bool,
-      recipeId: recipeId_int32,
-      msg: msg_string,
-    });
+    return makePacket(
+      PACKET_ID.S2CCraftStart,
+      PAYLOAD.S2CCraftStart(isSuccess_bool, recipeId_int32, msg_string),
+    );
   },
   S2CCraftEnd: (isSuccess_bool, msg_string) => {
-    return makePacket(PACKET_ID.S2CCraftEnd, {
-      isSuccess: isSuccess_bool,
-      msg: msg_string,
-    });
+    return makePacket(
+      PACKET_ID.S2CCraftEnd,
+      PAYLOAD.S2CCraftEnd(isSuccess_bool, msg_string),
+    );
   },
   S2CPing: (timestamp_int64) => {
     return makePacket(PACKET_ID.S2CPing, PAYLOAD.S2CPing(timestamp_int64));
   },
   S2CGetInventorySlotByItemId: (slots_InventorySlot_repeated) => {
-    return makePacket(PACKET_ID.S2CGetInventorySlotByItemId, {
-      slots: slots_InventorySlot_repeated,
-    });
+    return makePacket(
+      PACKET_ID.S2CGetInventorySlotByItemId,
+      PAYLOAD.S2CGetInventorySlotByItemId(slots_InventorySlot_repeated),
+    );
   },
 };
+
 export default PACKET;
