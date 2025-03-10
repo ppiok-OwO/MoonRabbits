@@ -215,6 +215,13 @@ const PAYLOAD_DATA = {
       transform: transform_TransformInfo,
     };
   },
+  BatchMonsterInfo: (monsterId, transformInfo, state) => {
+    return {
+      monsterId,
+      transform: transformInfo,
+      state,
+    };
+  },
 };
 
 export default PAYLOAD_DATA;

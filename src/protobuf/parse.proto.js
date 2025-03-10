@@ -87,6 +87,7 @@ const MSG_IDS = `
   S2C_DETECTED_PLAYER=123;
   C2S_MISSING_PLAYER=124;
   S2C_MISSING_PLAYER=125;
+  S2CBatchMonsterLocation=126;
 
   C2S_RESOURCES_LIST=141;
   S2C_RESOURCES_LIST=142;
@@ -99,6 +100,11 @@ const MSG_IDS = `
   S2C_GATHERING_DONE=149;
   C2S_GATHERING_ANIMATION_END = 150;
 
+
+  C2S_OPEN_CHEST = 156;
+  S2C_OPEN_CHEST = 157;
+  C2S_GET_TREASURE = 158;
+  S2C_REGEN_CHEST = 159;
   C2S_RECALL = 160;
   S2C_RECALL = 161;
   C2S_THROW_GRENADE = 162;
@@ -171,6 +177,7 @@ message S2CMoveSector{
   int32 targetSector = 1;
   repeated PlayerInfo players = 2;
   repeated TrapInfo traps = 3;
+  bool hasChest = 4;
 }
 
 message C2SEmote{
@@ -430,8 +437,17 @@ message S2CGatheringDone{
   int32 quantity = 3;
 }
 
-message C2SGatheringAnimationEnd{
-  
+message C2SGatheringAnimationEnd {}
+
+
+message C2SOpenChest {}
+message S2COpenChest {
+  int32 playerId = 1;
+  int32 openTimer = 2;
+}
+message C2SGetTreasure {}
+message S2CRegenChest {
+  int32 sectorCode = 1;
 }
 
 
@@ -469,6 +485,7 @@ message C2SStun {
   int32 skillType = 1;
   repeated int32 playerIds = 2;
   repeated int32 monsterIds = 3;
+  TrapInfo trap = 4;
 }
 message S2CStun {
   int32 stunTimer = 1;
@@ -657,7 +674,8 @@ message MonsterStatus {
 message PartyInfo {
   string partyId = 1;
   int32 leaderId = 2;
-  int32 memberCount = 3;
+  string leaderNickname = 3;
+  int32 memberCount = 4;
 }
 message InventorySlot {
   int32 slotIdx = 1;

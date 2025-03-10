@@ -5,6 +5,7 @@ import PACKET from '../utils/packet/packet.js';
 import Monster from './monster.class.js';
 import { getNaveMesh } from '../init/navMeshData.js';
 import { updateDurabilityHandler } from '../handlers/gathering/updateDurability.handler.js';
+import { config } from '../config/config.js';
 
 class Sector {
   constructor(sectorId, sectorCode, resources = []) {
@@ -54,36 +55,71 @@ class Sector {
 
     try {
       const currentTime = Date.now();
-      const packets = [];
 
-      // 몬스터 패킷 생성
+      // 변경된 몬스터 정보만 수집
+      const updatedMonsters = [];
+
       for (const monster of this.monsters.values()) {
-        try {
-          const packet = await monster.createPacket(currentTime);
-          if (packet) {
-            packets.push(packet);
-          }
-        } catch (error) {
-          console.error(
-            `몬스터 패킷 생성 오류 (ID: ${monster.monsterIdx}):`,
-            error,
+        // 위치나 상태가 변경된 몬스터만 추가
+        if (monster.positionChanged || monster.stateChanged) {
+          const transformInfo = PAYLOAD_DATA.TransformInfo(
+            monster.position.x,
+            monster.position.y,
+            monster.position.z,
+            0, // 회전값
           );
+
+          // 몬스터 정보 객체 생성
+          const monsterInfo = {
+            monsterId: monster.monsterIdx,
+            transform: transformInfo,
+            state: {
+              isAttacking: monster.isAttacking,
+              isStunned: monster.isStunned,
+            },
+          };
+
+          updatedMonsters.push(monsterInfo);
+
+          // 플래그 초기화
+          monster.positionChanged = false;
+          monster.stateChanged = false;
         }
       }
 
-      // 생성된 패킷 전송
-      for (const packet of packets) {
-        this.notify(packet);
-      }
+      // 업데이트할 몬스터가 있는 경우에만 패킷 전송
+      if (updatedMonsters.length > 0) {
+        // 네트워크 효율을 위해 배치 크기 조정
+        const batchSize = 15; // 한 패킷에 포함할 최대 몬스터 수
 
-      // 디버깅: 전송된 패킷 수 로깅
-      if (packets.length > 0) {
+        // 배치 단위로 분할
+        for (let i = 0; i < updatedMonsters.length; i += batchSize) {
+          const batch = updatedMonsters.slice(i, i + batchSize);
+
+          // 배치 패킷 생성
+          // 참고: 아래는 새로운 S2CBatchMonsterLocation 패킷을 사용한다고 가정합니다.
+          // 이 패킷 타입이 아직 구현되지 않았다면, 구현해야 합니다.
+          const batchPayload = {
+            count: batch.length,
+            monsters: batch,
+          };
+
+          const batchPacket = makePacket(
+            config.packetId.S2CBatchMonsterLocation, // 새로운 패킷 ID
+            batchPayload,
+          );
+
+          // 패킷 전송
+          this.notify(batchPacket);
+        }
+
+        // 디버깅 정보 (필요시)
         // console.log(
-        //   `${new Date().toISOString()} - 전송된 몬스터 패킷: ${packets.length}개`,
+        //   `${new Date().toISOString()} - 배치 전송된 몬스터: ${updatedMonsters.length}개, 패킷 수: ${Math.ceil(updatedMonsters.length / batchSize)}`
         // );
       }
     } catch (error) {
-      console.error('몬스터 패킷 전송 중 오류 발생:', error);
+      console.error('몬스터 패킷 배치 전송 중 오류 발생:', error);
     }
   }
 
@@ -337,7 +373,7 @@ class Sector {
   setStunMonster(monsterIds, duration) {
     console.log(monsterIds, duration);
     for (let id of monsterIds) {
-      this.monsters.get(id).startSturn(duration);
+      this.monsters.get(id).startStun(duration);
     }
   }
 

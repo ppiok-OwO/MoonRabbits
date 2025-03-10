@@ -67,6 +67,7 @@ export const PACKET_ID = {
   S2CDetectedPlayer: 123,
   C2SMissingPlayer: 124,
   S2CMissingPlayer: 125,
+
   C2SResourcesList: 141,
   S2CResourcesList: 142,
   S2CUpdateDurability: 143,

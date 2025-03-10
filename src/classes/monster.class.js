@@ -51,9 +51,9 @@ class Monster {
     this.attackStartTime = 0; // 공격 시작 시간
 
     // 스턴 관련 속성
-    this.isSturn = false; // 스턴 중인지 여부
-    this.sturnDuration = 2000; // 스턴 지속 시간
-    this.sturnStartTime = 0; // 스턴 시작 시간
+    this.isStunned = false; // 스턴 중인지 여부
+    this.stunnedDuration = 2000; // 스턴 지속 시간
+    this.stunnedStartTime = 0; // 스턴 시작 시간
 
     // 움직임 방향 저장
     this.direction = { x: 0, z: 0 };
@@ -305,11 +305,11 @@ class Monster {
       }
     }
   }
-  startSturn(duration) {
-    if (!this.isSturn) {
-      this.isSturn = true;
-      this.sturnDuration = duration * 1000;
-      this.sturnStartTime = Date.now();
+  startStun(duration) {
+    if (!this.isStunned) {
+      this.isStunned = true;
+      this.stunnedDuration = duration * 1000;
+      this.stunnedStartTime = Date.now();
       this.stateChanged = true;
     }
   }
@@ -323,9 +323,9 @@ class Monster {
   }
 
   // 스턴 종료 함수
-  endSturn() {
-    if (this.isSturn) {
-      this.isSturn = false;
+  endStun() {
+    if (this.isStunned) {
+      this.isStunned = false;
       this.stateChanged = true;
     }
   }
@@ -341,12 +341,12 @@ class Monster {
   }
 
   //스턴 상태 업데이트
-  updateSturnState(currentTime) {
+  updateStunState(currentTime) {
     if (
-      this.isSturn &&
-      currentTime - this.sturnStartTime >= this.sturnDuration
+      this.isStunned &&
+      currentTime - this.stunnedStartTime >= this.stunnedDuration
     ) {
-      this.endSturn();
+      this.endStun();
     }
   }
 
@@ -479,7 +479,7 @@ class Monster {
   // 경로를 따라 이동
   moveAlongPath(deltaTime) {
     // 공격 중이면 이동하지 않음
-    if (this.isAttacking || this.isSturn) {
+    if (this.isAttacking || this.isStunned) {
       return false;
     }
 
@@ -529,7 +529,7 @@ class Monster {
   // 플레이어 추적 관련 로직 업데이트
   async updatePlayerTracking(currentTime) {
     // 공격 중이면 플레이어 추적 로직 건너뜀
-    if (this.isAttacking || this.isSturn) {
+    if (this.isAttacking || this.isStunned) {
       return;
     }
 
@@ -606,19 +606,56 @@ class Monster {
       await this.calculatePath(nearestPlayer.position);
     }
   }
+  async getUpdateInfo(currentTime) {
+    try {
+      // 위치나 상태가 변경된 경우에만 정보 반환
+      if (this.positionChanged || this.stateChanged) {
+        // 기본 정보
+        const updateInfo = {
+          monsterId: this.monsterIdx,
+          position: { ...this.position },
+          state: {
+            isAttacking: this.isAttacking,
+            isStunned: this.isStunned,
+            // 필요한 다른 상태 정보가 있다면 추가
+            direction: { ...this.direction },
+          },
+        };
 
+        // 변경 플래그는 초기화하지 않음 - Sector에서 처리
+        // 이렇게 하면 Sector가 패킷을 전송한 후에 플래그를 초기화할 수 있음
+
+        return updateInfo;
+      }
+
+      // 변경 사항이 없으면 null 반환
+      return null;
+    } catch (error) {
+      console.error(
+        `몬스터 ${this.monsterIdx} 정보 가져오기 중 오류 발생:`,
+        error,
+      );
+      return null;
+    }
+  }
   // 별도 패킷 생성 함수 - 패킷 전송 로직을 업데이트에서 분리
   async createPacket(currentTime) {
+    // 배칭을 위한 정보 가져오기
+    const updateInfo = await this.getUpdateInfo(currentTime);
+
+    // 변경 사항이 없으면 null 반환
+    if (!updateInfo) return null;
+
     try {
-      // 위치 패킷 생성
+      // 기존 방식으로 패킷 생성
       const transformInfo = PAYLOAD_DATA.TransformInfo(
-        this.position.x,
-        this.position.y,
-        this.position.z,
+        updateInfo.position.x,
+        updateInfo.position.y,
+        updateInfo.position.z,
         0,
       );
       const monsterInfo = PAYLOAD.S2CMonsterLocation(
-        this.monsterIdx,
+        updateInfo.monsterId,
         transformInfo,
       );
       const packet = makePacket(
@@ -626,19 +663,9 @@ class Monster {
         monsterInfo,
       );
 
-      // 패킷 전송 시간 기록
-      this.lastPacketSentTime = currentTime;
-
-      // 디버깅 정보 - 위치나 상태가 변경되었을 때만 출력
-      if (this.positionChanged || this.stateChanged) {
-        // console.log(
-        //   `몬스터 ${this.monsterIdx} 업데이트: 위치(${this.position.x.toFixed(2)}, ${this.position.z.toFixed(2)}), 공격중: ${this.isAttacking}, 시간: ${Data.now()}`,
-        // );
-
-        // 패킷 생성 후 변경 상태 초기화
-        this.positionChanged = false;
-        this.stateChanged = false;
-      }
+      // 패킷 전송 후 변경 플래그 초기화
+      this.positionChanged = false;
+      this.stateChanged = false;
 
       return packet;
     } catch (error) {
@@ -659,14 +686,14 @@ class Monster {
 
     // 이전 상태 백업
     const prevIsAttacking = this.isAttacking;
-    const prevIsSturn = this.isSturn;
+    const prevIsStunned = this.isStunned;
     const prevPosition = { ...this.position };
 
     try {
       // 공격 상태 업데이트
       this.updateAttackState(currentTime);
       // 스턴 상태 업데이트
-      this.updateSturnState(currentTime);
+      this.updateStunState(currentTime);
 
       // 공격 상태 변경 감지
       if (prevIsAttacking !== this.isAttacking) {
@@ -674,12 +701,12 @@ class Monster {
       }
 
       // 스턴 상태 변경 감지
-      if (prevIsSturn !== this.isSturn) {
+      if (prevIsStunned !== this.isStunned) {
         this.stateChanged = true;
       }
 
       // 공격 중이 아닐 때만 플레이어 추적 및 이동 로직 실행
-      if (!this.isAttacking || !this.isSturn) {
+      if (!this.isAttacking || !this.isStunned) {
         // 플레이어 추적 로직 업데이트
         await this.updatePlayerTracking(currentTime);
 
