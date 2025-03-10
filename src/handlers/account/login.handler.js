@@ -72,7 +72,6 @@ const loginHandler = async (socket, packetData) => {
         const failResponse = PACKET.S2CLogin(isSuccess, msg);
         return socket.write(failResponse);
       }
-      await redisClient.del(redisKey);
     }
 
     // 로그인 성공 시, 사용자의 캐릭터 정보를 가져옴
