@@ -4,7 +4,7 @@ import { onError } from './onError.js';
 import { onData } from './onData.js';
 import { getUserSessions } from '../session/sessions.js';
 import { getBlacklist } from './blacklist.js';
-export const onConnection = (socket) => {
+export const onConnection = async (socket) => {
   const clientIP = socket.remoteAddress; // 헬스 체크 및 클라이언트 IP 확인
   console.log('클라이언트가 연결되었습니다:', clientIP, socket.remotePort);
 
@@ -13,10 +13,12 @@ export const onConnection = (socket) => {
     socket.destroy(); // 헬스 체크 요청이면 즉시 종료
     return;
   }
-  if (getBlacklist().has(clientIP)) {
+
+  const blacklist = await getBlacklist();
+
+  if (blacklist.has(clientIP)) {
     console.log('잡았다, 요놈!', clientIP);
     socket.destroy(); // 블랙리스트에 올라간 어뷰저의 IP면 즉시 종료
-    socket.destroy();
     return;
   }
 
