@@ -1,9 +1,5 @@
 import UserSession from '../../classes/session/userSession.class.js';
-import {
-  findPlayerByUserId,
-  findUserByEmail,
-  updateLastLogin,
-} from '../../db/user/user.db.js';
+import { findPlayerByUserId, findUserByEmail, updateLastLogin } from '../../db/user/user.db.js';
 import { getPlayerSession, getUserSessions } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
@@ -13,11 +9,32 @@ import bcrypt from 'bcrypt';
 import chalk from 'chalk';
 import redisClient from '../../utils/redis/redis.config.js';
 
-// !!! 패킷 정의 수정으로 S_Login -> S2CLogin 으로 일괄 수정해씀다
+// 서버 재시작 후 한 번만 fullSession 초기화를 실행하기 위한 플래그
+let isFullSessionCleared = false;
+
+const clearFullSession = async () => {
+  try {
+    // Redis에서 fullSession 패턴의 모든 키 검색
+    const keys = await redisClient.keys('fullSession:*');
+    if (keys.length > 0) {
+      // 모든 fullSession 키 삭제
+      await Promise.all(keys.map((key) => redisClient.del(key)));
+      console.log(`Cleared ${keys.length} fullSession keys from Redis.`);
+    }
+  } catch (error) {
+    console.error('Error clearing fullSession keys:', error);
+  }
+};
 
 /* 로그인 Handler */
 const loginHandler = async (socket, packetData) => {
   try {
+    // 서버 시작 후 첫 요청이면 fullSession 초기화 실행
+    // if (!isFullSessionCleared) {
+    //   await clearFullSession();
+    //   isFullSessionCleared = true;
+    // }
+
     const { email, pw } = packetData;
 
     // 로그인 ID로 사용자 검색
@@ -50,10 +67,7 @@ const loginHandler = async (socket, packetData) => {
     const sessionExists = await redisClient.exists(redisKey);
     if (sessionExists) {
       // 이미 존재하는 세션에서 플레이어 정보 가져오기
-      const existingPlayerSessionStr = await redisClient.hget(
-        redisKey,
-        'player',
-      );
+      const existingPlayerSessionStr = await redisClient.hget(redisKey, 'player');
       if (existingPlayerSessionStr) {
         const existingPlayerSession = JSON.parse(existingPlayerSessionStr);
         // 현재 로그인하려는 플레이어와 일치하는 경우 중복 로그인으로 간주
