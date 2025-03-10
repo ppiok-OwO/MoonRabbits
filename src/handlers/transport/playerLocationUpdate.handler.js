@@ -16,10 +16,7 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
     if (!player) {
       return socket.emit(
         'error',
-        new CustomError(
-          ErrorCodes.USER_NOT_FOUND,
-          '플레이어 정보를 찾을 수 없습니다.',
-        ),
+        new CustomError(ErrorCodes.USER_NOT_FOUND, '플레이어 정보를 찾을 수 없습니다.'),
       );
     }
 
@@ -29,10 +26,7 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
       player.setPosition(transform);
     } else {
       // PathValidator 사용하여 가장 가까운 경로 포인트 찾기
-      const validationResult = await PathValidator.validatePosition(
-        path,
-        transform,
-      );
+      const validationResult = await PathValidator.validatePosition(path, transform);
 
       const distance = validateSpeed(transform, player);
 

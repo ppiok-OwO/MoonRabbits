@@ -183,8 +183,7 @@ class Player {
     const validTimeEnd =
       validTimeStart +
       ((turnTime / 360) *
-        (60 +
-          (this.pickSpeed < 30 ? this.pickSpeed : 30 + this.pickSpeed * 0.3))) /
+        (60 + (this.pickSpeed < 30 ? this.pickSpeed : 30 + this.pickSpeed * 0.3))) /
         difficulty;
 
     const serverTime = (Date.now() - this.gatheringStartTime) % turnTime;
@@ -192,10 +191,7 @@ class Player {
     console.log(`20250304: serverTime: ${serverTime}
       validStart: ${validTimeStart} validEnd: ${validTimeEnd}`);
 
-    if (
-      serverTime > validTimeStart - pingTime &&
-      serverTime < validTimeEnd + pingTime
-    ) {
+    if (serverTime > validTimeStart - pingTime && serverTime < validTimeEnd + pingTime) {
       return true;
     }
     //일단 무조건 성공으로 처리.
@@ -208,7 +204,7 @@ class Player {
     if (targetLevel === -1) {
       this.level += 1;
       this.targetExp *= 2;
-      this.abilityPoint += 3;
+      this.abilityPoint += 1;
       return {
         newLevel: this.level,
         newTargetExp: this.targetExp,
@@ -246,17 +242,10 @@ class Player {
 
   _getTargetExpByLevel(level) {
     try {
-      const data = getGameAssets().targetExps.data.find(
-        (target) => target.level === level,
-      );
+      const data = getGameAssets().targetExps.data.find((target) => target.level === level);
       return { targetLevel: data.targetLevel, targetExp: data.target_exp };
     } catch (error) {
-      socket.emit(
-        new CustomError(
-          ErrorCodes.MISSING_FIELDS,
-          `${level}lv 요구경험치 조회 오류`,
-        ),
-      );
+      socket.emit(new CustomError(ErrorCodes.MISSING_FIELDS, `${level}lv 요구경험치 조회 오류`));
     }
   }
 

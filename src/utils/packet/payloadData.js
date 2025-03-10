@@ -25,24 +25,13 @@ const PAYLOAD_DATA = {
     };
   },
   RankingList: (rankingList_PlayerRank_repeated, timestamp_string) => {
-    return {
-      rankingList: rankingList_PlayerRank_repeated,
-      timestamp: timestamp_string,
-    };
+    return { rankingList: rankingList_PlayerRank_repeated, timestamp: timestamp_string };
   },
   TransformInfo: (posX_float, posY_float, posZ_float, rot_float) => {
-    return {
-      posX: posX_float,
-      posY: posY_float,
-      posZ: posZ_float,
-      rot: rot_float,
-    };
+    return { posX: posX_float, posY: posY_float, posZ: posZ_float, rot: rot_float };
   },
   SectorInfo: (sectorId_int32, monsters_MonsterStatus_repeated) => {
-    return {
-      sectorId: sectorId_int32,
-      monsters: monsters_MonsterStatus_repeated,
-    };
+    return { sectorId: sectorId_int32, monsters: monsters_MonsterStatus_repeated };
   },
   PlayerStatus: (
     playerLevel_int32,
@@ -182,18 +171,8 @@ const PAYLOAD_DATA = {
       monsterMoveSpeed: monsterMoveSpeed_float,
     };
   },
-  PartyInfo: (
-    partyId_string,
-    leaderId_int32,
-    leaderNickname_string,
-    memberCount_int32,
-  ) => {
-    return {
-      partyId: partyId_string,
-      leaderId: leaderId_int32,
-      leaderNickname: leaderNickname_string,
-      memberCount: memberCount_int32,
-    };
+  PartyInfo: (partyId_string, leaderId_int32, memberCount_int32) => {
+    return { partyId: partyId_string, leaderId: leaderId_int32, memberCount: memberCount_int32 };
   },
   InventorySlot: (slotIdx_int32, itemId_int32, stack_int32) => {
     return { slotIdx: slotIdx_int32, itemId: itemId_int32, stack: stack_int32 };
@@ -202,18 +181,10 @@ const PAYLOAD_DATA = {
     return { casterId: casterId_int32, pos: pos_Vec3 };
   },
   MaterialInfo: (materialId_int32, count_int32, slot_int32) => {
-    return {
-      materialId: materialId_int32,
-      count: count_int32,
-      slot: slot_int32,
-    };
+    return { materialId: materialId_int32, count: count_int32, slot: slot_int32 };
   },
   HousingInfo: (itemId_int32, dataType_int32, transform_TransformInfo) => {
-    return {
-      itemId: itemId_int32,
-      dataType: dataType_int32,
-      transform: transform_TransformInfo,
-    };
+    return { itemId: itemId_int32, dataType: dataType_int32, transform: transform_TransformInfo };
   },
   MonsterInfo: (id_int32, x_float, z_float) => {
     return { id: id_int32, x: x_float, z: z_float };
