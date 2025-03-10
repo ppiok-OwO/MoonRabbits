@@ -7,10 +7,6 @@ import printPacket from '../utils/log/printPacket.js';
 import { addBlacklist, isBlacklisted } from './blacklist.js';
 
 export const onData = (socket) => {
-  if (!data) {
-    console.log('Data is undefined or null');
-    return;
-  }
   if (!socket.buffer) {
     console.log('socket.buffer is undefined of null');
     return;
@@ -24,6 +20,11 @@ export const onData = (socket) => {
   }, 1000);
 
   return async (data) => {
+    if (!data) {
+      console.log('Data is undefined or null');
+      return;
+    }
+
     const clientIP = socket.remoteAddress;
 
     // 블랙리스트 IP인지 확인 후 차단
@@ -37,7 +38,7 @@ export const onData = (socket) => {
     socket.requestCounter++;
     if (socket.requestCounter > config.blacklist.MAX_REQUESTS_PER_SECOND) {
       console.log(`과도한 요청 감지 (IP: ${clientIP}) -> 블랙리스트 추가`);
-      addBlacklist(clientIP);
+      await addBlacklist(clientIP);
       socket.destroy();
       return;
     }
@@ -56,7 +57,7 @@ export const onData = (socket) => {
         socket.buffer = Buffer.alloc(0); // 버퍼 초기화
         socket.anomalyCounter += 1;
         if (socket.anomalyCounter >= 5) {
-          addBlacklist(socket.remoteAddress);
+          await addBlacklist(socket.remoteAddress);
           socket.destroy(); // 악의적인 패킷이므로 소켓 종료
         }
         return;
@@ -93,7 +94,7 @@ export const onData = (socket) => {
           socket.buffer = Buffer.alloc(0); // 버퍼 초기화
           socket.anomalyCounter += 1;
           if (socket.anomalyCounter >= 5) {
-            addBlacklist(socket.remoteAddress);
+            await addBlacklist(socket.remoteAddress);
             socket.destroy(); // 악의적인 패킷이므로 소켓 종료
           }
           return;
@@ -124,15 +125,16 @@ const decodedPacket = (socket, packetType, packetDataBuffer) => {
   try {
     return getProtoMessages()[packetType].decode(packetDataBuffer);
   } catch (error) {
-    console.log(
-      `패킷 디코딩 실패 (ID: ${packetId}, IP: ${socket.remoteAddress})`,
-    );
+    console.log(`패킷 디코딩 실패 (IP: ${socket.remoteAddress})`);
     socket.buffer = Buffer.alloc(0); // 버퍼 초기화
     socket.anomalyCounter += 1;
+
     if (socket.anomalyCounter >= 5) {
-      addBlacklist(socket.remoteAddress);
-      socket.destroy(); // 악의적인 패킷이므로 소켓 종료
+      addBlacklist(socket.remoteAddress).then(() => {
+        socket.destroy(); // 악의적인 패킷이므로 소켓 종료
+      });
     }
-    return;
+
+    return null;
   }
 };
