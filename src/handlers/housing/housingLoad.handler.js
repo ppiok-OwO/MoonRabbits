@@ -1,7 +1,8 @@
 import chalk from 'chalk';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
-import { loadHousingData } from '../user.db.js';
+import { loadHousingData } from '../../db/user/user.db.js';
+import PACKET from '../../utils/packet/packet.js';
 
 export const housingLoadHandler = async (socket, packetData) => {
   try {
@@ -20,7 +21,7 @@ export const housingLoadHandler = async (socket, packetData) => {
       '가구 배치 불러오기 성공',
       housingInfos,
     );
-    socket.emit(responsePacket);
+    socket.write(responsePacket);
     console.log(
       chalk.green(`[housingLoadHandler] 가구 배치 불러오기 성공 - playerId: ${playerId}`),
     );

@@ -334,25 +334,26 @@ export const rankingDataSaveToRedis = async () => {
 // 저장하는 과정에서 계속해서 통신
 export const saveHousingData = async (playerId, housingInfos) => {
   try {
+    // 한 플레이어의 집을 나타내는 UUID 생성 (플레이어 당 하나의 house_id)
+    const groupHouseId = uuidv4();
+
     // 데이터베이스 커넥션 획득 및 트랜잭션 시작
     const connection = await pools.PROJECT_R_USER_DB.getConnection();
     try {
       await connection.beginTransaction();
 
-      // 플레이어의 기존 가구 배치 데이터 삭제 (중복 삽입 방지)
+      // 해당 플레이어 기존의 가구 배치 데이터 삭제 (중복 삽입 방지)
       await connection.query(SQL_QUERIES.DELETE_OLD_HOUSING_DATA, [playerId]);
 
       // housingInfos 배열 내 모든 데이터를 순회하며 삽입
       for (const housingInfo of housingInfos) {
-        const houseId = uuidv4(); // 각 레코드에 대해 고유 ID 생성
-        const insertQuery = await pools.PROJECT_R_USER_DB.query(SQL_QUERIES.SAVE_HOUSING_DATA);
-        await connection.query(insertQuery, [
-          houseId,
+        await connection.query(SQL_QUERIES.SAVE_HOUSING_DATA, [
+          groupHouseId, // player_id 당 동일한 UUID
           playerId,
           housingInfo.itemId,
           housingInfo.dataType,
           housingInfo.transform.posX,
-          housingInfo.transform.posY, // 스키마 컬럼명이 poxY인 경우 수정 필요
+          housingInfo.transform.posY,
           housingInfo.transform.posZ,
           housingInfo.transform.rot,
         ]);
@@ -391,7 +392,7 @@ export const loadHousingData = async (playerId) => {
       dataType: row.data_type,
       transform: {
         posX: row.posX,
-        posY: row.poxY, // 스키마 필드명이 poxY인 경우 그대로 사용합니다.
+        posY: row.posY,
         posZ: row.posZ,
         rot: row.rot,
       },
