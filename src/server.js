@@ -2,6 +2,7 @@ import net from 'net';
 import initServer from './init/index.js';
 import { onConnection } from './events/onConnection.js';
 import { config } from './config/config.js';
+import { collectMetric } from './utils/log/logToFile.js';
 
 const server = net.createServer(onConnection);
 
@@ -13,30 +14,7 @@ initServer()
       );
       console.log(server.address());
 
-      const logstash = new net.Socket();
-      logstash.connect(5000, "59.8.54.12", () => {
-        console.log("Connected to Logstash");
-      });
-
-      setInterval(() => {
-        const log = {
-          timestamp : new Date().toISOString(),
-          level: "info",
-          message: "User logged in",
-          user: "test"
-        };
-
-        console.log(log);
-        logstash.write(JSON.stringify(log) + "\n");
-      }, 5000);
-
-      logstash.on("end", () => {
-        console.error("Logstash Closed:");
-      });
-
-      logstash.on("error", err => {
-        console.error("Logstash Error:", err);
-      });
+      collectMetric();
     });
   })
   .catch((error) => {
