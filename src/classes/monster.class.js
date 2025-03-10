@@ -607,24 +607,25 @@ class Monster {
     }
   }
 
+  async getUpdateInfo(currenTime) {
+    try {
+      const updateInfo = PAYLOAD_DATA.MonsterInfo(
+        this.monsterIdx,
+        this.position.x,
+        this.position.z,
+      );
+      return updateInfo;
+    } catch (err) {
+      console.error(
+        `몬스터 ${this.monsterIdx} 정보 가져오는 중 오류 발생 ${err}`,
+      );
+    }
+  }
+
   // 별도 패킷 생성 함수 - 패킷 전송 로직을 업데이트에서 분리
   async createPacket(currentTime) {
     try {
-      // 위치 패킷 생성
-      const transformInfo = PAYLOAD_DATA.TransformInfo(
-        this.position.x,
-        this.position.y,
-        this.position.z,
-        0,
-      );
-      const monsterInfo = PAYLOAD.S2CMonsterLocation(
-        this.monsterIdx,
-        transformInfo,
-      );
-      const packet = makePacket(
-        config.packetId.S2CMonsterLocation,
-        monsterInfo,
-      );
+      const monsterInfo = this.getUpdateInfo(currentTime);
 
       // 패킷 전송 시간 기록
       this.lastPacketSentTime = currentTime;
@@ -640,7 +641,7 @@ class Monster {
         this.stateChanged = false;
       }
 
-      return packet;
+      return monsterInfo;
     } catch (error) {
       console.error(`몬스터 ${this.monsterIdx} 패킷 생성 중 오류 발생:`, error);
       return null;

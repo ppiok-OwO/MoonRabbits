@@ -5,6 +5,9 @@ import PACKET from '../utils/packet/packet.js';
 import Monster from './monster.class.js';
 import { getNaveMesh } from '../init/navMeshData.js';
 import { updateDurabilityHandler } from '../handlers/gathering/updateDurability.handler.js';
+import { config } from '../config/config.js';
+import makePacket from '../utils/packet/makePacket.js';
+import PAYLOAD from '../utils/packet/payload.js';
 
 class Sector {
   constructor(sectorId, sectorCode, resources = []) {
@@ -54,14 +57,14 @@ class Sector {
 
     try {
       const currentTime = Date.now();
-      const packets = [];
+      const monsterInfos = [];
 
       // 몬스터 패킷 생성
       for (const monster of this.monsters.values()) {
         try {
-          const packet = await monster.createPacket(currentTime);
-          if (packet) {
-            packets.push(packet);
+          const monsterInfo = await monster.createPacket(currentTime);
+          if (monsterInfo) {
+            monsterInfos.push(monsterInfo);
           }
         } catch (error) {
           console.error(
@@ -71,13 +74,18 @@ class Sector {
         }
       }
 
+      console.log(monsterInfos);
+
+      const monsterBatchPacket = PACKET.S2CMonsterBatchLocation(
+        monsterInfos.length,
+        monsterInfos,
+      );
       // 생성된 패킷 전송
-      for (const packet of packets) {
-        this.notify(packet);
-      }
+
+      this.notify(monsterBatchPacket);
 
       // 디버깅: 전송된 패킷 수 로깅
-      if (packets.length > 0) {
+      if (monsterInfos.length > 0) {
         // console.log(
         //   `${new Date().toISOString()} - 전송된 몬스터 패킷: ${packets.length}개`,
         // );
