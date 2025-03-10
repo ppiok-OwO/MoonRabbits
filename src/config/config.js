@@ -193,6 +193,9 @@ export const config = {
     sad: 222,
     greeting: 333,
   },
+  blacklist: {
+    MAX_REQUESTS_PER_SECOND: 20,
+  },
 };
 
 export const packetIdEntries = Object.entries(config.packetId);
