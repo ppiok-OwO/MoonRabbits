@@ -8,6 +8,7 @@ import PAYLOAD_DATA from '../../utils/packet/payloadData.js';
 import bcrypt from 'bcrypt';
 import chalk from 'chalk';
 import redisClient from '../../utils/redis/redis.config.js';
+import onEnd from '../../events/onEnd.js';
 
 // 서버 재시작 후 한 번만 fullSession 초기화를 실행하기 위한 플래그
 let isFullSessionCleared = false;
@@ -75,8 +76,6 @@ const loginHandler = async (socket, packetData) => {
           const isSuccess = false;
           const msg = '중복 로그인 감지: 이미 로그인되어 있습니다.';
 
-          await redisClient.del(redisKey);
-
           const playerSessionManager = getPlayerSession();
           const existingSocket = playerSessionManager.getSocketByNickname(
             existingPlayerSession.nickname,
@@ -103,6 +102,8 @@ const loginHandler = async (socket, packetData) => {
         const isSuccess = false;
         const msg = '중복 로그인 감지: 이미 로그인되어 있습니다.';
 
+        await redisClient.del(redisKey);
+
         const failResponse = PACKET.S2CLogin(isSuccess, msg);
         return socket.write(failResponse);
       }
@@ -123,8 +124,7 @@ const loginHandler = async (socket, packetData) => {
         userId: userData.userId,
         // 캐릭터가 없다면 빈 문자열이나 null, 캐릭터가 있으면 해당 정보를 저장
         nickname: findPlayer && findPlayer.nickname ? findPlayer.nickname : '',
-        classCode:
-          findPlayer && findPlayer.classCode ? findPlayer.classCode : '',
+        classCode: findPlayer && findPlayer.classCode ? findPlayer.classCode : '',
       });
       //console.log('----- 업데이트된 userSession ----- \n', user);
     }
@@ -148,10 +148,7 @@ const loginHandler = async (socket, packetData) => {
       ${error}
       `,
     );
-    socket.emit(
-      'error',
-      new CustomError(ErrorCodes.HANDLER_ERROR, 'loginHandler 에러'),
-    );
+    socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'loginHandler 에러'));
   }
 };
 

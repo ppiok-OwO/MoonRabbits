@@ -9,13 +9,12 @@ export const onEnd = (socket) => async () => {
     console.log('클라이언트 연결이 종료되었습니다. (END)');
 
     // socket에 player 데이터가 존재할 경우
-    if (socket.player) {
+    if (socket.player && socket.player.playerId !== undefined) {
       const player_id = socket.player.playerId;
       const inventoryKey = `inventory:${player_id}`;
       // const fullSessionKey = `fullSession:${player_id}`;
 
       const player = getPlayerSession().getPlayer(socket);
-      if (player === undefined) return;
       if (player.isCrafting) {
         console.error('\x1b[31m제작중 종료 발생, 소모한 재료 복구 실행\x1b[0m');
         // redis 인벤토리 가져옴
