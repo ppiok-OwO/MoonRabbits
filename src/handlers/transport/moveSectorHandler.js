@@ -19,12 +19,6 @@ const moveSectorHandler = async (socket, packetData) => {
   const player = getPlayerSession().getPlayer(socket);
   const redisSession = new RedisSession();
 
-  // [예외] 하우징 씬 이동 별개 처리!!
-  if (targetSector === HOUSING_SCENE_CODE) {
-    moveToHousing(socket, player);
-    return;
-  }
-
   const currentSector = player.getSectorId();
   if (targetSector === currentSector) {
     const packet = PACKET.S2CChat(
@@ -33,6 +27,12 @@ const moveSectorHandler = async (socket, packetData) => {
       'System',
     );
     return socket.write(packet);
+  }
+
+  // [예외] 하우징 씬 이동 별개 처리!!
+  if (targetSector === HOUSING_SCENE_CODE) {
+    moveToHousing(socket, player);
+    return;
   }
 
   try {
@@ -56,7 +56,9 @@ const moveSectorHandler = async (socket, packetData) => {
       // [3-2] 이전 섹터가 마을이 아니면, 내가 남긴 덫들 제거
       if (prevSector.sectorCode != 100) {
         const oldTraps = prevSector.removeTraps(player.id);
-        prevSector.notifyExceptMe(PACKET.S2CRemoveTrap(oldTraps), player.id);
+        if (oldTraps) {
+          prevSector.notifyExceptMe(PACKET.S2CRemoveTrap(oldTraps), player.id);
+        }
       }
     }
 
@@ -140,7 +142,9 @@ function moveToHousing(socket, player) {
   // [2-2] 이전 섹터가 마을이 아니면, 내가 남긴 덫들 제거
   if (prevSector.sectorCode != 100) {
     const oldTraps = prevSector.removeTraps(player.id);
-    prevSector.notifyExceptMe(PACKET.S2CRemoveTrap(oldTraps), player.id);
+    if (oldTraps){
+      prevSector.notifyExceptMe(PACKET.S2CRemoveTrap(oldTraps), player.id);
+    }
   }
 
   // [3] 내 플레이어 정보 갱신
