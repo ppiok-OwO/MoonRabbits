@@ -79,6 +79,8 @@ export const PACKET_ID = {
   C2SGatheringDone: 148,
   S2CGatheringDone: 149,
   C2SGatheringAnimationEnd: 150,
+  C2SRecover: 154,
+  S2CRecover: 155,
   C2SOpenChest: 156,
   S2COpenChest: 157,
   C2SGetTreasure: 158,

@@ -77,6 +77,8 @@ export const packetNames = [
   'C2SGatheringDone',
   'S2CGatheringDone',
   'C2SGatheringAnimationEnd',
+  'C2SRecover',
+  'S2CRecover',
   'C2SOpenChest',
   'S2COpenChest',
   'C2SGetTreasure',

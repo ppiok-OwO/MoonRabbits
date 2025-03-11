@@ -96,7 +96,8 @@ enum MsgId {
   S2C_GATHERING_DONE=149;
   C2S_GATHERING_ANIMATION_END = 150;
 
-
+  C2S_RECOVER = 154;
+  S2C_RECOVER = 155;
   C2S_OPEN_CHEST = 156;
   S2C_OPEN_CHEST = 157;
   C2S_GET_TREASURE = 158;
@@ -440,7 +441,13 @@ message S2CGatheringDone{
 
 message C2SGatheringAnimationEnd {}
 
-
+message C2SRecover {
+  int32 targetPlayerId = 1;
+}
+message S2CRecover {
+  int32 casterId = 1;
+  int32 targetPlayerId = 2;
+}
 message C2SOpenChest {}
 message S2COpenChest {
   int32 playerId = 1;
