@@ -1,6 +1,8 @@
 import { onEnd } from '../events/onEnd.js';
 import { getPlayerSession, getUserSessions } from '../session/sessions.js';
+import { formatDate } from '../utils/dateFormatter.js';
 import { makePingPacket } from '../utils/packet/makePingPacket.js';
+import RedisSession from './session/redisSession.class.js';
 
 class User {
   constructor(socket) {
@@ -21,6 +23,8 @@ class User {
   // 레이턴시
   ping() {
     const now = Date.now();
+    // const date = new Date();
+    // console.log('ping : ', formatDate(date));
     this.socket.write(makePingPacket(now));
   }
 
@@ -32,7 +36,8 @@ class User {
 
   checkPong = async () => {
     const now = Date.now();
-    console.log('연결 췤!: ', now - this.lastPong);
+    const pingCheck = now - this.lastPong;
+    console.log('연결 췤!: ', pingCheck);
 
     // 10초 이상 퐁이 오지 않으면 연결 종료(디버깅할 땐 주석처리하기!!)
     if (now - this.lastPong > 10000) {
