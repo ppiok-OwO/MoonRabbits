@@ -16,7 +16,10 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
     if (!player) {
       return socket.emit(
         'error',
-        new CustomError(ErrorCodes.USER_NOT_FOUND, '플레이어 정보를 찾을 수 없습니다.'),
+        new CustomError(
+          ErrorCodes.USER_NOT_FOUND,
+          '플레이어 정보를 찾을 수 없습니다.',
+        ),
       );
     }
 
@@ -26,7 +29,10 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
       player.setPosition(transform);
     } else {
       // PathValidator 사용하여 가장 가까운 경로 포인트 찾기
-      const validationResult = await PathValidator.validatePosition(path, transform);
+      const validationResult = await PathValidator.validatePosition(
+        path,
+        transform,
+      );
 
       const clientDistance = getDistance(transform, player);
       const serverDistance =
@@ -39,7 +45,10 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
       // 속도 검증 끝난 뒤에 플레이어 포지션 업데이트
       player.setPosition(transform);
 
-      if (validationResult && validationResult.distance > 1.4) {
+      if (
+        validationResult &&
+        validationResult.distance > config.updateLocation.tolerance
+      ) {
         // 오차범위를 벗어나면 플레이어의 위치를 가장 가까운 포인트로 재조정
         const newTransform = {
           posX: validationResult.point.PosX,
