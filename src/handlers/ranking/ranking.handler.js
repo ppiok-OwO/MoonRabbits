@@ -57,10 +57,12 @@ export const rankingHandler = async (socket, packetData) => {
     if (!rankingCache) await updateRankingList();
 
     let responseData;
-    if (type === 'ALL') {
-      responseData = rankingCache; // 전체 유저 리스트
-    } else if (type === 'TOP') {
-      responseData = rankingCache.slice(0, 10); // 상위 10명만 추출
+    if (type === 'TOP10') {
+      responseData = rankingCache.slice(0, 10); // 전체 유저 리스트
+    } else if (type === 'TOP20') {
+      responseData = rankingCache.slice(0, 20); // 상위 10명만 추출
+    } else if (type === 'TOP30') {
+      responseData = rankingCache.slice(0, 30); // 상위 10명만 추출
     } else {
       throw new Error('유효하지 않은 요청 유형');
     }
@@ -72,10 +74,7 @@ export const rankingHandler = async (socket, packetData) => {
     socket.write(responsePacket);
   } catch (error) {
     console.error(chalk.red('[rankingHandler Error]\n', error));
-    socket.emit(
-      'error',
-      new CustomError(ErrorCodes.HANDLER_ERROR, 'rankingHandler 에러'),
-    );
+    socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'rankingHandler 에러'));
   }
 };
 
