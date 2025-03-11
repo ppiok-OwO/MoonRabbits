@@ -10,13 +10,7 @@ class PlayerSession {
   playerIdx = 1;
 
   async addPlayer(socket, user, nickname, classCode, statData) {
-    const newPlayer = new Player(
-      user,
-      this.playerIdx++,
-      nickname,
-      classCode,
-      statData,
-    );
+    const newPlayer = new Player(user, this.playerIdx++, nickname, classCode, statData);
     this.players.set(socket, newPlayer);
 
     // @@@ getSector가 sectorId로 탐색해서 수정 @@@
@@ -51,14 +45,10 @@ class PlayerSession {
 
       this.players.delete(socket);
 
-      console.log(
-        chalk.green(`[onEnd] playerSession에서 삭제된 socket ID: ${socket.id}`),
-      );
+      console.log(chalk.green(`[onEnd] playerSession에서 삭제된 socket ID: ${socket.id}`));
     } else {
       console.log(
-        chalk.yellow(
-          `[onEnd] playerSession에서 찾을 수 없습니다. socket ID : ${socket.id}`,
-        ),
+        chalk.yellow(`[onEnd] playerSession에서 찾을 수 없습니다. socket ID : ${socket.id}`),
       );
     }
   }
@@ -74,6 +64,20 @@ class PlayerSession {
     return -1;
   }
 
+  getSocketByPlayerId(playerId) {
+    for (const [socket, player] of this.players.entries()) {
+      if (player.id === playerId) {
+        return socket; // 해당 소켓 반환
+      }
+    }
+    console.log(
+      chalk.yellow(
+        `[getSocketByPlayerId] 해당 플레이어 ID(${playerId})에 대한 소켓을 찾을 수 없습니다.`,
+      ),
+    );
+    return undefined; // 없으면 undefined 반환
+  }
+
   getAllPlayers() {
     // return this.players.values();
     return this.players;
@@ -86,6 +90,16 @@ class PlayerSession {
       }
     }
     return -1;
+  }
+
+  getSocketByNickname(nickname) {
+    for (const [socket, player] of this.players.entries()) {
+      if (player.nickname === nickname) {
+        return socket;
+      }
+    }
+    console.log(chalk.yellow(`[getSocketByNickname] ${nickname}의 소켓을 찾을 수 없습니다.`));
+    return undefined;
   }
 
   clearSession() {
