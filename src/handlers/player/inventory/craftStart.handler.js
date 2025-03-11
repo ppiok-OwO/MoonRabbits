@@ -39,25 +39,39 @@ export const craftStartHandler = async (socket, packetData) => {
 
   // # 제작중... 재료 아이템 소모
   try {
-    for (let slotIdx = 0; slotIdx < 25; slotIdx++) {
-      newInventory[slotIdx] = JSON.parse(redisInventory[slotIdx]);
-      for (const materialItem of recipe.material_items) {
+    for (const materialItem of recipe.material_items) {
+      let count = materialItem.count;
+      for (let slotIdx = 0; slotIdx < 25; slotIdx++) {
+        newInventory[slotIdx] = JSON.parse(redisInventory[slotIdx]);
+
         if (newInventory[slotIdx].itemId * 1 === materialItem.item_id) {
           hasMaterial = true;
-          if (newInventory[slotIdx].stack >= materialItem.count) {
-            newInventory[slotIdx].stack -= materialItem.count;
+
+          if (newInventory[slotIdx].stack >= count) {
+            newInventory[slotIdx].stack -= count;
             player.backupCraftingSlot(
               slotIdx,
               materialItem.item_id,
-              materialItem.count,
+              count,
             );
+            count = 0;
             if (newInventory[slotIdx].stack === 0)
               newInventory[slotIdx].itemId = 0;
+          } else if(newInventory[slotIdx].stack > 0){
+            count -= newInventory[slotIdx].stack;
+            player.backupCraftingSlot(
+              slotIdx,
+              materialItem.item_id,
+              newInventory[slotIdx].stack,
+            )
+            newInventory[slotIdx].stack  = 0;
+            newInventory[slotIdx].itemId = 0;
           } else {
             canCraft = false;
           }
         }
       }
+      if(count > 0) canCraft = false;
     }
   } catch (error) {
     socket.emit(
@@ -108,7 +122,7 @@ export const craftStartHandler = async (socket, packetData) => {
   // 제작 결과 업데이트 패킷 전송
   try {
     socket.write(
-      PACKET.S2CCraftStart(true, recipeId, '재작 시작... 재료 소모됨'),
+      PACKET.S2CCraftStart(true, recipeId, '제작을 시작합니다'),
     );
   } catch (error) {
     socket.emit(new Error('S2CCraftStart 제작 시작 패킷 생성 에러'));
