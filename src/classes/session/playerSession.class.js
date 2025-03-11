@@ -27,21 +27,23 @@ class PlayerSession {
     const player = this.getPlayer(socket);
     if (player) {
       const playerSectorId = player.getSectorId();
-      const sector = SectorSessionManager.getSector(playerSectorId);
-      sector.deletePlayer(player.user.socket);
-
-      const oldTraps = sector.removeTraps(player.id);
-      if (oldTraps) {
-        sector.notifyExceptMe(PACKET.S2CRemoveTrap(oldTraps), player.id);
+      if (playerSectorId !== 99) {
+        const sector = SectorSessionManager.getSector(playerSectorId);
+        sector.deletePlayer(player.user.socket);
+  
+        const oldTraps = sector.removeTraps(player.id);
+        if (oldTraps) {
+          sector.notifyExceptMe(PACKET.S2CRemoveTrap(oldTraps), player.id);
+        }
+  
+        const partyId = player.getPartyId();
+        if (partyId) {
+          const party = partySessionManager.getParty(partyId);
+          leavePartyHandler(socket, { partyId, leftPlayerId: player.id });
+        }
+        // 디스폰
+        this.notify(PACKET.S2CDespawn(player.id));
       }
-
-      const partyId = player.getPartyId();
-      if (partyId) {
-        const party = partySessionManager.getParty(partyId);
-        leavePartyHandler(socket, { partyId, leftPlayerId: player.id });
-      }
-      // 디스폰
-      sector.notify(PACKET.S2CDespawn(player.id));
 
       this.players.delete(socket);
 

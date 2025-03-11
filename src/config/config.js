@@ -135,6 +135,8 @@ export const config = {
     C2SGatheringDone: PACKET_ID.C2SGatheringDone,
     S2CGatheringDone: PACKET_ID.S2CGatheringDone,
 
+    C2SRecover: PACKET_ID.C2SRecover,
+    S2CRecover: PACKET_ID.S2CRecover,
     C2SOpenChest: PACKET_ID.C2SOpenChest,
     S2COpenChest: PACKET_ID.S2COpenChest,
     C2SGetTreasure: PACKET_ID.C2SGetTreasure,
