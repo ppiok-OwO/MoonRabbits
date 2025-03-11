@@ -10,7 +10,7 @@ import PathValidator from '../../utils/validate/pathValidator.js';
 // 이동중이라면 0.1초마다 location 패킷 전송
 const playerLocationUpdateHandler = async (socket, packetData) => {
   try {
-    const { transform } = packetData;
+    const { transform, elapsedTime } = packetData;
     // 플레이어 세션을 통해 플레이어 인스턴스를 불러온다.
     const playerSession = getPlayerSession();
     const player = playerSession.getPlayer(socket);
@@ -38,11 +38,13 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
       // 클라이언트에서 이동한 거리와 서버에서 계산한 거리
       const clientDistance = getDistance(transform, player);
       let serverDistance =
-        player.getMoveSpeed() * 0.02 + config.updateLocation.tolerance;
+        player.getMoveSpeed() * (elapsedTime / 1000) +
+        config.updateLocation.tolerance;
       // 달리기 중이면 1.5배
       if (player.isRunning) {
         serverDistance =
-          player.getMoveSpeed() * 0.02 * 1.5 + config.updateLocation.tolerance;
+          player.getMoveSpeed() * (elapsedTime / 1000) * 1.5 +
+          config.updateLocation.tolerance;
       }
 
       // 둘을 비교해서 클라이언트가 더 크면 속도 검증 실패 로그 출력 + 용의자 리스트에 등록

@@ -36,6 +36,7 @@ class Player {
     this.usePortal = false;
     this.useMoveSector = false;
     this.isRunning = false;
+    this.timestamp = null;
   }
 
   sendPacket(packet) {
