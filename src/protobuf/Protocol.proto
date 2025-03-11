@@ -215,6 +215,7 @@ message C2SPlayerMove{
 message S2CPlayerMove{}
 message C2SPlayerLocation{
   TransformInfo transform = 1;
+  float elapsedTime = 2;
 }
 message S2CPlayerLocation{
   int32 playerId = 1;
