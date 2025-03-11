@@ -4,10 +4,22 @@ import { onError } from './onError.js';
 import { onData } from './onData.js';
 import { getUserSessions } from '../session/sessions.js';
 import { getBlacklist } from './blacklist.js';
+import PACKET from '../utils/packet/packet.js';
 
 export const onConnection = async (socket) => {
   const clientIP = socket.remoteAddress; // 헬스 체크 및 클라이언트 IP 확인
   console.log('클라이언트가 연결되었습니다:', clientIP, socket.remotePort);
+
+  socket.isUnity = false;
+  socket.write(PACKET.S2CChat(0, 'Hello', 'Auth'));
+  setTimeout(()=>{
+    if(socket.isUnity === true){
+      console.log('클라이언트 인증 완료');
+    }else {
+      console.log('클라이언트 인증 실패');
+      socket.destroy();
+    }
+  }, 1000);
 
   if (clientIP.startsWith('172.31.')) {
     console.log('헬스 체크 요청 감지, 세션 종료');
