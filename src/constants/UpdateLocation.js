@@ -1,3 +1,3 @@
 export const UPDATE_LOCATION = {
-  tolerance: 2,
+  tolerance: 1,
 };
