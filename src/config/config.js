@@ -72,6 +72,7 @@ export const config = {
     S2CPlayerLocation: PACKET_ID.S2CPlayerLocation,
     C2SPlayerRunning: PACKET_ID.C2SPlayerRunning,
     S2CPlayerRunning: PACKET_ID.S2CPlayerRunning,
+    C2SPlayerStopRunning: PACKET_ID.C2SPlayerStopRunning,
 
     C2SPortal: PACKET_ID.C2SPortal,
     S2CPortal: PACKET_ID.S2CPortal,
