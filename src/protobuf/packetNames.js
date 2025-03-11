@@ -21,6 +21,8 @@ export const packetNames = [
   'S2CPlayerLocation',
   'C2SPlayerRunning',
   'S2CPlayerRunning',
+  'C2SPlayerStopRunning',
+  'S2CPlayerStopRunning',
   'C2SPortal',
   'S2CPortal',
   'C2SRankingList',

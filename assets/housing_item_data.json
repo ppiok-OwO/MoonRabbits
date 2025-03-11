@@ -3,76 +3,211 @@
   "version": "1.0.0",
   "data": [
     {
-      "item_id": 30000,
-      "item_name": "재료 이름",
-      "item_type": "int 타입으로, 0은 Housing, 1은 Material",
-      "item_description": "하우징 아이템은 30000부터 시작",
-      "item_prefab": "오브젝트 이름",
-      "item_dataType": "int 타입으로, 0은 floor, 1은 furniture",
-      "item_gridSize": [1, 1]
-    },
-    {
       "item_id": 30001,
-      "item_name": "testHSItem",
+      "item_name": "얇은 나무 의자",
       "item_type": 0,
-      "item_description": "테스트용 하우징 아이템",
-      "item_prefab": "TestCube",
-      "item_dataType": 0,
+      "item_description": "나무로 만들어진 의자. 조금 불안정해 보인다.",
+      "item_prefab": "Thin Chair",
+      "item_dataType": 1,
       "item_gridSize": [1, 1]
     },
     {
       "item_id": 30002,
-      "item_name": "testHSItem",
+      "item_name": "기본 나무 의자",
       "item_type": 0,
-      "item_description": "테스트용 하우징 아이템",
-      "item_prefab": "TestLongCube",
-      "item_dataType": 0,
-      "item_gridSize": [3, 1]
+      "item_description": "가공된 나무 의자. 얇은 나무 의자를 조금 다듬었다.",
+      "item_prefab": "Standart Chair",
+      "item_dataType": 1,
+      "item_gridSize": [1, 1]
     },
     {
       "item_id": 30003,
-      "item_name": "testHSItem",
+      "item_name": "견고한 나무 의자",
       "item_type": 0,
-      "item_description": "테스트용 하우징 아이템",
-      "item_prefab": "TestPlane",
+      "item_description": "제련된 목재를 활용한 의자. 튼튼해 보인다.",
+      "item_prefab": "ChairParent",
       "item_dataType": 1,
       "item_gridSize": [1, 1]
     },
     {
       "item_id": 30004,
-      "item_name": "testHSItem",
+      "item_name": "편리한 게임용 의자",
       "item_type": 0,
-      "item_description": "테스트용 하우징 아이템",
-      "item_prefab": "TestLargeCube",
-      "item_dataType": 0,
-      "item_gridSize": [4, 3]
-    },
-    {
-      "item_id": 30010,
-      "item_name": "나무 의자",
-      "item_type": 1,
-      "item_description": "나무로 만들어진 의자",
-      "item_prefab": "WoodChair",
+      "item_description": "다양한 재료로 만들어진 의자. 어딘가 편리함이 느껴진다.",
+      "item_prefab": "Gaming Chair",
       "item_dataType": 1,
       "item_gridSize": [1, 1]
     },
     {
-      "item_id": 30011,
-      "item_name": "나무 책상",
-      "item_type": 1,
-      "item_description": "나무로 만들어진 책상",
-      "item_prefab": "WoodTable",
+      "item_id": 30005,
+      "item_name": "굳건한 나무 의자",
+      "item_type": 0,
+      "item_description": "고급 원목만을 사용한 의자. 높은 직위를 가진 것만 같다.",
+      "item_prefab": "Armchair",
       "item_dataType": 1,
-      "item_gridSize": [1, 2]
+      "item_gridSize": [1, 1]
+    },
+    {
+      "item_id": 30010,
+      "item_name": "둥근 나무 탁자",
+      "item_type": 0,
+      "item_description": "둥근 나무 탁자. 여러 사람이 사용하기 편리해 보인다.",
+      "item_prefab": "Round Table",
+      "item_dataType": 1,
+      "item_gridSize": [3, 3]
+    },
+    {
+      "item_id": 30011,
+      "item_name": "넓은 나무 탁자",
+      "item_type": 0,
+      "item_description": "가공된 목재를 사용한 나무 탁자. 다방면으로 사용할 수 있을 것 같다.",
+      "item_prefab": "TableParent",
+      "item_dataType": 1,
+      "item_gridSize": [2, 1]
     },
     {
       "item_id": 30012,
-      "item_name": "나무 침대",
-      "item_type": 1,
-      "item_description": "나무로 만든 침대, 푹신푹신할까?",
-      "item_prefab": "WoodBed",
+      "item_name": "표준 나무 탁자",
+      "item_type": 0,
+      "item_description": "보기 좋게 만들어진 나무 탁자. 맞은 편 사람과 대화를 나눠볼까?",
+      "item_prefab": "Table",
       "item_dataType": 1,
-      "item_gridSize": [3, 4]
+      "item_gridSize": [2, 2]
+    },
+    {
+      "item_id": 30013,
+      "item_name": "가공된 나무 탁자",
+      "item_type": 0,
+      "item_description": "넓어진 나무 탁자. 더 많은 사람과 사용할 수 있어 보인다.",
+      "item_prefab": "Rectangle Table",
+      "item_dataType": 1,
+      "item_gridSize": [3, 2]
+    },
+    {
+      "item_id": 30014,
+      "item_name": "사무용 탁자",
+      "item_type": 0,
+      "item_description": "사무용에 맞게 제련된 탁자. 사용하기 매우 편리해 보인다.",
+      "item_prefab": "LShapeDesk",
+      "item_dataType": 1,
+      "item_gridSize": [3, 3]
+    },
+    {
+      "item_id": 30020,
+      "item_name": "1인용 침대",
+      "item_type": 0,
+      "item_description": "싱글 사이즈의 침대. 혼자서도 괜히 좁은 느낌이 든다.",
+      "item_prefab": "Single Bed",
+      "item_dataType": 1,
+      "item_gridSize": [3, 2]
+    },
+    {
+      "item_id": 30021,
+      "item_name": "2인용 침대",
+      "item_type": 0,
+      "item_description": "더블 사이즈의 침대. 둘이서 사용하기 좋아 보인다.",
+      "item_prefab": "Double Bed",
+      "item_dataType": 1,
+      "item_gridSize": [4, 3]
+    },
+    {
+      "item_id": 30022,
+      "item_name": "다인용 침대",
+      "item_type": 0,
+      "item_description": "퀸 사이즈의 침대. 무엇보다 편안하다.",
+      "item_prefab": "BedBigParent",
+      "item_dataType": 1,
+      "item_gridSize": [2, 2]
+    },
+    {
+      "item_id": 30030,
+      "item_name": "2층 서랍장",
+      "item_type": 0,
+      "item_description": "작은 크기의 서랍장. 많은 물건을 넣을 수는 없어 보인다.",
+      "item_prefab": "Short Nightstand",
+      "item_dataType": 1,
+      "item_gridSize": [1, 1]
+    },
+    {
+      "item_id": 30031,
+      "item_name": "3층 서랍장",
+      "item_type": 0,
+      "item_description": "큰 크기의 서랍장. 공간을 더 효율적으로 사용해보자.",
+      "item_prefab": "Nightstand",
+      "item_dataType": 1,
+      "item_gridSize": [1, 1]
+    },
+    {
+      "item_id": 30032,
+      "item_name": "공부 책상",
+      "item_type": 0,
+      "item_description": "공부하기 좋아보이는 책상. 수납칸이 포함되어 있다.",
+      "item_prefab": "Desk",
+      "item_dataType": 1,
+      "item_gridSize": [2, 1]
+    },
+    {
+      "item_id": 30040,
+      "item_name": "일반 보관 상자",
+      "item_type": 0,
+      "item_description": "귀중품을 보관하는 상자. 다소 허술함이 느껴지는건 기분탓일까?",
+      "item_prefab": "NoramlChest",
+      "item_dataType": 1,
+      "item_gridSize": [2, 1]
+    },
+    {
+      "item_id": 30041,
+      "item_name": "엄중한 보관 상자",
+      "item_type": 0,
+      "item_description": "귀중품을 철저히 보관하는 상자. 쉽게 건들 수 없어 보인다.",
+      "item_prefab": "LargeChest",
+      "item_dataType": 1,
+      "item_gridSize": [2, 1]
+    },
+    {
+      "item_id": 30050,
+      "item_name": "바닥 타일",
+      "item_type": 0,
+      "item_description": "나무 바닥 타일. 집의 분위기는 무엇보다 바닥에서 시작한다.",
+      "item_prefab": "FloorParent",
+      "item_dataType": 0,
+      "item_gridSize": [1, 1]
+    },
+    {
+      "item_id": 30060,
+      "item_name": "높은 나무 장식",
+      "item_type": 0,
+      "item_description": "푸릇한 나무 장식. 새도 잠시 쉬어갈 수 있다.",
+      "item_prefab": "MediumTree",
+      "item_dataType": 1,
+      "item_gridSize": [4, 4]
+    },
+    {
+      "item_id": 30061,
+      "item_name": "죽은 나무 장식",
+      "item_type": 0,
+      "item_description": "죽은지 오래된 나무 장식. 어딘가 싸늘함이 느껴진다.",
+      "item_prefab": "DeadTree",
+      "item_dataType": 1,
+      "item_gridSize": [2, 2]
+    },
+    {
+      "item_id": 30070,
+      "item_name": "죽은 나무 그루터기",
+      "item_type": 0,
+      "item_description": "죽은지 오래된 나무 그루터기. 어딘가의 몬스터가 떠오른다.",
+      "item_prefab": "DeadStump",
+      "item_dataType": 1,
+      "item_gridSize": [2, 2]
+    },
+    {
+      "item_id": 30071,
+      "item_name": "푸른 나무 그루터기",
+      "item_type": 0,
+      "item_description": "잘린 나무 그루터기. 하지만 아직 생명력이 돋보인다.",
+      "item_prefab": "LiveStump",
+      "item_dataType": 1,
+      "item_gridSize": [2, 2]
     }
   ]
 }

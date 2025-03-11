@@ -52,6 +52,8 @@ import { startGatheringHandler } from './gathering/startGathering.handler.js';
 import housingSaveHandler from './housing/housingSave.handler.js';
 import housingLoadHandler from './housing/housingLoad.handler.js';
 import recoverHandler from './playerAction/recover.handler.js';
+import { playerRunningHandler } from './transport/playerRunning.handler.js';
+import { playerStopRunning } from './transport/playerStopRunning.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
@@ -60,6 +62,8 @@ const handlers = {
   [config.packetId.C2SEnterTown]: townEnterHandler,
   [config.packetId.C2SMoveSector]: moveSectorHandler,
   [config.packetId.C2SPlayerLocation]: playerLocationUpdateHandler,
+  [config.packetId.C2SPlayerRunning]: playerRunningHandler,
+  [config.packetId.C2SPlayerStopRunning]: playerStopRunning,
   [config.packetId.C2SPlayerMove]: playerMoveHandler,
   [config.packetId.C2SEmote]: animationHandler,
   [config.packetId.C2SChat]: chatHandler,
