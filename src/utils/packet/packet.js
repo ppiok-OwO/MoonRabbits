@@ -412,6 +412,15 @@ const PACKET = {
       PAYLOAD.S2CGetInventorySlotByItemId(slots_InventorySlot_repeated),
     );
   },
+  S2CMonsterBatchLocation: (count_int32, monsters_MonsterInfo_repeated) => {
+    return makePacket(
+      PACKET_ID.S2CMonsterBatchLocation,
+      PAYLOAD.S2CMonsterBatchLocation(
+        count_int32,
+        monsters_MonsterInfo_repeated,
+      ),
+    );
+  },
 };
 
 export default PACKET;

@@ -33,6 +33,8 @@ class Player {
     this.currentEquip = 0;
     this.isCrafting = false;
     this.craftingSlots = [];
+    this.usePortal = false;
+    this.useMoveSector = false;
   }
 
   sendPacket(packet) {

@@ -1,3 +1,4 @@
+import TransformInfo from '../../classes/transformInfo.class.js';
 import { getGameAssets } from '../../init/assets.js';
 import { getPlayerSession, getSectorSessions } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
@@ -52,6 +53,7 @@ export const portalHandler = (socket, packetData) => {
     player.position.posY = newPlayerPos.y;
     player.position.posZ = newPlayerPos.z;
     player.setPath(null);
+    player.usePortal = true;
 
     // 패킷 전송
     const portalPacket = PACKET.S2CPortal(newPlayerPos);

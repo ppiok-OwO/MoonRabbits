@@ -300,6 +300,9 @@ const PAYLOAD = {
   S2CGetInventorySlotByItemId: (slots_InventorySlot_repeated) => {
     return { slots: slots_InventorySlot_repeated };
   },
+  S2CMonsterBatchLocation: (count_int32, monsters_MonsterInfo_repeated) => {
+    return { count: count_int32, monsters: monsters_MonsterInfo_repeated };
+  },
 };
 
 export default PAYLOAD;
