@@ -15,6 +15,8 @@ export const onData = (socket) => {
   socket.anomalyCounter = 0;
   socket.requestCounter = 0;
 
+  const record = 10;
+
   setInterval(() => {
     socket.requestCounter = 0;
   }, 1000);
@@ -63,7 +65,7 @@ export const onData = (socket) => {
         console.log(`잘못된 패킷 크기: ${packetSize} (IP: ${socket.remoteAddress})`);
         socket.buffer = Buffer.alloc(0); // 버퍼 초기화
         socket.anomalyCounter += 1;
-        if (socket.anomalyCounter >= 5) {
+        if (socket.anomalyCounter >= record) {
           await addBlacklist(socket.remoteAddress);
           socket.destroy(); // 악의적인 패킷이므로 소켓 종료
         }
@@ -75,7 +77,7 @@ export const onData = (socket) => {
         console.log(`잘못된 패킷 ID: ${packetId} (IP: ${socket.remoteAddress})`);
         socket.anomalyCounter += 1;
         socket.buffer = Buffer.alloc(0); // 버퍼 초기화
-        if (socket.anomalyCounter >= 5) {
+        if (socket.anomalyCounter >= record) {
           console.log(`반복적인 잘못된 패킷 ID 감지 (IP: ${clientIP}) -> 차단`);
           await addBlacklist(clientIP);
           socket.destroy();
@@ -97,7 +99,7 @@ export const onData = (socket) => {
           console.log(`패킷 디코딩 실패 (ID: ${packetId}, IP: ${socket.remoteAddress})`);
           socket.buffer = Buffer.alloc(0); // 버퍼 초기화
           socket.anomalyCounter += 1;
-          if (socket.anomalyCounter >= 5) {
+          if (socket.anomalyCounter >= record) {
             await addBlacklist(socket.remoteAddress);
             socket.destroy(); // 악의적인 패킷이므로 소켓 종료
           }
@@ -133,7 +135,7 @@ const decodedPacket = (socket, packetType, packetDataBuffer) => {
     socket.buffer = Buffer.alloc(0); // 버퍼 초기화
     socket.anomalyCounter += 1;
 
-    if (socket.anomalyCounter >= 5) {
+    if (socket.anomalyCounter >= record) {
       addBlacklist(socket.remoteAddress).then(() => {
         socket.destroy(); // 악의적인 패킷이므로 소켓 종료
       });

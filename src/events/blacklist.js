@@ -3,6 +3,10 @@ import chalk from 'chalk';
 
 export const addBlacklist = async (IP) => {
   try {
+    if (IP === '127.0.0.1') {
+      return;
+    }
+
     // Redis에 블랙리스트 추가 (Set 자료형 사용)
     await redisClient.sadd('Blacklist:abuserIPs', IP);
     console.log(

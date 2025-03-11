@@ -28,10 +28,12 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
       // PathValidator 사용하여 가장 가까운 경로 포인트 찾기
       const validationResult = await PathValidator.validatePosition(path, transform);
 
-      const distance = validateSpeed(transform, player);
+      const clientDistance = getDistance(transform, player);
+      const serverDistance =
+        player.getMoveSpeed() * 0.02 + config.updateLocation.tolerance;
 
-      if (distance > 0.2 || distance < 0.08) {
-        console.log('속도 검증 실패!!', distance);
+      if (clientDistance > serverDistance) {
+        console.log('속도 검증 실패!!', clientDistance, serverDistance);
       }
 
       // 속도 검증 끝난 뒤에 플레이어 포지션 업데이트
@@ -80,7 +82,7 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
   }
 };
 
-function validateSpeed(transform, player) {
+function getDistance(transform, player) {
   try {
     if (player.usePortal) {
       const distance = 0.1;
@@ -98,10 +100,9 @@ function validateSpeed(transform, player) {
     const prevPosition = player.getPosition();
 
     const dx = transform.posX - prevPosition.x;
-    const dy = transform.posY - prevPosition.y;
     const dz = transform.posZ - prevPosition.z;
 
-    const distance = Math.sqrt(dx ** 2 + dy ** 2 + dz ** 2);
+    const distance = Math.sqrt(dx ** 2 + dz ** 2);
 
     return distance;
   } catch (error) {

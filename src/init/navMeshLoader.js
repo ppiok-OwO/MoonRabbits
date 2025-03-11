@@ -65,7 +65,7 @@ export async function loadNavMesh(objFile) {
   }
 }
 
-export async function findPath(navMesh, startPos, endPos, stepSize = 1) {
+export async function findPath(navMesh, startPos, endPos, stepSize = 0.25) {
   try {
     const navMeshQuery = new NavMeshQuery(navMesh);
 
