@@ -10,7 +10,7 @@ import PathValidator from '../../utils/validate/pathValidator.js';
 // 이동중이라면 0.1초마다 location 패킷 전송
 const playerLocationUpdateHandler = async (socket, packetData) => {
   try {
-    const { transform } = packetData;
+    const { transform, elapsed } = packetData;
     // 플레이어 세션을 통해 플레이어 인스턴스를 불러온다.
     const playerSession = getPlayerSession();
     const player = playerSession.getPlayer(socket);
