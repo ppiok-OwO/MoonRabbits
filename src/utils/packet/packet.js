@@ -83,6 +83,9 @@ const PACKET = {
       ),
     );
   },
+  S2CPlayerRunning: () => {
+    return makePacket(PACKET_ID.S2CPlayerRunning, PAYLOAD.S2CPlayerRunning());
+  },
   S2CPortal: (outPortalLocation_Vec3) => {
     return makePacket(
       PACKET_ID.S2CPortal,

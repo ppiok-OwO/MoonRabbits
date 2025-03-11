@@ -26,6 +26,7 @@ export const PACKET_ID = {
   S2CPlayerRunning: 35,
   C2SPortal: 36,
   S2CPortal: 37,
+  C2SPlayerStopRunning: 38,
   C2SRankingList: 50,
   S2CUpdateRanking: 51,
   C2SCollision: 60,

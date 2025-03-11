@@ -34,6 +34,8 @@ enum MsgId {
   S2C_PLAYER_RUNNING=35;
   C2S_PORTAL=36;
   S2C_PORTAL=37;
+  C2S_PLAYER_STOP_RUNNING=38;
+  S2C_PLAYER_STOP_RUNNING=39;
 
   C2S_RANKING_LIST=50;
   S2C_UPDATE_RANKING=51;
@@ -221,6 +223,10 @@ message S2CPlayerLocation{
 }
 message C2SPlayerRunning{} 
 message S2CPlayerRunning{} 
+
+message C2SPlayerStopRunning{}
+message S2CPlayerStopRunning{} 
+
 message C2SPortal {
   int32 inPortalId = 1;
   int32 outPortalId = 2;

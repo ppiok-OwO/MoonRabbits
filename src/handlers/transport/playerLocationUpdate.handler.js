@@ -1,4 +1,5 @@
 import { config } from '../../config/config.js';
+import { addSuspect } from '../../events/blacklist.js';
 import { getSectorSessions, getPlayerSession } from '../../session/sessions.js';
 import CustomError from '../../utils/error/customError.js';
 import { ErrorCodes } from '../../utils/error/errorCodes.js';
@@ -34,12 +35,20 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
         transform,
       );
 
+      // 클라이언트에서 이동한 거리와 서버에서 계산한 거리
       const clientDistance = getDistance(transform, player);
-      const serverDistance =
+      let serverDistance =
         player.getMoveSpeed() * 0.02 + config.updateLocation.tolerance;
+      // 달리기 중이면 1.5배
+      if (player.isRunning) {
+        serverDistance =
+          player.getMoveSpeed() * 0.02 * 1.5 + config.updateLocation.tolerance;
+      }
 
+      // 둘을 비교해서 클라이언트가 더 크면 속도 검증 실패 로그 출력 + 용의자 리스트에 등록
       if (clientDistance > serverDistance) {
         console.log('속도 검증 실패!!', clientDistance, serverDistance);
+        await addSuspect(socket.remoteAddress);
       }
 
       // 속도 검증 끝난 뒤에 플레이어 포지션 업데이트

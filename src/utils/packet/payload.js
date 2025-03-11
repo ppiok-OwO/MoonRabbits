@@ -59,6 +59,9 @@ const PAYLOAD = {
       isValidTransform: isValidTransform_bool,
     };
   },
+  S2CPlayerRunning: () => {
+    return {};
+  },
   S2CPortal: (outPortalLocation_Vec3) => {
     return { outPortalLocation: outPortalLocation_Vec3 };
   },
