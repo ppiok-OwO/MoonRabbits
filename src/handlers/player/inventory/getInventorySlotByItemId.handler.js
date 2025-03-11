@@ -26,15 +26,15 @@ export const getInventorySlotByItemIdHandler = async (socket, packetData) => {
   // Redis에서 itemId(값)에 해당하는 slotIdx(키), stack(값) 가져오기
   try {
     for (const itemId of itemIds) {
+      const slot = PAYLOAD_DATA.InventorySlot(-1, itemId, 0);
       for (let slotIdx = 0; slotIdx < 25; slotIdx++) {
         const redisSlot = JSON.parse(redisInventory[slotIdx]);
         if (redisSlot.itemId * 1 === itemId) {
-          slots.push(
-            PAYLOAD_DATA.InventorySlot(slotIdx, itemId, redisSlot.stack),
-          );
-          break;
+          if(slot.slotIdx===-1) slot.slotIdx = slotIdx;
+          slot.stack += redisSlot.stack;
         }
       }
+      slots.push(slot);
     }
   } catch (error) {
     socket.emit(
