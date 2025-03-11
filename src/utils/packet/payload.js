@@ -224,6 +224,9 @@ const PAYLOAD = {
       quantity: quantity_int32,
     };
   },
+  S2CRecover: (casterId_int32,targetPlayerId_int32) => {
+    return {casterId:casterId_int32,targetPlayerId:targetPlayerId_int32};
+  },
   S2COpenChest: (playerId_int32, openTimer_int32) => {
     return { playerId: playerId_int32, openTimer: openTimer_int32 };
   },

@@ -274,37 +274,9 @@ class Monster {
           key.write(partyPacket);
         });
       }
-
-      if (resultHp <= 0) {
-        await delay(3000);
-
-        // 마을로 이동할 땐 피를 복구해줘야 함(부활)
-        targetPlayerObj.setHp(config.newPlayerStatData.hp);
-
-        const socket = targetPlayerObj.user.getSocket();
-        moveSectorHandler(socket, { targetSector: 100 });
-
-        // 마을로 이동할 땐 파티 목록 업데이트 해주기
-        // 만약 파티 중이라면 멤버 카드 UI 업데이트
-        const partySession = getPartySessions();
-        const partyId = targetPlayerObj.getPartyId();
-        if (partyId) {
-          const party = partySession.getParty(partyId);
-          const members = party.getAllMembers();
-
-          members.forEach((value, key) => {
-            const partyPacket = PACKET.S2CUpdateParty(
-              party.getId(),
-              party.getPartyLeaderId(),
-              party.getMemberCount(),
-              party.getAllMemberCardInfo(value.id),
-            );
-            key.write(partyPacket);
-          });
-        }
-      }
     }
   }
+  
   startSturn(duration) {
     if (!this.isSturn) {
       this.isSturn = true;

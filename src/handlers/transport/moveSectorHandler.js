@@ -5,10 +5,13 @@ import {
 } from '../../session/sessions.js';
 import PACKET from '../../utils/packet/packet.js';
 import playerSpawnNotificationHandler from './playerSpawnNotification.handler.js';
+import { leavePartyHandler } from '../social/party/leaveParty.handler.js';
 import { getGameAssets } from '../../init/assets.js';
 import TransformInfo from '../../classes/transformInfo.class.js';
 import RedisSession from '../../classes/session/redisSession.class.js';
 import { config } from '../../config/config.js';
+
+const HOUSING_SCENE_CODE = 99;
 
 const moveSectorHandler = async (socket, packetData) => {
   // [1] 패킷 데이터에서 이동할 섹터코드 꺼내고, 내 플레이어 정보와 비교
@@ -16,7 +19,14 @@ const moveSectorHandler = async (socket, packetData) => {
   const player = getPlayerSession().getPlayer(socket);
   const redisSession = new RedisSession();
 
-  if (targetSector === player.getSectorId()) {
+  // [예외] 하우징 씬 이동 별개 처리!!
+  if (targetSector === HOUSING_SCENE_CODE) {
+    moveToHousing(socket, player);
+    return;
+  }
+
+  const currentSector = player.getSectorId();
+  if (targetSector === currentSector) {
     const packet = PACKET.S2CChat(
       0,
       '현 위치와 같은 섹터로 이동할 순 없습니다',
@@ -37,15 +47,17 @@ const moveSectorHandler = async (socket, packetData) => {
       return socket.write(packet);
     }
 
-    // [3] 전체 유저들에게 내 플레이어를 디스폰시킴 (클라의 PlayerList 갱신을 위해선 전체에 보내야함)
-    getPlayerSession().notify(PACKET.S2CDespawn(player.id));
-    // [3-1] 이전 섹터에서 내 정보를 제거
-    const prevSector = getSectorSessions().getSector(player.getSectorId());
-    prevSector.deletePlayer(socket);
-    // [3-2] 이전 섹터가 마을이 아니면, 내가 남긴 덫들 제거
-    if (prevSector.sectorCode != 100) {
-      const oldTraps = prevSector.removeTraps(player.id);
-      prevSector.notifyExceptMe(PACKET.S2CRemoveTrap(oldTraps), player.id);
+    if (currentSector !== HOUSING_SCENE_CODE) {
+      // [3] 전체 유저들에게 내 플레이어를 디스폰시킴 (클라의 PlayerList 갱신을 위해선 전체에 보내야함)
+      getPlayerSession().notify(PACKET.S2CDespawn(player.id));
+      // [3-1] 이전 섹터에서 내 정보를 제거
+      const prevSector = getSectorSessions().getSector(currentSector);
+      prevSector.deletePlayer(socket);
+      // [3-2] 이전 섹터가 마을이 아니면, 내가 남긴 덫들 제거
+      if (prevSector.sectorCode != 100) {
+        const oldTraps = prevSector.removeTraps(player.id);
+        prevSector.notifyExceptMe(PACKET.S2CRemoveTrap(oldTraps), player.id);
+      }
     }
 
     // [4] 내 플레이어 정보 갱신
@@ -108,3 +120,34 @@ const moveSectorHandler = async (socket, packetData) => {
 };
 
 export default moveSectorHandler;
+
+/* 하우징 씬 이동 */
+function moveToHousing(socket, player) {
+  // [1] 만약 파티가 있으면 파티 탈퇴 처리
+  const partyId = player.getPartyId();
+  if (partyId) {
+    leavePartyHandler(socket, {
+      partyId,
+      leftPlayerId: player.id,
+    });
+  }
+
+  // [2] 전체 유저들에게 내 플레이어를 디스폰시킴
+  getPlayerSession().notify(PACKET.S2CDespawn(player.id));
+  // [2-1] 이전 섹터에서 내 정보를 제거
+  const prevSector = getSectorSessions().getSector(player.getSectorId());
+  prevSector.deletePlayer(socket);
+  // [2-2] 이전 섹터가 마을이 아니면, 내가 남긴 덫들 제거
+  if (prevSector.sectorCode != 100) {
+    const oldTraps = prevSector.removeTraps(player.id);
+    prevSector.notifyExceptMe(PACKET.S2CRemoveTrap(oldTraps), player.id);
+  }
+
+  // [3] 내 플레이어 정보 갱신
+  player.position = new TransformInfo();
+  player.setPath(null);
+  player.setSectorId(HOUSING_SCENE_CODE);
+
+  // [4] 필요 정보만 담아서 응답
+  socket.write(PACKET.S2CMoveSector(HOUSING_SCENE_CODE));
+}

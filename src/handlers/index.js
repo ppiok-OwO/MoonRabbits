@@ -51,6 +51,7 @@ import { gatheringDoneHandler } from './gathering/gatheringDone.handler.js';
 import { startGatheringHandler } from './gathering/startGathering.handler.js';
 import housingSaveHandler from './housing/housingSave.handler.js';
 import housingLoadHandler from './housing/housingLoad.handler.js';
+import recoverHandler from './playerAction/recover.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
@@ -89,6 +90,7 @@ const handlers = {
   [config.packetId.C2SGatheringDone]: gatheringDoneHandler,
   [config.packetId.C2SGatheringAnimationEnd]: gatheringAnimationEndHandler,
 
+  [config.packetId.C2SRecover] : recoverHandler,
   [config.packetId.C2SOpenChest]: openChestHandler,
   [config.packetId.C2SGetTreasure]: getTreasureHandler,
   [config.packetId.C2SRecall]: tryRecallHandler,

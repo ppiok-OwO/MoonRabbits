@@ -302,6 +302,9 @@ const PACKET = {
       PAYLOAD.S2CGatheringDone(placedId_int32, itemId_int32, quantity_int32),
     );
   },
+  S2CRecover: (casterId_int32,targetPlayerId_int32) => {
+    return makePacket(PACKET_ID.S2CRecover,PAYLOAD.S2CRecover(casterId_int32,targetPlayerId_int32));
+  },
   S2COpenChest: (playerId_int32, openTimer_int32) => {
     return makePacket(
       PACKET_ID.S2COpenChest,
