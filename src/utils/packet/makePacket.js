@@ -31,7 +31,8 @@ function makePacket(packetId, packetData = {}) {
   if (
     packetId !== config.packetId.S2CPlayerLocation &&
     packetId !== config.packetId.S2CMonsterLocation &&
-    packetId !== config.packetId.S2CMonsterBatchLocation
+    packetId !== config.packetId.S2CMonsterBatchLocation &&
+    packetId !== config.packetId.S2CInventoryUpdate
   ) {
     printPacket(packetSize, packetId, packetData, 'out');
   }
