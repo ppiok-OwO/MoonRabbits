@@ -49,6 +49,82 @@
                 }
             ],
             "craft_item_id": 20005
+        },
+        {
+            "recipe_id" : 50011,
+            "material_items" : [
+                {
+                    "item_id" : 21001,
+                    "count" : 2
+                }
+            ],
+            "craft_item_id": 21002
+        },
+        {
+            "recipe_id" : 50012,
+            "material_items" : [
+                {
+                    "item_id" : 21001,
+                    "count" : 2
+                },
+                {
+                    "item_id" : 21002,
+                    "count" : 2
+                }
+            ],
+            "craft_item_id": 21003
+        },
+        {
+            "recipe_id" : 50013,
+            "material_items" : [
+                {
+                    "item_id" : 21001,
+                    "count" : 2
+                },
+                {
+                    "item_id" : 21002,
+                    "count" : 2
+                },
+                {
+                    "item_id" : 21003,
+                    "count" : 2
+                }
+            ],
+            "craft_item_id": 21004
+        },
+        {
+            "recipe_id" : 50016,
+            "material_items" : [
+                {
+                    "item_id" : 22001,
+                    "count" : 3
+                }
+            ],
+            "craft_item_id": 22002
+        },
+        {
+            "recipe_id" : 50017,
+            "material_items" : [
+                {
+                    "item_id" : 20001,
+                    "count" : 2
+                },
+                {
+                    "item_id" : 22002,
+                    "count" : 1
+                }
+            ],
+            "craft_item_id": 22003
+        },
+        {
+            "recipe_id" : 50018,
+            "material_items" : [
+                {
+                    "item_id" : 22004,
+                    "count" : 4
+                }
+            ],
+            "craft_item_id": 22005
         }
     ]
 }
