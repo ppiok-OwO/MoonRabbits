@@ -1,4 +1,5 @@
 import { packetIdEntries } from '../../config/config.js';
+import { addServerLog } from './log.js';
 
 const printPacket = (packetSize, packetId, packetData, str_in_out = '') => {
   const packetType = packetIdEntries.find(([, id]) => id === packetId)[0];
@@ -7,6 +8,8 @@ const printPacket = (packetSize, packetId, packetData, str_in_out = '') => {
   console.log(`\x1b[${color}m[${packetType} 패킷]\x1b[0m`);
   printObject(packetData);
   console.log();
+
+  addServerLog(`[${packetType}]${JSON.stringify(packetData)}}`);
 };
 
 const printObject = (object, width = 2, isArray = false) => {

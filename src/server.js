@@ -2,6 +2,7 @@ import net from 'net';
 import initServer from './init/index.js';
 import { onConnection } from './events/onConnection.js';
 import { config } from './config/config.js';
+import { addServerLog, reportMetric, reportErrorLog, reportServerLog } from './utils/log/log.js';
 
 const server = net.createServer(onConnection);
 
@@ -13,6 +14,11 @@ initServer()
       );
       console.log(server.address());
     });
+
+    addServerLog(`[메인서버]가 ${config.server.host}:${config.server.port}에서 실행 중입니다.`);
+    reportMetric();
+    reportServerLog();
+    reportErrorLog();
   })
   .catch((error) => {
     console.error(error);
