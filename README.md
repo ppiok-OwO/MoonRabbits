@@ -217,11 +217,84 @@
 ![image](https://github.com/user-attachments/assets/7ce2e063-1c67-4c8e-81f5-bfa29a9c165d)
 
 <br>
+</details>
 
+<details><summary>🥕 자원 채집 🥕
+</summary>
+<br>
+
+**아이템 제작 기능**
+- 제작 UI (단축키:C)에서 확인 가능
+- 제작 수량을 선택할 수 있고 제작 수량에 따라 현재 소지한 재료와 필요한 재료를 보여준다.
+- 제작 버튼을 누르면 인벤토리에서 재료가 소모되고 제작이 시작된다.
+- 제작이 완료되면 인벤토리에 제작된 아이템이 추가된다.
+- 제작 중간에 UI를 닫거나 다른 작업을 해도 제작은 진행된다.
+- 제작 중간에 비정상 종료 등으로 제작 완료를 못하면 소모한 재료가 복구된다.
+
+<br>
+
+![image](https://github.com/user-attachments/assets/552184c9-cac5-485c-abea-8dc54de8b8a7)
+
+<br>
+
+<br>
+
+![image](https://github.com/user-attachments/assets/5e0c85e8-e05d-46b7-911f-89f47de85f3f)
+
+<br>
+</details>
+
+<details><summary>🥕 플레이어 성장 🥕
+</summary>
+<br>
+
+**레벨 시스템**
+- 자원 채집을 통해 경험치를 쌓을 수 있습니다.
+- 매 레벨 당 일정량의 경험치를 획득하면 다음 레벨로 성장합니다.
+- 레벨업 시 3 포인트를 얻고, 포인트를 투자해 원하는 능력치를 강화할 수 있습니다.
+
+**능력치 시스템**
+- 플레이어가 성장시킬 수 있는 능력치엔 스태미나, 숙련도, 이동속도가 있습니다.
+- 스태미나는 달리기 시 소모되는 게이지로, 능력치에 비례해 최대 게이지가 상승합니다.
+- 숙련도는 자원 채집에 대한 성공 판정 범위를 증가시킵니다.
+  - 성공 판정 범위란 자원 채집 시 활성화되는 원의 흰 부분을 뜻합니다.
+- 이동속도는 플레이어의 기본 이동속도를 증가시킵니다.
+
+<br>
+
+![image](https://github.com/user-attachments/assets/ae979af8-6c0e-473c-86f8-e0bca2c4edbc)
+![image](https://github.com/user-attachments/assets/dc1f40e8-7d82-4ddb-adf8-1cb0c594f18e)
+
+<br>
+</details>
+
+<details><summary>🥕 하우징 컨텐츠 🥕
+</summary>
+<br>
+
+**가구 배치**
+**가구 제거**
+**카메라 이동**
+**스크린샷 저장**
+**배치 저장**
+
+<br>
 </details>
 
 ## 🐰 서비스 아키텍처
 
+![서비스 아키텍처](https://github.com/user-attachments/assets/8cc4fb8d-32f1-46bc-a84d-7c53f44ccc8d)
+
 ## 🐰 기술 스택
+**Client<br>**
+<img src="https://img.shields.io/badge/unity-%23000000.svg?&style=for-the-badge&logo=unity&logoColor=white" />
+**<br><br>Backend<br>**
+<img src="https://img.shields.io/badge/node.js-%23339933.svg?&style=for-the-badge&logo=node.js&logoColor=white" />
+**<br><br>Database<br>**
+<img src="https://img.shields.io/badge/mysql-%234479A1.svg?&style=for-the-badge&logo=mysql&logoColor=white" /><img src="https://img.shields.io/badge/redis-%23DC382D.svg?&style=for-the-badge&logo=redis&logoColor=white" />
+**<br><br>Infra<br>**
+<img src="https://img.shields.io/badge/amazon%20aws-%23232F3E.svg?&style=for-the-badge&logo=amazon%20aws&logoColor=white" />
+**<br><br>DevOps<br>**
+<img src="https://img.shields.io/badge/docker-%232496ED.svg?&style=for-the-badge&logo=docker&logoColor=white" /><img src="https://img.shields.io/badge/apache%20jmeter-%23D22128.svg?&style=for-the-badge&logo=apache%20jmeter&logoColor=white" />
 
 ## 🐰 Contact
