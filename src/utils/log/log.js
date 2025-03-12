@@ -1,6 +1,5 @@
 import os from 'os';
 import redisClient from '../redis/redis.config.js';
-import { setInterval } from 'timers/promises';
 
 const serverLogs = [];
 const errorLogs = [];
@@ -19,55 +18,47 @@ export function addErrorLog(message) {
 
 // 로그 기록
 export function reportServerLog() {
-  console.log('로그 인터벌 시작', serverLogs);
   setInterval(() => {
-    console.log('로그 기록');
     if (serverLogs.length <= 0) return;
 
     for (const log of serverLogs) {
       redisClient.zadd(
         'serverLogs',
-        log.timestamp,
+        log.time,
         JSON.stringify(log),
         (err) => {
           if (err) console.error('Redis 서버 로그 저장 실패:', err);
-          else console.log('서버 로그 저장 성공:', message);
         },
       );
     }
 
-    serverLogs = [];
+    serverLogs.length = 0;
   }, secPerReport * 1000);
 }
 
 // 에러 기록
 export function reportErrorLog() {
-  console.log('에러 인터벌 시작');
   setInterval(() => {
-    console.log('에러 기록');
     if (errorLogs.length <= 0) return;
 
     for (const log of errorLogs) {
       redisClient.zadd(
         'errorLogs',
-        log.timestamp,
+        log.time,
         JSON.stringify(log),
         (err) => {
           if (err) console.error('Redis 에러 로그 저장 실패:', err);
-          else console.log('에러 로그 저장 성공:', message);
         },
       );
     }
 
-    errorLogs = [];
+    errorLogs.length = 0;
   }, secPerReport * 1000);
 }
 
 // 메트릭 기록
 export function reportMetric() {
-  console.log('메트릭 인터벌 시작');
   setInterval(() => {
-    console.log('메트릭 기록');
     const cpuUsage = os.loadavg()[0];
     const memoryUsage = process.memoryUsage().heapUsed / 1024 / 1024;
     const message = `CPU 사용량: ${cpuUsage}, 메모리 사용량: ${memoryUsage.toFixed(3)} MB`;
@@ -79,8 +70,7 @@ export function reportMetric() {
       JSON.stringify({ message, time: timestamp }),
       (err) => {
         if (err) console.error('Redis 메트릭 저장 실패', err);
-        else console.log('메트릭 로그 저장 성공:', message);
       },
     );
-  }, 3 * 1000);
+  }, secPerReport * 1000);
 }

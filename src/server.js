@@ -13,12 +13,12 @@ initServer()
         `[메인서버]가 ${config.server.host}:${config.server.port}에서 실행 중입니다.`,
       );
       console.log(server.address());
+      
+      addServerLog(`[메인서버]가 ${config.server.host}:${config.server.port}에서 실행 중입니다.`);
+      reportMetric();
+      reportServerLog();
+      reportErrorLog();
     });
-
-    addServerLog(`[메인서버]가 ${config.server.host}:${config.server.port}에서 실행 중입니다.`);
-    reportMetric();
-    reportServerLog();
-    reportErrorLog();
   })
   .catch((error) => {
     console.error(error);
