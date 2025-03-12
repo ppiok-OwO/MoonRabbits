@@ -74,6 +74,11 @@
     },
     {
       "item_id": 22005,
+      "item_name": "석영",
+      "item_description": "광물이지만 건축에 사용할 시 고품질의 건축물을 만들 수 있다."
+    },
+    {
+      "item_id": 22005,
       "item_name": "벽돌",
       "item_description": "더 튼튼한 외벽을 만들기에 적합한 건축재료이다."
     }
