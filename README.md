@@ -341,6 +341,11 @@
 
 ![서비스 아키텍처](https://github.com/user-attachments/assets/8cc4fb8d-32f1-46bc-a84d-7c53f44ccc8d)
 
+![image](https://github.com/user-attachments/assets/410f2678-848c-4868-8e72-b02c9d07f431)
+
+![image](https://github.com/user-attachments/assets/e3833e98-a720-4d0f-b9e9-9e42443080b8)
+
+
 ## 🐰 기술 스택
 **Client<br>**
 <img src="https://img.shields.io/badge/unity-%23000000.svg?&style=for-the-badge&logo=unity&logoColor=white" />
