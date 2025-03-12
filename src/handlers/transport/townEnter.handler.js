@@ -23,9 +23,6 @@ const townEnterHandler = async (socket, packetData) => {
     // DB에서 스탯 정보 로드 (playerId를 키로 사용)
     const statData = await loadStat(playerId);
 
-    // 인벤토리 업데이트: 인벤토리 DB 데이터를 Redis에 동기화
-    await updateInventory();
-
     // PlayerSession에 추가 및 Redis 저장
     const playerSessionManager = getPlayerSession();
     const newPlayer = await playerSessionManager.addPlayer(
