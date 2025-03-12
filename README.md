@@ -1,3 +1,5 @@
+![image](https://github.com/user-attachments/assets/3ca8ada3-6e3a-4c36-9543-cb174d1483e3)
+
 ## Contents
 1. [🐰 Project MoonRabbits 소개](#-project-moonrabbits-소개)
 2. [🌕 게임 시나리오](#-게임-시나리오)
@@ -39,6 +41,8 @@
 몬스터들에게 빼앗긴 마을 땅을 되찾는다면, 허물어진 보금자리를 재건할 수 있을 터.<br><br>
 
 지금 바로 파티를 모아서 위기에 빠진 달토끼 마을을 재건해보자!
+
+![image](https://github.com/user-attachments/assets/18c8965b-2f3c-42a2-a2a0-b53fdd599bbe)
 
 <br>
 </details>
