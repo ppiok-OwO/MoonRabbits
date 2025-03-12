@@ -41,7 +41,7 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
         player.getMoveSpeed() * (elapsedTime / 1000) +
         config.updateLocation.tolerance;
       // 달리기 중이면 1.5배
-      if (player.isRunning) {
+      if (player.isRunning || player.usePortal) {
         serverDistance =
           player.getMoveSpeed() * (elapsedTime / 1000) * 1.5 +
           config.updateLocation.tolerance;
