@@ -128,6 +128,13 @@ class Sector {
     return this.players.get(socket);
   }
 
+  getPlayerById(playerId) {
+    for (const player of this.players.values()) {
+      if (player.id === playerId) return player;
+    }
+    return -1;
+  }
+
   getAllPlayer() {
     return this.players;
   }

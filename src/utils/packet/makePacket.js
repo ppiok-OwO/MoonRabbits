@@ -30,7 +30,8 @@ function makePacket(packetId, packetData = {}) {
   // 디버그용 콘솔 출력, packetId 필터링해서 사용
   if (
     packetId !== config.packetId.S2CPlayerLocation &&
-    packetId !== config.packetId.S2CMonsterLocation
+    packetId !== config.packetId.S2CMonsterLocation &&
+    packetId !== config.packetId.S2CMonsterBatchLocation
   ) {
     printPacket(packetSize, packetId, packetData, 'out');
   }

@@ -34,13 +34,13 @@ class Monster {
     }
 
     this.homePosition = { ...this.position };
-    this.roamingRange = 12; // 배회 범위
+    this.roamingRange = 24; // 배회 범위
     this.currentPath = []; // 현재 이동 경로
     this.pathIndex = 0; // 현재 경로에서의 위치
     this.stepSize = 10; // 경로 보간 간격
 
     // 플레이어 추적 관련 속성
-    this.detectionRadius = 8; // 플레이어 감지 반경
+    this.detectionRadius = 6; // 플레이어 감지 반경
     this.targetPlayer = null; // 현재 타겟팅 중인 플레이어
     this.lastPlayerContactTime = 0; // 마지막으로 플레이어와 접촉한 시간
     this.playerLostTimeout = 3000; // 플레이어를 잃은 후 홈으로 돌아가기까지의 시간 (3초)
@@ -197,7 +197,7 @@ class Monster {
 
       // 각 플레이어에 대해 처리
       for (const player of players) {
-        if (!player) continue;
+        if (!player || player.getHp() <= 0) continue;
 
         // 플레이어 위치
         let playerPos = null;
@@ -252,11 +252,13 @@ class Monster {
       this.isAttacking = true;
       this.attackStartTime = Date.now();
       this.stateChanged = true; // 상태 변경 플래그 설정
-
+      
+      console.log("!!! 여기 오나??? 2 !!!");
       // 플레이어 체력 변화
       const changedHp = targetPlayerObj.getHp() - 1;
       const resultHp = targetPlayerObj.setHp(changedHp); // setHp 메서드 내부에서 음수일 경우 예외처리가 들어감
-
+      console.log("!!! 그럼 changedHp? !!! ", changedHp);
+      console.log("!!! 그럼 resultHp? !!! ", resultHp);
       // 만약 파티 중이라면 멤버 카드 UI 업데이트
       const partySession = getPartySessions();
       const partyId = targetPlayerObj.getPartyId();
@@ -326,17 +328,13 @@ class Monster {
   handleCollisionPacket(data) {
     // 충돌 시 공격 시작 (이동 중지 2초)
     // null 체크
-    this.startAttack(this.targetPlayer.player);
-
     // 타겟 플레이어 설정 (이미 설정되어 있을 수 있음)
-    if (!this.targetPlayer && data && data.playerId) {
+    if (data && data.playerId) {
       try {
         const sector = getSectorSessions().getSectorByCode(this.sectorCode);
         if (!sector) return false;
-
-        const player = sector.getPlayer(data.playerId);
-        if (!player) return false;
-
+        const player = sector.getPlayerById(data.playerId);
+        if (player === -1) return false;
         let playerPos = null;
 
         // 여러 방법으로 플레이어 위치 가져오기 시도
@@ -353,12 +351,14 @@ class Monster {
         }
 
         if (playerPos) {
-          this.targetPlayer = {
-            player: player,
-            position: playerPos,
-            distance: this.getDistance(this.position, playerPos),
-          };
+          // this.targetPlayer = {
+          //   player: player,
+          //   position: playerPos,
+          //   distance: this.getDistance(this.position, playerPos),
+          // };
           this.lastPlayerContactTime = Date.now();
+
+          this.startAttack(player);
         }
       } catch (error) {
         console.error('타겟 플레이어 설정 중 오류 발생:', error);
@@ -509,6 +509,12 @@ class Monster {
     // 현재 타겟 플레이어가 있으면 위치 확인
     if (this.targetPlayer && this.targetPlayer.player) {
       const targetPlayerObj = this.targetPlayer.player;
+
+      if (targetPlayerObj.getHp() <= 0) {
+        this.targetPlayer = null;
+        return;
+      }
+
       let currentPlayerPos = null;
 
       // 현재 플레이어 위치 가져오기 시도
