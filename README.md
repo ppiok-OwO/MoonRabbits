@@ -41,7 +41,7 @@
 ## 🌕 게임 소개
 <br>
 
-Project MoonRabbits는요!
+저희 Project MoonRabbits는요!
 - **최대 5명의 플레이어**가 **파티**를 맺고 **몬스터**들로부터 살아남아 **보금자리를 재건**하는, **생존형 파밍 게임**입니다.
 - 약 100여 명의 플레이어가 접속할 수 있는 서버에서 **같은 파티원끼리 협동**하고, **다른 파티와는 경쟁**할 수 있습니다.
 
@@ -132,6 +132,92 @@ Project MoonRabbits는요!
 ![image](https://github.com/user-attachments/assets/d9e5b50e-7d31-4fef-8de7-80a216488d89)
 
 <br>
+</details>
+
+<details><summary>🥕 파티 맺기 🥕
+</summary>
+<br>
+
+**파티창 주요 기능**
+- 파티를 생성할 수 있습니다.
+- 닉네임을 통해 파티에 초대할 수 있습니다.
+- 파티 탈퇴 및 해체와 방출이 가능합니다.
+- 파티 목록 조회가 가능합니다.(최대 100개)
+
+<br>
+
+![image](https://github.com/user-attachments/assets/aed19e7f-f17e-4bb7-ac55-8186f62f88fc)
+
+<br>
+
+**파티원 정보창 주요 기능**
+- 다른 섹터에 있어도 파티원의 현재 정보를 알 수 있습니다.
+
+<br>
+
+![image](https://github.com/user-attachments/assets/5ee835cd-ce16-4dc1-ae4c-a5e9f630775f)
+
+<br>
+
+**파티를 통한 협동**
+- 같은 파티원의 덫은 밟히지 않습니다.
+- 같은 파티에 소속되지 않은 플레이어만 덫을 통해 기절합니다.
+
+<br>
+
+![image](https://github.com/user-attachments/assets/8fc5ab9f-0b3f-4130-9843-57bddf6aaaef)
+
+<br>
+
+- 같은 파티원의 기절 폭탄에 기절하지 않습니다.
+- 같은 파티에 소속되지 않은 플레이어만 기절 폭탄을 통해 기절합니다.
+
+<br>
+
+![image](https://github.com/user-attachments/assets/b704e880-ba28-4389-a01e-7fc6a690dd32)
+![image](https://github.com/user-attachments/assets/153f66bf-3253-436b-84df-05eaaedc2d86)
+![image](https://github.com/user-attachments/assets/094b91ac-7870-43ee-afe0-cb10629b7f6f)
+
+<br>
+</details>
+
+<details><summary>🥕 자원 채집 🥕
+</summary>
+<br>
+  
+  **나무**
+- 도끼를 장착하고 자원을 획득 할 수 있습니다.
+- 원의 흰 부분을 가리킬 때 다시 상호작용 하여 성공하면 자원을 얻습니다.
+- 지역에 따라서 나뭇가지, 평범한 나무 판자, 단단한 나무 판자 등을 얻을 수 있습니다.
+
+<br>
+
+![image](https://github.com/user-attachments/assets/52bf3057-1dff-441f-b9b7-4b298bdde747)
+
+<br>
+
+**돌(광석류)**
+- 곡괭이를 장착하고 자원을 획득 할 수 있습니다.
+- 원의 흰 부분을 가리킬 때 다시 상호작용 하여 성공하면 자원을 얻습니다.
+- 지역에 따라서 구리, 철, 금, 다이아몬드, 돌, 대리석 등을 얻을 수 있습니다.
+
+<br>
+
+![image](https://github.com/user-attachments/assets/d2d49e76-13ec-4e7b-8c13-17178b07a0e6)
+
+<br>
+
+**팁**
+- 폭탄을 잘 활용하면 쉽게 몬스터를 기절 시킬 수 있습니다.
+- 흰 부분이 너무 멀면 이동으로 취소하고 다시 상호작용을 하는 것이 더 빠를 수도 있습니다.
+- 흰 부분의 시작 점에 맞추기보다는 끝나기 전에 누르는 것이 1~2프레임을 더 확보할  수 있다.
+
+<br>
+
+![image](https://github.com/user-attachments/assets/7ce2e063-1c67-4c8e-81f5-bfa29a9c165d)
+
+<br>
+
 </details>
 
 ## 🐰 서비스 아키텍처
