@@ -18,6 +18,8 @@
 지금부터 달토끼 프로젝트에 대해 차근차근 소개해드릴 테니, 귀여운 토끼와 함께 프로젝트 저희를 따라와주세요!<br>
 
 ## 🌕 게임 시나리오
+<details><summary>🥕 토글을 눌러주세요! 🥕
+</summary>
 <br>
 
 **유난히 보름달이 빛나던 어느 먼 옛날, 평화롭던 지구에 외계인이 쳐들어오기 시작했다!**
@@ -37,11 +39,14 @@
 몬스터들에게 빼앗긴 마을 땅을 되찾는다면, 허물어진 보금자리를 재건할 수 있을 터.<br><br>
 
 지금 바로 파티를 모아서 위기에 빠진 달토끼 마을을 재건해보자!
+
 <br>
+</details>
+
 ## 🌕 게임 소개
 <br>
 
-저희 Project MoonRabbits는요!
+**저희 Project MoonRabbits는요!**
 - **최대 5명의 플레이어**가 **파티**를 맺고 **몬스터**들로부터 살아남아 **보금자리를 재건**하는, **생존형 파밍 게임**입니다.
 - 약 100여 명의 플레이어가 접속할 수 있는 서버에서 **같은 파티원끼리 협동**하고, **다른 파티와는 경쟁**할 수 있습니다.
 
@@ -298,3 +303,13 @@
 <img src="https://img.shields.io/badge/docker-%232496ED.svg?&style=for-the-badge&logo=docker&logoColor=white" /><img src="https://img.shields.io/badge/apache%20jmeter-%23D22128.svg?&style=for-the-badge&logo=apache%20jmeter&logoColor=white" />
 
 ## 🐰 Contact
+
+| 이름  | 블로그 주소                                                                   |
+| --- | ------------------------------------------------------------------------ |
+| 최슬기 | [https://princeali.tistory.com/](https://princeali.tistory.com/)         |
+| 김정태 | [https://explosion149.tistory.com/#](https://explosion149.tistory.com/#) |
+| 송원빈 | [https://bb201802.tistory.com/](https://bb201802.tistory.com/)           |
+| 이기환 | [https://wakelight23.tistory.com/](https://wakelight23.tistory.com/)     |
+| 김종하 | [https://foreiner852.tistory.com/](https://foreiner852.tistory.com/)     |
+| 남민우 | [https://puudding.tistory.com/](https://puudding.tistory.com/)           |
+| 김동욱 | [https://velog.io/@dwook1637/](https://velog.io/@dwook1637/)             |
