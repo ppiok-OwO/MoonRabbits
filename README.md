@@ -279,9 +279,59 @@
 <br>
 
 **가구 배치**
+- 화면 하단의 UI에서 아이템을 선택해 배치 모드를 시작할 수 있습니다.
+- 클릭 시 아이템의 미리보기 형태로 나타나며, Q 와 E 를 입력해 원하는 각도로 아이템을 회전시킬 수 있습니다.
+- 한 칸에는 하나의 같은 종류 아이템만 배치할 수 있습니다
+    - 다른 아이템이 배치된 위치에 추가로 배치하려는 경우, 미리보기가 빨간색으로 변하며 ‘배치할 수 없는 상태’ 임을 알립니다.
+    - 다른 종류의 아이템이면 같은 위치에 배치가 가능합니다.
+- 모든 배치가 완료되었다면 ESC 를 입력해 배치 모드를 종료할 수 있습니다.
+
+<br>
+
+![image](https://github.com/user-attachments/assets/00627030-cb6d-4883-94cb-a09d721ef122)
+
+<br>
+
+
 **가구 제거**
+- 화면의 UI 중 우측 하단의 ‘쓰레기통’ 버튼을 클릭 해 제거 모드를 시작할 수 있습니다.
+- 아이템이 배치되어 있는 곳에 클릭을 하게 되면, 해당 위치의 아이템은 제거됩니다.
+- 아이템이 배치되지 않은 곳은 선택할 수 없습니다.
+- 모든 제거가 완료되었다면 ESC 를 입력해 제거 모드를 종료할 수 있습니다.
+
+<br>
+
+![image](https://github.com/user-attachments/assets/9d4b120f-e5ac-48be-8c0b-3b7414115b99)
+![image](https://github.com/user-attachments/assets/75b0aa1b-da92-47d9-96f2-54e6ab47e63e)
+
+<br>
+
 **카메라 이동**
+- 배치 모드가 시작되지 않았거나, 종료된 ‘일반 모드’ 에서는 카메라를 자유롭게 움직이며 나만의 집을 구경할 수 있습니다.
+- 조작키는 다음과 같습니다.
+    - 카메라 이동 : W / A / S / D
+    - 확대/축소 :  마우스 스크롤
+    - 시점 이동 : 마우스 우클릭 홀드 + 드래그
+
+<br>
+
+![image](https://github.com/user-attachments/assets/db64872b-ab6b-4c0e-b454-374532a9bcd4)
+![image](https://github.com/user-attachments/assets/85f47156-569b-4df3-b380-0bf764fe5e94)
+
+<br>
+
 **스크린샷 저장**
+- 마음에 드는 아이템이나, 눈으로만 보기 아까운 광경들은 사진으로 남겨 저장할 수 있습니다
+- 화면 우측 상단의 ‘**사진**’ 버튼을 눌러 현재 화면 시점을 저장합니다.
+- 저장된 사진은 **‘바탕화면/ScreenShots/”ProjectMR_Screenshot_{날짜}”’** 의 이름으로 저장됩니다.
+
+<br>
+
+![image](https://github.com/user-attachments/assets/490fdd6c-b0f4-4ab9-af27-2e5cdbf5b0d6)
+![image](https://github.com/user-attachments/assets/800931c2-f2e7-42f5-aab5-6285a82d594c)
+
+<br>
+
 **배치 저장**
 
 <br>
