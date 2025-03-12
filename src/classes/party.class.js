@@ -46,12 +46,16 @@ class Party {
     return this.partyLeader.id;
   }
 
+  getPartyLeaderNickname() {
+    return this.partyLeader.nickname;
+  }
+
   getAllMembersSockets() {
     return this.members.keys();
   }
 
   getAllMembers() {
-    return this.members.values();
+    return this.members;
   }
 
   getAllMemberEntries() {
@@ -74,8 +78,12 @@ class Party {
       const memberInfo = {
         id: member.id,
         nickname: member.nickname,
+        currentSector: member.getSectorId(),
         isPartyLeader: member === this.partyLeader,
         isMine: member.id === playerId,
+        hp: member.getHp(),
+        level: member.getLevel(),
+        currentEquip: member.getCurrentEquip(),
       };
 
       memberCardInfos.push(memberInfo);
@@ -88,13 +96,14 @@ class Party {
     return {
       partyId: this.getId(),
       leaderId: this.getPartyLeaderId(),
+      leaderNickname: this.getPartyLeaderNickname(),
       memberCount: this.getMemberCount(),
     };
   }
 
   disbandParty() {
-    const members = this.getAllMemberEntries();
-    members.forEach(([key, value]) => {
+    const members = this.getAllMembers();
+    members.forEach((value, key) => {
       value.partyId = null;
     });
     this.members.clear();

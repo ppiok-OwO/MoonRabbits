@@ -6,7 +6,7 @@ import {
 import CustomError from '../../../utils/error/customError.js';
 import { ErrorCodes } from '../../../utils/error/errorCodes.js';
 import handleError from '../../../utils/error/errorHandler.js';
-import Packet from '../../../utils/packet/packet.js';
+import PACKET from '../../../utils/packet/packet.js';
 
 export const allowInviteHandler = (socket, packetData) => {
   try {
@@ -16,26 +16,26 @@ export const allowInviteHandler = (socket, packetData) => {
     const partySession = getPartySessions();
     const party = partySession.getParty(partyId);
     if (!party) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.PARTY_NOT_FOUND,
-          '파티 정보를 찾을 수 없습니다.',
-        ),
+      const packet = PACKET.S2CChat(
+        0,
+        '파티 정보를 찾을 수 없습니다.',
+        'System',
       );
+
+      return socket.write(packet);
     }
 
     // 새로운 멤버의 플레이어 인스턴스
     const playerSession = getPlayerSession();
     const newMember = playerSession.getPlayerById(memberId);
     if (!newMember || newMember === -1) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.USER_NOT_FOUND,
-          '플레이어 정보를 찾을 수 없습니다.',
-        ),
+      const packet = PACKET.S2CChat(
+        0,
+        '플레이어 정보를 찾을 수 없습니다.',
+        'System',
       );
+
+      return socket.write(packet);
     }
 
     if (
@@ -44,15 +44,15 @@ export const allowInviteHandler = (socket, packetData) => {
       party.getMemberCount() < config.party.MaxMember
     ) {
       // 새 플레이어를 파티에 추가
-      party.addMember(newMember.user.getSocket(), newMember);
+      party.addMember(socket, newMember);
       newMember.setPartyId(partyId);
       newMember.isInvited = false;
 
       // 각 멤버에 대하여 맞춤형 패킷 생성
-      const members = party.getAllMemberEntries();
+      const members = party.getAllMembers();
 
-      members.forEach(([key, value]) => {
-        const packet = Packet.S2CAllowInvite(
+      members.forEach((value, key) => {
+        const packet = PACKET.S2CAllowInvite(
           party.getId(),
           party.getPartyLeaderId(),
           party.getMemberCount(),
@@ -61,13 +61,13 @@ export const allowInviteHandler = (socket, packetData) => {
         key.write(packet);
       });
     } else {
-      const packet = Packet.S2CChat(
+      const packet = PACKET.S2CChat(
         0,
         '해당 파티는 정원이 모두 찼으므로 참가할 수 없습니다.',
-        "System"
+        'System',
       );
 
-      return newMember.user.getSocket().write(packet);
+      return socket.write(packet);
     }
   } catch (error) {
     handleError(socket, error);

@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import Packet from '../../utils/packet/packet.js';
+import PACKET from '../../utils/packet/packet.js';
 import PAYLOAD_DATA from '../../utils/packet/payloadData.js';
 import {
   createInventory,
@@ -23,7 +23,7 @@ const createCharacterHandler = async (socket, packetData) => {
     if (duplicateNickname) {
       const isSuccess = false;
       const msg = '이미 존재하는 닉네임입니다.';
-      const failResponse = Packet.S2CCreateCharacter(isSuccess, msg, []);
+      const failResponse = PACKET.S2CCreateCharacter(isSuccess, msg, []);
       return socket.write(failResponse);
     }
 
@@ -32,7 +32,7 @@ const createCharacterHandler = async (socket, packetData) => {
     if (!userData || !userData.userId) {
       const isSuccess = false;
       const msg = '로그인 된 사용자 정보가 없습니다.';
-      return socket.write(Packet.S2CCreateCharacter(isSuccess, msg, []));
+      return socket.write(PACKET.S2CCreateCharacter(isSuccess, msg, []));
     }
 
     // 플레이어(캐릭터) 테이블에서 해당 사용자의 userId 검색
@@ -42,13 +42,17 @@ const createCharacterHandler = async (socket, packetData) => {
     // nickname 또는 class_code의 값이 비어있다면 업데이트
     if (player && (!player.nickname || !player.classCode)) {
       await updatePlayer(userData.userId, nickname, classCode);
-      console.log(chalk.green(`[DB Log] 플레이어 업데이트 완료: userId ${userData.userId}`));
+      console.log(
+        chalk.green(
+          `[DB Log] 플레이어 업데이트 완료: userId ${userData.userId}`,
+        ),
+      );
     }
     // 이미 캐릭터 정보가 존재하는 경우에는 재생성을 막습니다.
     else {
       const isSuccess = false;
       const msg = '이미 캐릭터 정보가 존재합니다.';
-      return socket.write(Packet.S2CCreateCharacter(isSuccess, msg, []));
+      return socket.write(PACKET.S2CCreateCharacter(isSuccess, msg, []));
     }
 
     // 캐릭터 생성 성공 여부
@@ -78,7 +82,8 @@ const createCharacterHandler = async (socket, packetData) => {
         userId: userData.userId,
         // 캐릭터가 없다면 빈 문자열이나 null, 캐릭터가 있으면 해당 정보를 저장
         nickname: findPlayer && findPlayer.nickname ? findPlayer.nickname : '',
-        classCode: findPlayer && findPlayer.classCode ? findPlayer.classCode : '',
+        classCode:
+          findPlayer && findPlayer.classCode ? findPlayer.classCode : '',
       });
       console.log('----- 업데이트된 userSession ----- \n', user);
     }
@@ -88,7 +93,7 @@ const createCharacterHandler = async (socket, packetData) => {
       PAYLOAD_DATA.OwnedCharacter(findPlayer.nickname, findPlayer.classCode),
     ];
 
-    const packet = Packet.S2CLogin(isSuccess, msg, ownedCharacters);
+    const packet = PACKET.S2CLogin(isSuccess, msg, ownedCharacters);
     socket.write(packet);
   } catch (error) {
     console.error(
@@ -96,7 +101,10 @@ const createCharacterHandler = async (socket, packetData) => {
        ${error}
       `,
     );
-    socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'createCharacterHandler 에러'));
+    socket.emit(
+      'error',
+      new CustomError(ErrorCodes.HANDLER_ERROR, 'createCharacterHandler 에러'),
+    );
   }
 };
 

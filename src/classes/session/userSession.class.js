@@ -1,15 +1,20 @@
 import { v4 as uuidV4 } from 'uuid';
 import User from '../user.class.js';
 import redisClient from '../../utils/redis/redis.config.js';
+import { getUserSessions } from '../../session/sessions.js';
+import IntervalManager from '../manager/interval.manager.js';
+import { getPlayerSession } from '../../session/sessions.js';
+import { formatDate } from '../../utils/dateFormatter.js';
 
 class UserSession {
   users = new Map();
+  intervalManager = new IntervalManager();
 
   setUser(socket) {
     const newUser = new User(socket);
 
     this.users.set(socket, newUser);
-
+    console.log('newUser : ', newUser);
     // 임시 세션 키 생성 (로그인 전으로 userId가 없는 상태)
     const tempKey = `userSession:temp:${socket.id}`;
     redisClient.hset(tempKey, {
@@ -19,6 +24,16 @@ class UserSession {
     // 임시 세션은 일정 시간 후 만료
     redisClient.expire(tempKey, 3600);
 
+    // 유저 생성 시 인텁벌 매니저도 생성
+    // 1초마다 핑 측정
+    this.intervalManager.addPlayer(socket.id, newUser.ping.bind(newUser), 1000);
+    // 3초마다 연결 상태 체크
+    this.intervalManager.checkPong(
+      socket.id,
+      newUser.checkPong.bind(newUser),
+      3000,
+    );
+
     return newUser;
   }
 
@@ -26,40 +41,25 @@ class UserSession {
   async updateUserSessionAfterLogin(socket, loginData) {
     // loginData: { userId, nickname, ... }
     const user = this.getUser(socket);
+    const date = new Date();
     if (!user) return;
 
     // in-memory에 사용자 정보 업데이트
     user.userId = loginData.userId;
     user.nickname = loginData.nickname;
-    user.loginTime = new Date().toISOString();
-    user.status = 'online';
+    user.loginTime = formatDate(date);
 
     // 기존 임시 Redis 세션 삭제 (socket 기반)
     const tempKey = `userSession:temp:${socket.id}`;
     await redisClient.del(tempKey);
 
-    // userId 기반 Redis 세션 생성 (Hash 자료구조)
-    const key = `userSession:${user.userId}`;
-    await redisClient.hset(key, {
-      userId: user.userId,
-      nickname: user.nickname,
-      loginTime: user.loginTime,
-      currentSector: user.currentSector || 'None', // 예: "Town" 등
-      status: user.status,
-    });
-    // 세션 만료시간 설정
-    await redisClient.expire(key, 3600);
-
     return user;
   }
 
   removeUser(socket) {
-    const user = this.users.get(socket);
-    if (user) {
-      const key = `userSession:${user.userId}`;
-      redisClient.del(key); // Redis에서 세션 삭제
-      this.users.delete(socket);
-    }
+    getPlayerSession().removePlayer(socket);
+    this.users.delete(socket);
+    this.intervalManager.removePlayer(socket.id);
   }
 
   getUser(socket) {
@@ -71,11 +71,6 @@ class UserSession {
   }
 
   clearSession() {
-    this.users.forEach((user) => {
-      if (user.userId) {
-        redisClient.del(`userSession:${user.userId}`);
-      }
-    });
     this.users.clear();
   }
 }

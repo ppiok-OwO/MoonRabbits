@@ -5,92 +5,77 @@
     {
       "item_id": 20000,
       "item_name": "재료 이름",
-      "item_type": "Type",
       "item_description": "재료 아이템은 20000부터 시작"
     },
     {
       "item_id": 20001,
       "item_name": "나뭇가지",
-      "item_type": "Material",
       "item_description": "나무에서 떨어져 나온 가지이다."
     },
     {
       "item_id": 20002,
       "item_name": "평범한 나무 판자",
-      "item_type": "Material",
       "item_description": "집을 짓기에 아주 적합해보이는 나무 판자이다."
     },
     {
       "item_id": 20003,
       "item_name": "단단한 나무 판자",
-      "item_type": "Material",
       "item_description": "평범한 나무 판자보다 더 견고하며 기둥으로 사용될만큼 튼튼하다."
     },
     {
       "item_id": 20004,
       "item_name": "철로 강화된 나무 판자",
-      "item_type": "Material",
       "item_description": "철로 강화된 나무 판자이다. 내구성이 높아져 더 오래 사용할 수 있다."
     },
     {
       "item_id": 20005,
       "item_name": "단열재가 들어간 판자",
-      "item_type": "Material",
       "item_description": "집의 온도를 유지하고 따뜻하게 해주는 단열재가 들어간 나무 판자이다."
     },
     {
       "item_id": 21001,
       "item_name": "구리 광석",
-      "item_type": "Material",
       "item_description": "마을 주변에서 흔히 볼 수 있는 광물이다."
     },
     {
       "item_id": 21002,
       "item_name": "철 광석",
-      "item_type": "Material",
       "item_description": "내구성을 높이기 위해 사용되는 광물이다."
     },
     {
       "item_id": 21003,
       "item_name": "금 광석",
-      "item_type": "Material",
       "item_description": "가치가 높은 광물이며, 가구에 사용 시 더욱 화려한 가구를 제작할 수 있다."
     },
     {
       "item_id": 21004,
       "item_name": "다이아몬드 광석",
-      "item_type": "Material",
       "item_description": "가공되지 않은 다이아몬드 광석이다. 가공을 하여 가구에 사용하면 누구도 부럽지 않은 가구를 만들 수 있다."
     },
     {
       "item_id": 22001,
       "item_name": "돌",
-      "item_type": "Material",
       "item_description": "마을 주변에서 주울 수 있는 돌이다."
     },
     {
       "item_id": 22002,
       "item_name": "대리석",
-      "item_type": "Material",
       "item_description": "건축에 사용되는 재료이다. 주로 바닥재로 사용된다."
     },
     {
       "item_id": 22003,
       "item_name": "회반죽",
-      "item_type": "Material",
       "item_description": "회반죽으로 가구를 만들면 어떤 느낌일까? 딱딱하지 않을까"
     },
     {
       "item_id": 22004,
       "item_name": "질 좋은 진흙",
-      "item_type": "Material",
       "item_description": "한국 건축물에는 진흙을 사용하여 지은 집이 있다고 한다. 친환경 건축재료이다."
     },
     {
       "item_id": 22005,
-      "item_name": "석영",
-      "item_type": "Material",
-      "item_description": "광물이지만 건축에 사용할 시 고품질의 건축물을 만들 수 있다."
+      "item_name": "벽돌",
+      "item_description": "더 튼튼한 외벽을 만들기에 적합한 건축재료이다."
     }
   ]
 }

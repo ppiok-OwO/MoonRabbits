@@ -1,0 +1,372 @@
+{
+  "name": "furniture_recipe",
+  "version": "1.0.0",
+  "data": [
+    {
+      "recipe_id": 60001,
+      "material_items": [
+        {
+          "item_id": 20001,
+          "count": 4
+        },
+        {
+          "item_id": 20002,
+          "count": 2
+        }
+      ],
+      "craft_item_id": 30001
+    },
+    {
+      "recipe_id": 60002,
+      "material_items": [
+        {
+          "item_id": 20001,
+          "count": 4
+        },
+        {
+          "item_id": 20002,
+          "count": 6
+        }
+      ],
+      "craft_item_id": 30002
+    },
+    {
+      "recipe_id": 60003,
+      "material_items": [
+        {
+          "item_id": 20002,
+          "count": 4
+        },
+        {
+          "item_id": 20003,
+          "count": 2
+        }
+      ],
+      "craft_item_id": 30003
+    },
+    {
+      "recipe_id": 60004,
+      "material_items": [
+        {
+          "item_id": 20004,
+          "count": 2
+        },
+        {
+          "item_id": 21002,
+          "count": 4
+        },
+        {
+          "item_id": 21003,
+          "count": 1
+        }
+      ],
+      "craft_item_id": 30004
+    },
+    {
+      "recipe_id": 60005,
+      "material_items": [
+        {
+          "item_id": 20003,
+          "count": 4
+        },
+        {
+          "item_id": 20004,
+          "count": 4
+        }
+      ],
+      "craft_item_id": 30005
+    },
+    {
+      "recipe_id": 60006,
+      "material_items": [
+        {
+          "item_id": 20001,
+          "count": 4
+        },
+        {
+          "item_id": 20002,
+          "count": 6
+        }
+      ],
+      "craft_item_id": 30010
+    },
+    {
+      "recipe_id": 60007,
+      "material_items": [
+        {
+          "item_id": 20001,
+          "count": 4
+        },
+        {
+          "item_id": 20002,
+          "count": 6
+        }
+      ],
+      "craft_item_id": 30011
+    },
+    {
+      "recipe_id": 60008,
+      "material_items": [
+        {
+          "item_id": 20002,
+          "count": 2
+        },
+        {
+          "item_id": 20003,
+          "count": 2
+        }
+      ],
+      "craft_item_id": 30012
+    },
+    {
+      "recipe_id": 60009,
+      "material_items": [
+        {
+          "item_id": 20003,
+          "count": 6
+        },
+        {
+          "item_id": 20004,
+          "count": 2
+        }
+      ],
+      "craft_item_id": 30013
+    },
+    {
+      "recipe_id": 60010,
+      "material_items": [
+        {
+          "item_id": 20004,
+          "count": 4
+        },
+        {
+          "item_id": 21002,
+          "count": 4
+        },
+        {
+          "item_id": 21003,
+          "count": 2
+        }
+      ],
+      "craft_item_id": 30014
+    },
+    {
+      "recipe_id": 60011,
+      "material_items": [
+        {
+          "item_id": 20002,
+          "count": 4
+        },
+        {
+          "item_id": 20005,
+          "count": 1
+        },
+        {
+          "item_id": 21001,
+          "count": 2
+        },
+        {
+          "item_id": 21002,
+          "count": 2
+        }
+      ],
+      "craft_item_id": 30020
+    },
+    {
+      "recipe_id": 60012,
+      "material_items": [
+        {
+          "item_id": 20003,
+          "count": 4
+        },
+        {
+          "item_id": 20005,
+          "count": 2
+        },
+        {
+          "item_id": 21002,
+          "count": 4
+        },
+        {
+          "item_id": 21003,
+          "count": 1
+        }
+      ],
+      "craft_item_id": 30021
+    },
+    {
+      "recipe_id": 60013,
+      "material_items": [
+        {
+          "item_id": 20004,
+          "count": 4
+        },
+        {
+          "item_id": 20005,
+          "count": 4
+        },
+        {
+          "item_id": 21002,
+          "count": 4
+        },
+        {
+          "item_id": 21004,
+          "count": 2
+        }
+      ],
+      "craft_item_id": 30022
+    },
+    {
+      "recipe_id": 60014,
+      "material_items": [
+        {
+          "item_id": 20002,
+          "count": 4
+        },
+        {
+          "item_id": 20003,
+          "count": 4
+        }
+      ],
+      "craft_item_id": 30030
+    },
+    {
+      "recipe_id": 60015,
+      "material_items": [
+        {
+          "item_id": 20003,
+          "count": 4
+        },
+        {
+          "item_id": 20004,
+          "count": 4
+        }
+      ],
+      "craft_item_id": 30031
+    },
+    {
+      "recipe_id": 60016,
+      "material_items": [
+        {
+          "item_id": 20002,
+          "count": 4
+        },
+        {
+          "item_id": 20003,
+          "count": 4
+        },
+        {
+          "item_id": 20004,
+          "count": 4
+        }
+      ],
+      "craft_item_id": 30032
+    },
+    {
+      "recipe_id": 60017,
+      "material_items": [
+        {
+          "item_id": 20002,
+          "count": 4
+        },
+        {
+          "item_id": 20003,
+          "count": 4
+        },
+        {
+          "item_id": 21002,
+          "count": 4
+        }
+      ],
+      "craft_item_id": 30040
+    },
+    {
+      "recipe_id": 60018,
+      "material_items": [
+        {
+          "item_id": 20003,
+          "count": 8
+        },
+        {
+          "item_id": 21002,
+          "count": 4
+        },
+        {
+          "item_id": 21003,
+          "count": 2
+        },
+        {
+          "item_id": 21004,
+          "count": 1
+        }
+      ],
+      "craft_item_id": 30041
+    },
+    {
+      "recipe_id": 60019,
+      "material_items": [
+        {
+          "item_id": 20002,
+          "count": 1
+        }
+      ],
+      "craft_item_id": 30050
+    },
+    {
+      "recipe_id": 60020,
+      "material_items": [
+        {
+          "item_id": 20001,
+          "count": 20
+        },
+        {
+          "item_id": 22004,
+          "count": 4
+        }
+      ],
+      "craft_item_id": 30060
+    },
+    {
+      "recipe_id": 60021,
+      "material_items": [
+        {
+          "item_id": 20001,
+          "count": 20
+        },
+        {
+          "item_id": 22004,
+          "count": 4
+        }
+      ],
+      "craft_item_id": 30061
+    },
+    {
+      "recipe_id": 60022,
+      "material_items": [
+        {
+          "item_id": 20002,
+          "count": 10
+        },
+        {
+          "item_id": 22001,
+          "count": 10
+        }
+      ],
+      "craft_item_id": 30070
+    },
+    {
+      "recipe_id": 60023,
+      "material_items": [
+        {
+          "item_id": 20002,
+          "count": 10
+        },
+        {
+          "item_id": 21004,
+          "count": 1
+        }
+      ],
+      "craft_item_id": 30071
+    }
+  ]
+}

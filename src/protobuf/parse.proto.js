@@ -18,13 +18,13 @@ const MSG_IDS = `
   C2S_CREATE_CHARACTER=4;
   S2C_CREATE_CHARACTER=5;
 
-  C2S_ENTER=10;
-  S2C_ENTER=11;
-  C2S_LEAVE=12;
-  S2C_LEAVE=13;
+  C2S_ENTER_TOWN=10;
+  S2C_ENTER_TOWN=11;
+  C2S_MOVE_SECTOR=12;
+  S2C_MOVE_SECTOR=13;
 
-  C2S_ANIMATION=14;
-  S2C_ANIMATION=15;
+  C2S_EMOTE=14;
+  S2C_EMOTE=15;
 
   C2S_CHAT=20;
   S2C_CHAT=21;
@@ -38,6 +38,8 @@ const MSG_IDS = `
   S2C_PLAYER_LOCATION=33;
   C2S_PLAYER_RUNNING=34;
   S2C_PLAYER_RUNNING=35;
+  C2S_PORTAL=36;
+  S2C_PORTAL=37;
 
   C2S_RANKING_LIST=50;
   S2C_UPDATE_RANKING=51;
@@ -49,7 +51,15 @@ const MSG_IDS = `
   C2S_ITEM_DISASSEMBLY = 81;
   C2S_ITEM_DESTROY = 82;
   C2S_INVENTORY_SORT = 83;
-  S2C_INVENTORY_UPDATE = 84;
+  C2S_ITEM_MOVE	= 84;
+  S2C_INVENTORY_UPDATE = 85;
+
+  C2S_HOUSING_SAVE = 90;
+  S2C_HOUSING_SAVE = 91;
+  C2S_HOUSING_LOAD = 92;
+  S2C_HOUSING_LOAD = 93;
+  C2S_FURNITURE_CRAFT = 94;
+  S2C_FURNITURE_CRAFT = 95;
 
   C2S_CREATE_PARTY=100;
   S2C_CREATE_PARTY=101;
@@ -69,6 +79,7 @@ const MSG_IDS = `
   S2C_ALLOW_INVITE=115;
   C2S_REJECT_INVITE=116;
   S2C_REJECT_INVITE=117;
+  S2C_UPDATE_PARTY=118;
 
   C2S_MONSTER_LOCATION=120;
   S2C_MONSTER_LOCATION=121;
@@ -77,26 +88,51 @@ const MSG_IDS = `
   C2S_MISSING_PLAYER=124;
   S2C_MISSING_PLAYER=125;
 
-  S2C_RESOURCE_LIST=141;
-  S2C_UPDATE_DURABILITY=142;
-  C2S_GATHERING_START=143;
-  S2C_GATHERING_START=144;
-  C2S_GATHERING_SKILL_CHECK=145;
-  S2C_GATHERING_SKILL_CHECK=146;
-  S2C_GATHERING_DONE=147;
+  C2S_RESOURCES_LIST=141;
+  S2C_RESOURCES_LIST=142;
+  S2C_UPDATE_DURABILITY=143;
+  C2S_GATHERING_START=144;
+  S2C_GATHERING_START=145;
+  C2S_GATHERING_SKILL_CHECK=146;
+  S2C_GATHERING_SKILL_CHECK=147;
+  C2S_GATHERING_DONE=148;
+  S2C_GATHERING_DONE=149;
+  C2S_GATHERING_ANIMATION_END = 150;
 
-  C2S_SECTOR_ENTER=170;
-  S2C_SECTOR_ENTER=171;
-  C2S_SECTOR_LEAVE=172;
-  S2C_SECTOR_LEAVE=173;
-  C2S_IN_PORTAL=174;
-  S2C_IN_PORTAL=175;
+
+  C2S_OPEN_CHEST = 156;
+  S2C_OPEN_CHEST = 157;
+  C2S_GET_TREASURE = 158;
+  S2C_REGEN_CHEST = 159;
+  C2S_RECALL = 160;
+  S2C_RECALL = 161;
+  C2S_THROW_GRENADE = 162;
+  S2C_THROW_GRENADE = 163;
+  S2C_TRAPS = 164;
+  C2S_SET_TRAP = 165;
+  S2C_SET_TRAP = 166;
+  C2S_REMOVE_TRAP = 167;
+  S2C_REMOVE_TRAP = 168;
+  C2S_STUN = 169;
+  S2C_STUN = 170;
+  C2S_EQUIP_CHANGE = 171;
+  S2C_EQUIP_CHANGE = 172;
 
   C2S_ADD_EXP=200;
   S2C_ADD_EXP=201;
   S2C_LEVEL_UP=202;
   C2S_INVEST_POINT=203;
   S2C_INVEST_POINT=204;
+
+  C2S_GET_INVENTORY_SLOT_BY_ITEM_ID=209;
+  S2C_GET_INVENTORY_SLOT_BY_ITEM_ID=210;
+  C2S_CRAFT_START = 211;
+  S2C_CRAFT_START = 212;
+  C2S_CRAFT_END = 213;
+  S2C_CRAFT_END = 214;
+
+  S2C_PING=254;
+  C2S_PONG=255;
 `;
 const MESSAGES = `
 message C2SRegister{
@@ -126,23 +162,26 @@ message S2CCreateCharacter{
   string msg = 2;
 }
 
-message C2SEnter{
+message C2SEnterTown{
   string nickname = 1;
   int32 classCode = 2;
-  int32 targetScene = 3;
 }
-message S2CEnter{
-  PlayerInfo player = 1;
+message S2CEnterTown{
+  repeated PlayerInfo players = 1;
 }
-message C2SLeave{
-  optional int32  targetScene = 1;
+message C2SMoveSector{
+  int32 targetSector = 1;
 }
-message S2CLeave{}
+message S2CMoveSector{
+  int32 targetSector = 1;
+  repeated PlayerInfo players = 2;
+  repeated TrapInfo traps = 3;
+}
 
-message C2SAnimation{
+message C2SEmote{
   int32 animCode = 1;
 }
-message S2CAnimation{
+message S2CEmote{
   int32 playerId = 1;
   int32 animCode = 2;
 }
@@ -161,11 +200,10 @@ message S2CChat{
 }
 
 message S2CSpawn{
-  repeated PlayerInfo players = 1;
+  PlayerInfo player = 1;
 }
 message S2CDespawn{
-  repeated int32 playerIds = 1;
-  int32 currentScene = 2;
+  int32 playerId = 1;
 }
 
 message C2SPlayerMove{
@@ -184,11 +222,16 @@ message S2CPlayerLocation{
   int32 playerId = 1;
   TransformInfo transform = 2;
   bool isValidTransform = 3;
-  int32 currentScene = 4;
-
 }
 message C2SPlayerRunning{} 
 message S2CPlayerRunning{} 
+message C2SPortal {
+  int32 inPortalId = 1;
+  int32 outPortalId = 2;
+}
+message S2CPortal {
+  Vec3 outPortalLocation = 1;
+}
 
 message C2SRankingList{
   string type = 1;
@@ -219,9 +262,40 @@ message C2SItemDestroy {
 message C2SInventorySort {
   repeated InventorySlot slots = 1;
 }
+message C2SItemMove {
+  repeated InventorySlot slots = 1;
+}
 message S2CInventoryUpdate {
   repeated InventorySlot slots = 1;
 }
+
+message C2SHousingSave {
+  repeated HousingInfo housingInfo = 1;
+}
+
+message S2CHousingSave {
+  string status = 1;
+  string msg = 2;
+}
+
+message C2SHousingLoad {}
+
+message S2CHousingLoad {
+  string status = 1;
+  string msg = 2;
+  repeated HousingInfo housingInfo = 3;
+}
+
+message C2SFurnitureCraft {
+  int32 recipeId = 1;
+}
+
+message S2CFurnitureCraft {
+  bool isSuccess = 1;
+  string msg = 2;
+  int32 recipeId = 3;
+}
+
 message C2SCreateParty{}
 message S2CCreateParty{
   string partyId = 1;
@@ -290,6 +364,12 @@ message S2CAllowInvite{
   int32 memberCount = 3;
   repeated MemberCardInfo members = 4;
 }
+message S2CUpdateParty{
+  string partyId = 1;
+  int32 leaderId = 2;
+  int32 memberCount = 3;
+  repeated MemberCardInfo members = 4;
+}
 message C2SRejectInvite {
   int32 memberId = 1;
 }
@@ -322,6 +402,8 @@ message S2CMissingPlayer{
   int32 playerId = 2;
 }
 
+message C2SResourcesList{
+}
 message S2CResourcesList{
   repeated Resource resources = 1;
 }
@@ -345,30 +427,66 @@ message S2CGatheringSkillCheck{
   int32 placedId = 1;
   int32 durability = 2;
 }
+message C2SGatheringDone{
+}
 message S2CGatheringDone{
   int32 placedId = 1;
   int32 itemId = 2;
   int32 quantity = 3;
 }
 
-message C2SSectorEnter{
-  int32 sectorId = 1;
-  optional string partyId = 2;
+message C2SGatheringAnimationEnd{
+  
 }
-message S2CSectorEnter{
-  SectorInfo sectorInfo = 1;
-  PlayerStatus player = 2;
+
+
+message C2SRecall {}
+message S2CRecall {
+  int32 playerId = 1;
+  int32 recallTimer = 2;
 }
-message C2SSectorLeave{
-  int32 sectorId = 1;
-  optional string partyId = 2;
+message C2SThrowGrenade {
+  Vec3 startPos = 1;
+  Vec3 targetPos = 2;
 }
-message S2CSectorLeave{}
-message C2SInPortal{
-  int32 sectorId = 1;
-  int32 portalId = 2;
+message S2CThrowGrenade {
+  int32 playerId = 1;
+  Vec3 velocity = 2;
+  int32 coolTime = 3;
 }
-message S2CInPortal{}
+message S2CTraps {
+  repeated TrapInfo traps = 1;
+}
+message C2SSetTrap {
+  Vec3 trapPos = 1;
+}
+message S2CSetTrap {
+  TrapInfo trapInfo = 1;
+  int32 coolTime = 2;
+}
+message C2SRemoveTrap {
+  TrapInfo trapInfo = 1;
+}
+message S2CRemoveTrap {
+  repeated TrapInfo trapInfos = 1;
+}
+message C2SStun {
+  int32 skillType = 1;
+  repeated int32 playerIds = 2;
+  repeated int32 monsterIds = 3;
+}
+message S2CStun {
+  int32 stunTimer = 1;
+  repeated int32 playerIds = 2;
+  repeated int32 monsterIds = 3;
+}
+message C2SEquipChange {
+  int32 nextEquip = 1;
+}
+message S2CEquipChange {
+  int32 playerId = 1;
+  int32 nextEquip = 2;
+}
 
 message C2SAddExp {
   int32 count = 1;
@@ -389,6 +507,37 @@ message C2SInvestPoint {
 message S2CInvestPoint {
   StatInfo statInfo = 1;
 }
+
+message C2SCraftStart{
+  int32 recipeId = 1;
+}
+message S2CCraftStart{
+  bool isSuccess = 1;
+  int32 recipeId = 2;
+  string msg = 3;
+}
+
+message C2SCraftEnd{
+  int32 recipeId = 1;
+}
+message S2CCraftEnd{
+  bool isSuccess = 1;
+  string msg = 2;
+}
+
+message S2CPing {
+  int64 timestamp = 1;
+}
+message C2SPong {
+  int64 timestamp = 1;
+}
+
+message C2SGetInventorySlotByItemId {
+  repeated int32 itemIds = 1;
+}
+message S2CGetInventorySlotByItemId {
+  repeated InventorySlot slots = 1;
+}
 `;
 const STRUCTS = `
 message PlayerInfo {
@@ -398,7 +547,6 @@ message PlayerInfo {
   int32 classCode = 4; 
   TransformInfo transform = 5;
   StatInfo statInfo = 6;
-  int32 currentScene = 7;
 }
 
 message PlayerRank {
@@ -443,8 +591,12 @@ message InventoryInfo {}
 message MemberCardInfo {
   int32 id = 1;
   string nickname = 2;
-  bool isLeader = 3;
-  bool isMine = 4;
+  int32 currentSector = 3;
+  bool isLeader = 4;
+  bool isMine = 5;
+  int32 hp = 6;
+  int32 level = 7;
+  int32 currentEquip = 8;
 }
 
 message OwnedCharacter {
@@ -486,6 +638,7 @@ message Vec3 {
 message Resource {
   int32 resourceIdx = 1;
   int32 resourceId = 2;
+  int32 durability = 3;
 }
 
 message StatInfo {
@@ -494,6 +647,10 @@ message StatInfo {
   int32 pickSpeed = 3;
   int32 moveSpeed = 4;
   int32 abilityPoint = 5;
+  int32 curStamina = 6;
+  int32 exp = 7;
+  int32 targetExp = 8;
+  int32 hp = 9;
 }
 
 message MonsterStatus {
@@ -511,6 +668,23 @@ message InventorySlot {
   int32 slotIdx = 1;
   int32 itemId = 2;
   int32 stack = 3;
+}
+
+message TrapInfo {
+  int32 casterId = 1;
+  Vec3 pos = 2;
+}
+
+message MaterialInfo{
+  int32 materialId = 1;
+  int32 count = 2;
+  int32 slot = 3;
+}
+
+message HousingInfo {
+  int32 itemId = 1;
+  int32 dataType = 2;
+  TransformInfo transform = 3;
 }
 `;
 
@@ -610,9 +784,7 @@ function getDataFuncs(Messages) {
       });
 
     const paramList = fields.map((f) => `${f.name}_${f.type}`).join(', ');
-    const returnObj = fields
-      .map((f) => `${f.name}: ${f.name}_${f.type}`)
-      .join(', ');
+    const returnObj = fields.map((f) => `${f.name}: ${f.name}_${f.type}`).join(', ');
 
     const funcStr = `(${paramList}) => { return { ${returnObj} }; }`;
 

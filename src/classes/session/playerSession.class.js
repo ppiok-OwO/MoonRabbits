@@ -1,27 +1,57 @@
 import chalk from 'chalk';
 import redisClient from '../../utils/redis/redis.config.js';
 import Player from '../player.class.js';
-import { getSectorSessions } from '../../session/sessions.js';
+import { getSectorSessions, getPartySessions } from '../../session/sessions.js';
+import { leavePartyHandler } from '../../handlers/social/party/leaveParty.handler.js';
+import PACKET from '../../utils/packet/packet.js';
+
 class PlayerSession {
   players = new Map();
-  playerId = 1;
+  playerIdx = 1;
 
   async addPlayer(socket, user, nickname, classCode, statData) {
-    const newPlayer = new Player(user, this.playerId++, nickname, classCode, statData);
+    const newPlayer = new Player(user, this.playerIdx++, nickname, classCode, statData);
     this.players.set(socket, newPlayer);
 
-    getSectorSessions().getSector(1).setPlayer(socket, newPlayer);
+    // @@@ getSector가 sectorId로 탐색해서 수정 @@@
+    getSectorSessions().getSector(100).setPlayer(socket, newPlayer);
 
     return newPlayer;
   }
 
   removePlayer(socket) {
-    const player = this.players.get(socket);
-    console.log('removePlayer 할 때 players.get(socket) 뭐 나오나 : ', player.id);
+    const SectorSessionManager = getSectorSessions();
+    const partySessionManager = getPartySessions();
+
+    // 2. playerSession에서 해당 소켓에 대한 플레이어 세션 삭제
+    const player = this.getPlayer(socket);
     if (player) {
-      const key = `playerSession:${player.id}`;
-      redisClient.del(key);
+      const playerSectorId = player.getSectorId();
+      if (playerSectorId !== 99) {
+        const sector = SectorSessionManager.getSector(playerSectorId);
+        sector.deletePlayer(player.user.socket);
+  
+        const oldTraps = sector.removeTraps(player.id);
+        if (oldTraps) {
+          sector.notifyExceptMe(PACKET.S2CRemoveTrap(oldTraps), player.id);
+        }
+  
+        const partyId = player.getPartyId();
+        if (partyId) {
+          const party = partySessionManager.getParty(partyId);
+          leavePartyHandler(socket, { partyId, leftPlayerId: player.id });
+        }
+        // 디스폰
+        this.notify(PACKET.S2CDespawn(player.id));
+      }
+
       this.players.delete(socket);
+
+      console.log(chalk.green(`[onEnd] playerSession에서 삭제된 socket ID: ${socket.id}`));
+    } else {
+      console.log(
+        chalk.yellow(`[onEnd] playerSession에서 찾을 수 없습니다. socket ID : ${socket.id}`),
+      );
     }
   }
 
@@ -34,6 +64,20 @@ class PlayerSession {
       if (player.id === playerId) return player;
     }
     return -1;
+  }
+
+  getSocketByPlayerId(playerId) {
+    for (const [socket, player] of this.players.entries()) {
+      if (player.id === playerId) {
+        return socket; // 해당 소켓 반환
+      }
+    }
+    console.log(
+      chalk.yellow(
+        `[getSocketByPlayerId] 해당 플레이어 ID(${playerId})에 대한 소켓을 찾을 수 없습니다.`,
+      ),
+    );
+    return undefined; // 없으면 undefined 반환
   }
 
   getAllPlayers() {
@@ -50,35 +94,30 @@ class PlayerSession {
     return -1;
   }
 
+  getSocketByNickname(nickname) {
+    for (const [socket, player] of this.players.entries()) {
+      if (player.nickname === nickname) {
+        return socket;
+      }
+    }
+    console.log(chalk.yellow(`[getSocketByNickname] ${nickname}의 소켓을 찾을 수 없습니다.`));
+    return undefined;
+  }
+
   clearSession() {
-    this.players.forEach((player) => {
-      redisClient.del(`playerSession:${player.id}`);
-    });
     this.players.clear();
   }
 
   notify(packet) {
-    for (const player of this.players.keys()) {
-      player.write(packet);
+    for (const socket of this.players.keys()) {
+      socket.write(packet);
     }
   }
 
-  // Redis에 Player 데이터를 저장하는 메서드
-  async saveToRedis(key, player) {
-    try {
-      await redisClient.hset(key, {
-        id: player.id,
-        userId: player.user.userId,
-        nickname: player.nickname,
-        classCode: player.classCode,
-        status: 'active',
-        currentSector: 'Town', // 기본적으로 Town으로 설정
-        loginTime: new Date().toISOString(),
-      });
-      await redisClient.expire(key, 3600); // 만료 시간 설정
-      console.log(`${chalk.green('[Redis Log]')} Player 데이터 저장 완료: ${key}`);
-    } catch (error) {
-      console.error(`${chalk.green('[Redis Error]')} Player 데이터 저장 실패: ${key}`, error);
+  notifyExceptMe(packet, mySocketId) {
+    for (const socket of this.players.keys()) {
+      if (socket.id === mySocketId) continue;
+      socket.write(packet);
     }
   }
 }

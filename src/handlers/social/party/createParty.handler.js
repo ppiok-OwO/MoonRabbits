@@ -5,7 +5,7 @@ import {
 import CustomError from '../../../utils/error/customError.js';
 import { ErrorCodes } from '../../../utils/error/errorCodes.js';
 import handleError from '../../../utils/error/errorHandler.js';
-import Packet from '../../../utils/packet/packet.js';
+import PACKET from '../../../utils/packet/packet.js';
 
 export const createPartyHandler = (socket, packetData) => {
   try {
@@ -14,13 +14,13 @@ export const createPartyHandler = (socket, packetData) => {
     const player = playerSession.getPlayer(socket);
 
     if (!player) {
-      return socket.emit(
-        'error',
-        new CustomError(
-          ErrorCodes.USER_NOT_FOUND,
-          '플레이어 정보를 찾을 수 없습니다.',
-        ),
+      const packet = PACKET.S2CChat(
+        0,
+        '플레이어 정보를 찾을 수 없습니다.',
+        'System',
       );
+
+      return socket.write(packet);
     }
 
     const partySession = getPartySessions();
@@ -28,7 +28,7 @@ export const createPartyHandler = (socket, packetData) => {
     const partyId = party.getId();
     player.setPartyId(partyId);
 
-    const packet = Packet.S2CCreateParty(
+    const packet = PACKET.S2CCreateParty(
       party.getId(),
       party.getPartyLeaderId(),
       party.getMemberCount(),

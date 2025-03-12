@@ -6,13 +6,15 @@
       "sector_code": 0,
       "sector_name": "지역명",
       "areas": "각 분할된 구역 위치",
-      "monsters": ["몬스터코드, 이동정보  하나씩 할것"]
+      "monsters": ["몬스터코드, 이동정보  하나씩 할것"],
+      "resources": ["자원 코드"]
     },
     {
-      "sector_code": 1,
+      "sector_code": 100,
       "sector_name": "마을",
       "areas": [],
-      "monsters": []
+      "monsters": [],
+      "resources": []
     },
     {
       "sector_code": 2,
@@ -74,7 +76,110 @@
           "monster_id": 11001,
           "areaIdx": 5
         }
-      ]
+      ],
+      "resources": []
+    },
+    {
+      "sector_code": 101,
+      "sector_name": "아누논덴",
+      "areas": [
+        { "position": { "x": 0, "y": 0, "z": 0 } },
+        { "position": { "x": 0, "y": 0, "z": -34.52 } },
+        { "position": { "x": -34.52, "y": 0, "z": 0 } },
+        { "position": { "x": -34.52, "y": 0, "z": -34.52 } }
+      ],
+      "monsters": [
+        {
+          "monster_id": 1,
+          "areaIdx": 0
+        },
+        {
+          "monster_id": 2,
+          "areaIdx": 1
+        },
+        {
+          "monster_id": 3,
+          "areaIdx": 2
+        },
+        {
+          "monster_id": 4,
+          "areaIdx": 3
+        }
+      ],
+      "resources": [1, 1, 1, 1, 1, 1, 51, 51, 51, 51, 51, 51]
+    },
+    {
+      "sector_code": 102,
+      "sector_name": "누논덴",
+      "areas": [
+        { "position": { "x": 0, "y": 0, "z": 0 } },
+        { "position": { "x": -34.52, "y": 0, "z": 0 } },
+        { "position": { "x": 0, "y": 0, "z": -34.52 } },
+        { "position": { "x": -69.05, "y": 0, "z": 0 } },
+        { "position": { "x": -69.05, "y": 0, "z": 34.52 } }
+      ],
+      "monsters": [
+        {
+          "monster_id": 1,
+          "areaIdx": 0
+        },
+        {
+          "monster_id": 2,
+          "areaIdx": 1
+        },
+        {
+          "monster_id": 3,
+          "areaIdx": 2
+        },
+        {
+          "monster_id": 4,
+          "areaIdx": 3
+        },
+        {
+          "monster_id": 5,
+          "areaIdx": 4
+        }
+      ],
+      "resources": [2, 2, 2, 2, 2, 2, 2, 52, 52, 52, 52, 52, 52, 52]
+    },
+    {
+      "sector_code": 103,
+      "sector_name": "더운덴",
+      "areas": [
+        { "position": { "x": 0, "y": 0, "z": -34.52 } },
+        { "position": { "x": 0, "y": 0, "z": 0 } },
+        { "position": { "x": -34.52, "y": 0, "z": 0 } },
+        { "position": { "x": -69.05, "y": 0, "z": 0 } },
+        { "position": { "x": -69.05, "y": 0, "z": 34.52 } },
+        { "position": { "x": -34.52, "y": 0, "z": 34.52 } }
+      ],
+      "monsters": [
+        {
+          "monster_id": 1,
+          "areaIdx": 0
+        },
+        {
+          "monster_id": 2,
+          "areaIdx": 1
+        },
+        {
+          "monster_id": 3,
+          "areaIdx": 2
+        },
+        {
+          "monster_id": 4,
+          "areaIdx": 3
+        },
+        {
+          "monster_id": 5,
+          "areaIdx": 4
+        },
+        {
+          "monster_id": 6,
+          "areaIdx": 5
+        }
+      ],
+      "resources": [3, 3, 3, 3, 3, 3, 3, 3, 53, 53, 53, 53, 53, 53, 53, 53]
     }
   ]
 }
