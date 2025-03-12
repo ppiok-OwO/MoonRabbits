@@ -253,12 +253,9 @@ class Monster {
       this.attackStartTime = Date.now();
       this.stateChanged = true; // 상태 변경 플래그 설정
       
-      console.log("!!! 여기 오나??? 2 !!!");
       // 플레이어 체력 변화
       const changedHp = targetPlayerObj.getHp() - 1;
       const resultHp = targetPlayerObj.setHp(changedHp); // setHp 메서드 내부에서 음수일 경우 예외처리가 들어감
-      console.log("!!! 그럼 changedHp? !!! ", changedHp);
-      console.log("!!! 그럼 resultHp? !!! ", resultHp);
       // 만약 파티 중이라면 멤버 카드 UI 업데이트
       const partySession = getPartySessions();
       const partyId = targetPlayerObj.getPartyId();
