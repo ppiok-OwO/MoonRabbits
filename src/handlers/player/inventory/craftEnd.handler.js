@@ -58,13 +58,17 @@ export const craftEndHandler = async (socket, packetData) => {
       console.error(`invalid format : redisInventory[slotIdx]`);
       return;
     }
-    if (newInventory[slotIdx].itemId * 1 === craftItemId) {
+
+    // 빈 슬롯 중에 제일 앞의 슬롯
+    if (newInventory[slotIdx].itemId * 1 === 0) {
+      tempSlotIdx = Math.min(slotIdx, tempSlotIdx);
+    }
+
+    // 기존 인벤토리에 제작 아이템이 있는 슬롯 
+    if (newInventory[slotIdx].itemId * 1 === craftItemId && isNewCraft) {
       isNewCraft = false;
       canCraft = true;
       newInventory[slotIdx].stack += 1;
-    }
-    if (newInventory[slotIdx].itemId * 1 === 0) {
-      tempSlotIdx = Math.min(slotIdx, tempSlotIdx);
     }
   }
 
