@@ -339,7 +339,7 @@
 
 ## 🐰 서비스 아키텍처
 
-![서비스 아키텍처](https://github.com/user-attachments/assets/8cc4fb8d-32f1-46bc-a84d-7c53f44ccc8d)
+![서비스 아키텍처](https://github.com/user-attachments/assets/b3a82d03-3e27-4be5-b53b-b0657c6f880e)
 
 ![image](https://github.com/user-attachments/assets/410f2678-848c-4868-8e72-b02c9d07f431)
 
