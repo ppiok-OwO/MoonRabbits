@@ -23,6 +23,13 @@ export const createPartyHandler = (socket, packetData) => {
       return socket.write(packet);
     }
 
+    // 파티가 이미 생성되었으면 return
+    if (player.getPartyId()) {
+      const packet = PACKET.S2CChat(0, '이미 파티를 생성하였습니다.', 'System');
+
+      return socket.write(packet);
+    }
+
     const partySession = getPartySessions();
     const party = partySession.addParty(socket, player);
     const partyId = party.getId();
