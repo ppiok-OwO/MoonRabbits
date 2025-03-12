@@ -8,6 +8,11 @@ import PACKET from '../utils/packet/packet.js';
 
 export const onConnection = async (socket) => {
   const clientIP = socket.remoteAddress; // 헬스 체크 및 클라이언트 IP 확인
+  if (!clientIP || clientIP === undefined) {
+    socket.destroy();
+    return;
+  }
+
   console.log('클라이언트가 연결되었습니다:', clientIP, socket.remotePort);
 
   // socket.isUnity = false;
