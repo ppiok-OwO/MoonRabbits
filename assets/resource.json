@@ -50,8 +50,8 @@
       "resource_durability": 5,
       "resource_respawn": 60,
       "drop_item": [
-        { "chance": 10, "item_id": 20002 },
-        { "chance": 50, "item_id": 20003 }
+        { "chance": 10, "item_id": 20004 },
+        { "chance": 50, "item_id": 20005 }
       ]
     },
     {
@@ -65,7 +65,7 @@
       "drop_item": [
         { "chance": 10, "item_id": 22001 },
         { "chance": 10, "item_id": 22002 },
-        { "chance": 10, "item_id": 21001 }
+        { "chance": 10, "item_id": 22003 }
       ]
     },
     {
@@ -77,11 +77,10 @@
       "resource_durability": 3,
       "resource_respawn": 30,
       "drop_item": [
-        { "chance": 2, "item_id": 22001 },
-        { "chance": 10, "item_id": 22002 },
+        { "chance": 10, "item_id": 22004 },
         { "chance": 10, "item_id": 22005 },
         { "chance": 10, "item_id": 21001 },
-        { "chance": 10, "item_id": 21001 }
+        { "chance": 10, "item_id": 21002 }
       ]
     },
     {
