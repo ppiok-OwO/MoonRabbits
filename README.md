@@ -224,7 +224,7 @@
 <br>
 </details>
 
-<details><summary>🥕 자원 채집 🥕
+<details><summary>🥕 아이템 제작 🥕
 </summary>
 <br>
 
