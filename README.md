@@ -337,6 +337,18 @@
 <br>
 
 **배치 저장**
+- 나만의 집에 배치된 아이템들은 일정 주기마다 저장됩니다.
+- 저장된 아이템들은 서버로 전송되어 게임을 종료한 이후에도 항상 같은 상태를 유지할 수 있습니다.
+- 또한 화면 우측 상단의 ‘체크’ 버튼을 눌러 저장 주기를 기다리지 않고 직접 저장할 수도 있습니다.
+- 게임 종료 시에도 현재 배치된 아이템들을 자동적으로 저장하여 배치 상태를 잃어버리는 돌발 상황을 막을 수 있습니다.
+
+<br>
+
+![image](https://github.com/user-attachments/assets/ad476d5d-0763-4007-b450-c3cd259f1c83)
+![image](https://github.com/user-attachments/assets/57f10f66-79d0-4b5f-866a-a09ebc412e33)
+![image](https://github.com/user-attachments/assets/5974f66c-13a0-43b1-bcb3-869ffc8f26a8)
+
+<br>
 
 <br>
 </details>
