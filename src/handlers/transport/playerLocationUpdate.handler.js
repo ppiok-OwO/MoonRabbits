@@ -41,14 +41,14 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
         player.getMoveSpeed() * (elapsedTime / 1000) +
         config.updateLocation.tolerance;
       // 달리기 중이면 1.5배
-      if (player.isRunning || player.usePortal) {
+      if (player.isRunning) {
         serverDistance =
           player.getMoveSpeed() * (elapsedTime / 1000) * 1.5 +
           config.updateLocation.tolerance;
       }
 
       // 둘을 비교해서 클라이언트가 더 크면 속도 검증 실패 로그 출력 + 용의자 리스트에 등록
-      if (clientDistance > serverDistance) {
+      if (clientDistance > serverDistance && !player.usePortal) {
         console.log('속도 검증 실패!!', clientDistance, serverDistance);
         await addSuspect(socket.remoteAddress);
       }
