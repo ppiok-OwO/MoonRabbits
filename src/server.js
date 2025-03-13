@@ -6,11 +6,15 @@ import { addServerLog, reportMetric, reportErrorLog, reportServerLog, addErrorLo
 
 const server = net.createServer(onConnection);
 
-process.on('uncaughtException', (err) => {
-  addErrorLog(`예기치 않은 오류 발생: ${err}`);
-});
-process.on('unhandledRejection', (reason) => {
-  addErrorLog(`Unhandled Rejection: ${reason}`);
+process.on('unhandledRejection', (reason, promise) => {
+  const stack = reason instanceof Error ? reason.stack : '';
+  const match = stack.match(/\((.*):(\d+):(\d+)\)/);
+  if (match) {
+      const [_, file, line, column] = match;
+      addErrorLog(`Unhandled Rejection: ${reason} (파일: ${file}, 행: ${line}, 열: ${column})`);
+  } else {
+      addErrorLog(`Unhandled Rejection: ${reason}`);
+  }
 });
 
 initServer()
