@@ -147,6 +147,7 @@ message S2CRegister{
 message C2SLogin{
   string email = 1;
   string pw = 2;
+  string version = 3;
 }
 message S2CLogin{
   bool isSuccess = 1;
