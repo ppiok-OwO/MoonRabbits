@@ -58,12 +58,15 @@ async function deleteUserSession(socket) {
   const userSessionManager = getUserSessions();
   const user = userSessionManager.getUser(socket);
   if (user) {
+    //있을때만 적용
+    if(user.userId){
+      // Redis에 저장된 전체 세션(fullSession:{userId})도 삭제
+      const redisSession = new RedisSession();
+      await redisSession.removeFullSession(socket.user.userId);
+      console.log(chalk.green(`[onEnd] Redis에 저장된 fullSession:${user.userId} 삭제됨`));
+    }
     userSessionManager.removeUser(socket);
     console.log(chalk.green(`[onEnd] userSession에서 삭제된 socket ID : ${socket.id}`));
-    // Redis에 저장된 전체 세션(fullSession:{userId})도 삭제
-    const redisSession = new RedisSession();
-    await redisSession.removeFullSession(socket.user.userId);
-    console.log(chalk.green(`[onEnd] Redis에 저장된 fullSession:${user.userId} 삭제됨`));
   } else {
     console.log(chalk.yellow(`[onEnd] userSession에서 찾을 수 없습니다. : ${socket.id}`));
   }

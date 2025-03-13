@@ -9,6 +9,7 @@ import bcrypt from 'bcrypt';
 import chalk from 'chalk';
 import redisClient from '../../utils/redis/redis.config.js';
 import onEnd from '../../events/onEnd.js';
+import { config } from '../../config/config.js';
 
 // 서버 재시작 후 한 번만 fullSession 초기화를 실행하기 위한 플래그
 let isFullSessionCleared = false;
@@ -36,7 +37,19 @@ const loginHandler = async (socket, packetData) => {
     //   isFullSessionCleared = true;
     // }
 
-    const { email, pw } = packetData;
+    const { email, pw, version } = packetData;
+
+    console.log("버전: " +version + config.client.version);
+
+    // 버전 검증
+    if (version != config.client.version) {
+      const isSuccess = false;
+      const msg = '클라이언트 버전이 맞지 않습니다.';
+
+      const failResponse = PACKET.S2CLogin(isSuccess, msg, []);
+      return socket.write(failResponse);
+    }
+
 
     // 로그인 ID로 사용자 검색
     const userData = await findUserByEmail(email);
