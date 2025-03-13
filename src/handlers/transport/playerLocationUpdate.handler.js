@@ -75,9 +75,9 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
           // 만약 던전이면
           const sectorSessions = getSectorSessions();
           const sector = sectorSessions.getSector(sectorCode);
-          sector.notify(packet);
+          sector.notifyExceptMe(packet,player.id);
         } else {
-          playerSession.notify(packet);
+          playerSession.notifyExceptMe(packet,socket.id);
         }
         return;
       } else {
@@ -88,10 +88,10 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
           // 만약 던전이면
           const sectorSessions = getSectorSessions();
           const sector = sectorSessions.getSector(sectorCode);
-          sector.notify(packet);
+          sector.notifyExceptMe(packet,player.id);
         } else {
           // 던전이 아니면
-          playerSession.notify(packet);
+          playerSession.notifyExceptMe(packet,socket.id);
         }
       }
     }

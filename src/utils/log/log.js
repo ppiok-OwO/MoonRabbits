@@ -87,8 +87,8 @@ let previousNetworkStats = {};
 
 // 메트릭 기록
 export function reportMetric() {
-  setInterval(() => {
-    //const cpuUsage = os.loadavg()[0];{
+  redisClient.del('metricLogs');
+  setInterval(async () => {
     const currentCpuUsage = process.cpuUsage();
     const userCpu = (currentCpuUsage.user - previousCpuUsage.user) / 1000;
     const systemCpu = (currentCpuUsage.system - previousCpuUsage.system) / 1000;
@@ -96,45 +96,17 @@ export function reportMetric() {
     const cores = os.cpus().length;
     const totalAvailableTime = 5000 * cores;
     const cpuUsagePercentage = ((totalCpuTime / totalAvailableTime) * 100).toFixed(2);
+    previousCpuUsage = currentCpuUsage;
 
     const currentMemoryUsage = process.memoryUsage().heapUsed / 1024 / 1024;
     
-    //const message = `CPU 사용량: ${cpuUsage}, 메모리 사용량: ${memoryUsage.toFixed(3)} MB`;
-    const networkInterfaces = os.networkInterfaces();
-    const currentNetworkStats = [];
-
-    let totalTx = 0;
-    let totalRx = 0;
-
-    for (const [key, interfaces] of Object.entries(networkInterfaces)) {
-      for (const iface of interfaces) {
-        if (iface.family === 'IPv4' && !iface.internal) {
-          currentNetworkStats[key] = {
-            tx: iface.tx_bytes || 0,
-            rx: iface.rx_bytes || 0,
-          };
-
-          // 이전 상태와 현재 상태 비교
-          if (previousNetworkStats[key]) {
-            const diffTx = currentNetworkStats[key].tx - previousNetworkStats[key].tx;
-            const diffRx = currentNetworkStats[key].rx - previousNetworkStats[key].rx;
-
-            totalTx += diffTx > 0 ? diffTx : 0;
-            totalRx += diffRx > 0 ? diffRx : 0;
-          }
-        }
-      }
-    }
-
-    previousCpuUsage = currentCpuUsage;
-
     const cpuUsage = `${cpuUsagePercentage}%`;
     const memoryUsage = `${currentMemoryUsage.toFixed(3)} MB`;
-    const networkUsage = `(TX):${totalTx}bytes, (RX):${totalRx}bytes`;
+    const networkUsage = `(Out):${stats.total.outputMb.toFixed(2)} MB, (In):${stats.total.inputMb.toFixed(2)} MB`;
     const timestamp = Date.now();
 
     redisClient.zadd(
-      'metricLogs2',
+      'metricLogs',
       timestamp,
       JSON.stringify({ cpuUsage, memoryUsage, networkUsage, time: timestamp }),
       (err) => {
@@ -142,4 +114,17 @@ export function reportMetric() {
       },
     );
   }, secPerReport * 1000);
+}
+
+function calculateMbps(interfaceName, currentStats, previousStats) {
+  if (!previousStats[interfaceName]) return { rxMbps: 0, txMbps: 0 };
+
+  const timeInterval = 1; // 측정 간격(초)
+  const rxBytesDiff = currentStats.rxBytes - previousStats[interfaceName].rxBytes;
+  const txBytesDiff = currentStats.txBytes - previousStats[interfaceName].txBytes;
+
+  const rxMbps = (rxBytesDiff * 8) / (timeInterval * 1024 * 1024); // Mbps 계산
+  const txMbps = (txBytesDiff * 8) / (timeInterval * 1024 * 1024); // Mbps 계산
+
+  return { rxMbps, txMbps };
 }

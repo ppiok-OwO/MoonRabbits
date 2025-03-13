@@ -15,6 +15,7 @@ export const packetNames = [
   'S2CChat',
   'S2CSpawn',
   'S2CDespawn',
+  'C2SSpawn',
   'C2SPlayerMove',
   'S2CPlayerMove',
   'C2SPlayerLocation',
