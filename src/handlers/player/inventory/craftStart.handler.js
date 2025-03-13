@@ -90,26 +90,15 @@ export const craftStartHandler = async (socket, packetData) => {
 
   // 레디스 인벤토리 업데이트
   const slots = [];
-  await redisClient.del(redisKey);
-  for (let i = 0; i < 25; i++) {
-    redisClient.hset(redisKey, i.toString(), JSON.stringify(newInventory[i]));
-    try {
-      slots.push(
-        PAYLOAD_DATA.InventorySlot(
-          i,
-          newInventory[i].itemId,
-          newInventory[i].stack,
-        ),
-      );
-    } catch (error) {
-      socket.emit(
-        new CustomError(
-          ErrorCodes.HANDLER_ERROR,
-          'redis inventory 저장장 에러',
-        ),
-      );
-      return;
-    }
+  const hashInventory = {};
+  for(let i = 0; i < 25; i++){
+    hashInventory[i.toString()] = JSON.stringify(newInventory[i]);
+    slots.push(PAYLOAD_DATA.InventorySlot(i, newInventory[i].itemId, newInventory[i].stack));
+  }
+  try {
+    await redisClient.hset(redisKey, hashInventory);
+  } catch (error) {
+    socket.emit(new CustomError(ErrorCodes.HANDLER_ERROR, 'redis inventory 저장 에러'));
   }
 
   // 인벤토리 업데이트 패킷 전송

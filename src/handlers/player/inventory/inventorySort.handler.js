@@ -21,13 +21,14 @@ export const inventorySortHandler = async (socket, packetData) => {
     await redisClient.del(redisKey);
 
     // 정렬된 슬롯 배열의 순서대로 재인덱싱하여 저장
-    for (let i = 0; i < slots.length; i++) {
-      const { itemId, stack } = slots[i];
-      await redisClient.hset(
-        redisKey,
-        i.toString(),
-        JSON.stringify({ itemId, stack }),
-      );
+    const hashInventory = {};
+    for(let i = 0; i< 25; i++){
+      hashInventory[i.toString()] = JSON.stringify({ itemId, stack });
+    }
+    try {
+      await redisClient.hset(redisKey, hashInventory);
+    } catch (error) {
+      socket.emit(new CustomError(ErrorCodes.HANDLER_ERROR, 'redis inventory 저장 에러'));
     }
 
     console.log(
