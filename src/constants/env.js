@@ -20,5 +20,4 @@ export const REDIS_PORT = process.env.REDIS_PORT || 6379;
 export const REDIS_PASSWORD = process.env.REDIS_PASSWORD;
 
 // JWT
-export const TOKEN_SECRET_KEY =
-  process.env.TOKEN_SECRET_KEY || 'custom_secret_key';
+export const TOKEN_SECRET_KEY = process.env.TOKEN_SECRET_KEY || 'custom_secret_key';
