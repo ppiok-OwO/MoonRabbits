@@ -65,6 +65,7 @@ export const config = {
 
     S2CSpawn: PACKET_ID.S2CSpawn,
     S2CDespawn: PACKET_ID.S2CDespawn,
+    C2SSpawn: PACKET_ID.C2SSpawn,
 
     C2SPlayerMove: PACKET_ID.C2SPlayerMove,
     S2CPlayerMove: PACKET_ID.S2CPlayerMove,

@@ -18,6 +18,7 @@ export const PACKET_ID = {
   S2CChat: 21,
   S2CSpawn: 22,
   S2CDespawn: 23,
+  C2SSpawn: 24,
   C2SPlayerMove: 30,
   S2CPlayerMove: 31,
   C2SPlayerLocation: 32,
