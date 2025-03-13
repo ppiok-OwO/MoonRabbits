@@ -46,7 +46,7 @@ async function updateRankingList() {
 }
 
 // 1시간마다 랭킹 캐시 갱신
-setInterval(updateRankingList, 3600000);
+setInterval(updateRankingList, 600 * 1000);
 updateRankingList();
 // 전체 또는 상위 랭킹 리스트를 요청하는 핸들러
 export const rankingHandler = async (socket, packetData) => {
@@ -74,7 +74,10 @@ export const rankingHandler = async (socket, packetData) => {
     socket.write(responsePacket);
   } catch (error) {
     console.error(chalk.red('[rankingHandler Error]\n', error));
-    socket.emit('error', new CustomError(ErrorCodes.HANDLER_ERROR, 'rankingHandler 에러'));
+    socket.emit(
+      'error',
+      new CustomError(ErrorCodes.HANDLER_ERROR, 'rankingHandler 에러'),
+    );
   }
 };
 
