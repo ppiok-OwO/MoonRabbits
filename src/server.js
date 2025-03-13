@@ -2,9 +2,16 @@ import net from 'net';
 import initServer from './init/index.js';
 import { onConnection } from './events/onConnection.js';
 import { config } from './config/config.js';
-import { addServerLog, reportMetric, reportErrorLog, reportServerLog } from './utils/log/log.js';
+import { addServerLog, reportMetric, reportErrorLog, reportServerLog, addErrorLog } from './utils/log/log.js';
 
 const server = net.createServer(onConnection);
+
+process.on('uncaughtException', (err) => {
+  addErrorLog('예기치 않은 오류 발생:');
+});
+process.on('unhandledRejection', (reason, promise) => {
+  addErrorLog(`Unhandled Rejection:, ${reason}`);
+});
 
 initServer()
   .then(() => {
