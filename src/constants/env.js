@@ -5,7 +5,7 @@ dotenv.config();
 export const PORT = process.env.PORT || 3000;
 
 export const HOST = process.env.HOST || '0.0.0.0';
-export const CLIENT_VERSION = '1.0.9';
+export const CLIENT_VERSION = '1.0.10';
 
 // DB
 export const DB1_NAME = process.env.DB1_NAME || 'database1';
