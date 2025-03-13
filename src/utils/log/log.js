@@ -83,7 +83,6 @@ export function reportErrorLog() {
 }
 
 let previousCpuUsage = process.cpuUsage();
-let previousNetworkStats = {};
 
 // 메트릭 기록
 export function reportMetric() {
@@ -102,7 +101,7 @@ export function reportMetric() {
     
     const cpuUsage = `${cpuUsagePercentage}%`;
     const memoryUsage = `${currentMemoryUsage.toFixed(3)} MB`;
-    const networkUsage = `(Out):${stats.total.outputMb.toFixed(2)} MB, (In):${stats.total.inputMb.toFixed(2)} MB`;
+    const networkUsage = `ㅠㅠ`;
     const timestamp = Date.now();
 
     redisClient.zadd(
