@@ -1,4 +1,5 @@
 import { getPlayerSession } from '../../session/sessions.js';
+import { addErrorLog } from '../log/log.js';
 import PACKET from '../packet/packet.js';
 import { ErrorCodes } from './errorCodes.js';
 
@@ -150,6 +151,8 @@ const handleError = (socket, error) => {
         `클라이언트: ${nickname ? `${nickname}` : `로그인하지 않음`}`,
       );
       console.error(error);
+
+      addErrorLog(`(${nickname?nickname:'로그인하지 않음'})${error}`);
       break;
   }
 };
@@ -160,6 +163,8 @@ function printCustomErrorConsole(nickname, error) {
   );
   console.error(`클라이언트: ${nickname ? `${nickname}` : `로그인하지 않음`}`);
   console.error(error);
+  
+  addErrorLog(`(${nickname?nickname:'로그인하지 않음'})${error}`);
 }
 
 export default handleError;
