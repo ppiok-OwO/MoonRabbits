@@ -5,6 +5,7 @@ import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
 import printPacket from '../utils/log/printPacket.js';
 import { addBlacklist, addSuspect, isBlacklisted } from './blacklist.js';
+import geoip from 'geoip-lite';
 
 export const onData = (socket) => {
   if (!socket.buffer) {
@@ -36,6 +37,18 @@ export const onData = (socket) => {
       return;
     }
 
+    const geo = geoip.lookup(clientIP);
+
+    if (geo && geo.country === 'KR') {
+      next(); // 한국 IP일 경우 요청 처리
+    } else {
+      console.log(
+        `한국 대역폭이 아닌 IP(${clientIP})의 접근 시도 감지 -> 연결 종료`,
+      );
+      socket.destroy();
+      return;
+    }
+
     // 패킷 크기 검사
     if (data.length > config.blacklist.MAX_PACKET_SIZE) {
       console.log(
@@ -52,8 +65,8 @@ export const onData = (socket) => {
       console.log(
         `과도한 요청 감지 (요청 횟수 : ${socket.requestCounter}, IP: ${clientIP}) -> 용의자 리스트 추가`,
       );
-      await addSuspect(socket.remoteAddress);
       socket.buffer = Buffer.alloc(0); // 버퍼 초기화
+      await addSuspect(socket.remoteAddress);
     }
 
     socket.buffer = Buffer.concat([socket.buffer, data]);
