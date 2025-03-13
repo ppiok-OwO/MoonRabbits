@@ -49,7 +49,6 @@ const playerLocationUpdateHandler = async (socket, packetData) => {
 
       // 둘을 비교해서 클라이언트가 더 크면 속도 검증 실패 로그 출력 + 용의자 리스트에 등록
       if (clientDistance > serverDistance && !player.usePortal) {
-        console.log('속도 검증 실패!!', clientDistance, serverDistance);
         await addSuspect(socket.remoteAddress);
       }
 
