@@ -152,7 +152,14 @@ const handleError = (socket, error) => {
       );
       console.error(error);
 
-      addErrorLog(`(${nickname?nickname:'로그인하지 않음'})${error}`);
+      const stack = error instanceof Error ? error.stack : '';
+      const match = stack.match(/\((.*):(\d+):(\d+)\)/);
+      if (match) {
+          const [_, file, line, column] = match;
+          addErrorLog(`(${nickname?nickname:'로그인하지 않음'})${error} (파일: ${file}, 행: ${line})`);
+      } else {
+          addErrorLog(`(${nickname?nickname:'로그인하지 않음'})${error}`);
+      }
       break;
   }
 };
@@ -164,7 +171,14 @@ function printCustomErrorConsole(nickname, error) {
   console.error(`클라이언트: ${nickname ? `${nickname}` : `로그인하지 않음`}`);
   console.error(error);
   
-  addErrorLog(`(${nickname?nickname:'로그인하지 않음'})${error}`);
+  const stack = error instanceof Error ? error.stack : '';
+  const match = stack.match(/\((.*):(\d+):(\d+)\)/);
+  if (match) {
+      const [_, file, line, column] = match;
+      addErrorLog(`(${nickname?nickname:'로그인하지 않음'})${error} (파일: ${file}, 행: ${line})`);
+  } else {
+      addErrorLog(`(${nickname?nickname:'로그인하지 않음'})${error}`);
+  }
 }
 
 export default handleError;
