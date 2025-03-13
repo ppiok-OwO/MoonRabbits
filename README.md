@@ -57,6 +57,10 @@
 ![image](https://github.com/user-attachments/assets/de935e51-bcd6-4c56-9c23-05b2daaf17ea)
 <br>
 ## 🌕 게임 실행 방법
+**[1] 아래 링크에서 zip 파일을 다운로드 받아주세요.**<br>
+https://ppiok.itch.io/moonrabbits
+<br>**[2] 압축을 푼 뒤 exe 파일을 실행해주세요.(Windows PC 환경만 지원합니다.)**
+<br>**[3] 게임을 즐겁게 플레이해주세요!**
 
 ## 🌕 게임 플로우 차트
 <details><summary>🥕 토글을 눌러주세요! 🥕
