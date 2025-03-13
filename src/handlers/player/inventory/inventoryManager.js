@@ -17,8 +17,7 @@ export const addItemToInventory = async (socket, playerId, dropItem) => {
   // Redis에서 기존 인벤토리 데이터 가져오기 (없을 경우 빈 객체)
   const currentData = (await redisClient.hgetall(redisKey)) || {};
   const inventorySlots = [];
-
-  console.log('currentData : \n', currentData);
+  const changedSlots = []; // 변경된 슬롯 정보를 누적
 
   // 25칸 인벤토리 기본값 초기화 (빈 슬롯: itemId 0, stack 0)
   for (let i = 0; i < 25; i++) {
@@ -38,35 +37,31 @@ export const addItemToInventory = async (socket, playerId, dropItem) => {
   let updatedSlotIdx = -1;
   let updatedStack = 0;
 
-  // 스택 가능한 아이템의 경우, 기존 인벤토리 내에 동일한 itemId가 있다면 무조건 +1로 증가
+  // 스택 가능한 아이템의 경우
   if (item.stackable) {
     for (let i = 0; i < inventorySlots.length; i++) {
       if (inventorySlots[i].itemId === item.itemId) {
-        inventorySlots[i].stack += 1; // 항상 +1씩 증가
+        inventorySlots[i].stack += 1; // +1씩 증가
         updatedSlotIdx = i;
         updatedStack = inventorySlots[i].stack;
-        await redisClient.hset(
-          redisKey,
-          i.toString(),
-          JSON.stringify(inventorySlots[i]),
-        );
+        // 해당 슬롯 업데이트 정보 누적
+        changedSlots.push({ slotIdx: i, itemId: item.itemId, stack: updatedStack });
+        await redisClient.hset(redisKey, i.toString(), JSON.stringify(inventorySlots[i]));
         break;
       }
     }
   }
 
-  // 동일 아이템이 없으면 빈 슬롯에 저장 (stack은 1로 설정)
+  // 동일 아이템이 없으면 빈 슬롯 할당
   if (updatedSlotIdx === -1) {
     for (let i = 0; i < inventorySlots.length; i++) {
       if (inventorySlots[i].itemId === 0) {
         inventorySlots[i] = { itemId: item.itemId, stack: item.stack };
         updatedSlotIdx = i;
         updatedStack = item.stack;
-        await redisClient.hset(
-          redisKey,
-          i.toString(),
-          JSON.stringify(inventorySlots[i]),
-        );
+        // 빈 슬롯 업데이트 정보 누적
+        changedSlots.push({ slotIdx: i, itemId: item.itemId, stack: item.stack });
+        await redisClient.hset(redisKey, i.toString(), JSON.stringify(inventorySlots[i]));
         break;
       }
     }
@@ -76,16 +71,8 @@ export const addItemToInventory = async (socket, playerId, dropItem) => {
     throw new Error('인벤토리가 가득 차있습니다.');
   }
 
-  // 업데이트된 슬롯 정보를 포함하는 패킷 데이터 구성 (InventorySlot 구조: slotIdx, itemId, stack)
-  const updateData = {
-    slots: [
-      {
-        slotIdx: updatedSlotIdx,
-        itemId: item.itemId,
-        stack: updatedStack,
-      },
-    ],
-  };
+  // 모든 변경사항이 적용된 후 누적된 변경 슬롯 정보를 클라이언트에 전달
+  const updateData = { slots: changedSlots };
 
   // inventoryUpdate.handler.js를 호출하여 Redis에 저장된 전체 인벤토리(25 슬롯) 데이터를 클라이언트에 전송
   await inventoryUpdateHandler(socket, updateData);
