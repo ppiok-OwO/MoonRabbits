@@ -7,10 +7,10 @@ import { addServerLog, reportMetric, reportErrorLog, reportServerLog, addErrorLo
 const server = net.createServer(onConnection);
 
 process.on('uncaughtException', (err) => {
-  addErrorLog('예기치 않은 오류 발생:');
+  addErrorLog(`예기치 않은 오류 발생: ${err}`);
 });
-process.on('unhandledRejection', (reason, promise) => {
-  addErrorLog(`Unhandled Rejection:, ${reason}`);
+process.on('unhandledRejection', (reason) => {
+  addErrorLog(`Unhandled Rejection: ${reason}`);
 });
 
 initServer()
