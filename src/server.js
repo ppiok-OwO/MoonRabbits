@@ -2,7 +2,7 @@ import net from 'net';
 import initServer from './init/index.js';
 import { onConnection } from './events/onConnection.js';
 import { config } from './config/config.js';
-import { addServerLog, reportMetric, reportErrorLog, reportServerLog, addErrorLog } from './utils/log/log.js';
+import { addServerLog, reportMetric, reportErrorLog, reportServerLog, addErrorLog, reportPacketLog } from './utils/log/log.js';
 
 const server = net.createServer(onConnection);
 
@@ -24,6 +24,7 @@ initServer()
       addServerLog(`[메인서버]가 ${config.server.host}:${config.server.port}에서 실행 중입니다.`);
       reportMetric();
       reportServerLog();
+      reportPacketLog();
       reportErrorLog();
     });
   })

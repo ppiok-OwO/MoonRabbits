@@ -5,9 +5,9 @@ const printPacket = (packetSize, packetId, packetData, str_in_out = '') => {
   const packetType = packetIdEntries.find(([, id]) => id === packetId)[0];
   const color = str_in_out === 'in' ? 33 : 36;
 
-  // console.log(`\x1b[${color}m[${packetType} 패킷]\x1b[0m`);
-  // printObject(packetData);
-  // console.log();
+  console.log(`\x1b[${color}m[${packetType} 패킷]\x1b[0m`);
+  printObject(packetData);
+  console.log();
 
   addPacketLog(packetType, JSON.stringify(packetData));
 };
