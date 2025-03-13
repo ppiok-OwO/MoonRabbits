@@ -25,6 +25,7 @@ enum MsgId {
 
   S2C_SPAWN=22;
   S2C_DESPAWN=23;
+  C2S_SPAWN=24;
 
   C2S_PLAYER_MOVE=30;
   S2C_PLAYER_MOVE=31;
@@ -202,6 +203,9 @@ message S2CSpawn{
   PlayerInfo player = 1;
 }
 message S2CDespawn{
+  int32 playerId = 1;
+}
+message C2SSpawn{
   int32 playerId = 1;
 }
 

@@ -54,6 +54,7 @@ import housingLoadHandler from './housing/housingLoad.handler.js';
 import recoverHandler from './playerAction/recover.handler.js';
 import { playerRunningHandler } from './transport/playerRunning.handler.js';
 import { playerStopRunning } from './transport/playerStopRunning.handler.js';
+import playerSpawnNotificationHandler from './transport/playerSpawnNotification.handler.js';
 
 // !!! 패킷 정의 수정으로 config.packetId 일괄 수정해씀다
 
@@ -67,6 +68,7 @@ const handlers = {
   [config.packetId.C2SPlayerMove]: playerMoveHandler,
   [config.packetId.C2SEmote]: animationHandler,
   [config.packetId.C2SChat]: chatHandler,
+  [config.packetId.C2SSpawn]: playerSpawnNotificationHandler,
   // !!! 제거된 패킷임다 [config.packetId.C_PlayerResponse]: playerResponseHandler,
   [config.packetId.C2SRegister]: registerHandler,
   [config.packetId.C2SLogin]: loginHandler,
