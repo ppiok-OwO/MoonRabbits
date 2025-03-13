@@ -39,9 +39,8 @@ export const onData = (socket) => {
 
     const geo = geoip.lookup(clientIP);
 
-    if (geo && geo.country === 'KR') {
-      next(); // 한국 IP일 경우 요청 처리
-    } else {
+    if (clientIP === '127.0.0.1') {
+    } else if (geo.country !== 'KR') {
       console.log(
         `한국 대역폭이 아닌 IP(${clientIP})의 접근 시도 감지 -> 연결 종료`,
       );
