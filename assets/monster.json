@@ -1,5 +1,100 @@
 {
   "name": "monster",
   "version": "1.0.0",
-  "data": []
+  "data": [
+    {
+      "monster_id": 10000,
+      "monster_name": "몬스터 이름",
+      "sector_code": 1000,
+      "monster_description": "몬스터 설명",
+      "speed": 1
+    },
+    {
+      "monster_id": 10001,
+      "monster_name": "네펜데스",
+      "sector_code": 5001,
+      "monster_description": "벌레 잡는 식물이라 들었는데... 왜이리 크죠...?",
+      "speed": 0.1
+    },
+    {
+      "monster_id": 10002,
+      "monster_name": "웨어울프",
+      "sector_code": 5002,
+      "monster_description": "늑대는 4족보행인데 이건...?",
+      "speed": 0.2
+    },
+    {
+      "monster_id": 10003,
+      "monster_name": "랫맨",
+      "sector_code": 5003,
+      "monster_description": "쥐가 사람만하다면 믿으시겠습니까?",
+      "speed": 0.3
+    },
+    {
+      "monster_id": 10004,
+      "monster_name": "쌍살벌",
+      "sector_code": 5004,
+      "monster_description": "저 독침에 찔렸다가는 독에 죽기보다는 몸이 뚫려 죽겠어요!",
+      "speed": 0.4
+    },
+    {
+      "monster_id": 10005,
+      "monster_name": "부유골렘",
+      "sector_code": 5005,
+      "monster_description": "골렘이 있다는 건 무언가를 지키고 있는 게 아닐까요?",
+      "speed": 0.5
+    },
+    {
+      "monster_id": 10000,
+      "monster_name": "몬스터 이름",
+      "dungeon_code": 1000,
+      "monster_type": "common",
+      "monster_description": "몬스터 설명",
+      "max_hp": 1,
+      "atk": 1,
+      "def": 1,
+      "magic": 1,
+      "speed": 0.1,
+      "drop_item": ["item1", "item2", "item3", "item4", "item5"]
+    },
+    {
+      "monster_id": 10001,
+      "monster_name": "움직이는버섯",
+      "dungeon_code": 1001,
+      "monster_type": "common",
+      "monster_description": "이 버섯이 움직이는 이유는 무엇일까?",
+      "max_hp": 100,
+      "atk": 10,
+      "def": 5,
+      "magic": 1,
+      "speed": 0.1,
+      "drop_item": ["item1", "item2", "item3", "item4", "item5"]
+    },
+    {
+      "monster_id": 11001,
+      "monster_name": "퀸 비",
+      "dungeon_code": 1001,
+      "monster_type": "mid-boss",
+      "monster_description": "누군가 벌집을 건들인듯 하다. 매우 화나있다.",
+      "max_hp": 300,
+      "atk": 15,
+      "def": 5,
+      "magic": 15,
+      "speed": 0.2,
+      "drop_item": ["item1", "item2", "item3", "item4", "item5"]
+    },
+    {
+      "monster_id": 12001,
+      "monster_name": "웨어울프",
+      "dungeon_code": 1001,
+      "monster_type": "boss",
+      "monster_description": "사람이 늑대로 변할 걸까, 애초부터 늑대였을까?",
+      "max_hp": 600,
+      "atk": 30,
+      "def": 10,
+      "magic": 5,
+      "speed": 0.3,
+      "drop_item": ["item1", "item2", "item3", "item4", "item5"]
+    }
+  ]
 }

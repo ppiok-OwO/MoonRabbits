@@ -1,19 +1,184 @@
-import { createResponse } from '../response/createResponse.js';
+import { getPlayerSession } from '../../session/sessions.js';
+import { addErrorLog } from '../log/log.js';
+import PACKET from '../packet/packet.js';
 import { ErrorCodes } from './errorCodes.js';
 
-export const handleError = (socket, error) => {
-  // let responseCode;
-  // let message;
-  // console.log(error);
-  // if (error.code) {
-  //   responseCode = error.code;
-  //   message = error.message;
-  //   console.error(`에러 코드: ${error.code}, 메시지: ${error.message}`);
-  // } else {
-  //   responseCode = ErrorCodes.SOCKET_ERROR;
-  //   message = error.message;
-  //   console.error(`일반 에러: ${error.message}`);
-  // }
-  // const errorResponse = createResponse(-1, responseCode, { message }, null);
-  // socket.write(errorResponse);
+// !!! Packet.S_Chat -> Packet.S2CChat으로 일괄 수정해씀다
+
+const handleError = (socket, error) => {
+  const nickname = '로그인 시도';
+
+  switch (error.code) {
+    case ErrorCodes.CLIENT_VERSION_MISMATCH:
+      const clientVersionMismatch_sChat = PACKET.S2CChat(
+        0,
+        `클라이언트 버전이 일치하지 않습니다.`,
+        'System',
+      );
+      socket.write(clientVersionMismatch_sChat);
+      printCustomErrorConsole(nickname, error);
+      break;
+    case ErrorCodes.GAME_NOT_FOUND:
+      const gameNotFound_sChat = PACKET.S2CChat(
+        0,
+        `게임을 찾을 수 없습니다.`,
+        'System',
+      );
+      socket.write(gameNotFound_sChat);
+      printCustomErrorConsole(nickname, error);
+      break;
+    case ErrorCodes.HANDLER_ERROR:
+      const handerError_sChat = PACKET.S2CChat(
+        0,
+        `서버에서 핸들러 오류가 발생하였습니다.`,
+        'System',
+      );
+      socket.write(handerError_sChat);
+      printCustomErrorConsole(nickname, error);
+      break;
+    case ErrorCodes.INVALID_PACKET:
+      const invalidPacket_sChat = PACKET.S2CChat(
+        0,
+        `유효하지 않은 패킷입니다.`,
+        'System',
+      );
+      socket.write(invalidPacket_sChat);
+      printCustomErrorConsole(nickname, error);
+      break;
+    case ErrorCodes.INVALID_SEQUENCE:
+      const invalidSequence_sChat = PACKET.S2CChat(
+        0,
+        `시퀀스 오류가 발생하였습니다.`,
+        'System',
+      );
+      socket.write(invalidSequence_sChat);
+      printCustomErrorConsole(nickname, error);
+      break;
+    case ErrorCodes.MISSING_FIELDS:
+      const missingFields_sChat = PACKET.S2CChat(
+        0,
+        `패킷에서 필드값이 누락되었습니다.`,
+        'System',
+      );
+      socket.write(missingFields_sChat);
+      printCustomErrorConsole(nickname, error);
+      break;
+    case ErrorCodes.NOT_ENOUGH_MONEY:
+      const notEnoughMoney_sChat = PACKET.S2CChat(
+        0,
+        `금액이 충분하지 않습니다.`,
+        'System',
+      );
+      socket.write(notEnoughMoney_sChat);
+      printCustomErrorConsole(nickname, error);
+      break;
+    case ErrorCodes.PACKET_DECODE_ERROR:
+      const packetDecode_sChat = PACKET.S2CChat(
+        0,
+        `서버에서 패킷 읽기 오류가 발생하였습니다.`,
+        'System',
+      );
+      socket.write(packetDecode_sChat);
+      printCustomErrorConsole(nickname, error);
+      break;
+    case ErrorCodes.PACKET_STRUCTURE_MISMATCH:
+      const packetStructureMismatch_sChat = PACKET.S2CChat(
+        0,
+        `서버에서 패킷 구조 오류가 발생하였습니다.`,
+        'System',
+      );
+      socket.write(packetStructureMismatch_sChat);
+      printCustomErrorConsole(nickname, error);
+      break;
+    case ErrorCodes.UNKNOWN_HANDLER_ID:
+      const unknownHandler_sChat = PACKET.S2CChat(
+        0,
+        `서버에서 핸들러 오류가 발생하였습니다.`,
+        'System',
+      );
+      socket.write(unknownHandler_sChat);
+      printCustomErrorConsole(nickname, error);
+      break;
+    case ErrorCodes.USER_NOT_FOUND:
+      const userNotFound_sChat = PACKET.S2CChat(
+        0,
+        `서버에서 사용자 조회 오류가 발생하였습니다.`,
+        'System',
+      );
+      socket.write(userNotFound_sChat);
+      printCustomErrorConsole(nickname, error);
+      break;
+
+    case ErrorCodes.INVALID_NAVMESH:
+      const invalidNavMesh_sChat = PACKET.S2CChat(
+        0,
+        `NavMesh 데이터가 일치하지 않습니다.`,
+        'System',
+      );
+      socket.write(invalidNavMesh_sChat);
+      printCustomErrorConsole(nickname, error);
+      break;
+    case ErrorCodes.PARTY_NOT_FOUND:
+      const partyNotFound_sChat = PACKET.S2CChat(
+        0,
+        `파티 정보를 찾을 수 없습니다.`,
+        'System',
+      );
+      socket.write(partyNotFound_sChat);
+      printCustomErrorConsole(nickname, error);
+      break;
+    case ErrorCodes.INVALID_INPUT:
+      const invalidInput = PACKET.S2CChat(
+        0,
+        `클라이언트에서 잘못된 값을 전송했습니다.`,
+        'System',
+      );
+      socket.write(invalidInput);
+      printCustomErrorConsole(nickname, error);
+      break;
+    default:
+      const defaultError_sChat = PACKET.S2CChat(
+        0,
+        `서버에서 일반 오류가 발생하였습니다.`,
+        'System',
+      );
+      socket.write(defaultError_sChat);
+
+      console.error(
+        '\x1b[31m-------------------- 일반 에러 발생 --------------------\x1b[0m',
+      );
+      console.error(
+        `클라이언트: ${nickname ? `${nickname}` : `로그인하지 않음`}`,
+      );
+      console.error(error);
+
+      const stack = error instanceof Error ? error.stack : '';
+      const match = stack.match(/\((.*):(\d+):(\d+)\)/);
+      if (match) {
+          const [_, file, line, column] = match;
+          addErrorLog(`(${nickname?nickname:'로그인하지 않음'})${error} (파일: ${file}, 행: ${line})`);
+      } else {
+          addErrorLog(`(${nickname?nickname:'로그인하지 않음'})${error}`);
+      }
+      break;
+  }
 };
+
+function printCustomErrorConsole(nickname, error) {
+  console.error(
+    '\x1b[31m-------------------- 커스텀 에러 발생 --------------------\x1b[0m',
+  );
+  console.error(`클라이언트: ${nickname ? `${nickname}` : `로그인하지 않음`}`);
+  console.error(error);
+  
+  const stack = error instanceof Error ? error.stack : '';
+  const match = stack.match(/\((.*):(\d+):(\d+)\)/);
+  if (match) {
+      const [_, file, line, column] = match;
+      addErrorLog(`(${nickname?nickname:'로그인하지 않음'})${error} (파일: ${file}, 행: ${line})`);
+  } else {
+      addErrorLog(`(${nickname?nickname:'로그인하지 않음'})${error}`);
+  }
+}
+
+export default handleError;

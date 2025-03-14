@@ -1,0 +1,15 @@
+{
+  "name": "quest",
+  "version": "1.0.0",
+  "data": [
+    {
+      "quest_id": 40000
+    },
+    {
+      "quest_id": 40001
+    },
+    {
+      "quest_id": 40002
+    }
+  ]
+}

@@ -1,3 +1,10 @@
+yarn.lock
+package-lock.json
+/db
+docker-compose.yml
+Dockerfile
+.dockerignore
+
 # Logs
 logs
 *.log
@@ -128,3 +135,4 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+src/Protocol.cs

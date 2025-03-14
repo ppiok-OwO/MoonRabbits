@@ -31,28 +31,22 @@ const protoFiles = getAllProtoFiles(protoDir);
 // 로드된 프로토 메시지들을 저장할 객체
 const protoMessages = {};
 
+// protobuf 최상위 객체
+const root = new protobuf.Root();
+
 export const loadProtos = async () => {
   try {
-    const root = new protobuf.Root();
-
     // 비동기 병렬 처리로 프로토 파일 로드
     await Promise.all(protoFiles.map((file) => root.load(file)));
 
-    // packetNames 에 정의된 패킷들을 등록
-    for (const [namespace, types] of Object.entries(packetNames)) {
-      console.log(namespace);
-      console.log(types);
-
-      protoMessages[namespace] = {};
-
-      for (const [type, typeName] of Object.entries(types)) {
-        protoMessages[namespace][type] = root.lookupType(typeName);
-      }
+    for (let type of packetNames) {
+      protoMessages[type] = root.lookupType(type);
     }
 
     console.log('Protobuf 파일이 로드되었습니다.');
+    console.log(Object.keys(protoMessages));
   } catch (error) {
-    console.error('Protobuf 파일 로드 중 오류가 발생했습니다:', error);
+    console.error('Protobuf 파일 로드 중 오류가 발생했습니다: ', error);
   }
 };
 
