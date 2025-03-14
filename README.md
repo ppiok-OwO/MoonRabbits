@@ -10,6 +10,7 @@
 7. [🐰 서비스 아키텍처](#-서비스-아키텍처)
 8. [🐰 기술 스택](#-기술-스택)
 9. [🐰 Contact](#-contact)
+10. [🐰 참고 링크](#-참고-링크)
 
 
 # 🐰 Project MoonRabbits 소개
@@ -391,3 +392,10 @@ https://ppiok.itch.io/moonrabbits
 | 김종하 | [https://foreiner852.tistory.com/](https://foreiner852.tistory.com/)     |
 | 남민우 | [https://puudding.tistory.com/](https://puudding.tistory.com/)           |
 | 김동욱 | [https://velog.io/@dwook1637/](https://velog.io/@dwook1637/)             |
+
+## 🐰 참고 링크
+- 프로젝트 브로셔 링크
+https://www.notion.so/teamsparta/Project-MoonRabbits-1b12dc3ef51480288bbfc6a90c1658a5?pvs=4
+
+- 최종 발표회 PPT 링크
+https://docs.google.com/presentation/d/1c_xilWJN3rvDnO2JAaqnyBDmwCRb7s59ceHvIWYPPKs/edit?usp=sharing
