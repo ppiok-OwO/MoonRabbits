@@ -399,3 +399,6 @@ https://www.notion.so/teamsparta/Project-MoonRabbits-1b12dc3ef51480288bbfc6a90c1
 
 - 최종 발표회 PPT 링크
 https://docs.google.com/presentation/d/1c_xilWJN3rvDnO2JAaqnyBDmwCRb7s59ceHvIWYPPKs/edit?usp=sharing
+
+- 시연 영상
+https://www.youtube.com/watch?v=ahCP40IVNQI&t=73s
