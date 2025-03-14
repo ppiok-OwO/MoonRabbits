@@ -39,6 +39,7 @@ export async function playerMoveHandler(socket, packetData) {
     const path = await findPath(navMesh, currentPos, targetPos);
 
     let isValidPath;
+    if (!path) return false;
     if (path.length > 1) {
       player.setPath(path);
       isValidPath = true;
